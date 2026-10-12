@@ -67,7 +67,11 @@ class AppShell extends StatelessWidget {
     final body = Column(
       children: [
         if (isDesktopPlatform)
-          AppTitleBar(title: l10n.appTitle, windowActions: state.windowActions),
+          AppTitleBar(
+            title: l10n.appTitle,
+            windowActions: state.windowActions,
+            showControls: !wide,
+          ),
         search,
         Expanded(
           child: IndexedStack(index: state.tabIndex, children: pages),
@@ -83,6 +87,25 @@ class AppShell extends StatelessWidget {
               selectedIndex: state.tabIndex,
               onSelected: state.selectTab,
               destinations: destinations,
+              header: isDesktopPlatform
+                  ? SizedBox(
+                      height: 28,
+                      child: Row(
+                        children: [
+                          TrafficLights(actions: state.windowActions),
+                          Expanded(
+                            child: GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onPanStart: (_) =>
+                                  state.windowActions?.startDrag(),
+                              onDoubleTap: () =>
+                                  state.windowActions?.toggleMaximize(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : null,
             ),
             Expanded(child: body),
           ],

@@ -10,29 +10,49 @@ class SideNav extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onSelected;
   final List<SideNavDestination> destinations;
+  final Widget? header;
 
   const SideNav({
     super.key,
     required this.selectedIndex,
     required this.onSelected,
     required this.destinations,
+    this.header,
   });
 
   @override
   Widget build(BuildContext context) {
+    final header = this.header;
     return ColoredBox(
       color: Theme.of(context).colorScheme.surfaceContainerLow,
       child: SizedBox(
         width: 208,
         height: double.infinity,
-        child: ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-          itemCount: destinations.length,
-          itemBuilder: (context, index) => _SideNavItem(
-            destination: destinations[index],
-            selected: index == selectedIndex,
-            onTap: () => onSelected(index),
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (header != null)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+                child: header,
+              ),
+            Expanded(
+              child: ListView.builder(
+                padding: EdgeInsets.fromLTRB(
+                  12,
+                  header == null ? 16 : 4,
+                  12,
+                  16,
+                ),
+                itemCount: destinations.length,
+                itemBuilder: (context, index) => _SideNavItem(
+                  destination: destinations[index],
+                  selected: index == selectedIndex,
+                  onTap: () => onSelected(index),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
