@@ -4,6 +4,7 @@ import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../services/player_controller.dart';
 import '../../state/app_state.dart';
+import '../../utils/debug_log.dart';
 import '../../utils/format.dart';
 import '../../utils/stream_picker.dart';
 import '../shell/title_bar.dart';
@@ -42,6 +43,7 @@ class _WatchPageState extends State<WatchPage> {
 
   Future<void> _load() async {
     setState(() => _error = null);
+    debugLog('[watch] loading ${widget.video.id}');
     try {
       final state = AppScope.read(context);
       if (!_recorded) {
@@ -49,12 +51,17 @@ class _WatchPageState extends State<WatchPage> {
         state.history.record(widget.video, state.prefs);
       }
       final details = await state.api.videoDetails(widget.video.id);
+      debugLog(
+        '[watch] ${widget.video.id}: ${details.streams.length} streams',
+      );
       state.api
           .relatedVideos(widget.video.id)
           .then((related) {
             if (mounted) setState(() => _related = related);
           })
-          .catchError((_) {});
+          .catchError((e) {
+            debugLog('[watch] ${widget.video.id}: related videos failed: $e');
+          });
       if (!mounted) return;
 
       final player = state.createPlayer();
@@ -65,10 +72,16 @@ class _WatchPageState extends State<WatchPage> {
       PlayableStream? current;
       if (choice != null) {
         current = choice.stream;
+        debugLog(
+          '[watch] ${widget.video.id}: opening ${choice.stream.quality}'
+          '${choice.audioUrl == null ? '' : ' + separate audio'}',
+        );
         await player.open(choice.stream.url, audioUrl: choice.audioUrl);
         if (!state.settings.autoplay) {
           await player.pause();
         }
+      } else {
+        debugLog('[watch] ${widget.video.id}: no playable streams');
       }
       if (!mounted) {
         await player.dispose();
@@ -80,6 +93,7 @@ class _WatchPageState extends State<WatchPage> {
         _currentStream = current;
       });
     } catch (e) {
+      debugLog('[watch] ${widget.video.id}: load failed: $e');
       if (!mounted) return;
       setState(() => _error = e);
     }
@@ -87,6 +101,10 @@ class _WatchPageState extends State<WatchPage> {
 
   void _selectStream(PlayableStream stream) {
     final choice = pairWithAudio(stream, _details?.streams ?? const []);
+    debugLog(
+      '[watch] ${widget.video.id}: switching to ${stream.quality}'
+      '${choice.audioUrl == null ? '' : ' + separate audio'}',
+    );
     setState(() => _currentStream = stream);
     _player?.open(choice.stream.url, audioUrl: choice.audioUrl);
   }

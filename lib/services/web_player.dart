@@ -6,6 +6,7 @@ import 'dart:ui_web' as ui_web;
 import 'package:flutter/widgets.dart';
 import 'package:web/web.dart' as web;
 
+import '../utils/debug_log.dart';
 import 'player_controller.dart';
 
 class WebPlayerController implements PlayerController {
@@ -31,6 +32,9 @@ class WebPlayerController implements PlayerController {
 
   WebPlayerController() {
     ui_web.platformViewRegistry.registerViewFactory(_viewType, (_) => _video);
+    _video.onError.listen(
+      (_) => debugLog('[player] video error: ${_video.error?.message}'),
+    );
   }
 
   @override
@@ -78,11 +82,13 @@ class WebPlayerController implements PlayerController {
     final p = playing;
     if (p != _lastPlaying) {
       _lastPlaying = p;
+      debugLog('[player] playing=$p');
       _playing.add(p);
     }
     final b = buffering;
     if (b != _lastBuffering) {
       _lastBuffering = b;
+      debugLog('[player] buffering=$b');
       _buffering.add(b);
     }
     _syncAudio();
@@ -90,6 +96,9 @@ class WebPlayerController implements PlayerController {
 
   @override
   Future<void> open(String url, {String? audioUrl}) async {
+    debugLog(
+      '[player] open $url${audioUrl == null ? '' : ' + audio $audioUrl'}',
+    );
     _video.src = url;
     if (audioUrl != null) {
       _audio = web.HTMLAudioElement()..src = audioUrl;
@@ -113,6 +122,7 @@ class WebPlayerController implements PlayerController {
 
   @override
   Future<void> seek(Duration position) async {
+    debugLog('[player] seek ${position.inSeconds}s');
     _video.currentTime = position.inMilliseconds / 1000;
     if (_audioAttached) {
       _audio.currentTime = _video.currentTime;

@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../utils/debug_log.dart';
 import 'player_controller.dart';
 
 class UnsupportedPlayerController implements PlayerController {
@@ -22,7 +23,9 @@ class UnsupportedPlayerController implements PlayerController {
   Stream<bool> get bufferingStream => const Stream.empty();
 
   @override
-  Future<void> open(String url, {String? audioUrl}) async {}
+  Future<void> open(String url, {String? audioUrl}) async {
+    debugLog('[player] playback unsupported on this platform: $url');
+  }
   @override
   Future<void> play() async {}
   @override
