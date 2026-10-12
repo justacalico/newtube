@@ -51,5 +51,11 @@
   "audioOnly": "Fuaim amháin",
   "fullscreen": "Lánscáileán",
   "quality": "Cáilíocht",
-  "searchResultsFor": "Torthaí"
+  "searchResultsFor": "Torthaí",
+  "corsNoticeTitle": "Tá físeáin bacaithe sa bhrabhsálaí",
+  "corsNoticeBody": "Ní cheadaíonn YouTube iarratais dhíreacha ó aipeanna gréasáin. Suiteáil síneadh CORS nó socraigh seachfhreastalaí i Socruithe.",
+  "corsFirefox": "Breiseán Firefox",
+  "corsChrome": "Síneadh Chrome",
+  "corsProxyLabel": "Réimír sheachfhreastalaí CORS",
+  "corsProxyHint": "Cuirtear URL an fhíse leis i bhfoirm ionchódaithe, mar shampla https://proxy.example/?url="
 }

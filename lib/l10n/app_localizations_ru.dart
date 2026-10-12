@@ -166,4 +166,24 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get searchResultsFor => 'Результаты';
+
+  @override
+  String get corsNoticeTitle => 'Видео заблокировано в браузере';
+
+  @override
+  String get corsNoticeBody =>
+      'YouTube не разрешает прямые запросы из веб-приложений. Установите CORS-расширение или укажите прокси в настройках.';
+
+  @override
+  String get corsFirefox => 'Дополнение Firefox';
+
+  @override
+  String get corsChrome => 'Расширение Chrome';
+
+  @override
+  String get corsProxyLabel => 'Префикс CORS-прокси';
+
+  @override
+  String get corsProxyHint =>
+      'URL видео добавляется в кодированном виде, например https://proxy.example/?url=';
 }

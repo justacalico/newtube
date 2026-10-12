@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
+import '../../state/app_state.dart';
+import 'cors_notice.dart';
 import 'video_card.dart';
 
 class VideoGrid extends StatelessWidget {
@@ -70,13 +72,16 @@ class FeedStateView extends StatelessWidget {
     }
     if (error != null) {
       return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(l10n.errorLoading),
-            const SizedBox(height: 8),
-            FilledButton(onPressed: onRetry, child: Text(l10n.retry)),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(l10n.errorLoading),
+              const SizedBox(height: 8),
+              FilledButton(onPressed: onRetry, child: Text(l10n.retry)),
+              if (AppScope.read(context).isWeb) const CorsNotice(),
+            ],
+          ),
         ),
       );
     }

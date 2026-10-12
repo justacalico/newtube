@@ -5,15 +5,32 @@ import 'package:http/http.dart' as http;
 import 'package:youtube_explode_dart/youtube_explode_dart.dart' as yt;
 
 import '../models/video_info.dart';
+import 'proxy_client.dart';
 import 'youtube_api.dart';
 
 class YouTubeExplodeApi implements YouTubeApi {
   final yt.YoutubeExplode _yt;
   final http.Client _http;
+  final String? Function()? _proxyPrefix;
 
-  YouTubeExplodeApi({yt.YoutubeExplode? explode, http.Client? httpClient})
-    : _yt = explode ?? yt.YoutubeExplode(),
-      _http = httpClient ?? http.Client();
+  YouTubeExplodeApi({
+    yt.YoutubeExplode? explode,
+    http.Client? httpClient,
+    String? Function()? proxyPrefix,
+  }) : _proxyPrefix = proxyPrefix,
+       _http = ProxiedClient(
+         httpClient ?? http.Client(),
+         () => proxyPrefix?.call(),
+       ),
+       _yt =
+           explode ??
+           yt.YoutubeExplode(
+             httpClient: yt.YoutubeHttpClient(
+               ProxiedClient(http.Client(), () => proxyPrefix?.call()),
+             ),
+           );
+
+  String _proxied(String url) => proxiedUrl(url, _proxyPrefix?.call());
 
   @override
   Future<List<VideoInfo>> homeFeed() async {
@@ -140,12 +157,14 @@ class YouTubeExplodeApi implements YouTubeApi {
     return int.tryParse(digits) ?? 0;
   }
 
-  static VideoInfo _mapVideo(yt.Video v) => VideoInfo(
+  VideoInfo _mapVideo(yt.Video v) => VideoInfo(
     id: v.id.value,
     title: v.title,
     author: v.author,
     channelId: v.channelId.value,
-    thumbnailUrl: v.thumbnails.highResUrl,
+    thumbnailUrl: v.thumbnails.highResUrl.isEmpty
+        ? null
+        : _proxied(v.thumbnails.highResUrl),
     duration: v.duration,
     viewCount: v.engagement.viewCount,
     uploaded: v.uploadDateRaw,
@@ -212,15 +231,21 @@ class YouTubeExplodeApi implements YouTubeApi {
           hasAudio: false,
         ),
       for (final s in manifest.muxed)
-        PlayableStream(url: s.url.toString(), quality: s.qualityLabel),
+        PlayableStream(
+          url: _proxied(s.url.toString()),
+          quality: s.qualityLabel,
+        ),
       for (final s in manifest.audioOnly)
         PlayableStream(
-          url: s.url.toString(),
+          url: _proxied(s.url.toString()),
           quality: 'audio ${s.bitrate.bitsPerSecond ~/ 1000}kbps',
           hasVideo: false,
         ),
       for (final s in manifest.hls)
-        PlayableStream(url: s.url.toString(), quality: s.qualityLabel),
+        PlayableStream(
+          url: _proxied(s.url.toString()),
+          quality: s.qualityLabel,
+        ),
     ];
     return VideoDetails(
       info: VideoInfo(

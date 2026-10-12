@@ -165,6 +165,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get searchResultsFor => 'Results';
+
+  @override
+  String get corsNoticeTitle => 'Videos are blocked in the browser';
+
+  @override
+  String get corsNoticeBody =>
+      'YouTube does not allow direct requests from web apps. Install a CORS extension or set a proxy in Settings.';
+
+  @override
+  String get corsFirefox => 'Firefox add-on';
+
+  @override
+  String get corsChrome => 'Chrome extension';
+
+  @override
+  String get corsProxyLabel => 'CORS proxy prefix';
+
+  @override
+  String get corsProxyHint =>
+      'The video URL is appended URL-encoded, for example https://proxy.example/?url=';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -327,4 +347,24 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get searchResultsFor => 'Results';
+
+  @override
+  String get corsNoticeTitle => 'Videos are blocked in the browser';
+
+  @override
+  String get corsNoticeBody =>
+      'YouTube does not allow direct requests from web apps. Install a CORS extension or set a proxy in Settings.';
+
+  @override
+  String get corsFirefox => 'Firefox add-on';
+
+  @override
+  String get corsChrome => 'Chrome extension';
+
+  @override
+  String get corsProxyLabel => 'CORS proxy prefix';
+
+  @override
+  String get corsProxyHint =>
+      'The video URL is appended URL-encoded, for example https://proxy.example/?url=';
 }

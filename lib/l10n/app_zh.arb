@@ -51,5 +51,11 @@
   "audioOnly": "仅音频",
   "fullscreen": "全屏",
   "quality": "画质",
-  "searchResultsFor": "搜索结果"
+  "searchResultsFor": "搜索结果",
+  "corsNoticeTitle": "视频在浏览器里被拦截",
+  "corsNoticeBody": "YouTube 不允许网页应用直接请求。请安装 CORS 扩展，或在设置中填写代理。",
+  "corsFirefox": "Firefox 扩展",
+  "corsChrome": "Chrome 扩展",
+  "corsProxyLabel": "CORS 代理前缀",
+  "corsProxyHint": "视频地址会以 URL 编码形式附加，例如 https://proxy.example/?url="
 }

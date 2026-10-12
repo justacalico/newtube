@@ -166,4 +166,24 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get searchResultsFor => 'Torthaí';
+
+  @override
+  String get corsNoticeTitle => 'Tá físeáin bacaithe sa bhrabhsálaí';
+
+  @override
+  String get corsNoticeBody =>
+      'Ní cheadaíonn YouTube iarratais dhíreacha ó aipeanna gréasáin. Suiteáil síneadh CORS nó socraigh seachfhreastalaí i Socruithe.';
+
+  @override
+  String get corsFirefox => 'Breiseán Firefox';
+
+  @override
+  String get corsChrome => 'Síneadh Chrome';
+
+  @override
+  String get corsProxyLabel => 'Réimír sheachfhreastalaí CORS';
+
+  @override
+  String get corsProxyHint =>
+      'Cuirtear URL an fhíse leis i bhfoirm ionchódaithe, mar shampla https://proxy.example/?url=';
 }

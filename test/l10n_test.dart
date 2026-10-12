@@ -58,6 +58,12 @@ void touchAll(AppLocalizations l) {
   l.audioOnly;
   l.fullscreen;
   l.quality;
+  l.corsNoticeTitle;
+  l.corsNoticeBody;
+  l.corsFirefox;
+  l.corsChrome;
+  l.corsProxyLabel;
+  l.corsProxyHint;
   l.searchResultsFor;
 }
 

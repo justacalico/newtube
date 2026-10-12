@@ -51,5 +51,11 @@
   "audioOnly": "Audio only",
   "fullscreen": "Fullscreen",
   "quality": "Quality",
-  "searchResultsFor": "Results"
+  "searchResultsFor": "Results",
+  "corsNoticeTitle": "Videos are blocked in the browser",
+  "corsNoticeBody": "YouTube does not allow direct requests from web apps. Install a CORS extension or set a proxy in Settings.",
+  "corsFirefox": "Firefox add-on",
+  "corsChrome": "Chrome extension",
+  "corsProxyLabel": "CORS proxy prefix",
+  "corsProxyHint": "The video URL is appended URL-encoded, for example https://proxy.example/?url="
 }

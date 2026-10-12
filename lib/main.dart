@@ -13,6 +13,9 @@ import 'state/app_state.dart';
 import 'state/history_store.dart';
 import 'state/settings_store.dart';
 import 'state/subscriptions_store.dart';
+
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 import 'ui/shell/title_bar.dart' show isDesktopPlatform;
 
 // coverage:ignore-start
@@ -30,10 +33,12 @@ Future<void> _initWindow() async {
 // coverage:ignore-end
 
 Future<AppState> createAppState(SharedPreferences prefs) async {
+  final settings = await SettingsStore.load(prefs);
   return AppState(
     prefs: prefs,
-    api: YouTubeExplodeApi(),
-    settings: await SettingsStore.load(prefs),
+    api: YouTubeExplodeApi(proxyPrefix: () => settings.proxyPrefix),
+    isWeb: kIsWeb,
+    settings: settings,
     subscriptions: await SubscriptionsStore.load(prefs),
     history: await HistoryStore.load(prefs),
     launch: defaultLaunch,

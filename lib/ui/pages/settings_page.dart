@@ -100,6 +100,25 @@ class SettingsPage extends StatelessWidget {
               value: settings.autoplay,
               onChanged: (value) => settings.setAutoplay(value, state.prefs),
             ),
+            if (state.isWeb) ...[
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.public),
+                title: Text(l10n.corsProxyLabel),
+                subtitle: Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: TextFormField(
+                    initialValue: settings.proxyPrefix,
+                    decoration: InputDecoration(
+                      hintText: 'https://proxy.example/?url=',
+                      helperText: l10n.corsProxyHint,
+                    ),
+                    onChanged: (value) =>
+                        settings.setProxyPrefix(value, state.prefs),
+                  ),
+                ),
+              ),
+            ],
             const Divider(),
             ListTile(
               leading: const Icon(Icons.info_outline),

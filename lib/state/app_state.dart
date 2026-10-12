@@ -22,6 +22,7 @@ class AppState extends ChangeNotifier {
   final UrlLaunch launch;
   final Future<PackageInfo> Function() packageInfo;
   final PlayerController Function() createPlayer;
+  final bool isWeb;
 
   int _tabIndex = 0;
   AppUpdate? _update;
@@ -39,6 +40,7 @@ class AppState extends ChangeNotifier {
     required this.createPlayer,
     this.windowActions,
     this._versionChecker,
+    this.isWeb = false,
   });
 
   int get tabIndex => _tabIndex;

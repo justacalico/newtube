@@ -234,6 +234,7 @@ Future<AppState> testState({
   SubscriptionsStore? subscriptions,
   HistoryStore? history,
   List<Uri>? launched,
+  bool isWeb = false,
   Map<String, Object> initialPrefs = const {},
 }) async {
   SharedPreferences.setMockInitialValues(initialPrefs);
@@ -257,6 +258,7 @@ Future<AppState> testState({
     createPlayer: () => player ?? FakePlayerController(),
     windowActions: windowActions,
     versionChecker: versionChecker ?? FakeVersionChecker(),
+    isWeb: isWeb,
   );
 }
 

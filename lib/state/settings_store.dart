@@ -14,15 +14,18 @@ class SettingsStore extends ChangeNotifier {
   static const _themeKey = 'theme';
   static const _localeKey = 'locale';
   static const _autoplayKey = 'autoplay';
+  static const _proxyPrefixKey = 'proxy_prefix';
 
   AppTheme _theme;
   Locale? _locale;
   bool _autoplay;
+  String _proxyPrefix;
 
   SettingsStore({
     this._theme = AppTheme.system,
     this._locale,
     this._autoplay = true,
+    this._proxyPrefix = '',
   });
 
   static Future<SettingsStore> load(SharedPreferences prefs) async {
@@ -32,6 +35,7 @@ class SettingsStore extends ChangeNotifier {
           AppTheme.system,
       locale: _parseLocale(prefs.getString(_localeKey)),
       autoplay: prefs.getBool(_autoplayKey) ?? true,
+      proxyPrefix: prefs.getString(_proxyPrefixKey) ?? '',
     );
   }
 
@@ -52,6 +56,7 @@ class SettingsStore extends ChangeNotifier {
   AppTheme get theme => _theme;
   Locale? get locale => _locale;
   bool get autoplay => _autoplay;
+  String get proxyPrefix => _proxyPrefix;
 
   Future<void> setTheme(AppTheme theme, SharedPreferences prefs) async {
     _theme = theme;
@@ -62,6 +67,12 @@ class SettingsStore extends ChangeNotifier {
   Future<void> setLocale(Locale? locale, SharedPreferences prefs) async {
     _locale = locale;
     await prefs.setString(_localeKey, _localeString(locale));
+    notifyListeners();
+  }
+
+  Future<void> setProxyPrefix(String value, SharedPreferences prefs) async {
+    _proxyPrefix = value.trim();
+    await prefs.setString(_proxyPrefixKey, _proxyPrefix);
     notifyListeners();
   }
 

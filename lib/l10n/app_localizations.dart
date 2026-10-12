@@ -415,6 +415,42 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Results'**
   String get searchResultsFor;
+
+  /// No description provided for @corsNoticeTitle.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Videos are blocked in the browser'**
+  String get corsNoticeTitle;
+
+  /// No description provided for @corsNoticeBody.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'YouTube does not allow direct requests from web apps. Install a CORS extension or set a proxy in Settings.'**
+  String get corsNoticeBody;
+
+  /// No description provided for @corsFirefox.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Firefox add-on'**
+  String get corsFirefox;
+
+  /// No description provided for @corsChrome.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Chrome extension'**
+  String get corsChrome;
+
+  /// No description provided for @corsProxyLabel.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'CORS proxy prefix'**
+  String get corsProxyLabel;
+
+  /// No description provided for @corsProxyHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'The video URL is appended URL-encoded, for example https://proxy.example/?url='**
+  String get corsProxyHint;
 }
 
 class _AppLocalizationsDelegate

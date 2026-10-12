@@ -164,6 +164,25 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get searchResultsFor => '搜索结果';
+
+  @override
+  String get corsNoticeTitle => '视频在浏览器里被拦截';
+
+  @override
+  String get corsNoticeBody => 'YouTube 不允许网页应用直接请求。请安装 CORS 扩展，或在设置中填写代理。';
+
+  @override
+  String get corsFirefox => 'Firefox 扩展';
+
+  @override
+  String get corsChrome => 'Chrome 扩展';
+
+  @override
+  String get corsProxyLabel => 'CORS 代理前缀';
+
+  @override
+  String get corsProxyHint =>
+      '视频地址会以 URL 编码形式附加，例如 https://proxy.example/?url=';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -325,4 +344,23 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get searchResultsFor => '搜索结果';
+
+  @override
+  String get corsNoticeTitle => '视频在浏览器里被拦截';
+
+  @override
+  String get corsNoticeBody => 'YouTube 不允许网页应用直接请求。请安装 CORS 扩展，或在设置中填写代理。';
+
+  @override
+  String get corsFirefox => 'Firefox 扩展';
+
+  @override
+  String get corsChrome => 'Chrome 扩展';
+
+  @override
+  String get corsProxyLabel => 'CORS 代理前缀';
+
+  @override
+  String get corsProxyHint =>
+      '视频地址会以 URL 编码形式附加，例如 https://proxy.example/?url=';
 }
