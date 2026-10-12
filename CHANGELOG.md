@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.4.0 - 2026-10-12
+#### Features
+- 窗口控制按钮移入侧边栏 - (645f748) - calico
+- 重做桌面端侧边导航栏 - (70c727e) - calico
+
+- - -
+
 ## v0.3.1 - 2026-10-12
 #### Bug Fixes
 - 对齐设置页语言下拉菜单 - (3c12d7e) - calico
