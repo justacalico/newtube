@@ -31,7 +31,8 @@ void touchAll(AppLocalizations l) {
   l.noSubscriptionsHint;
   l.unsubscribe;
   l.watchHistory;
-  l.clearHistory;
+  l.clearWatchHistory;
+  l.clearSearchHistory;
   l.noHistory;
   l.noHistoryHint;
   l.noSearchHistory;

@@ -82,7 +82,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get watchHistory => '观看历史';
 
   @override
-  String get clearHistory => '清除历史记录';
+  String get clearWatchHistory => '清除观看历史';
+
+  @override
+  String get clearSearchHistory => '清除搜索历史';
 
   @override
   String get noHistory => '还没有观看记录';
@@ -274,7 +277,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get watchHistory => '观看历史';
 
   @override
-  String get clearHistory => '清除历史记录';
+  String get clearWatchHistory => '清除观看历史';
+
+  @override
+  String get clearSearchHistory => '清除搜索历史';
 
   @override
   String get noHistory => '还没有观看记录';

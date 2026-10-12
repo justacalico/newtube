@@ -248,11 +248,17 @@ abstract class AppLocalizations {
   /// **'Watch history'**
   String get watchHistory;
 
-  /// No description provided for @clearHistory.
+  /// No description provided for @clearWatchHistory.
   ///
   /// In en_GB, this message translates to:
-  /// **'Clear history'**
-  String get clearHistory;
+  /// **'Clear watch history'**
+  String get clearWatchHistory;
+
+  /// No description provided for @clearSearchHistory.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Clear search history'**
+  String get clearSearchHistory;
 
   /// No description provided for @noHistory.
   ///

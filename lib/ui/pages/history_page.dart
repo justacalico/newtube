@@ -34,46 +34,32 @@ class HistoryPage extends StatelessWidget {
           );
         }
 
-        return Column(
-          children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton.icon(
-                icon: const Icon(Icons.delete_outline),
-                label: Text(l10n.clearHistory),
-                onPressed: () => state.history.clear(state.prefs),
+        return ListView.builder(
+          itemCount: entries.length,
+          itemBuilder: (context, i) {
+            final video = entries[i];
+            return ListTile(
+              leading: VideoThumbnail(
+                url: video.thumbnailUrl,
+                width: 96,
+                height: 54,
               ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: entries.length,
-                itemBuilder: (context, i) {
-                  final video = entries[i];
-                  return ListTile(
-                    leading: VideoThumbnail(
-                      url: video.thumbnailUrl,
-                      width: 96,
-                      height: 54,
-                    ),
-                    title: Text(
-                      video.title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    subtitle: Text(video.author),
-                    trailing: video.duration == null
-                        ? null
-                        : Text(formatDuration(video.duration)),
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (_) => WatchPage(video: video),
-                      ),
-                    ),
-                  );
-                },
+              title: Text(
+                video.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
-            ),
-          ],
+              subtitle: Text(video.author),
+              trailing: video.duration == null
+                  ? null
+                  : Text(formatDuration(video.duration)),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => WatchPage(video: video),
+                ),
+              ),
+            );
+          },
         );
       },
     );
