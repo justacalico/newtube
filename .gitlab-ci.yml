@@ -170,6 +170,10 @@ pages:
         mkdir -p public/flatpak
         curl -fsSL "$URL" -o /tmp/flatpak.tar.gz && tar -xzf /tmp/flatpak.tar.gz -C public/flatpak || true
       fi
+      mkdir -p public/flatpak
+      if [ ! -f public/flatpak/index.html ]; then
+        printf '%s\n' '<!doctype html><meta charset="utf-8"><title>NewTube flatpak repo</title><p>Flatpak repository for NewTube. Add it with <code>flatpak remote-add newtube https://httpanimations.gitlab.io/newtube/flatpak</code> once a release is published.</p>' > public/flatpak/index.html
+      fi
     - ls public public/app
   artifacts:
     paths:
