@@ -33,6 +33,12 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
     await pumpPage(tester, s, page, size: size);
+    await tester.runAsync(() async {
+      for (final element in tester.elementList(find.byType(Image))) {
+        final provider = (element.widget as Image).image;
+        if (provider is AssetImage) await precacheImage(provider, element);
+      }
+    });
     await tester.pumpAndSettle();
     await expectLater(
       find.byType(MaterialApp),
