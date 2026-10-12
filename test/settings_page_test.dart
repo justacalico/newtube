@@ -77,7 +77,9 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(SwitchListTile));
+    await tester.tap(
+      find.widgetWithText(SwitchListTile, 'Autoplay videos'),
+    );
     await tester.pump();
     expect(state.settings.autoplay, isFalse);
 
@@ -94,6 +96,8 @@ void main() {
 
     expect(find.text('Version 1.2.3'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('Check for updates'), 200);
+    await tester.ensureVisible(find.text('Check for updates'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Check for updates'));
     await tester.pumpAndSettle();
     expect(find.text('You are up to date'), findsOneWidget);
@@ -115,6 +119,8 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.scrollUntilVisible(find.text('Check for updates'), 200);
+    await tester.ensureVisible(find.text('Check for updates'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Check for updates'));
     await tester.pumpAndSettle();
     expect(find.text('New version available: 2.0.0'), findsOneWidget);
@@ -130,9 +136,31 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(find.text('Check for updates'), 200);
+    await tester.ensureVisible(find.text('Check for updates'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Check for updates'));
     await tester.pumpAndSettle();
     expect(find.text('Could not check for updates'), findsOneWidget);
+  });
+
+  testWidgets('toggles search history', (tester) async {
+    final state = await testState();
+    await pumpPage(tester, state, const SettingsPage());
+    await tester.pumpAndSettle();
+
+    await tester.tap(
+      find.widgetWithText(SwitchListTile, 'Search history'),
+    );
+    await tester.pump();
+    expect(state.settings.searchHistoryEnabled, isFalse);
+    expect(state.prefs.getBool('search_history_enabled'), isFalse);
+
+    await tester.tap(
+      find.widgetWithText(SwitchListTile, 'Search history'),
+    );
+    await tester.pump();
+    expect(state.settings.searchHistoryEnabled, isTrue);
+    expect(state.prefs.getBool('search_history_enabled'), isTrue);
   });
 
   testWidgets('clears watch and search history', (tester) async {

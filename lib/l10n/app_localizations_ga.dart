@@ -112,6 +112,19 @@ class AppLocalizationsGa extends AppLocalizations {
   String get removeSearchEntry => 'Bain';
 
   @override
+  String get searchHistory => 'Stair chuardaigh';
+
+  @override
+  String get searchHistoryHint => 'Meabhraigh na cuardaigh a dhéanann tú';
+
+  @override
+  String get searchHistoryOff => 'Tá stair chuardaigh múchtha';
+
+  @override
+  String get searchHistoryOffHint =>
+      'Cas air i Socruithe le do chuardaigh a fheiceáil anseo.';
+
+  @override
   String get theme => 'Téama';
 
   @override

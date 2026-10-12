@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/models/video_info.dart';
+import 'package:newtube/state/settings_store.dart';
 import 'package:newtube/state/subscriptions_store.dart';
 import 'package:newtube/ui/pages/channel_page.dart';
 import 'package:newtube/ui/pages/history_page.dart';
@@ -104,6 +105,31 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Results: dogs'), findsOneWidget);
       expect(state.searchHistory.entries, ['dogs', 'cats']);
+    });
+
+    testWidgets('disabled history hides entries and skips recording', (
+      tester,
+    ) async {
+      final api = FakeYouTubeApi(
+        searchResults: const SearchResults(videos: testVideos),
+      );
+      final state = await testState(
+        api: api,
+        settings: SettingsStore(searchHistoryEnabled: false),
+        initialPrefs: {'search_history': '["cats","dogs"]'},
+      );
+      await pumpPage(tester, state, const SearchPage());
+      await tester.pumpAndSettle();
+
+      expect(find.text('Search history is off'), findsOneWidget);
+      expect(find.text('dogs'), findsNothing);
+
+      await tester.enterText(find.byType(TextField), 'birds');
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Results: birds'), findsOneWidget);
+      expect(state.searchHistory.entries, ['cats', 'dogs']);
     });
 
     testWidgets('removes entries', (tester) async {

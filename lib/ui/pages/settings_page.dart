@@ -190,6 +190,14 @@ class _SettingsPageState extends State<SettingsPage> {
                 style: Theme.of(context).textTheme.titleSmall,
               ),
             ),
+            SwitchListTile(
+              secondary: const Icon(Icons.history_toggle_off),
+              title: Text(l10n.searchHistory),
+              subtitle: Text(l10n.searchHistoryHint),
+              value: settings.searchHistoryEnabled,
+              onChanged: (value) =>
+                  settings.setSearchHistoryEnabled(value, state.prefs),
+            ),
             ListTile(
               leading: const Icon(Icons.delete_outline),
               title: Text(l10n.clearHistory),

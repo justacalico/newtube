@@ -111,6 +111,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get removeSearchEntry => 'Remove';
 
   @override
+  String get searchHistory => 'Search history';
+
+  @override
+  String get searchHistoryHint => 'Remember the searches you run';
+
+  @override
+  String get searchHistoryOff => 'Search history is off';
+
+  @override
+  String get searchHistoryOffHint =>
+      'Turn it on in Settings to see your searches here.';
+
+  @override
   String get theme => 'Theme';
 
   @override
@@ -313,6 +326,19 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get removeSearchEntry => 'Remove';
+
+  @override
+  String get searchHistory => 'Search history';
+
+  @override
+  String get searchHistoryHint => 'Remember the searches you run';
+
+  @override
+  String get searchHistoryOff => 'Search history is off';
+
+  @override
+  String get searchHistoryOffHint =>
+      'Turn it on in Settings to see your searches here.';
 
   @override
   String get theme => 'Theme';

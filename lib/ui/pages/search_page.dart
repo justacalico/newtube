@@ -33,7 +33,9 @@ class _SearchPageState extends State<SearchPage> {
     if (q.isEmpty || q == _query) return;
     final state = AppScope.read(context);
     _query = q;
-    state.searchHistory.record(q, state.prefs);
+    if (state.settings.searchHistoryEnabled) {
+      state.searchHistory.record(q, state.prefs);
+    }
     _load();
   }
 
@@ -179,20 +181,27 @@ class _SearchHistory extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
 
     return ListenableBuilder(
-      listenable: state.searchHistory,
+      listenable: Listenable.merge([state.searchHistory, state.settings]),
       builder: (context, _) {
+        final enabled = state.settings.searchHistoryEnabled;
         final entries = state.searchHistory.entries;
-        if (entries.isEmpty) {
+        if (!enabled || entries.isEmpty) {
           return Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  l10n.noSearchHistory,
+                  enabled
+                      ? l10n.noSearchHistory
+                      : l10n.searchHistoryOff,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const SizedBox(height: 8),
-                Text(l10n.noSearchHistoryHint),
+                Text(
+                  enabled
+                      ? l10n.noSearchHistoryHint
+                      : l10n.searchHistoryOffHint,
+                ),
               ],
             ),
           );
