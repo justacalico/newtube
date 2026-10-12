@@ -106,7 +106,7 @@ void main() {
       expect(state.searchHistory.entries, ['dogs', 'cats']);
     });
 
-    testWidgets('removes entries and clears all', (tester) async {
+    testWidgets('removes entries', (tester) async {
       final state = await testState(
         initialPrefs: {'search_history': '["cats","dogs"]'},
       );
@@ -117,11 +117,6 @@ void main() {
       await tester.pumpAndSettle();
       expect(state.searchHistory.entries, ['dogs']);
       expect(find.text('cats'), findsNothing);
-
-      await tester.tap(find.text('Clear history'));
-      await tester.pumpAndSettle();
-      expect(find.text('No searches yet'), findsOneWidget);
-      expect(state.prefs.getString('search_history'), '[]');
     });
   });
 
@@ -235,7 +230,7 @@ void main() {
       expect(find.text('Nothing watched yet'), findsOneWidget);
     });
 
-    testWidgets('lists, opens and clears entries', (tester) async {
+    testWidgets('lists and opens entries', (tester) async {
       final prefs = <String, Object>{
         'history': '[{"id":"v1","title":"First video","author":"Channel One","channelId":"c1","duration":201}]',
       };
@@ -250,10 +245,6 @@ void main() {
       await tester.pumpAndSettle();
       await tester.pageBack();
       await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Clear history'));
-      await tester.pumpAndSettle();
-      expect(find.text('Nothing watched yet'), findsOneWidget);
     });
   });
 }

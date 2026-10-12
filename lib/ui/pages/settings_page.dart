@@ -86,7 +86,11 @@ class _SettingsPageState extends State<SettingsPage> {
     final result = _result ?? state.update;
 
     return ListenableBuilder(
-      listenable: state.settings,
+      listenable: Listenable.merge([
+        state.settings,
+        state.history,
+        state.searchHistory,
+      ]),
       builder: (context, _) {
         final settings = state.settings;
         return ListView(
@@ -182,16 +186,31 @@ class _SettingsPageState extends State<SettingsPage> {
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: Text(
+                l10n.navHistory,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.delete_outline),
+              title: Text(l10n.clearHistory),
+              enabled:
+                  state.history.entries.isNotEmpty ||
+                  state.searchHistory.entries.isNotEmpty,
+              onTap: () {
+                state.history.clear(state.prefs);
+                state.searchHistory.clear(state.prefs);
+              },
+            ),
+            const Divider(),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              child: Text(
                 l10n.about,
                 style: Theme.of(context).textTheme.titleSmall,
               ),
             ),
             const SizedBox(height: 16),
-            Image.asset(
-              'assets/icon/icon_256.png',
-              width: 64,
-              height: 64,
-            ),
+            Image.asset('assets/icon/icon_256.png', width: 64, height: 64),
             const SizedBox(height: 8),
             Center(
               child: Text(

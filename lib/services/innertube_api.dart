@@ -138,19 +138,20 @@ class InnertubeApi implements YouTubeApi {
 
   String? _thumbField(String? url) => url == null ? null : _proxied(url);
 
-  List<VideoInfo> _proxiedThumbs(List<VideoInfo> videos, {String? channelId}) => [
-    for (final v in videos)
-      VideoInfo(
-        id: v.id,
-        title: v.title,
-        author: v.author,
-        channelId: v.channelId.isEmpty ? channelId ?? '' : v.channelId,
-        thumbnailUrl: _thumbField(v.thumbnailUrl),
-        duration: v.duration,
-        viewCount: v.viewCount,
-        uploaded: v.uploaded,
-      ),
-  ];
+  List<VideoInfo> _proxiedThumbs(List<VideoInfo> videos, {String? channelId}) =>
+      [
+        for (final v in videos)
+          VideoInfo(
+            id: v.id,
+            title: v.title,
+            author: v.author,
+            channelId: v.channelId.isEmpty ? channelId ?? '' : v.channelId,
+            thumbnailUrl: _thumbField(v.thumbnailUrl),
+            duration: v.duration,
+            viewCount: v.viewCount,
+            uploaded: v.uploaded,
+          ),
+      ];
 
   List<ChannelInfo> _proxiedChannels(List<ChannelInfo> channels) => [
     for (final c in channels)

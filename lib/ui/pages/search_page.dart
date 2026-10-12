@@ -198,36 +198,21 @@ class _SearchHistory extends StatelessWidget {
           );
         }
 
-        return Column(
-          children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton.icon(
-                icon: const Icon(Icons.delete_outline),
-                label: Text(l10n.clearHistory),
-                onPressed: () => state.searchHistory.clear(state.prefs),
+        return ListView.builder(
+          itemCount: entries.length,
+          itemBuilder: (context, i) {
+            final entry = entries[i];
+            return ListTile(
+              leading: const Icon(Icons.history),
+              title: Text(entry),
+              trailing: IconButton(
+                icon: const Icon(Icons.close),
+                tooltip: l10n.removeSearchEntry,
+                onPressed: () => state.searchHistory.remove(entry, state.prefs),
               ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: entries.length,
-                itemBuilder: (context, i) {
-                  final entry = entries[i];
-                  return ListTile(
-                    leading: const Icon(Icons.history),
-                    title: Text(entry),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.close),
-                      tooltip: l10n.removeSearchEntry,
-                      onPressed: () =>
-                          state.searchHistory.remove(entry, state.prefs),
-                    ),
-                    onTap: () => onSelect(entry),
-                  );
-                },
-              ),
-            ),
-          ],
+              onTap: () => onSelect(entry),
+            );
+          },
         );
       },
     );
