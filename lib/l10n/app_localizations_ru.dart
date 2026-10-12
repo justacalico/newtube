@@ -86,6 +86,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get clearHistory => 'Очистить историю';
 
   @override
+  String get clearHistoryConfirm =>
+      'Будут удалены все просмотренные видео и поисковые запросы.';
+
+  @override
+  String get cancel => 'Отмена';
+
+  @override
+  String get clear => 'Очистить';
+
+  @override
   String get noHistory => 'Вы ещё ничего не смотрели';
 
   @override

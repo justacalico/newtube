@@ -86,6 +86,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get clearHistory => 'Clear history';
 
   @override
+  String get clearHistoryConfirm =>
+      'This removes all watched videos and searches.';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get clear => 'Clear';
+
+  @override
   String get noHistory => 'Nothing watched yet';
 
   @override
@@ -278,6 +288,16 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get clearHistory => 'Clear history';
+
+  @override
+  String get clearHistoryConfirm =>
+      'This removes all watched videos and searches.';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get clear => 'Clear';
 
   @override
   String get noHistory => 'Nothing watched yet';

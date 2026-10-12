@@ -147,10 +147,30 @@ void main() {
 
     await tester.tap(find.text('Clear history'));
     await tester.pumpAndSettle();
+    await tester.tap(find.text('Clear'));
+    await tester.pumpAndSettle();
     expect(state.history.entries, isEmpty);
     expect(state.searchHistory.entries, isEmpty);
     expect(state.prefs.getString('history'), '[]');
     expect(state.prefs.getString('search_history'), '[]');
+  });
+
+  testWidgets('keeps history when clear is cancelled', (tester) async {
+    final state = await testState(
+      initialPrefs: {
+        'history': '[{"id":"v1","title":"First video","author":"Channel One","channelId":"c1","duration":201}]',
+        'search_history': '["cats","dogs"]',
+      },
+    );
+    await pumpPage(tester, state, const SettingsPage());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Clear history'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    expect(state.history.entries, isNotEmpty);
+    expect(state.searchHistory.entries, isNotEmpty);
   });
 
   testWidgets('launches releases, source and licence links', (tester) async {

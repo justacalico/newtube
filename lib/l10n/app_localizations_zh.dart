@@ -85,6 +85,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get clearHistory => '清除历史记录';
 
   @override
+  String get clearHistoryConfirm => '将删除所有观看记录和搜索记录。';
+
+  @override
+  String get cancel => '取消';
+
+  @override
+  String get clear => '清除';
+
+  @override
   String get noHistory => '还没有观看记录';
 
   @override
@@ -275,6 +284,15 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get clearHistory => '清除历史记录';
+
+  @override
+  String get clearHistoryConfirm => '将删除所有观看记录和搜索记录。';
+
+  @override
+  String get cancel => '取消';
+
+  @override
+  String get clear => '清除';
 
   @override
   String get noHistory => '还没有观看记录';

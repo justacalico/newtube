@@ -196,9 +196,28 @@ class _SettingsPageState extends State<SettingsPage> {
               enabled:
                   state.history.entries.isNotEmpty ||
                   state.searchHistory.entries.isNotEmpty,
-              onTap: () {
-                state.history.clear(state.prefs);
-                state.searchHistory.clear(state.prefs);
+              onTap: () async {
+                final confirmed = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text(l10n.clearHistory),
+                    content: Text(l10n.clearHistoryConfirm),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: Text(l10n.cancel),
+                      ),
+                      FilledButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: Text(l10n.clear),
+                      ),
+                    ],
+                  ),
+                );
+                if (confirmed ?? false) {
+                  state.history.clear(state.prefs);
+                  state.searchHistory.clear(state.prefs);
+                }
               },
             ),
             const Divider(),
