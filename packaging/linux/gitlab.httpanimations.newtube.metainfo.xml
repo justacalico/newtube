@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>gitlab.httpanimations.newtube</id>
+  <name>NewTube</name>
+  <summary>A privacy-friendly YouTube client</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>AGPL-3.0-only</project_license>
+  <description>
+    <p>Watch YouTube without the ads, the tracking or the clutter. Subscriptions and history stay on your device.</p>
+  </description>
+  <launchable type="desktop-id">gitlab.httpanimations.newtube.desktop</launchable>
+  <url type="homepage">https://httpanimations.gitlab.io/newtube/</url>
+  <provides>
+    <binary>newtube</binary>
+  </provides>
+</component>

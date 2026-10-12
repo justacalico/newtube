@@ -1,0 +1,394 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      build_all:
+        description: 'Build all release targets'
+        type: boolean
+        default: true
+      create_release:
+        description: 'Create a versioned release from this build'
+        type: boolean
+        default: false
+      merge_request_id:
+        description: 'Merge request ID'
+        type: string
+        default: ''
+      merge_request_url:
+        description: 'Merge request URL'
+        type: string
+        default: ''
+
+permissions:
+  contents: write
+  actions: read
+
+env:
+  FLUTTER_VERSION: "3.47.7"
+  COCOGITTO_VERSION: "7.0.0"
+  APP_ID: "gitlab.httpanimations.newtube"
+
+concurrency:
+  group: ci-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+jobs:
+  setup:
+    name: Setup build metadata
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
+      build_number: ${{ steps.meta.outputs.build_number }}
+      build_all: ${{ steps.meta.outputs.build_all }}
+      targets: ${{ steps.meta.outputs.targets }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Read version and build metadata
+        id: meta
+        run: |
+          VERSION=$(grep '^version: ' pubspec.yaml | sed 's/^version: //; s/+.*//')
+          BUILD_NUMBER=$(grep '^version: ' pubspec.yaml | sed 's/.*+//')
+          if [ -n "${{ inputs.build_all }}" ]; then
+            BUILD_ALL="${{ inputs.build_all }}"
+          else
+            BUILD_ALL="true"
+          fi
+          if [ "$BUILD_ALL" = "true" ]; then
+            TARGETS='[{"target":"linux","os":"ubuntu-latest","arch":"x86_64"},{"target":"linux-arm64","os":"ubuntu-24.04-arm","arch":"aarch64"},{"target":"android","os":"ubuntu-latest"},{"target":"windows","os":"windows-latest"},{"target":"macos","os":"macos-latest"},{"target":"ios","os":"macos-latest"},{"target":"web","os":"ubuntu-latest"}]'
+          else
+            TARGETS='[]'
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "build_number=$BUILD_NUMBER" >> "$GITHUB_OUTPUT"
+          echo "build_all=$BUILD_ALL" >> "$GITHUB_OUTPUT"
+          echo "targets=$TARGETS" >> "$GITHUB_OUTPUT"
+
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Install cocogitto
+        run: |
+          curl -fsSL --retry 3 -o /tmp/cog.tar.gz "https://github.com/cocogitto/cocogitto/releases/download/${COCOGITTO_VERSION}/cocogitto-${COCOGITTO_VERSION}-x86_64-unknown-linux-musl.tar.gz"
+          mkdir -p /tmp/cog && tar -xzf /tmp/cog.tar.gz -C /tmp/cog
+          sudo install -m 755 /tmp/cog/x86_64-unknown-linux-musl/cog /usr/local/bin/cog
+
+      - name: Check commits
+        if: github.event_name != 'pull_request'
+        run: cog check
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Pub get
+        run: flutter pub get
+
+      - name: Check formatting
+        run: dart format --set-exit-if-changed lib test
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Test with coverage
+        run: flutter test --coverage
+
+      - name: Require 100% line coverage
+        run: |
+          python3 - <<'PY'
+          lf = lh = 0
+          for line in open('coverage/lcov.info'):
+              if line.startswith('LF:'):
+                  lf += int(line[3:])
+              elif line.startswith('LH:'):
+                  lh += int(line[3:])
+          if lf == 0 or lh != lf:
+              raise SystemExit(f'coverage {lh}/{lf}, need 100%')
+          print(f'coverage {lh}/{lf} OK')
+          PY
+
+      - name: Landing analyze and test
+        run: |
+          cd landing
+          flutter pub get
+          flutter analyze --no-fatal-infos
+          flutter test
+
+  build:
+    name: Build ${{ matrix.target }}
+    needs: [setup, verify]
+    if: ${{ needs.setup.outputs.build_all == 'true' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJson(needs.setup.outputs.targets) }}
+    runs-on: ${{ matrix.os }}
+    env:
+      VERSION: ${{ needs.setup.outputs.version }}
+      BUILD_NUMBER: ${{ needs.setup.outputs.build_number }}
+      TARGET: ${{ matrix.target }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Install Linux dependencies
+        if: startsWith(matrix.target, 'linux')
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev libmpv-dev dpkg-dev rpm flatpak flatpak-builder curl unzip zip
+
+      - name: Pub get
+        run: flutter pub get
+
+      - name: Prepare Android signing
+        id: signing
+        if: matrix.target == 'android'
+        run: |
+          if [ -z "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
+            echo "Missing keystore on a release build, refusing to ship debug-signed artifacts" >&2
+            exit 1
+          fi
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > "$GITHUB_WORKSPACE/android/newtube.jks" || exit 1
+          cat > "$GITHUB_WORKSPACE/android/key.properties" <<EOF
+          storePassword=${{ secrets.ANDROID_STORE_PASSWORD }}
+          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
+          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
+          storeFile=../newtube.jks
+          EOF
+          keytool -list -keystore "$GITHUB_WORKSPACE/android/newtube.jks" -storepass "${{ secrets.ANDROID_STORE_PASSWORD }}" >/dev/null || exit 1
+
+      - name: Build Linux
+        if: startsWith(matrix.target, 'linux')
+        run: |
+          flutter build linux --release --build-name="$VERSION" --build-number="$BUILD_NUMBER"
+          LINUX_ARCH="${{ matrix.arch }}"
+          BUNDLE="build/linux/${LINUX_ARCH}/release/bundle"
+          mkdir -p artifacts
+
+          tar -czf "artifacts/newtube-${VERSION}-linux-${LINUX_ARCH}.tar.gz" -C "$BUNDLE" .
+          (cd "$BUNDLE" && zip -qr "../../../../../artifacts/newtube-${VERSION}-linux-${LINUX_ARCH}.zip" .)
+
+          # .deb
+          PKGDIR=$(mktemp -d)
+          mkdir -p "$PKGDIR/opt/newtube" "$PKGDIR/usr/bin" "$PKGDIR/DEBIAN" \
+            "$PKGDIR/usr/share/applications" "$PKGDIR/usr/share/icons/hicolor/256x256/apps"
+          cp -a "$BUNDLE/." "$PKGDIR/opt/newtube/"
+          ln -sf /opt/newtube/newtube "$PKGDIR/usr/bin/newtube"
+          install -m644 packaging/linux/newtube.desktop "$PKGDIR/usr/share/applications/${{ env.APP_ID }}.desktop"
+          install -m644 packaging/linux/newtube.png "$PKGDIR/usr/share/icons/hicolor/256x256/apps/newtube.png"
+          DEB_ARCH=$([ "$LINUX_ARCH" = "aarch64" ] && echo arm64 || echo amd64)
+          cat > "$PKGDIR/DEBIAN/control" <<EOF
+          Package: newtube
+          Version: ${VERSION}
+          Architecture: ${DEB_ARCH}
+          Maintainer: NewTube CI <ci@gitlab.com>
+          Section: net
+          Priority: optional
+          Description: A privacy-friendly YouTube client
+          EOF
+          dpkg-deb --build "$PKGDIR" "artifacts/newtube-${VERSION}-linux-${LINUX_ARCH}.deb"
+
+          # .rpm
+          bash scripts/build-rpm.sh "$BUNDLE" "$VERSION" "$LINUX_ARCH" "artifacts/newtube-${VERSION}-linux-${LINUX_ARCH}.rpm" "$BUILD_NUMBER"
+
+          # AppImage
+          APPIMAGE_TOOL_ARCH=$([ "$LINUX_ARCH" = "aarch64" ] && echo aarch64 || echo x86_64)
+          curl -fsSL -o /tmp/appimagetool "https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-${APPIMAGE_TOOL_ARCH}.AppImage"
+          chmod +x /tmp/appimagetool
+          APPDIR=$(mktemp -d)
+          mkdir -p "$APPDIR/usr/bin" "$APPDIR/usr/lib/newtube" "$APPDIR/usr/share/applications" "$APPDIR/usr/share/icons/hicolor/256x256/apps"
+          cp -a "$BUNDLE/." "$APPDIR/usr/lib/newtube/"
+          cat > "$APPDIR/AppRun" <<'EOF'
+          #!/bin/sh
+          export LD_LIBRARY_PATH="/usr/lib/newtube/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+          HERE="$(dirname "$(readlink -f "$0")")"
+          export LD_LIBRARY_PATH="$HERE/usr/lib/newtube/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+          exec "$HERE/usr/lib/newtube/newtube" "$@"
+          EOF
+          chmod +x "$APPDIR/AppRun"
+          install -m644 packaging/linux/newtube.desktop "$APPDIR/${{ env.APP_ID }}.desktop"
+          sed -i 's|Exec=newtube|Exec=usr/lib/newtube/newtube|' "$APPDIR/${{ env.APP_ID }}.desktop"
+          install -m644 packaging/linux/newtube.png "$APPDIR/newtube.png"
+          install -m644 packaging/linux/newtube.png "$APPDIR/usr/share/icons/hicolor/256x256/apps/newtube.png"
+          install -m644 packaging/linux/newtube.desktop "$APPDIR/usr/share/applications/${{ env.APP_ID }}.desktop"
+          ARCH=$APPIMAGE_TOOL_ARCH /tmp/appimagetool --appimage-extract-and-run "$APPDIR" "artifacts/newtube-${VERSION}-linux-${LINUX_ARCH}.AppImage" || \
+          ARCH=$APPIMAGE_TOOL_ARCH /tmp/appimagetool "$APPDIR" "artifacts/newtube-${VERSION}-linux-${LINUX_ARCH}.AppImage"
+
+          # Flatpak (x86_64 only, arm flatpak runtimes are flaky in CI)
+          if [ "$LINUX_ARCH" = "x86_64" ]; then
+            mkdir -p bundle
+            cp -a "$BUNDLE/." bundle/
+            sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo || flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+            sudo flatpak install -y --noninteractive flathub org.freedesktop.Platform//24.08 org.freedesktop.Sdk//24.08 || true
+            sudo flatpak-builder --force-clean --repo=flatpak-repo build-dir packaging/flatpak/gitlab.httpanimations.newtube.yml || flatpak-builder --force-clean --repo=flatpak-repo --user build-dir packaging/flatpak/gitlab.httpanimations.newtube.yml
+            tar -czf "artifacts/newtube-${VERSION}-flatpak.tar.gz" -C flatpak-repo .
+            rm -rf bundle build-dir
+          fi
+          ls -la artifacts/
+
+      - name: Build Android
+        if: matrix.target == 'android'
+        run: |
+          flutter build apk --release --build-name="$VERSION" --build-number="$BUILD_NUMBER"
+          flutter build appbundle --release --build-name="$VERSION" --build-number="$BUILD_NUMBER"
+          mkdir -p artifacts
+          cp build/app/outputs/flutter-apk/app-release.apk "artifacts/newtube-${VERSION}-android.apk"
+          cp build/app/outputs/bundle/release/app-release.aab "artifacts/newtube-${VERSION}-android.aab"
+          ls -la artifacts/
+
+      - name: Build Windows
+        if: matrix.target == 'windows'
+        run: |
+          flutter build windows --release --build-name="$VERSION" --build-number="$BUILD_NUMBER"
+          mkdir -p artifacts
+          Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath "artifacts/newtube-$env:VERSION-windows-x86_64.zip"
+          ls artifacts/
+
+      - name: Build macOS
+        if: matrix.target == 'macos'
+        run: |
+          flutter build macos --release --build-name="$VERSION" --build-number="$BUILD_NUMBER"
+          mkdir -p artifacts
+          cd build/macos/Build/Products/Release
+          zip -qr "../../../../../artifacts/newtube-${VERSION}-macos-arm64.zip" .
+          ls -la ../../../../../artifacts/
+
+      - name: Build iOS
+        if: matrix.target == 'ios'
+        run: |
+          flutter build ios --release --no-codesign --build-name="$VERSION" --build-number="$BUILD_NUMBER"
+          mkdir -p artifacts Payload
+          cp -r "build/ios/iphoneos/Runner.app" Payload/
+          ditto -c -k --sequesterRsrc --keepParent Payload "artifacts/newtube-${VERSION}-ios.ipa"
+          ls -la artifacts/
+
+      - name: Build web
+        if: matrix.target == 'web'
+        run: |
+          flutter build web --release --build-name="$VERSION" --build-number="$BUILD_NUMBER"
+          mkdir -p artifacts
+          (cd build/web && zip -qr "../../artifacts/newtube-${VERSION}-web.zip" .)
+          ls -la artifacts/
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}
+          path: artifacts/
+          retention-days: 400
+
+  release:
+    name: GitHub release
+    runs-on: ubuntu-latest
+    needs: [setup, build]
+    if: ${{ !cancelled() && needs.build.result == 'success' && needs.setup.outputs.build_all == 'true' && inputs.merge_request_id == '' && ((github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && (inputs.create_release == true || inputs.create_release == 'true')) || (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v'))) }}
+    outputs:
+      release_tag: ${{ steps.meta.outputs.release_tag }}
+    concurrency:
+      group: release-ops
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Determine release tag
+        id: meta
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "release_tag=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "release_tag=v${{ needs.setup.outputs.version }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create tag for dispatch releases
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          TAG="${{ steps.meta.outputs.release_tag }}"
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git tag -f "$TAG"
+          git push -f origin "refs/tags/$TAG"
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: '*'
+          path: artifacts
+          merge-multiple: true
+
+      - name: Prepare release assets
+        run: |
+          mkdir -p release-assets
+          find artifacts -type f -name 'newtube*' -exec cp {} release-assets/ \;
+          TAG="${{ steps.meta.outputs.release_tag }}"
+          git archive --format=tar.gz -o "release-assets/newtube-${TAG}-source.tar.gz" "$TAG" || true
+          ls -la release-assets/
+
+      - name: Checksums
+        run: |
+          cd release-assets
+          sha256sum * | tee ../SHA256SUMS.txt
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.meta.outputs.release_tag }}
+          name: NewTube ${{ steps.meta.outputs.release_tag }}
+          generate_release_notes: true
+          prerelease: false
+          fail_on_unmatched_files: false
+
+      - name: Upload release assets
+        run: |
+          RELEASE_TAG="${{ steps.meta.outputs.release_tag }}"
+          for file in release-assets/* SHA256SUMS.txt; do
+            for attempt in 1 2 3; do
+              if gh release upload "$RELEASE_TAG" -R "$GITHUB_REPOSITORY" "$file" --clobber; then
+                break
+              fi
+              if [ "$attempt" -eq 3 ]; then
+                echo "Failed to upload $file" >&2
+                exit 1
+              fi
+              sleep 10
+            done
+          done
+        env:
+          RELEASE_TAG: ${{ steps.meta.outputs.release_tag }}
+
+  gitlab-sync:
+    name: Sync release to GitLab
+    runs-on: ubuntu-latest
+    needs: [release]
+    if: always() && needs.release.result == 'success'
+    steps:
+      - name: Trigger GitLab release-sync pipeline
+        run: |
+          curl -fsS --request POST \
+            --form "token=${{ secrets.GITLAB_TRIGGER_TOKEN }}" \
+            --form "ref=main" \
+            --form "variables[RELEASE_TAG]=${{ needs.release.outputs.release_tag }}" \
+            "https://gitlab.com/api/v4/projects/${{ secrets.GITLAB_PROJECT_ID }}/trigger/pipeline"

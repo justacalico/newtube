@@ -1,0 +1,27 @@
+{
+  "name": "NewTube",
+  "subtitle": "A privacy-friendly YouTube client",
+  "description": "Watch YouTube without the ads, the tracking or the clutter.",
+  "iconURL": "https://gitlab.com/HttpAnimations/newtube/-/raw/main/assets/icon/icon.png",
+  "website": "https://gitlab.com/HttpAnimations/newtube",
+  "sourceURL": "https://gitlab.com/HttpAnimations/newtube/-/raw/main/repos/altstore.json",
+  "apps": [
+    {
+      "name": "NewTube",
+      "bundleIdentifier": "gitlab.httpanimations.newtube",
+      "developerName": "HttpAnimations",
+      "subtitle": "A privacy-friendly YouTube client",
+      "localizedDescription": "Watch YouTube without the ads, the tracking or the clutter.",
+      "iconURL": "https://gitlab.com/HttpAnimations/newtube/-/raw/main/assets/icon/icon.png",
+      "tintColor": "#C02026",
+      "category": "entertainment",
+      "screenshots": [],
+      "versions": [],
+      "appPermissions": {
+        "entitlements": [],
+        "privacy": {}
+      }
+    }
+  ],
+  "news": []
+}

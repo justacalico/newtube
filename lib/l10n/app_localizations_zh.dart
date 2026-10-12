@@ -1,0 +1,328 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for Chinese (`zh`).
+class AppLocalizationsZh extends AppLocalizations {
+  AppLocalizationsZh([String locale = 'zh']) : super(locale);
+
+  @override
+  String get appTitle => 'NewTube';
+
+  @override
+  String get navHome => '首页';
+
+  @override
+  String get navSubscriptions => '订阅';
+
+  @override
+  String get navHistory => '历史记录';
+
+  @override
+  String get navSettings => '设置';
+
+  @override
+  String get searchHint => '搜索';
+
+  @override
+  String get loading => '加载中…';
+
+  @override
+  String get errorLoading => '出错了';
+
+  @override
+  String get retry => '重试';
+
+  @override
+  String get noVideos => '没有找到视频';
+
+  @override
+  String get views => '次观看';
+
+  @override
+  String get relatedVideos => '相关视频';
+
+  @override
+  String get description => '简介';
+
+  @override
+  String get subscribe => '订阅';
+
+  @override
+  String get subscribed => '已订阅';
+
+  @override
+  String get subscribers => '位订阅者';
+
+  @override
+  String get channelVideos => '视频';
+
+  @override
+  String get latestFromSubscriptions => '订阅的最新视频';
+
+  @override
+  String get channelsTitle => '频道';
+
+  @override
+  String get noSubscriptions => '还没有订阅';
+
+  @override
+  String get noSubscriptionsHint => '订阅频道后，他们的最新视频会显示在这里。';
+
+  @override
+  String get unsubscribe => '取消订阅';
+
+  @override
+  String get watchHistory => '观看历史';
+
+  @override
+  String get clearHistory => '清除历史记录';
+
+  @override
+  String get noHistory => '还没有观看记录';
+
+  @override
+  String get noHistoryHint => '你看过的视频会显示在这里。';
+
+  @override
+  String get theme => '主题';
+
+  @override
+  String get themeSystem => '跟随系统';
+
+  @override
+  String get themeLight => '浅色';
+
+  @override
+  String get themeDark => '深色';
+
+  @override
+  String get themeOled => 'OLED 纯黑';
+
+  @override
+  String get language => '语言';
+
+  @override
+  String get languageSystem => '跟随系统';
+
+  @override
+  String get autoplay => '自动播放视频';
+
+  @override
+  String get autoplayHint => '打开视频后立即开始播放';
+
+  @override
+  String get about => '关于';
+
+  @override
+  String get version => '版本';
+
+  @override
+  String get checkForUpdates => '检查更新';
+
+  @override
+  String get checkingUpdates => '正在检查更新…';
+
+  @override
+  String get upToDate => '已是最新版本';
+
+  @override
+  String get updateAvailable => '有新版本可用';
+
+  @override
+  String get checkFailed => '无法检查更新';
+
+  @override
+  String get viewRelease => '查看该版本';
+
+  @override
+  String get allReleases => '所有版本';
+
+  @override
+  String get sourceCode => '源代码';
+
+  @override
+  String get licence => '许可证';
+
+  @override
+  String get licenceText => 'GNU Affero 通用公共许可证 v3.0';
+
+  @override
+  String get openVideo => '播放';
+
+  @override
+  String get audioOnly => '仅音频';
+
+  @override
+  String get fullscreen => '全屏';
+
+  @override
+  String get quality => '画质';
+
+  @override
+  String get searchResultsFor => '搜索结果';
+}
+
+/// The translations for Chinese, using the Han script (`zh_Hans`).
+class AppLocalizationsZhHans extends AppLocalizationsZh {
+  AppLocalizationsZhHans() : super('zh_Hans');
+
+  @override
+  String get appTitle => 'NewTube';
+
+  @override
+  String get navHome => '首页';
+
+  @override
+  String get navSubscriptions => '订阅';
+
+  @override
+  String get navHistory => '历史记录';
+
+  @override
+  String get navSettings => '设置';
+
+  @override
+  String get searchHint => '搜索';
+
+  @override
+  String get loading => '加载中…';
+
+  @override
+  String get errorLoading => '出错了';
+
+  @override
+  String get retry => '重试';
+
+  @override
+  String get noVideos => '没有找到视频';
+
+  @override
+  String get views => '次观看';
+
+  @override
+  String get relatedVideos => '相关视频';
+
+  @override
+  String get description => '简介';
+
+  @override
+  String get subscribe => '订阅';
+
+  @override
+  String get subscribed => '已订阅';
+
+  @override
+  String get subscribers => '位订阅者';
+
+  @override
+  String get channelVideos => '视频';
+
+  @override
+  String get latestFromSubscriptions => '订阅的最新视频';
+
+  @override
+  String get channelsTitle => '频道';
+
+  @override
+  String get noSubscriptions => '还没有订阅';
+
+  @override
+  String get noSubscriptionsHint => '订阅频道后，他们的最新视频会显示在这里。';
+
+  @override
+  String get unsubscribe => '取消订阅';
+
+  @override
+  String get watchHistory => '观看历史';
+
+  @override
+  String get clearHistory => '清除历史记录';
+
+  @override
+  String get noHistory => '还没有观看记录';
+
+  @override
+  String get noHistoryHint => '你看过的视频会显示在这里。';
+
+  @override
+  String get theme => '主题';
+
+  @override
+  String get themeSystem => '跟随系统';
+
+  @override
+  String get themeLight => '浅色';
+
+  @override
+  String get themeDark => '深色';
+
+  @override
+  String get themeOled => 'OLED 纯黑';
+
+  @override
+  String get language => '语言';
+
+  @override
+  String get languageSystem => '跟随系统';
+
+  @override
+  String get autoplay => '自动播放视频';
+
+  @override
+  String get autoplayHint => '打开视频后立即开始播放';
+
+  @override
+  String get about => '关于';
+
+  @override
+  String get version => '版本';
+
+  @override
+  String get checkForUpdates => '检查更新';
+
+  @override
+  String get checkingUpdates => '正在检查更新…';
+
+  @override
+  String get upToDate => '已是最新版本';
+
+  @override
+  String get updateAvailable => '有新版本可用';
+
+  @override
+  String get checkFailed => '无法检查更新';
+
+  @override
+  String get viewRelease => '查看该版本';
+
+  @override
+  String get allReleases => '所有版本';
+
+  @override
+  String get sourceCode => '源代码';
+
+  @override
+  String get licence => '许可证';
+
+  @override
+  String get licenceText => 'GNU Affero 通用公共许可证 v3.0';
+
+  @override
+  String get openVideo => '播放';
+
+  @override
+  String get audioOnly => '仅音频';
+
+  @override
+  String get fullscreen => '全屏';
+
+  @override
+  String get quality => '画质';
+
+  @override
+  String get searchResultsFor => '搜索结果';
+}
