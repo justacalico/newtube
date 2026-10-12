@@ -391,6 +391,7 @@ jobs:
             done
           done
         env:
+          GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ steps.meta.outputs.release_tag }}
 
   gitlab-sync:
