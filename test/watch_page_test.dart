@@ -6,6 +6,12 @@ import 'package:newtube/ui/pages/watch_page.dart';
 
 import 'fakes.dart';
 
+class _RelatedFailApi extends FakeYouTubeApi {
+  @override
+  Future<List<VideoInfo>> relatedVideos(String videoId) async =>
+      throw StateError('nope');
+}
+
 void main() {
   testWidgets('plays video, shows details and related', (tester) async {
     final player = FakePlayerController();
@@ -134,6 +140,15 @@ void main() {
     await tester.tap(find.text('Subscribe'));
     await tester.pump();
     expect(state.subscriptions.isSubscribed('c1'), isTrue);
+  });
+
+  testWidgets('related videos failure still plays', (tester) async {
+    final player = FakePlayerController();
+    final state = await testState(api: _RelatedFailApi(), player: player);
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+    expect(player.opened, isNotEmpty);
+    expect(find.text('A video description'), findsOneWidget);
   });
 
   testWidgets('video without streams still shows info', (tester) async {

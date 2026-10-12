@@ -1,4 +1,5 @@
 import '../models/video_info.dart';
+import 'debug_log.dart';
 
 class StreamChoice {
   final PlayableStream stream;
@@ -36,7 +37,10 @@ StreamChoice? pickDefaultStream(
     });
   if (videoStreams.isEmpty) {
     final audio = bestAudioUrl(streams);
-    if (audio == null) return null;
+    if (audio == null) {
+      debugLog('[streams] no playable stream');
+      return null;
+    }
     return StreamChoice(streams.firstWhere((s) => s.url == audio), null);
   }
 

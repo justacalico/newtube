@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:youtube_explode_dart/youtube_explode_dart.dart' as yt;
 
 import '../models/video_info.dart';
+import '../utils/debug_log.dart';
 import 'innertube_api.dart';
 import 'proxy_client.dart';
 import 'youtube_api.dart';
@@ -253,6 +254,7 @@ class YouTubeExplodeApi implements YouTubeApi {
           quality: s.qualityLabel,
         ),
     ];
+    debugLog('[api] $videoId: ${streams.length} playable streams');
     return VideoDetails(
       info: VideoInfo(
         id: video.id.value,

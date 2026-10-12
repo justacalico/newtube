@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
+import '../utils/debug_log.dart';
 import 'player_controller.dart';
 
 class MediaKitPlayerController implements PlayerController {
@@ -35,15 +36,24 @@ class MediaKitPlayerController implements PlayerController {
 
   @override
   Future<void> open(String url, {String? audioUrl}) async {
-    await _player.open(Media(url), play: false);
-    if (audioUrl != null &&
-        (Platform.isLinux || Platform.isWindows || Platform.isMacOS)) {
-      final platform = _player.platform;
-      if (platform is NativePlayer) {
-        await platform.setProperty('audio-files', audioUrl);
+    debugLog(
+      '[player] open $url${audioUrl == null ? '' : ' + audio $audioUrl'}',
+    );
+    try {
+      await _player.open(Media(url), play: false);
+      if (audioUrl != null &&
+          (Platform.isLinux || Platform.isWindows || Platform.isMacOS)) {
+        final platform = _player.platform;
+        if (platform is NativePlayer) {
+          await platform.setProperty('audio-files', audioUrl);
+        }
       }
+      await _player.play();
+    } catch (e) {
+      debugLog('[player] open failed: $e');
+      rethrow;
     }
-    await _player.play();
+    debugLog('[player] playing');
   }
 
   @override
@@ -51,7 +61,10 @@ class MediaKitPlayerController implements PlayerController {
   @override
   Future<void> pause() => _player.pause();
   @override
-  Future<void> seek(Duration position) => _player.seek(position);
+  Future<void> seek(Duration position) {
+    debugLog('[player] seek ${position.inSeconds}s');
+    return _player.seek(position);
+  }
 
   @override
   Widget buildView(BuildContext context) =>
