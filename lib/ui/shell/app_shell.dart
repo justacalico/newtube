@@ -10,8 +10,15 @@ import '../pages/subscriptions_page.dart';
 import 'side_nav.dart';
 import 'title_bar.dart';
 
-class AppShell extends StatelessWidget {
+class AppShell extends StatefulWidget {
   const AppShell({super.key});
+
+  @override
+  State<AppShell> createState() => _AppShellState();
+}
+
+class _AppShellState extends State<AppShell> {
+  final _contentNavigator = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +86,10 @@ class AppShell extends StatelessWidget {
         );
         final index = selected < 0 ? destinations.length - 1 : selected;
 
-        void onSelected(int i) => state.selectTab(destinations[i].page);
+        void onSelected(int i) {
+          _contentNavigator.currentState?.popUntil((route) => route.isFirst);
+          state.selectTab(destinations[i].page);
+        }
 
         final body = Column(
           children: [
@@ -90,7 +100,18 @@ class AppShell extends StatelessWidget {
                 showControls: !wide,
               ),
             Expanded(
-              child: IndexedStack(index: state.tabIndex, children: pages),
+              child: Navigator(
+                key: _contentNavigator,
+                onGenerateRoute: (_) => MaterialPageRoute<void>(
+                  builder: (context) => Material(
+                    type: MaterialType.transparency,
+                    child: IndexedStack(
+                      index: AppScope.of(context).tabIndex,
+                      children: pages,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         );
@@ -102,9 +123,7 @@ class AppShell extends StatelessWidget {
                 SideNav(
                   selectedIndex: index,
                   onSelected: onSelected,
-                  destinations: [
-                    for (final d in destinations) d.destination,
-                  ],
+                  destinations: [for (final d in destinations) d.destination],
                   header: isDesktopPlatform
                       ? SizedBox(
                           height: 28,
@@ -134,8 +153,7 @@ class AppShell extends StatelessWidget {
         return Scaffold(
           body: SafeArea(child: body),
           bottomNavigationBar: NavigationBar(
-            labelBehavior:
-                NavigationDestinationLabelBehavior.onlyShowSelected,
+            labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
             selectedIndex: index,
             onDestinationSelected: onSelected,
             destinations: [

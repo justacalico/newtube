@@ -53,11 +53,7 @@ class HistoryPage extends StatelessWidget {
               trailing: video.duration == null
                   ? null
                   : Text(formatDuration(video.duration)),
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => WatchPage(video: video),
-                ),
-              ),
+              onTap: () => openWatchPage(context, video),
             );
           },
         );

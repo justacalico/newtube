@@ -46,18 +46,9 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
     });
   }
 
-  void _openVideo(VideoInfo video) {
-    Navigator.of(context)
-        .push(MaterialPageRoute<void>(builder: (_) => WatchPage(video: video)));
-  }
+  void _openVideo(VideoInfo video) => openWatchPage(context, video);
 
-  void _openChannel(String channelId) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => ChannelPage(channelId: channelId),
-      ),
-    );
-  }
+  void _openChannel(String channelId) => openChannelPage(context, channelId);
 
   @override
   Widget build(BuildContext context) {

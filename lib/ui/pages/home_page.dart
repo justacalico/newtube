@@ -45,18 +45,11 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _openVideo(VideoInfo video) {
-    Navigator.of(context)
-        .push(MaterialPageRoute<void>(builder: (_) => WatchPage(video: video)));
-  }
+  void _openVideo(VideoInfo video) => openWatchPage(context, video);
 
   void _openChannel(VideoInfo video) {
     if (video.channelId.isEmpty) return;
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => ChannelPage(channelId: video.channelId),
-      ),
-    );
+    openChannelPage(context, video.channelId);
   }
 
   @override
