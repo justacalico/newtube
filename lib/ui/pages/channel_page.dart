@@ -38,7 +38,10 @@ class _ChannelPageState extends State<ChannelPage> {
     try {
       final api = AppScope.read(context).api;
       final channel = await api.channel(widget.channelId);
-      final videos = await api.channelVideos(widget.channelId);
+      final videos = [
+        for (final v in await api.channelVideos(widget.channelId))
+          if (v.author.isEmpty) v.copyWith(author: channel.name) else v,
+      ];
       if (!mounted) return;
       setState(() {
         _channel = channel;

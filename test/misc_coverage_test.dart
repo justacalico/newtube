@@ -33,6 +33,36 @@ void main() {
     expect(a == c, isFalse);
   });
 
+  test('VideoInfo copyWith overrides only given fields', () {
+    const video = VideoInfo(
+      id: 'a',
+      title: 't',
+      author: 'x',
+      channelId: 'c',
+    );
+    final same = video.copyWith();
+    expect(same.author, 'x');
+    expect(same.channelId, 'c');
+    final copy = video.copyWith(
+      author: 'y',
+      channelId: 'c2',
+      title: 't2',
+      id: 'b',
+      thumbnailUrl: 'u',
+      duration: const Duration(seconds: 3),
+      viewCount: 7,
+      uploaded: '1d',
+    );
+    expect(copy.id, 'b');
+    expect(copy.title, 't2');
+    expect(copy.author, 'y');
+    expect(copy.channelId, 'c2');
+    expect(copy.thumbnailUrl, 'u');
+    expect(copy.duration, const Duration(seconds: 3));
+    expect(copy.viewCount, 7);
+    expect(copy.uploaded, '1d');
+  });
+
   test('VersionCheckException formats its message', () {
     expect(
       const VersionCheckException('oops').toString(),

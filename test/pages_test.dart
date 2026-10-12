@@ -114,6 +114,18 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('First video'), findsOneWidget);
     });
+
+    testWidgets('fills channel name on videos without author', (tester) async {
+      final api = FakeYouTubeApi(
+        uploads: const [
+          VideoInfo(id: 'u1', title: 'Upload One', author: '', channelId: 'c1'),
+        ],
+      );
+      final state = await testState(api: api);
+      await pumpPage(tester, state, const ChannelPage(channelId: 'c1'));
+      await tester.pumpAndSettle();
+      expect(find.text('Channel One'), findsNWidgets(3));
+    });
   });
 
   group('SubscriptionsPage', () {
@@ -153,6 +165,19 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('First video'));
       await tester.pumpAndSettle();
+    });
+
+    testWidgets('fills channel name on videos without author', (tester) async {
+      final subs = SubscriptionsStore({'c1': testChannel});
+      final api = FakeYouTubeApi(
+        uploads: const [
+          VideoInfo(id: 'u1', title: 'Upload One', author: '', channelId: 'c1'),
+        ],
+      );
+      final state = await testState(api: api, subscriptions: subs);
+      await pumpPage(tester, state, const SubscriptionsPage());
+      await tester.pumpAndSettle();
+      expect(find.text('Channel One'), findsNWidgets(2));
     });
   });
 

@@ -452,6 +452,19 @@ void main() {
       expect((await api.channelVideos('UC1')).single.id, 'base');
     });
 
+    test('channelVideos fills in a missing channel id', () async {
+      final api = _api(
+        (_, _) => {
+          'w': {
+            'compactVideoRenderer': {'videoId': 'c'},
+          },
+        },
+      );
+      final video = (await api.channelVideos('UC1')).single;
+      expect(video.channelId, 'UC1');
+      expect(video.author, '');
+    });
+
     test('channelVideos without matching tab uses base browse', () async {
       final api = _api(
         (_, _) => {
