@@ -18,7 +18,6 @@ modules:
       - install -Dm755 packaging/flatpak/newtube.sh /app/bin/newtube
       - install -Dm644 packaging/linux/newtube.desktop /app/share/applications/gitlab.httpanimations.newtube.desktop
       - install -Dm644 packaging/linux/newtube.png /app/share/icons/hicolor/256x256/apps/gitlab.httpanimations.newtube.png
-      - install -Dm644 packaging/linux/newtube.png /app/share/icons/hicolor/256x256/apps/newtube.png
       - install -Dm644 packaging/linux/gitlab.httpanimations.newtube.metainfo.xml /app/share/metainfo/gitlab.httpanimations.newtube.metainfo.xml
     sources:
       - type: dir

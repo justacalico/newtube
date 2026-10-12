@@ -2,7 +2,7 @@
 Name=NewTube
 Comment=A privacy-friendly YouTube client
 Exec=newtube
-Icon=newtube
+Icon=gitlab.httpanimations.newtube
 Terminal=false
 Type=Application
 Categories=AudioVideo;Video;Network;

@@ -64,14 +64,14 @@ mkdir -p %{buildroot}/opt/newtube %{buildroot}/usr/bin
 cp -a "%{bundle_dir}/." %{buildroot}/opt/newtube/
 ln -sf /opt/newtube/newtube %{buildroot}/usr/bin/newtube
 install -Dm644 "%{linux_assets}/newtube.desktop" %{buildroot}/usr/share/applications/gitlab.httpanimations.newtube.desktop
-install -Dm644 "%{linux_assets}/newtube.png" %{buildroot}/usr/share/icons/hicolor/256x256/apps/newtube.png
+install -Dm644 "%{linux_assets}/newtube.png" %{buildroot}/usr/share/icons/hicolor/256x256/apps/gitlab.httpanimations.newtube.png
 install -Dm644 "%{license_file}" %{buildroot}/usr/share/licenses/newtube/LICENSE
 
 %files
 /opt/newtube
 /usr/bin/newtube
 /usr/share/applications/gitlab.httpanimations.newtube.desktop
-/usr/share/icons/hicolor/256x256/apps/newtube.png
+/usr/share/icons/hicolor/256x256/apps/gitlab.httpanimations.newtube.png
 %license /usr/share/licenses/newtube/LICENSE
 EOF
 
