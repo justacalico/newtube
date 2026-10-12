@@ -55,6 +55,10 @@ find_run() {
     if ! runs=$(gh api --method GET "repos/$REPO/actions/workflows/$WORKFLOW/runs" "${args[@]}" \
       -q '.workflow_runs[] | "\(.id) \(.created_at)"' 2>"$err_file"); then
       runs=""
+      if [ ! -s "${err_file}.shown" ]; then
+        cat "$err_file" >&2
+        : >"${err_file}.shown"
+      fi
       rate_limit_wait "$(cat "$err_file")"
     fi
     if [ -n "$since" ]; then
