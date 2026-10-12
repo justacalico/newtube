@@ -68,7 +68,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Something went wrong'), findsOneWidget);
-    expect(find.text('Videos are blocked in the browser'), findsOneWidget);
+    expect(find.byType(AlertDialog), findsOneWidget);
+    expect(find.text('Videos are blocked in the browser'), findsNWidgets(2));
 
     await tester.tap(find.text('Firefox add-on'));
     await tester.tap(find.text('Chrome extension'));
@@ -76,6 +77,13 @@ void main() {
       'addons.mozilla.org',
       'chromewebstore.google.com',
     ]);
+
+    await tester.tapAt(const Offset(20, 20));
+    await tester.pumpAndSettle();
+    expect(find.byType(AlertDialog), findsNothing);
+    await tester.tap(find.text('Videos are blocked in the browser'));
+    await tester.pumpAndSettle();
+    expect(find.byType(AlertDialog), findsOneWidget);
   });
 
   testWidgets('non-web feed error hides cors help', (tester) async {

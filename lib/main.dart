@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'app.dart';
+import 'services/innertube_api.dart';
 import 'services/launcher.dart';
 import 'services/player_controller.dart';
 import 'services/window_actions_impl.dart';
@@ -36,7 +37,11 @@ Future<AppState> createAppState(SharedPreferences prefs) async {
   final settings = await SettingsStore.load(prefs);
   return AppState(
     prefs: prefs,
-    api: YouTubeExplodeApi(proxyPrefix: () => settings.proxyPrefix),
+    api: kIsWeb
+        ? InnertubeApi(
+            proxyPrefix: () => settings.proxyPrefix,
+          ) // coverage:ignore-line
+        : YouTubeExplodeApi(proxyPrefix: () => settings.proxyPrefix),
     isWeb: kIsWeb,
     settings: settings,
     subscriptions: await SubscriptionsStore.load(prefs),

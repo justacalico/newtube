@@ -1,0 +1,144 @@
+// coverage:ignore-file
+import 'dart:async';
+
+import 'dart:ui_web' as ui_web;
+
+import 'package:flutter/widgets.dart';
+import 'package:web/web.dart' as web;
+
+import 'player_controller.dart';
+
+class WebPlayerController implements PlayerController {
+  final _viewType = 'newtube-player-${_nextId++}';
+  static int _nextId = 0;
+
+  final _video = web.HTMLVideoElement()
+    ..style.width = '100%'
+    ..style.height = '100%'
+    ..style.backgroundColor = 'black';
+  late final web.HTMLAudioElement _audio;
+  bool _audioAttached = false;
+
+  final _position = StreamController<Duration>.broadcast();
+  final _duration = StreamController<Duration>.broadcast();
+  final _playing = StreamController<bool>.broadcast();
+  final _buffering = StreamController<bool>.broadcast();
+
+  Timer? _poll;
+  bool _lastPlaying = false;
+  bool _lastBuffering = true;
+  Duration _lastDuration = Duration.zero;
+
+  WebPlayerController() {
+    ui_web.platformViewRegistry.registerViewFactory(_viewType, (_) => _video);
+  }
+
+  @override
+  Duration get position =>
+      Duration(milliseconds: (_video.currentTime * 1000).round());
+
+  @override
+  Duration get duration => _video.duration.isFinite
+      ? Duration(milliseconds: (_video.duration * 1000).round())
+      : Duration.zero;
+
+  @override
+  bool get playing => !_video.paused;
+
+  @override
+  bool get buffering => playing && _video.readyState < 3;
+
+  @override
+  Stream<Duration> get positionStream => _position.stream;
+  @override
+  Stream<Duration> get durationStream => _duration.stream;
+  @override
+  Stream<bool> get playingStream => _playing.stream;
+  @override
+  Stream<bool> get bufferingStream => _buffering.stream;
+
+  void _syncAudio() {
+    if (!_audioAttached) return;
+    final diff = (_audio.currentTime - _video.currentTime).abs();
+    if (diff > 0.3) _audio.currentTime = _video.currentTime;
+    if (playing && _audio.paused) {
+      _audio.play();
+    } else if (!playing && !_audio.paused) {
+      _audio.pause();
+    }
+  }
+
+  void _tick() {
+    _position.add(position);
+    final d = duration;
+    if (d != _lastDuration) {
+      _lastDuration = d;
+      _duration.add(d);
+    }
+    final p = playing;
+    if (p != _lastPlaying) {
+      _lastPlaying = p;
+      _playing.add(p);
+    }
+    final b = buffering;
+    if (b != _lastBuffering) {
+      _lastBuffering = b;
+      _buffering.add(b);
+    }
+    _syncAudio();
+  }
+
+  @override
+  Future<void> open(String url, {String? audioUrl}) async {
+    _video.src = url;
+    if (audioUrl != null) {
+      _audio = web.HTMLAudioElement()..src = audioUrl;
+      _audioAttached = true;
+    }
+    _poll?.cancel();
+    _poll = Timer.periodic(const Duration(milliseconds: 250), (_) => _tick());
+  }
+
+  @override
+  Future<void> play() async {
+    _video.play();
+    if (_audioAttached) _audio.play();
+  }
+
+  @override
+  Future<void> pause() async {
+    _video.pause();
+    if (_audioAttached) _audio.pause();
+  }
+
+  @override
+  Future<void> seek(Duration position) async {
+    _video.currentTime = position.inMilliseconds / 1000;
+    if (_audioAttached) {
+      _audio.currentTime = _video.currentTime;
+    }
+    _position.add(this.position);
+  }
+
+  @override
+  Widget buildView(BuildContext context) =>
+      HtmlElementView(viewType: _viewType);
+
+  @override
+  Future<void> dispose() async {
+    _poll?.cancel();
+    _video.pause();
+    _video.removeAttribute('src');
+    _video.load();
+    if (_audioAttached) {
+      _audio.pause();
+      _audio.removeAttribute('src');
+    }
+    await Future.wait([
+      _position.close(),
+      _duration.close(),
+      _playing.close(),
+      _buffering.close(),
+    ]);
+  }
+}

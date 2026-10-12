@@ -32,6 +32,14 @@ directly from the [releases page](https://gitlab.com/HttpAnimations/newtube/-/re
 - **Windows / macOS**: `.zip`
 - **Web**: [httpanimations.gitlab.io/newtube/app/](https://httpanimations.gitlab.io/newtube/app/)
 
+The web build needs a little help to reach YouTube, since browsers block
+cross-site requests. Either install a CORS extension
+([Firefox](https://addons.mozilla.org/en-US/firefox/addon/cors-everywhere/),
+[Chrome](https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf))
+or set a CORS proxy prefix in Settings. For local development a small proxy
+is included: `node scripts/dev/cors_proxy.mjs`, then use
+`http://localhost:8090/?u=` as the prefix.
+
 ### AltStore source (iOS)
 
 Add this source in AltStore to install and update NewTube:

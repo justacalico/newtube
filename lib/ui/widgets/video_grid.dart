@@ -71,17 +71,24 @@ class FeedStateView extends StatelessWidget {
       return const Center(child: CircularProgressIndicator());
     }
     if (error != null) {
+      if (AppScope.read(context).isWeb) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (context.mounted) CorsNotice.show(context);
+        });
+      }
       return Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(l10n.errorLoading),
-              const SizedBox(height: 8),
-              FilledButton(onPressed: onRetry, child: Text(l10n.retry)),
-              if (AppScope.read(context).isWeb) const CorsNotice(),
-            ],
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(l10n.errorLoading),
+            const SizedBox(height: 8),
+            FilledButton(onPressed: onRetry, child: Text(l10n.retry)),
+            if (AppScope.read(context).isWeb)
+              TextButton(
+                onPressed: () => CorsNotice.show(context),
+                child: Text(l10n.corsNoticeTitle),
+              ),
+          ],
         ),
       );
     }

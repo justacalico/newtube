@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import 'player_factory_stub.dart'
+    if (dart.library.html) 'player_factory_web.dart'
     if (dart.library.io) 'player_factory_io.dart'
     as player_factory;
 
