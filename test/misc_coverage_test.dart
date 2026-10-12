@@ -7,8 +7,8 @@ import 'package:newtube/models/app_update.dart';
 import 'package:newtube/state/app_state.dart';
 import 'package:newtube/models/video_info.dart';
 import 'package:newtube/services/version_checker.dart';
-import 'package:newtube/ui/pages/about_page.dart';
 import 'package:newtube/ui/pages/search_page.dart';
+import 'package:newtube/ui/pages/settings_page.dart';
 import 'package:newtube/ui/pages/watch_page.dart';
 
 import 'fakes.dart';
@@ -58,8 +58,9 @@ void main() {
     final gate = Completer<AppUpdate>();
     final checker = _GatedChecker(gate);
     final state = await testState(versionChecker: checker);
-    await pumpPage(tester, state, const AboutPage());
+    await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('Check for updates'), 200);
     await tester.tap(find.text('Check for updates'));
     await tester.pump();
     expect(find.text('Checking for updates…'), findsOneWidget);
