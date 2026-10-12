@@ -34,6 +34,9 @@ void touchAll(AppLocalizations l) {
   l.clearHistory;
   l.noHistory;
   l.noHistoryHint;
+  l.noSearchHistory;
+  l.noSearchHistoryHint;
+  l.removeSearchEntry;
   l.theme;
   l.themeSystem;
   l.themeLight;

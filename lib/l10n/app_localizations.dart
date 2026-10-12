@@ -266,6 +266,24 @@ abstract class AppLocalizations {
   /// **'Videos you watch will show up here.'**
   String get noHistoryHint;
 
+  /// No description provided for @noSearchHistory.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'No searches yet'**
+  String get noSearchHistory;
+
+  /// No description provided for @noSearchHistoryHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Searches you run will show up here.'**
+  String get noSearchHistoryHint;
+
+  /// No description provided for @removeSearchEntry.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Remove'**
+  String get removeSearchEntry;
+
   /// No description provided for @theme.
   ///
   /// In en_GB, this message translates to:

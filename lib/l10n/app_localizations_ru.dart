@@ -92,6 +92,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get noHistoryHint => 'Просмотренные видео будут показаны здесь.';
 
   @override
+  String get noSearchHistory => 'Вы ещё ничего не искали';
+
+  @override
+  String get noSearchHistoryHint => 'Ваши запросы будут показаны здесь.';
+
+  @override
+  String get removeSearchEntry => 'Убрать';
+
+  @override
   String get theme => 'Тема';
 
   @override

@@ -92,6 +92,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noHistoryHint => 'Videos you watch will show up here.';
 
   @override
+  String get noSearchHistory => 'No searches yet';
+
+  @override
+  String get noSearchHistoryHint => 'Searches you run will show up here.';
+
+  @override
+  String get removeSearchEntry => 'Remove';
+
+  @override
   String get theme => 'Theme';
 
   @override
@@ -275,6 +284,15 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get noHistoryHint => 'Videos you watch will show up here.';
+
+  @override
+  String get noSearchHistory => 'No searches yet';
+
+  @override
+  String get noSearchHistoryHint => 'Searches you run will show up here.';
+
+  @override
+  String get removeSearchEntry => 'Remove';
 
   @override
   String get theme => 'Theme';

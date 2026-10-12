@@ -92,6 +92,16 @@ class AppLocalizationsGa extends AppLocalizations {
   String get noHistoryHint => 'Taispeánfar na físeáin a fheachann tú anseo.';
 
   @override
+  String get noSearchHistory => 'Níl aon rud cuardaithe agat fós';
+
+  @override
+  String get noSearchHistoryHint =>
+      'Taispeánfar na cuardaigh a dhéanann tú anseo.';
+
+  @override
+  String get removeSearchEntry => 'Bain';
+
+  @override
   String get theme => 'Téama';
 
   @override

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/models/video_info.dart';
 import 'package:newtube/state/history_store.dart';
+import 'package:newtube/state/search_history_store.dart';
 import 'package:newtube/state/settings_store.dart';
 import 'package:newtube/state/subscriptions_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -184,6 +185,71 @@ void main() {
           await prefs({'history': '[{"id":"v9","title":"T"},"bogus"]'}),
         )).entries.single.id,
         'v9',
+      );
+    });
+  });
+
+  group('SearchHistoryStore', () {
+    test('records newest first, deduplicates and removes', () async {
+      final p = await prefs();
+      final store = SearchHistoryStore();
+      await store.record('cats', p);
+      await store.record('dogs', p);
+      await store.record('cats', p);
+      expect(store.entries, ['cats', 'dogs']);
+      await store.remove('cats', p);
+      expect(store.entries, ['dogs']);
+    });
+
+    test('persists across reloads', () async {
+      final p = await prefs();
+      await SearchHistoryStore().record('cats', p);
+      final reloaded = await SearchHistoryStore.load(
+        await SharedPreferences.getInstance(),
+      );
+      expect(reloaded.entries, ['cats']);
+    });
+
+    test('clear empties and persists', () async {
+      final p = await prefs();
+      final store = SearchHistoryStore(['cats']);
+      await store.clear(p);
+      expect(store.entries, isEmpty);
+      expect(
+        (await SearchHistoryStore.load(await SharedPreferences.getInstance()))
+            .entries,
+        isEmpty,
+      );
+    });
+
+    test('caps at 50 entries', () async {
+      final p = await prefs();
+      final store = SearchHistoryStore();
+      for (var i = 0; i < 55; i++) {
+        await store.record('q$i', p);
+      }
+      expect(store.entries.length, 50);
+      expect(store.entries.first, 'q54');
+    });
+
+    test('corrupt payloads load as empty', () async {
+      expect(
+        (await SearchHistoryStore.load(
+          await prefs({'search_history': '{!'}),
+        )).entries,
+        isEmpty,
+      );
+      expect(
+        (await SearchHistoryStore.load(
+          await prefs({'search_history': '{"a":1}'}),
+        )).entries,
+        isEmpty,
+      );
+      expect(
+        (await SearchHistoryStore.load(
+          await prefs({'search_history': '["ok",1]'}),
+        )).entries,
+        ['ok'],
       );
     });
   });

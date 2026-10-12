@@ -16,16 +16,31 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  final _controller = TextEditingController();
   String _query = '';
   SearchResults _results = const SearchResults();
   bool _loading = false;
   Object? _error;
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   void _search(String query) {
     final q = query.trim();
     if (q.isEmpty || q == _query) return;
+    final state = AppScope.read(context);
     _query = q;
+    state.searchHistory.record(q, state.prefs);
     _load();
+  }
+
+  void _searchFromHistory(String query) {
+    _controller.text = query;
+    _controller.selection = TextSelection.collapsed(offset: query.length);
+    _search(query);
   }
 
   Future<void> _load() async {
@@ -70,6 +85,7 @@ class _SearchPageState extends State<SearchPage> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: SearchBar(
+            controller: _controller,
             hintText: l10n.searchHint,
             leading: const Icon(Icons.search),
             onSubmitted: _search,
@@ -77,13 +93,7 @@ class _SearchPageState extends State<SearchPage> {
         ),
         Expanded(
           child: _query.isEmpty
-              ? Center(
-                  child: Icon(
-                    Icons.search,
-                    size: 48,
-                    color: Theme.of(context).colorScheme.outline,
-                  ),
-                )
+              ? _SearchHistory(onSelect: _searchFromHistory)
               : FeedStateView(
                   loading: _loading,
                   error: _error,
@@ -154,6 +164,72 @@ class _SearchPageState extends State<SearchPage> {
                 ),
         ),
       ],
+    );
+  }
+}
+
+class _SearchHistory extends StatelessWidget {
+  const _SearchHistory({required this.onSelect});
+
+  final ValueChanged<String> onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    final state = AppScope.of(context);
+    final l10n = AppLocalizations.of(context);
+
+    return ListenableBuilder(
+      listenable: state.searchHistory,
+      builder: (context, _) {
+        final entries = state.searchHistory.entries;
+        if (entries.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  l10n.noSearchHistory,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8),
+                Text(l10n.noSearchHistoryHint),
+              ],
+            ),
+          );
+        }
+
+        return Column(
+          children: [
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                icon: const Icon(Icons.delete_outline),
+                label: Text(l10n.clearHistory),
+                onPressed: () => state.searchHistory.clear(state.prefs),
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: entries.length,
+                itemBuilder: (context, i) {
+                  final entry = entries[i];
+                  return ListTile(
+                    leading: const Icon(Icons.history),
+                    title: Text(entry),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.close),
+                      tooltip: l10n.removeSearchEntry,
+                      onPressed: () =>
+                          state.searchHistory.remove(entry, state.prefs),
+                    ),
+                    onTap: () => onSelect(entry),
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
