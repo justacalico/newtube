@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.2.0 - 2026-10-12
+#### Features
+- 网页版 CORS 提示与代理设置 - (fff9887) - calico
+
+- - -
+
 ## v0.1.0 - 2026-10-12
 #### Features
 - NewTube 客户端、落地页与发布流水线 - (a2f41d4) - calico
