@@ -2,6 +2,23 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.5.0 - 2026-10-12
+#### Features
+- 播放页改为内嵌页面 - (62b1c5c) - HttpAnimations
+- 允许在设置中关闭搜索历史 - (3205cf7) - HttpAnimations
+- 清除历史记录前添加确认对话框 - (d4df622) - HttpAnimations
+- 清除历史按钮移至设置页 - (38ae6c2) - HttpAnimations
+- 搜索页显示搜索历史 - (1243043) - HttpAnimations
+- 搜索改为独立标签页 - (d6a09d3) - HttpAnimations
+- 关于页使用真实应用图标 - (53744f5) - calico
+#### Bug Fixes
+- OLED 主题下顶栏使用纯黑背景 - (6018928) - HttpAnimations
+- OLED 主题下导航栏与侧边栏使用纯黑背景 - (729f7f0) - HttpAnimations
+- 修复视频卡片两行标题时底部溢出 - (78fc9b2) - HttpAnimations
+- 修复订阅和频道页视频缺少播放量和上传时间 - (fef4399) - HttpAnimations
+
+- - -
+
 ## v0.4.0 - 2026-10-12
 #### Features
 - 窗口控制按钮移入侧边栏 - (645f748) - calico
