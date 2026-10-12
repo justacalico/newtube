@@ -41,6 +41,8 @@ void main() {
       expect(app.themeMode, mode);
       if (theme == AppTheme.oled) {
         expect(app.darkTheme!.scaffoldBackgroundColor, Colors.black);
+        expect(app.darkTheme!.colorScheme.surfaceContainerLow, Colors.black);
+        expect(app.darkTheme!.colorScheme.surfaceContainer, Colors.black);
       }
     }
   });
