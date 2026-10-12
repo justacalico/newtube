@@ -16,6 +16,32 @@ String _localeKey(Locale locale) => locale.countryCode == null
     ? locale.languageCode
     : '${locale.languageCode}_${locale.countryCode}';
 
+class _SettingsDropdown<T> extends StatelessWidget {
+  const _SettingsDropdown({
+    required this.value,
+    required this.items,
+    required this.onChanged,
+  });
+
+  final T value;
+  final List<DropdownMenuItem<T>> items;
+  final ValueChanged<T?> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 180,
+      child: DropdownButton<T>(
+        value: value,
+        isExpanded: true,
+        underline: const SizedBox(),
+        onChanged: onChanged,
+        items: items,
+      ),
+    );
+  }
+}
+
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
@@ -33,9 +59,8 @@ class SettingsPage extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.palette_outlined),
               title: Text(l10n.theme),
-              trailing: DropdownButton<AppTheme>(
+              trailing: _SettingsDropdown<AppTheme>(
                 value: settings.theme,
-                underline: const SizedBox(),
                 onChanged: (theme) {
                   if (theme != null) settings.setTheme(theme, state.prefs);
                 },
@@ -62,11 +87,10 @@ class SettingsPage extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.language),
               title: Text(l10n.language),
-              trailing: DropdownButton<String>(
+              trailing: _SettingsDropdown<String>(
                 value: settings.locale == null
                     ? 'system'
                     : _localeKey(settings.locale!),
-                underline: const SizedBox(),
                 onChanged: (key) {
                   if (key == null) return;
                   if (key == 'system') {
