@@ -5,12 +5,14 @@ import 'package:http/http.dart' as http;
 import 'package:youtube_explode_dart/youtube_explode_dart.dart' as yt;
 
 import '../models/video_info.dart';
+import 'innertube_api.dart';
 import 'proxy_client.dart';
 import 'youtube_api.dart';
 
 class YouTubeExplodeApi implements YouTubeApi {
   final yt.YoutubeExplode _yt;
   final http.Client _http;
+  final InnertubeApi _innertube;
   final String? Function()? _proxyPrefix;
 
   YouTubeExplodeApi({
@@ -21,6 +23,10 @@ class YouTubeExplodeApi implements YouTubeApi {
        _http = ProxiedClient(
          httpClient ?? http.Client(),
          () => proxyPrefix?.call(),
+       ),
+       _innertube = InnertubeApi(
+         httpClient: httpClient,
+         proxyPrefix: proxyPrefix,
        ),
        _yt =
            explode ??
@@ -295,22 +301,6 @@ class YouTubeExplodeApi implements YouTubeApi {
   }
 
   @override
-  Future<List<VideoInfo>> channelVideos(String channelId) async {
-    final uploads = await _yt.channels.getUploadsFromPage(
-      yt.ChannelId(channelId),
-    );
-    return [
-      for (final v in uploads)
-        VideoInfo(
-          id: v.id.value,
-          title: v.title,
-          author: v.author,
-          channelId: v.channelId.value,
-          thumbnailUrl: v.thumbnails.highResUrl,
-          duration: v.duration,
-          viewCount: v.engagement.viewCount,
-          uploaded: v.uploadDateRaw,
-        ),
-    ];
-  }
+  Future<List<VideoInfo>> channelVideos(String channelId) =>
+      _innertube.channelVideos(channelId);
 }

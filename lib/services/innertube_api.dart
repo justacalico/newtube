@@ -138,13 +138,13 @@ class InnertubeApi implements YouTubeApi {
 
   String? _thumbField(String? url) => url == null ? null : _proxied(url);
 
-  List<VideoInfo> _proxiedThumbs(List<VideoInfo> videos) => [
+  List<VideoInfo> _proxiedThumbs(List<VideoInfo> videos, {String? channelId}) => [
     for (final v in videos)
       VideoInfo(
         id: v.id,
         title: v.title,
         author: v.author,
-        channelId: v.channelId,
+        channelId: v.channelId.isEmpty ? channelId ?? '' : v.channelId,
         thumbnailUrl: _thumbField(v.thumbnailUrl),
         duration: v.duration,
         viewCount: v.viewCount,
@@ -258,11 +258,13 @@ class InnertubeApi implements YouTubeApi {
       });
       final videos = <VideoInfo>[];
       collectVideos(tab, videos);
-      if (videos.isNotEmpty) return _proxiedThumbs(videos);
+      if (videos.isNotEmpty) {
+        return _proxiedThumbs(videos, channelId: channelId);
+      }
     }
     final videos = <VideoInfo>[];
     collectVideos(r, videos);
-    return _proxiedThumbs(videos);
+    return _proxiedThumbs(videos, channelId: channelId);
   }
 
   String? _videosTabParams(dynamic node) {

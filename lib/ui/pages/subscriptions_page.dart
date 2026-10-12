@@ -33,7 +33,10 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
     final videos = <VideoInfo>[];
     for (final channel in channels) {
       try {
-        videos.addAll(await state.api.channelVideos(channel.id));
+        videos.addAll([
+          for (final v in await state.api.channelVideos(channel.id))
+            if (v.author.isEmpty) v.copyWith(author: channel.name) else v,
+        ]);
       } catch (_) {}
     }
     if (!mounted) return;

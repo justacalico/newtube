@@ -18,6 +18,26 @@ class VideoInfo {
     this.viewCount = 0,
     this.uploaded,
   });
+
+  VideoInfo copyWith({
+    String? id,
+    String? title,
+    String? author,
+    String? channelId,
+    String? thumbnailUrl,
+    Duration? duration,
+    int? viewCount,
+    String? uploaded,
+  }) => VideoInfo(
+    id: id ?? this.id,
+    title: title ?? this.title,
+    author: author ?? this.author,
+    channelId: channelId ?? this.channelId,
+    thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+    duration: duration ?? this.duration,
+    viewCount: viewCount ?? this.viewCount,
+    uploaded: uploaded ?? this.uploaded,
+  );
 }
 
 class ChannelInfo {
