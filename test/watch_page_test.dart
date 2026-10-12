@@ -96,6 +96,26 @@ void main() {
     expect(find.text('A video description'), findsOneWidget);
   });
 
+  testWidgets('quality change works in fullscreen', (tester) async {
+    final player = FakePlayerController();
+    final state = await testState(api: FakeYouTubeApi(), player: player);
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Fullscreen'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Quality'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('360p').last);
+    await tester.pumpAndSettle();
+
+    expect(player.opened.last, contains('360'));
+
+    await tester.tap(find.byIcon(Icons.fullscreen_exit));
+    await tester.pumpAndSettle();
+    expect(find.text('A video description'), findsOneWidget);
+  });
+
   testWidgets('channel name opens channel page', (tester) async {
     final api = FakeYouTubeApi(uploads: testVideos);
     final state = await testState(api: api);

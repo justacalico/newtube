@@ -119,6 +119,23 @@ void main() {
     );
   });
 
+  testWidgets('watch page in shell', (tester) async {
+    await golden(
+      tester,
+      'watch_in_shell',
+      const AppShell(),
+      state: await testState(
+        api: FakeYouTubeApi(feed: testVideos, related: testVideos),
+        windowActions: FakeWindowActions(),
+      ),
+      interact: (tester) async {
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('First video'));
+        await tester.pumpAndSettle();
+      },
+    );
+  });
+
   testWidgets('channel page', (tester) async {
     final api = FakeYouTubeApi(uploads: testVideos);
     await golden(

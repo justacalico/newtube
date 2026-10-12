@@ -9,6 +9,12 @@ import '../widgets/thumbnail.dart';
 import '../widgets/video_grid.dart';
 import 'watch_page.dart';
 
+void openChannelPage(BuildContext context, String channelId) {
+  Navigator.of(context).push(
+    MaterialPageRoute<void>(builder: (_) => ChannelPage(channelId: channelId)),
+  );
+}
+
 class ChannelPage extends StatefulWidget {
   final String channelId;
 
@@ -57,10 +63,7 @@ class _ChannelPageState extends State<ChannelPage> {
     }
   }
 
-  void _openVideo(VideoInfo video) {
-    Navigator.of(context)
-        .push(MaterialPageRoute<void>(builder: (_) => WatchPage(video: video)));
-  }
+  void _openVideo(VideoInfo video) => openWatchPage(context, video);
 
   @override
   Widget build(BuildContext context) {

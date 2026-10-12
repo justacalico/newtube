@@ -77,9 +77,7 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
-    await tester.tap(
-      find.widgetWithText(SwitchListTile, 'Autoplay videos'),
-    );
+    await tester.tap(find.widgetWithText(SwitchListTile, 'Autoplay videos'));
     await tester.pump();
     expect(state.settings.autoplay, isFalse);
 
@@ -148,16 +146,12 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
-    await tester.tap(
-      find.widgetWithText(SwitchListTile, 'Search history'),
-    );
+    await tester.tap(find.widgetWithText(SwitchListTile, 'Search history'));
     await tester.pump();
     expect(state.settings.searchHistoryEnabled, isFalse);
     expect(state.prefs.getBool('search_history_enabled'), isFalse);
 
-    await tester.tap(
-      find.widgetWithText(SwitchListTile, 'Search history'),
-    );
+    await tester.tap(find.widgetWithText(SwitchListTile, 'Search history'));
     await tester.pump();
     expect(state.settings.searchHistoryEnabled, isTrue);
     expect(state.prefs.getBool('search_history_enabled'), isTrue);

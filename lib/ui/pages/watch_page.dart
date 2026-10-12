@@ -11,6 +11,11 @@ import '../widgets/player_view.dart';
 import '../widgets/subscribe_button.dart';
 import 'channel_page.dart';
 
+void openWatchPage(BuildContext context, VideoInfo video) {
+  Navigator.of(context)
+      .push(MaterialPageRoute<void>(builder: (_) => WatchPage(video: video)));
+}
+
 class WatchPage extends StatefulWidget {
   final VideoInfo video;
 
@@ -86,7 +91,23 @@ class _WatchPageState extends State<WatchPage> {
     _player?.open(choice.stream.url, audioUrl: choice.audioUrl);
   }
 
-  void _toggleFullscreen() => setState(() => _fullscreen = !_fullscreen);
+  void _openFullscreen(PlayerController player) {
+    setState(() => _fullscreen = true);
+    Navigator.of(context, rootNavigator: true)
+        .push(
+          MaterialPageRoute<void>(
+            builder: (_) => _FullscreenPlayer(
+              player: player,
+              streams: _details?.streams ?? const [],
+              current: _currentStream,
+              onQualitySelected: _selectStream,
+            ),
+          ),
+        )
+        .whenComplete(() {
+          if (mounted) setState(() => _fullscreen = false);
+        });
+  }
 
   @override
   void dispose() {
@@ -98,28 +119,6 @@ class _WatchPageState extends State<WatchPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final player = _player;
-
-    if (_fullscreen && player != null) {
-      return PopScope(
-        canPop: false,
-        onPopInvokedWithResult: (didPop, _) {
-          if (!didPop) _toggleFullscreen();
-        },
-        child: Scaffold(
-          backgroundColor: Colors.black,
-          body: SafeArea(
-            child: PlayerView(
-              player: player,
-              streams: _details?.streams ?? const [],
-              current: _currentStream,
-              onQualitySelected: _selectStream,
-              onToggleFullscreen: _toggleFullscreen,
-              isFullscreen: true,
-            ),
-          ),
-        ),
-      );
-    }
 
     return Scaffold(
       appBar: AppBar(title: Text(widget.video.title)),
@@ -141,13 +140,15 @@ class _WatchPageState extends State<WatchPage> {
               children: [
                 AspectRatio(
                   aspectRatio: 16 / 9,
-                  child: PlayerView(
-                    player: player,
-                    streams: _details!.streams,
-                    current: _currentStream,
-                    onQualitySelected: _selectStream,
-                    onToggleFullscreen: _toggleFullscreen,
-                  ),
+                  child: _fullscreen
+                      ? const ColoredBox(color: Colors.black)
+                      : PlayerView(
+                          player: player,
+                          streams: _details!.streams,
+                          current: _currentStream,
+                          onQualitySelected: _selectStream,
+                          onToggleFullscreen: () => _openFullscreen(player),
+                        ),
                 ),
                 Expanded(
                   child: SingleChildScrollView(
@@ -167,12 +168,9 @@ class _WatchPageState extends State<WatchPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   InkWell(
-                                    onTap: () => Navigator.of(context).push(
-                                      MaterialPageRoute<void>(
-                                        builder: (_) => ChannelPage(
-                                          channelId: _details!.info.channelId,
-                                        ),
-                                      ),
+                                    onTap: () => openChannelPage(
+                                      context,
+                                      _details!.info.channelId,
                                     ),
                                     child: Text(
                                       _details!.info.author,
@@ -240,6 +238,49 @@ class _WatchPageState extends State<WatchPage> {
                 ),
               ],
             ),
+    );
+  }
+}
+
+class _FullscreenPlayer extends StatefulWidget {
+  final PlayerController player;
+  final List<PlayableStream> streams;
+  final PlayableStream? current;
+  final ValueChanged<PlayableStream> onQualitySelected;
+
+  const _FullscreenPlayer({
+    required this.player,
+    required this.streams,
+    required this.current,
+    required this.onQualitySelected,
+  });
+
+  @override
+  State<_FullscreenPlayer> createState() => _FullscreenPlayerState();
+}
+
+class _FullscreenPlayerState extends State<_FullscreenPlayer> {
+  late PlayableStream? _current = widget.current;
+
+  void _selectStream(PlayableStream stream) {
+    widget.onQualitySelected(stream);
+    setState(() => _current = stream);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: PlayerView(
+          player: widget.player,
+          streams: widget.streams,
+          current: _current,
+          onQualitySelected: _selectStream,
+          onToggleFullscreen: () => Navigator.of(context).pop(),
+          isFullscreen: true,
+        ),
+      ),
     );
   }
 }

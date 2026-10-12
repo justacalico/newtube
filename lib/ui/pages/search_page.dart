@@ -66,18 +66,9 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-  void _openVideo(VideoInfo video) {
-    Navigator.of(context)
-        .push(MaterialPageRoute<void>(builder: (_) => WatchPage(video: video)));
-  }
+  void _openVideo(VideoInfo video) => openWatchPage(context, video);
 
-  void _openChannel(String channelId) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => ChannelPage(channelId: channelId),
-      ),
-    );
-  }
+  void _openChannel(String channelId) => openChannelPage(context, channelId);
 
   @override
   Widget build(BuildContext context) {
@@ -191,9 +182,7 @@ class _SearchHistory extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  enabled
-                      ? l10n.noSearchHistory
-                      : l10n.searchHistoryOff,
+                  enabled ? l10n.noSearchHistory : l10n.searchHistoryOff,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const SizedBox(height: 8),

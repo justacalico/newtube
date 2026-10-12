@@ -74,9 +74,7 @@ void main() {
       findsNothing,
     );
 
-    await tester.tap(
-      find.descendant(of: nav, matching: find.text('Settings')),
-    );
+    await tester.tap(find.descendant(of: nav, matching: find.text('Settings')));
     await tester.pumpAndSettle();
     expect(state.tabIndex, 4);
     expect(find.text('Search history'), findsOneWidget);
@@ -148,6 +146,78 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(SideNav), findsOneWidget);
     expect(find.byKey(const Key('titlebar.close')), findsNothing);
+    debugDefaultTargetPlatformOverride = null;
+  });
+
+  testWidgets('watch page opens inside the shell', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    final state = await testState(windowActions: FakeWindowActions());
+    await pumpPage(
+      tester,
+      state,
+      const AppShell(),
+      size: const Size(1200, 800),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('First video'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(SideNav), findsOneWidget);
+    expect(find.text('A video description'), findsOneWidget);
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    expect(find.text('A video description'), findsNothing);
+    expect(find.text('First video'), findsOneWidget);
+    debugDefaultTargetPlatformOverride = null;
+  });
+
+  testWidgets('switching tabs pops pushed pages', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    final player = FakePlayerController();
+    final state = await testState(
+      windowActions: FakeWindowActions(),
+      player: player,
+    );
+    await pumpPage(
+      tester,
+      state,
+      const AppShell(),
+      size: const Size(1200, 800),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('First video'));
+    await tester.pumpAndSettle();
+    expect(find.text('A video description'), findsOneWidget);
+
+    await tester.tap(
+      find.descendant(
+        of: find.byType(SideNav),
+        matching: find.text('Settings'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(state.tabIndex, 4);
+    expect(find.text('Theme'), findsOneWidget);
+    expect(find.text('A video description'), findsNothing);
+    expect(player.disposed, isTrue);
+    debugDefaultTargetPlatformOverride = null;
+  });
+
+  testWidgets('watch page keeps bottom navigation', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
+    final state = await testState();
+    await pumpPage(tester, state, const AppShell(), size: const Size(400, 800));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('First video'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(NavigationBar), findsOneWidget);
+    expect(find.text('A video description'), findsOneWidget);
     debugDefaultTargetPlatformOverride = null;
   });
 
