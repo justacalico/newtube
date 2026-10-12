@@ -37,8 +37,8 @@ cross-site requests. Either install a CORS extension
 ([Firefox](https://addons.mozilla.org/en-US/firefox/addon/cors-everywhere/),
 [Chrome](https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf))
 or set a CORS proxy prefix in Settings. For local development a small proxy
-is included: run `node scripts/dev/cors_proxy.mjs`, then set the prefix to
-`localhost:8090/?u=` with `http://` in front.
+is included: run `node scripts/dev/cors_proxy.mjs`, then point the prefix at
+the address it prints plus `?u=`.
 
 ### AltStore source (iOS)
 
