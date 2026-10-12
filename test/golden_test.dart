@@ -94,6 +94,21 @@ void main() {
     );
   });
 
+  testWidgets('search page empty', (tester) async {
+    await golden(tester, 'search_empty', const SearchPage());
+  });
+
+  testWidgets('search page history', (tester) async {
+    await golden(
+      tester,
+      'search_history',
+      const SearchPage(),
+      state: await testState(
+        initialPrefs: {'search_history': '["flutter tutorial","lofi beats"]'},
+      ),
+    );
+  });
+
   testWidgets('watch page', (tester) async {
     final api = FakeYouTubeApi(related: testVideos);
     await golden(

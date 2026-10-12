@@ -91,6 +91,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noHistoryHint => '你看过的视频会显示在这里。';
 
   @override
+  String get noSearchHistory => '还没有搜索记录';
+
+  @override
+  String get noSearchHistoryHint => '你搜索过的内容会显示在这里。';
+
+  @override
+  String get removeSearchEntry => '移除';
+
+  @override
   String get theme => '主题';
 
   @override
@@ -272,6 +281,15 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get noHistoryHint => '你看过的视频会显示在这里。';
+
+  @override
+  String get noSearchHistory => '还没有搜索记录';
+
+  @override
+  String get noSearchHistoryHint => '你搜索过的内容会显示在这里。';
+
+  @override
+  String get removeSearchEntry => '移除';
 
   @override
   String get theme => '主题';

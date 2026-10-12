@@ -69,6 +69,7 @@ void main() {
 
       expect(find.text('Results: cats'), findsOneWidget);
       expect(find.text('Channel One'), findsWidgets);
+      expect(state.searchHistory.entries, ['cats']);
       await tester.tap(find.text('Channel One').first);
       await tester.pumpAndSettle();
       expect(find.text('Videos'), findsNothing);
@@ -76,6 +77,51 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('First video'));
       await tester.pumpAndSettle();
+    });
+
+    testWidgets('shows empty hint when no history', (tester) async {
+      final state = await testState();
+      await pumpPage(tester, state, const SearchPage());
+      await tester.pumpAndSettle();
+      expect(find.text('No searches yet'), findsOneWidget);
+    });
+
+    testWidgets('tapping an entry fills the field and searches', (
+      tester,
+    ) async {
+      final api = FakeYouTubeApi(
+        searchResults: const SearchResults(videos: testVideos),
+      );
+      final state = await testState(
+        api: api,
+        initialPrefs: {'search_history': '["cats","dogs"]'},
+      );
+      await pumpPage(tester, state, const SearchPage());
+      await tester.pumpAndSettle();
+
+      expect(find.text('dogs'), findsOneWidget);
+      await tester.tap(find.text('dogs'));
+      await tester.pumpAndSettle();
+      expect(find.text('Results: dogs'), findsOneWidget);
+      expect(state.searchHistory.entries, ['dogs', 'cats']);
+    });
+
+    testWidgets('removes entries and clears all', (tester) async {
+      final state = await testState(
+        initialPrefs: {'search_history': '["cats","dogs"]'},
+      );
+      await pumpPage(tester, state, const SearchPage());
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.close).first);
+      await tester.pumpAndSettle();
+      expect(state.searchHistory.entries, ['dogs']);
+      expect(find.text('cats'), findsNothing);
+
+      await tester.tap(find.text('Clear history'));
+      await tester.pumpAndSettle();
+      expect(find.text('No searches yet'), findsOneWidget);
+      expect(state.prefs.getString('search_history'), '[]');
     });
   });
 
