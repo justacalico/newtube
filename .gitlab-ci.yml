@@ -45,6 +45,9 @@ github-sync:
           SHA=$(git rev-parse "$CI_COMMIT_TAG^{commit}")
           RUN_ID=$(bash scripts/watch-github-run.sh find --sha "$SHA" --event push ${SINCE:+--since "$SINCE"} || true)
           if [ -z "$RUN_ID" ]; then
+            RUN_ID=$(bash scripts/watch-github-run.sh find --sha "$SHA" --event push --branch "$CI_COMMIT_TAG" ${SINCE:+--since "$SINCE"} || true)
+          fi
+          if [ -z "$RUN_ID" ]; then
             echo "No GitHub run found for tag $CI_COMMIT_TAG" >&2
             exit 1
           fi

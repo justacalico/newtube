@@ -114,12 +114,20 @@ jobs:
         run: |
           python3 - <<'PY'
           lf = lh = 0
+          cur = ''
+          missed = []
           for line in open('coverage/lcov.info'):
-              if line.startswith('LF:'):
+              line = line.strip()
+              if line.startswith('SF:'):
+                  cur = line[3:]
+              elif line.startswith('LF:'):
                   lf += int(line[3:])
               elif line.startswith('LH:'):
                   lh += int(line[3:])
+              elif line.startswith('DA:') and line.endswith(',0'):
+                  missed.append(f'{cur}:{line[3:]}')
           if lf == 0 or lh != lf:
+              print('\n'.join(missed))
               raise SystemExit(f'coverage {lh}/{lf}, need 100%')
           print(f'coverage {lh}/{lf} OK')
           PY

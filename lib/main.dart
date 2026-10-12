@@ -37,11 +37,12 @@ Future<AppState> createAppState(SharedPreferences prefs) async {
   final settings = await SettingsStore.load(prefs);
   return AppState(
     prefs: prefs,
-    api: kIsWeb
-        ? InnertubeApi(
+    api:
+        kIsWeb // coverage:ignore-start
+        ? InnertubeApi(proxyPrefix: () => settings.proxyPrefix)
+        : YouTubeExplodeApi(
             proxyPrefix: () => settings.proxyPrefix,
-          ) // coverage:ignore-line
-        : YouTubeExplodeApi(proxyPrefix: () => settings.proxyPrefix),
+          ), // coverage:ignore-end
     isWeb: kIsWeb,
     settings: settings,
     subscriptions: await SubscriptionsStore.load(prefs),
