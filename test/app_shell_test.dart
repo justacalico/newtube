@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/models/video_info.dart';
 import 'package:newtube/ui/shell/app_shell.dart';
+import 'package:newtube/ui/shell/side_nav.dart';
+import 'package:newtube/ui/shell/title_bar.dart';
 
 import 'fakes.dart';
 
@@ -19,7 +21,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.byType(NavigationRail), findsOneWidget);
+    expect(find.byType(SideNav), findsOneWidget);
     expect(find.text('NewTube'), findsOneWidget);
 
     await tester.tap(find.text('History'));
@@ -40,7 +42,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(NavigationBar), findsOneWidget);
-    expect(find.byType(NavigationRail), findsNothing);
+    expect(find.byType(SideNav), findsNothing);
 
     await tester.tap(find.text('Settings'));
     await tester.pumpAndSettle();
@@ -58,9 +60,10 @@ void main() {
     debugDefaultTargetPlatformOverride = null;
   });
 
-  testWidgets('title bar present on desktop', (tester) async {
+  testWidgets('window controls live in sidebar on desktop', (tester) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.linux;
-    final state = await testState(windowActions: FakeWindowActions());
+    final actions = FakeWindowActions();
+    final state = await testState(windowActions: actions);
     await pumpPage(
       tester,
       state,
@@ -68,7 +71,43 @@ void main() {
       size: const Size(1200, 800),
     );
     await tester.pumpAndSettle();
-    expect(find.byKey(const Key('titlebar.close')), findsOneWidget);
+
+    final close = find.byKey(const Key('titlebar.close'));
+    expect(
+      find.descendant(of: find.byType(SideNav), matching: close),
+      findsOneWidget,
+    );
+
+    await tester.tap(close);
+    expect(actions.closed, 1);
+
+    final dragSpot =
+        tester.getTopRight(find.byType(TrafficLights)) + const Offset(40, 6);
+    await tester.dragFrom(dragSpot, const Offset(60, 0));
+    await tester.pump();
+    expect(actions.dragged, greaterThan(0));
+
+    await tester.tapAt(dragSpot);
+    await tester.pump(const Duration(milliseconds: 60));
+    await tester.tapAt(dragSpot);
+    await tester.pump();
+    expect(actions.maximized, greaterThan(0));
+    await tester.pump(const Duration(milliseconds: 500));
+    debugDefaultTargetPlatformOverride = null;
+  });
+
+  testWidgets('wide tablet sidebar has no window controls', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
+    final state = await testState();
+    await pumpPage(
+      tester,
+      state,
+      const AppShell(),
+      size: const Size(1200, 800),
+    );
+    await tester.pumpAndSettle();
+    expect(find.byType(SideNav), findsOneWidget);
+    expect(find.byKey(const Key('titlebar.close')), findsNothing);
     debugDefaultTargetPlatformOverride = null;
   });
 

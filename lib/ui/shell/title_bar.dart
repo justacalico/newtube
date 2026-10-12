@@ -12,8 +12,14 @@ bool get isDesktopPlatform =>
 class AppTitleBar extends StatelessWidget {
   final String title;
   final WindowActions? windowActions;
+  final bool showControls;
 
-  const AppTitleBar({super.key, required this.title, this.windowActions});
+  const AppTitleBar({
+    super.key,
+    required this.title,
+    this.windowActions,
+    this.showControls = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +28,10 @@ class AppTitleBar extends StatelessWidget {
       height: 38,
       child: Row(
         children: [
-          const SizedBox(width: 8),
-          _TrafficLights(actions: windowActions),
+          if (showControls) ...[
+            const SizedBox(width: 8),
+            TrafficLights(actions: windowActions),
+          ],
           Expanded(
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
@@ -41,23 +49,23 @@ class AppTitleBar extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: 62),
+          if (showControls) const SizedBox(width: 62),
         ],
       ),
     );
   }
 }
 
-class _TrafficLights extends StatefulWidget {
+class TrafficLights extends StatefulWidget {
   final WindowActions? actions;
 
-  const _TrafficLights({this.actions});
+  const TrafficLights({super.key, this.actions});
 
   @override
-  State<_TrafficLights> createState() => _TrafficLightsState();
+  State<TrafficLights> createState() => _TrafficLightsState();
 }
 
-class _TrafficLightsState extends State<_TrafficLights> {
+class _TrafficLightsState extends State<TrafficLights> {
   bool _hovered = false;
 
   @override
