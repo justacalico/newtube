@@ -257,7 +257,8 @@ jobs:
             sudo flatpak-builder --force-clean --repo=flatpak-repo build-dir packaging/flatpak/gitlab.httpanimations.newtube.yml || flatpak-builder --force-clean --repo=flatpak-repo --user build-dir packaging/flatpak/gitlab.httpanimations.newtube.yml
             sudo chown -R "$(id -u):$(id -g)" flatpak-repo
             tar -czf "artifacts/newtube-${VERSION}-flatpak.tar.gz" -C flatpak-repo .
-            rm -rf bundle build-dir
+            rm -rf bundle
+            sudo rm -rf build-dir .flatpak-builder
           fi
           ls -la artifacts/
 
