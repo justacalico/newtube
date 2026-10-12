@@ -26,12 +26,12 @@ void main() {
 
     await tester.tap(find.text('History'));
     await tester.pumpAndSettle();
-    expect(state.tabIndex, 2);
+    expect(state.tabIndex, 3);
     expect(find.text('Nothing watched yet'), findsOneWidget);
 
     await tester.tap(find.text('Subscriptions'));
     await tester.pumpAndSettle();
-    expect(state.tabIndex, 1);
+    expect(state.tabIndex, 2);
     debugDefaultTargetPlatformOverride = null;
   });
 
@@ -44,9 +44,9 @@ void main() {
     expect(find.byType(NavigationBar), findsOneWidget);
     expect(find.byType(SideNav), findsNothing);
 
-    await tester.tap(find.text('Settings'));
+    await tester.tap(find.byIcon(Icons.settings_outlined));
     await tester.pumpAndSettle();
-    expect(state.tabIndex, 3);
+    expect(state.tabIndex, 4);
     expect(find.text('Theme'), findsOneWidget);
     debugDefaultTargetPlatformOverride = null;
   });
@@ -111,7 +111,7 @@ void main() {
     debugDefaultTargetPlatformOverride = null;
   });
 
-  testWidgets('search pushes results page', (tester) async {
+  testWidgets('search tab shows results', (tester) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.linux;
     final api = FakeYouTubeApi(
       searchResults: const SearchResults(videos: testVideos),
@@ -125,10 +125,17 @@ void main() {
     );
     await tester.pumpAndSettle();
 
+    await tester.tap(
+      find.descendant(of: find.byType(SideNav), matching: find.text('Search')),
+    );
+    await tester.pumpAndSettle();
+    expect(state.tabIndex, 1);
+
     await tester.enterText(find.byType(TextField).first, 'kittens');
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
     expect(find.text('Results: kittens'), findsOneWidget);
+    expect(find.text('First video'), findsOneWidget);
     debugDefaultTargetPlatformOverride = null;
   });
 }

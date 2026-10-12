@@ -26,6 +26,11 @@ class AppShell extends StatelessWidget {
         label: l10n.navHome,
       ),
       (
+        icon: Icons.search_outlined,
+        selectedIcon: Icons.search,
+        label: l10n.navSearch,
+      ),
+      (
         icon: Icons.subscriptions_outlined,
         selectedIcon: Icons.subscriptions,
         label: l10n.navSubscriptions,
@@ -44,25 +49,11 @@ class AppShell extends StatelessWidget {
 
     const pages = [
       HomePage(),
+      SearchPage(),
       SubscriptionsPage(),
       HistoryPage(),
       SettingsPage(),
     ];
-
-    final search = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      child: SearchBar(
-        hintText: l10n.searchHint,
-        leading: const Icon(Icons.search),
-        onSubmitted: (query) {
-          final q = query.trim();
-          if (q.isEmpty) return;
-          Navigator.of(
-            context,
-          ).push(MaterialPageRoute<void>(builder: (_) => SearchPage(query: q)));
-        },
-      ),
-    );
 
     final body = Column(
       children: [
@@ -72,7 +63,6 @@ class AppShell extends StatelessWidget {
             windowActions: state.windowActions,
             showControls: !wide,
           ),
-        search,
         Expanded(
           child: IndexedStack(index: state.tabIndex, children: pages),
         ),
@@ -116,6 +106,7 @@ class AppShell extends StatelessWidget {
     return Scaffold(
       body: SafeArea(child: body),
       bottomNavigationBar: NavigationBar(
+        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
         selectedIndex: state.tabIndex,
         onDestinationSelected: state.selectTab,
         destinations: [

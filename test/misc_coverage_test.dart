@@ -72,7 +72,10 @@ void main() {
   testWidgets('search page error retries', (tester) async {
     final api = FakeYouTubeApi()..error = 'down';
     final state = await testState(api: api);
-    await pumpPage(tester, state, const SearchPage(query: 'x'));
+    await pumpPage(tester, state, const SearchPage());
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'x');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
     expect(find.text('Something went wrong'), findsOneWidget);
     api.error = null;
@@ -87,7 +90,10 @@ void main() {
       uploads: testVideos,
     );
     final state = await testState(api: api);
-    await pumpPage(tester, state, const SearchPage(query: 'x'));
+    await pumpPage(tester, state, const SearchPage());
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'x');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Channel One').first);
     await tester.pumpAndSettle();
