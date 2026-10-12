@@ -149,8 +149,16 @@ jobs:
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
+        if: matrix.target != 'linux-arm64'
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Setup Flutter arm64
+        uses: subosito/flutter-action@v2
+        if: matrix.target == 'linux-arm64'
+        with:
+          channel: stable
           cache: true
 
       - name: Install Linux dependencies
@@ -175,7 +183,7 @@ jobs:
           storePassword=${{ secrets.ANDROID_STORE_PASSWORD }}
           keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
           keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
-          storeFile=../newtube.jks
+          storeFile=newtube.jks
           EOF
           keytool -list -keystore "$GITHUB_WORKSPACE/android/newtube.jks" -storepass "${{ secrets.ANDROID_STORE_PASSWORD }}" >/dev/null || exit 1
 
@@ -184,7 +192,8 @@ jobs:
         run: |
           flutter build linux --release --build-name="$VERSION" --build-number="$BUILD_NUMBER"
           LINUX_ARCH="${{ matrix.arch }}"
-          BUNDLE="build/linux/${LINUX_ARCH}/release/bundle"
+          FLUTTER_ARCH=$([ "$LINUX_ARCH" = "aarch64" ] && echo arm64 || echo x64)
+          BUNDLE="build/linux/${FLUTTER_ARCH}/release/bundle"
           mkdir -p artifacts
 
           tar -czf "artifacts/newtube-${VERSION}-linux-${LINUX_ARCH}.tar.gz" -C "$BUNDLE" .
