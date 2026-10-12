@@ -36,8 +36,7 @@ class VideoCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AspectRatio(
-              aspectRatio: 16 / 9,
+            Expanded(
               child: Stack(
                 fit: StackFit.expand,
                 children: [
