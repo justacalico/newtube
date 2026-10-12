@@ -35,6 +35,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/fonts/
+    - assets/icon/icon_256.png
   fonts:
     - family: Inter
       fonts:

@@ -187,7 +187,11 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             const SizedBox(height: 16),
-            const Icon(Icons.play_circle, size: 64),
+            Image.asset(
+              'assets/icon/icon_256.png',
+              width: 64,
+              height: 64,
+            ),
             const SizedBox(height: 8),
             Center(
               child: Text(
