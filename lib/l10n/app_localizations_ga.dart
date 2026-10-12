@@ -86,6 +86,16 @@ class AppLocalizationsGa extends AppLocalizations {
   String get clearHistory => 'Glan an stair';
 
   @override
+  String get clearHistoryConfirm =>
+      'Bainfear gach físeán breathnaithe agus cuardach.';
+
+  @override
+  String get cancel => 'Cealaigh';
+
+  @override
+  String get clear => 'Glan';
+
+  @override
   String get noHistory => 'Níl aon rud feite agat fós';
 
   @override

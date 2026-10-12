@@ -254,6 +254,24 @@ abstract class AppLocalizations {
   /// **'Clear history'**
   String get clearHistory;
 
+  /// No description provided for @clearHistoryConfirm.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'This removes all watched videos and searches.'**
+  String get clearHistoryConfirm;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @clear.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Clear'**
+  String get clear;
+
   /// No description provided for @noHistory.
   ///
   /// In en_GB, this message translates to:
