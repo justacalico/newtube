@@ -291,6 +291,7 @@ jobs:
       - name: Build macOS
         if: matrix.target == 'macos'
         run: |
+          sed -i '' 's/bool isWindowingEnabled = .*/bool isWindowingEnabled = false;/' "$FLUTTER_ROOT/packages/flutter/lib/src/foundation/_features.dart"
           flutter build macos --release --build-name="$VERSION" --build-number="$BUILD_NUMBER"
           mkdir -p artifacts
           cd build/macos/Build/Products/Release
