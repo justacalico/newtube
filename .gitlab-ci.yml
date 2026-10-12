@@ -8,7 +8,7 @@ variables:
   GLAB_VERSION: "1.113.0"
   GIT_DEPTH: "0"
   GIT_STRATEGY: "fetch"
-  FLUTTER_IMAGE: "ghcr.io/cirruslabs/flutter:stable"
+  FLUTTER_IMAGE: "ghcr.io/cirruslabs/flutter:3.47.7"
 
 .github-common: &github-common
   tags: [linux-truenas]
