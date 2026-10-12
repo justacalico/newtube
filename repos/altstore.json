@@ -16,7 +16,16 @@
       "tintColor": "#C02026",
       "category": "entertainment",
       "screenshots": [],
-      "versions": [],
+      "versions": [
+        {
+          "version": "0.1.0",
+          "date": "2026-10-12",
+          "localizedDescription": "See the release notes for changes.",
+          "downloadURL": "https://gitlab.com/HttpAnimations/newtube/-/releases/v0.1.0/downloads/newtube-0.1.0-ios.ipa",
+          "size": 15384004,
+          "minOSVersion": "14.0"
+        }
+      ],
       "appPermissions": {
         "entitlements": [],
         "privacy": {}
