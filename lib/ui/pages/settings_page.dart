@@ -192,15 +192,14 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             ListTile(
               leading: const Icon(Icons.delete_outline),
-              title: Text(l10n.clearWatchHistory),
-              enabled: state.history.entries.isNotEmpty,
-              onTap: () => state.history.clear(state.prefs),
-            ),
-            ListTile(
-              leading: const Icon(Icons.delete_outline),
-              title: Text(l10n.clearSearchHistory),
-              enabled: state.searchHistory.entries.isNotEmpty,
-              onTap: () => state.searchHistory.clear(state.prefs),
+              title: Text(l10n.clearHistory),
+              enabled:
+                  state.history.entries.isNotEmpty ||
+                  state.searchHistory.entries.isNotEmpty,
+              onTap: () {
+                state.history.clear(state.prefs);
+                state.searchHistory.clear(state.prefs);
+              },
             ),
             const Divider(),
             Padding(

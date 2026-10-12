@@ -145,14 +145,11 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Clear watch history'));
+    await tester.tap(find.text('Clear history'));
     await tester.pumpAndSettle();
     expect(state.history.entries, isEmpty);
-    expect(state.prefs.getString('history'), '[]');
-
-    await tester.tap(find.text('Clear search history'));
-    await tester.pumpAndSettle();
     expect(state.searchHistory.entries, isEmpty);
+    expect(state.prefs.getString('history'), '[]');
     expect(state.prefs.getString('search_history'), '[]');
   });
 
@@ -164,6 +161,7 @@ void main() {
 
     await tester.scrollUntilVisible(find.text('All releases'), 200);
     await tester.tap(find.text('All releases'));
+    await tester.scrollUntilVisible(find.text('Source code'), 200);
     await tester.tap(find.text('Source code'));
     await tester.scrollUntilVisible(find.text('Licence'), 200);
     await tester.tap(find.text('Licence'));

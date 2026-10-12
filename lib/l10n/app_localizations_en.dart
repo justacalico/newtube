@@ -83,10 +83,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get watchHistory => 'Watch history';
 
   @override
-  String get clearWatchHistory => 'Clear watch history';
-
-  @override
-  String get clearSearchHistory => 'Clear search history';
+  String get clearHistory => 'Clear history';
 
   @override
   String get noHistory => 'Nothing watched yet';
@@ -280,10 +277,7 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   String get watchHistory => 'Watch history';
 
   @override
-  String get clearWatchHistory => 'Clear watch history';
-
-  @override
-  String get clearSearchHistory => 'Clear search history';
+  String get clearHistory => 'Clear history';
 
   @override
   String get noHistory => 'Nothing watched yet';
