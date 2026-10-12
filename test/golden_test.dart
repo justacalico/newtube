@@ -5,7 +5,6 @@ import 'package:newtube/models/video_info.dart';
 import 'package:newtube/state/app_state.dart';
 import 'package:newtube/state/settings_store.dart';
 import 'package:newtube/state/subscriptions_store.dart';
-import 'package:newtube/ui/pages/about_page.dart';
 import 'package:newtube/ui/pages/channel_page.dart';
 import 'package:newtube/ui/pages/history_page.dart';
 import 'package:newtube/ui/pages/home_page.dart';
@@ -145,15 +144,11 @@ void main() {
     );
   });
 
-  testWidgets('about page', (tester) async {
-    await golden(tester, 'about_page', const AboutPage());
-  });
-
-  testWidgets('about page chinese', (tester) async {
+  testWidgets('settings page chinese', (tester) async {
     await golden(
       tester,
-      'about_page_zh',
-      const AboutPage(),
+      'settings_page_zh',
+      const SettingsPage(),
       state: await testState(
         settings: SettingsStore(locale: const Locale('zh', 'Hans')),
       ),
