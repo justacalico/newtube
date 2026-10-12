@@ -16,6 +16,9 @@ class AppLocalizationsGa extends AppLocalizations {
   String get navHome => 'Baile';
 
   @override
+  String get navSearch => 'Cuardaigh';
+
+  @override
   String get navSubscriptions => 'Síntiúis';
 
   @override

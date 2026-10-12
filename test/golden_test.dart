@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -26,6 +28,7 @@ void main() {
     Size size = const Size(1280, 800),
     AppState? state,
     TargetPlatform platform = TargetPlatform.linux,
+    FutureOr<void> Function(WidgetTester tester)? interact,
   }) async {
     debugDefaultTargetPlatformOverride = platform;
     final s = state ?? await testState();
@@ -33,6 +36,7 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
     await pumpPage(tester, s, page, size: size);
+    await interact?.call(tester);
     await tester.runAsync(() async {
       for (final element in tester.elementList(find.byType(Image))) {
         final provider = (element.widget as Image).image;
@@ -80,8 +84,13 @@ void main() {
     await golden(
       tester,
       'search_page',
-      const SearchPage(query: 'test'),
+      const SearchPage(),
       state: await testState(api: api),
+      interact: (tester) async {
+        await tester.enterText(find.byType(TextField), 'test');
+        await tester.testTextInput.receiveAction(TextInputAction.done);
+        await tester.pumpAndSettle();
+      },
     );
   });
 

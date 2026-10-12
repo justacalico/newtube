@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/models/video_info.dart';
 import 'package:newtube/state/subscriptions_store.dart';
@@ -59,7 +60,11 @@ void main() {
         ),
       );
       final state = await testState(api: api);
-      await pumpPage(tester, state, const SearchPage(query: 'cats'));
+      await pumpPage(tester, state, const SearchPage());
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byType(TextField), 'cats');
+      await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pumpAndSettle();
 
       expect(find.text('Results: cats'), findsOneWidget);

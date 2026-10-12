@@ -9,22 +9,22 @@ import 'channel_page.dart';
 import 'watch_page.dart';
 
 class SearchPage extends StatefulWidget {
-  final String query;
-
-  const SearchPage({super.key, required this.query});
+  const SearchPage({super.key});
 
   @override
   State<SearchPage> createState() => _SearchPageState();
 }
 
 class _SearchPageState extends State<SearchPage> {
+  String _query = '';
   SearchResults _results = const SearchResults();
-  bool _loading = true;
+  bool _loading = false;
   Object? _error;
 
-  @override
-  void initState() {
-    super.initState();
+  void _search(String query) {
+    final q = query.trim();
+    if (q.isEmpty || q == _query) return;
+    _query = q;
     _load();
   }
 
@@ -34,7 +34,7 @@ class _SearchPageState extends State<SearchPage> {
       _error = null;
     });
     try {
-      final results = await AppScope.read(context).api.search(widget.query);
+      final results = await AppScope.read(context).api.search(_query);
       if (!mounted) return;
       setState(() {
         _results = results;
@@ -65,68 +65,95 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return Scaffold(
-      appBar: AppBar(title: Text('${l10n.searchResultsFor}: ${widget.query}')),
-      body: FeedStateView(
-        loading: _loading,
-        error: _error,
-        videos: _results.videos,
-        onRetry: _load,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (_results.channels.isNotEmpty)
-              SizedBox(
-                height: 96,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  children: [
-                    for (final channel in _results.channels)
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: SearchBar(
+            hintText: l10n.searchHint,
+            leading: const Icon(Icons.search),
+            onSubmitted: _search,
+          ),
+        ),
+        Expanded(
+          child: _query.isEmpty
+              ? Center(
+                  child: Icon(
+                    Icons.search,
+                    size: 48,
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
+                )
+              : FeedStateView(
+                  loading: _loading,
+                  error: _error,
+                  videos: _results.videos,
+                  onRetry: _load,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(8),
-                            onTap: () => _openChannel(channel.id),
-                            child: SizedBox(
-                              width: 180,
-                              child: Row(
-                                children: [
-                                  VideoThumbnail(
-                                    url: channel.thumbnailUrl,
-                                    width: 48,
-                                    height: 48,
-                                    borderRadius: BorderRadius.circular(24),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      channel.name,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                        padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+                        child: Text(
+                          '${l10n.searchResultsFor}: $_query',
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ),
-                  ],
+                      if (_results.channels.isNotEmpty)
+                        SizedBox(
+                          height: 96,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            children: [
+                              for (final channel in _results.channels)
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 8),
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(8),
+                                      onTap: () => _openChannel(channel.id),
+                                      child: SizedBox(
+                                        width: 180,
+                                        child: Row(
+                                          children: [
+                                            VideoThumbnail(
+                                              url: channel.thumbnailUrl,
+                                              width: 48,
+                                              height: 48,
+                                              borderRadius:
+                                                  BorderRadius.circular(24),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Expanded(
+                                              child: Text(
+                                                channel.name,
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      Expanded(
+                        child: VideoGrid(
+                          videos: _results.videos,
+                          onVideoTap: _openVideo,
+                          onChannelTap: (v) => _openChannel(v.channelId),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            Expanded(
-              child: VideoGrid(
-                videos: _results.videos,
-                onVideoTap: _openVideo,
-                onChannelTap: (v) => _openChannel(v.channelId),
-              ),
-            ),
-          ],
         ),
-      ),
+      ],
     );
   }
 }

@@ -16,6 +16,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navHome => 'Home';
 
   @override
+  String get navSearch => 'Search';
+
+  @override
   String get navSubscriptions => 'Subscriptions';
 
   @override
@@ -196,6 +199,9 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get navHome => 'Home';
+
+  @override
+  String get navSearch => 'Search';
 
   @override
   String get navSubscriptions => 'Subscriptions';

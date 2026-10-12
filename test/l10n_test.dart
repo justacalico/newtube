@@ -9,6 +9,7 @@ import 'package:newtube/l10n/app_localizations_zh.dart';
 void touchAll(AppLocalizations l) {
   l.appTitle;
   l.navHome;
+  l.navSearch;
   l.navSubscriptions;
   l.navHistory;
   l.navSettings;
