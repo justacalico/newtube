@@ -15,17 +15,20 @@ class SettingsStore extends ChangeNotifier {
   static const _localeKey = 'locale';
   static const _autoplayKey = 'autoplay';
   static const _proxyPrefixKey = 'proxy_prefix';
+  static const _searchHistoryKey = 'search_history_enabled';
 
   AppTheme _theme;
   Locale? _locale;
   bool _autoplay;
   String _proxyPrefix;
+  bool _searchHistoryEnabled;
 
   SettingsStore({
     this._theme = AppTheme.system,
     this._locale,
     this._autoplay = true,
     this._proxyPrefix = '',
+    this._searchHistoryEnabled = true,
   });
 
   static Future<SettingsStore> load(SharedPreferences prefs) async {
@@ -36,6 +39,7 @@ class SettingsStore extends ChangeNotifier {
       locale: _parseLocale(prefs.getString(_localeKey)),
       autoplay: prefs.getBool(_autoplayKey) ?? true,
       proxyPrefix: prefs.getString(_proxyPrefixKey) ?? '',
+      searchHistoryEnabled: prefs.getBool(_searchHistoryKey) ?? true,
     );
   }
 
@@ -57,6 +61,7 @@ class SettingsStore extends ChangeNotifier {
   Locale? get locale => _locale;
   bool get autoplay => _autoplay;
   String get proxyPrefix => _proxyPrefix;
+  bool get searchHistoryEnabled => _searchHistoryEnabled;
 
   Future<void> setTheme(AppTheme theme, SharedPreferences prefs) async {
     _theme = theme;
@@ -79,6 +84,15 @@ class SettingsStore extends ChangeNotifier {
   Future<void> setAutoplay(bool value, SharedPreferences prefs) async {
     _autoplay = value;
     await prefs.setBool(_autoplayKey, value);
+    notifyListeners();
+  }
+
+  Future<void> setSearchHistoryEnabled(
+    bool value,
+    SharedPreferences prefs,
+  ) async {
+    _searchHistoryEnabled = value;
+    await prefs.setBool(_searchHistoryKey, value);
     notifyListeners();
   }
 }

@@ -40,6 +40,10 @@ void touchAll(AppLocalizations l) {
   l.noSearchHistory;
   l.noSearchHistoryHint;
   l.removeSearchEntry;
+  l.searchHistory;
+  l.searchHistoryHint;
+  l.searchHistoryOff;
+  l.searchHistoryOffHint;
   l.theme;
   l.themeSystem;
   l.themeLight;

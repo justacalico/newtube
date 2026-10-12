@@ -30,6 +30,7 @@ void main() {
       expect(store.theme, AppTheme.system);
       expect(store.locale, isNull);
       expect(store.autoplay, isTrue);
+      expect(store.searchHistoryEnabled, isTrue);
     });
 
     test('persists theme, locale and autoplay', () async {
@@ -38,6 +39,7 @@ void main() {
       await store.setTheme(AppTheme.oled, p);
       await store.setLocale(const Locale('zh', 'Hans'), p);
       await store.setAutoplay(false, p);
+      await store.setSearchHistoryEnabled(false, p);
 
       final reloaded = await SettingsStore.load(
         await SharedPreferences.getInstance(),
@@ -45,6 +47,7 @@ void main() {
       expect(reloaded.theme, AppTheme.oled);
       expect(reloaded.locale, const Locale('zh', 'Hans'));
       expect(reloaded.autoplay, isFalse);
+      expect(reloaded.searchHistoryEnabled, isFalse);
     });
 
     test('system locale persists as null', () async {

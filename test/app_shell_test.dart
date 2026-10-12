@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/models/video_info.dart';
+import 'package:newtube/state/settings_store.dart';
 import 'package:newtube/ui/shell/app_shell.dart';
 import 'package:newtube/ui/shell/side_nav.dart';
 import 'package:newtube/ui/shell/title_bar.dart';
@@ -48,6 +49,45 @@ void main() {
     await tester.pumpAndSettle();
     expect(state.tabIndex, 4);
     expect(find.text('Theme'), findsOneWidget);
+    debugDefaultTargetPlatformOverride = null;
+  });
+
+  testWidgets('hides history tab when search history is disabled', (
+    tester,
+  ) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    final state = await testState(
+      settings: SettingsStore(searchHistoryEnabled: false),
+      windowActions: FakeWindowActions(),
+    );
+    await pumpPage(
+      tester,
+      state,
+      const AppShell(),
+      size: const Size(1200, 800),
+    );
+    await tester.pumpAndSettle();
+
+    final nav = find.byType(SideNav);
+    expect(
+      find.descendant(of: nav, matching: find.text('History')),
+      findsNothing,
+    );
+
+    await tester.tap(
+      find.descendant(of: nav, matching: find.text('Settings')),
+    );
+    await tester.pumpAndSettle();
+    expect(state.tabIndex, 4);
+    expect(find.text('Search history'), findsOneWidget);
+
+    await state.settings.setSearchHistoryEnabled(true, state.prefs);
+    await tester.pumpAndSettle();
+    expect(
+      find.descendant(of: nav, matching: find.text('History')),
+      findsOneWidget,
+    );
+    expect(find.text('Search history'), findsOneWidget);
     debugDefaultTargetPlatformOverride = null;
   });
 

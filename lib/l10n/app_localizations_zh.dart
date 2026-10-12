@@ -109,6 +109,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get removeSearchEntry => '移除';
 
   @override
+  String get searchHistory => '搜索历史';
+
+  @override
+  String get searchHistoryHint => '记住你搜索过的内容';
+
+  @override
+  String get searchHistoryOff => '搜索历史已关闭';
+
+  @override
+  String get searchHistoryOffHint => '在设置中开启后，你的搜索会显示在这里。';
+
+  @override
   String get theme => '主题';
 
   @override
@@ -308,6 +320,18 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get removeSearchEntry => '移除';
+
+  @override
+  String get searchHistory => '搜索历史';
+
+  @override
+  String get searchHistoryHint => '记住你搜索过的内容';
+
+  @override
+  String get searchHistoryOff => '搜索历史已关闭';
+
+  @override
+  String get searchHistoryOffHint => '在设置中开启后，你的搜索会显示在这里。';
 
   @override
   String get theme => '主题';

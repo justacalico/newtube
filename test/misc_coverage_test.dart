@@ -86,6 +86,8 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(find.text('Check for updates'), 200);
+    await tester.ensureVisible(find.text('Check for updates'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Check for updates'));
     await tester.pump();
     expect(find.text('Checking for updates…'), findsOneWidget);

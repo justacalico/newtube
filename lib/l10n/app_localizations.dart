@@ -302,6 +302,30 @@ abstract class AppLocalizations {
   /// **'Remove'**
   String get removeSearchEntry;
 
+  /// No description provided for @searchHistory.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Search history'**
+  String get searchHistory;
+
+  /// No description provided for @searchHistoryHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Remember the searches you run'**
+  String get searchHistoryHint;
+
+  /// No description provided for @searchHistoryOff.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Search history is off'**
+  String get searchHistoryOff;
+
+  /// No description provided for @searchHistoryOffHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Turn it on in Settings to see your searches here.'**
+  String get searchHistoryOffHint;
+
   /// No description provided for @theme.
   ///
   /// In en_GB, this message translates to:

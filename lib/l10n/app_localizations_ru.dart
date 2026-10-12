@@ -111,6 +111,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get removeSearchEntry => 'Убрать';
 
   @override
+  String get searchHistory => 'История поиска';
+
+  @override
+  String get searchHistoryHint => 'Запоминать поисковые запросы';
+
+  @override
+  String get searchHistoryOff => 'История поиска отключена';
+
+  @override
+  String get searchHistoryOffHint =>
+      'Включите её в настройках, чтобы видеть запросы здесь.';
+
+  @override
   String get theme => 'Тема';
 
   @override
