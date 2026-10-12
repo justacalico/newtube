@@ -34,12 +34,7 @@ void main() {
   });
 
   test('VideoInfo copyWith overrides only given fields', () {
-    const video = VideoInfo(
-      id: 'a',
-      title: 't',
-      author: 'x',
-      channelId: 'c',
-    );
+    const video = VideoInfo(id: 'a', title: 't', author: 'x', channelId: 'c');
     final same = video.copyWith();
     expect(same.author, 'x');
     expect(same.channelId, 'c');

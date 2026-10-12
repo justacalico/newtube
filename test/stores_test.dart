@@ -234,9 +234,8 @@ void main() {
 
     test('corrupt payloads load as empty', () async {
       expect(
-        (await SearchHistoryStore.load(
-          await prefs({'search_history': '{!'}),
-        )).entries,
+        (await SearchHistoryStore.load(await prefs({'search_history': '{!'})))
+            .entries,
         isEmpty,
       );
       expect(
