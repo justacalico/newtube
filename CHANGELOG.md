@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.3.0 - 2026-10-12
+#### Features
+- 网页版播放器与内置数据接口 - (e86656c) - calico
+#### Bug Fixes
+- 覆盖 CI 覆盖率诊断与标记 - (e38f714) - calico
+
+- - -
+
 ## v0.2.0 - 2026-10-12
 #### Features
 - 网页版 CORS 提示与代理设置 - (fff9887) - calico
