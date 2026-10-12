@@ -8,7 +8,7 @@ variables:
   GLAB_VERSION: "1.113.0"
   GIT_DEPTH: "0"
   GIT_STRATEGY: "fetch"
-  FLUTTER_IMAGE: "ghcr.io/cirruslabs/flutter:3.47.7"
+  FLUTTER_IMAGE: "debian:trixie-slim"
 
 .github-common: &github-common
   tags: [linux-truenas]
@@ -142,7 +142,12 @@ pages:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/
   needs: [github-sync]
   before_script:
+    - apt-get update -qq && apt-get install -y -qq git curl unzip xz-utils python3 ca-certificates
+    - git clone --depth 1 -b 3.47.7 https://github.com/flutter/flutter.git /opt/flutter
+    - export PATH="/opt/flutter/bin:$PATH"
+    - git config --global --add safe.directory /opt/flutter
     - git config --global --add safe.directory "$CI_PROJECT_DIR"
+    - flutter --version
     - mkdir -p landing/assets/screenshots
     - cp test/goldens/app_shell.png landing/assets/screenshots/app_shell.png
     - cp test/goldens/watch_page.png landing/assets/screenshots/watch_page.png
