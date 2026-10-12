@@ -7,6 +7,7 @@ import '../pages/home_page.dart';
 import '../pages/search_page.dart';
 import '../pages/settings_page.dart';
 import '../pages/subscriptions_page.dart';
+import 'side_nav.dart';
 import 'title_bar.dart';
 
 class AppShell extends StatelessWidget {
@@ -18,15 +19,27 @@ class AppShell extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final wide = MediaQuery.sizeOf(context).width >= 800;
 
-    final destinations = [
-      (Icons.home_outlined, Icons.home, l10n.navHome),
+    final destinations = <SideNavDestination>[
       (
-        Icons.subscriptions_outlined,
-        Icons.subscriptions,
-        l10n.navSubscriptions,
+        icon: Icons.home_outlined,
+        selectedIcon: Icons.home,
+        label: l10n.navHome,
       ),
-      (Icons.history_outlined, Icons.history, l10n.navHistory),
-      (Icons.settings_outlined, Icons.settings, l10n.navSettings),
+      (
+        icon: Icons.subscriptions_outlined,
+        selectedIcon: Icons.subscriptions,
+        label: l10n.navSubscriptions,
+      ),
+      (
+        icon: Icons.history_outlined,
+        selectedIcon: Icons.history,
+        label: l10n.navHistory,
+      ),
+      (
+        icon: Icons.settings_outlined,
+        selectedIcon: Icons.settings,
+        label: l10n.navSettings,
+      ),
     ];
 
     const pages = [
@@ -66,20 +79,11 @@ class AppShell extends StatelessWidget {
       return Scaffold(
         body: Row(
           children: [
-            NavigationRail(
+            SideNav(
               selectedIndex: state.tabIndex,
-              onDestinationSelected: state.selectTab,
-              labelType: NavigationRailLabelType.all,
-              destinations: [
-                for (final d in destinations)
-                  NavigationRailDestination(
-                    icon: Icon(d.$1),
-                    selectedIcon: Icon(d.$2),
-                    label: Text(d.$3),
-                  ),
-              ],
+              onSelected: state.selectTab,
+              destinations: destinations,
             ),
-            const VerticalDivider(width: 1),
             Expanded(child: body),
           ],
         ),
@@ -94,9 +98,9 @@ class AppShell extends StatelessWidget {
         destinations: [
           for (final d in destinations)
             NavigationDestination(
-              icon: Icon(d.$1),
-              selectedIcon: Icon(d.$2),
-              label: d.$3,
+              icon: Icon(d.icon),
+              selectedIcon: Icon(d.selectedIcon),
+              label: d.label,
             ),
         ],
       ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/models/video_info.dart';
 import 'package:newtube/ui/shell/app_shell.dart';
+import 'package:newtube/ui/shell/side_nav.dart';
 
 import 'fakes.dart';
 
@@ -19,7 +20,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.byType(NavigationRail), findsOneWidget);
+    expect(find.byType(SideNav), findsOneWidget);
     expect(find.text('NewTube'), findsOneWidget);
 
     await tester.tap(find.text('History'));
@@ -40,7 +41,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(NavigationBar), findsOneWidget);
-    expect(find.byType(NavigationRail), findsNothing);
+    expect(find.byType(SideNav), findsNothing);
 
     await tester.tap(find.text('Settings'));
     await tester.pumpAndSettle();
