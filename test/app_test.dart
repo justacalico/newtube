@@ -43,6 +43,7 @@ void main() {
         expect(app.darkTheme!.scaffoldBackgroundColor, Colors.black);
         expect(app.darkTheme!.colorScheme.surfaceContainerLow, Colors.black);
         expect(app.darkTheme!.colorScheme.surfaceContainer, Colors.black);
+        expect(app.darkTheme!.colorScheme.surfaceTint, Colors.transparent);
       }
     }
   });

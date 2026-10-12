@@ -23,6 +23,7 @@ class NewtubeApp extends StatelessWidget {
         surfaceContainerLowest: Colors.black,
         surfaceContainerLow: Colors.black,
         surfaceContainer: Colors.black,
+        surfaceTint: Colors.transparent,
       ),
       cardTheme: theme.cardTheme.copyWith(color: const Color(0xFF111111)),
     );
