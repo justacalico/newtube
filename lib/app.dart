@@ -18,7 +18,12 @@ class NewtubeApp extends StatelessWidget {
     if (!oled) return theme;
     return theme.copyWith(
       scaffoldBackgroundColor: Colors.black,
-      colorScheme: scheme.copyWith(surface: Colors.black),
+      colorScheme: scheme.copyWith(
+        surface: Colors.black,
+        surfaceContainerLowest: Colors.black,
+        surfaceContainerLow: Colors.black,
+        surfaceContainer: Colors.black,
+      ),
       cardTheme: theme.cardTheme.copyWith(color: const Color(0xFF111111)),
     );
   }
