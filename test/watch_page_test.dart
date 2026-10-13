@@ -112,6 +112,63 @@ void main() {
     expect(player.opened.last, contains('360'));
   });
 
+  testWidgets('quality switch pairs audio from the same container', (
+    tester,
+  ) async {
+    const streams = [
+      PlayableStream(
+        url: 'https://video.example.com/360',
+        quality: '360p',
+        container: 'mp4',
+      ),
+      PlayableStream(
+        url: 'https://video.example.com/1080',
+        quality: '1080p',
+        hasAudio: false,
+        container: 'mp4',
+      ),
+      PlayableStream(
+        url: 'https://audio.example.com/webm',
+        quality: 'audio 136kbps',
+        hasVideo: false,
+        container: 'webm',
+      ),
+      PlayableStream(
+        url: 'https://audio.example.com/mp4',
+        quality: 'audio 130kbps',
+        hasVideo: false,
+        container: 'mp4',
+      ),
+    ];
+    final player = FakePlayerController();
+    final state = await testState(
+      api: FakeYouTubeApi(
+        details: const VideoDetails(
+          info: VideoInfo(
+            id: 'v1',
+            title: 'First video',
+            author: 'A',
+            channelId: 'c',
+          ),
+          description: '',
+          streams: streams,
+        ),
+      ),
+      player: player,
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+    expect(player.opened.single, 'https://video.example.com/360');
+
+    await _openSettings(tester, 'Quality');
+    await tester.tap(find.text('1080p'));
+    await tester.pumpAndSettle();
+    expect(
+      player.opened.last,
+      'https://video.example.com/1080+https://audio.example.com/mp4',
+    );
+  });
+
   testWidgets('stream switch keeps playback position', (tester) async {
     final player = FakePlayerController();
     final state = await testState(api: FakeYouTubeApi(), player: player);

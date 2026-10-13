@@ -15,8 +15,15 @@ int streamPixels(PlayableStream stream) {
   return match == null ? 0 : int.tryParse(match.group(0)!) ?? 0;
 }
 
-PlayableStream? bestAudio(List<PlayableStream> streams) {
-  final audio = streams.where((s) => !s.hasVideo && s.hasAudio).toList();
+bool sameContainer(PlayableStream a, PlayableStream b) =>
+    a.container == null || b.container == null || a.container == b.container;
+
+PlayableStream? bestAudio(List<PlayableStream> streams, {String? container}) {
+  var audio = streams.where((s) => !s.hasVideo && s.hasAudio).toList();
+  if (container != null) {
+    final matching = audio.where((s) => s.container == container).toList();
+    if (matching.isNotEmpty) audio = matching;
+  }
   final defaults = audio.where((s) => s.isDefaultAudio).toList();
   PlayableStream? best;
   for (final s in defaults.isNotEmpty ? defaults : audio) {
@@ -45,13 +52,13 @@ StreamChoice? pickDefaultStream(
   }
 
   if (desktop) {
-    final audio = bestAudio(streams);
-    if (audio != null) {
-      final separate = videoStreams.firstWhere(
-        (s) => !s.hasAudio,
-        orElse: () => videoStreams.first,
-      );
-      if (!separate.hasAudio) return StreamChoice(separate, audio);
+    final separate = videoStreams.firstWhere(
+      (s) => !s.hasAudio,
+      orElse: () => videoStreams.first,
+    );
+    if (!separate.hasAudio) {
+      final audio = bestAudio(streams, container: separate.container);
+      if (audio != null) return StreamChoice(separate, audio);
     }
   }
 
@@ -59,11 +66,20 @@ StreamChoice? pickDefaultStream(
     (s) => s.hasAudio,
     orElse: () => videoStreams.first,
   );
-  return StreamChoice(muxed, muxed.hasAudio ? null : bestAudio(streams));
+  return StreamChoice(
+    muxed,
+    muxed.hasAudio ? null : bestAudio(streams, container: muxed.container),
+  );
 }
 
 StreamChoice pairWithAudio(
   PlayableStream stream,
   List<PlayableStream> all, {
   PlayableStream? audio,
-}) => StreamChoice(stream, stream.hasAudio ? null : (audio ?? bestAudio(all)));
+}) {
+  if (stream.hasAudio) return StreamChoice(stream, null);
+  final track = audio != null && sameContainer(stream, audio)
+      ? audio
+      : bestAudio(all, container: stream.container) ?? audio;
+  return StreamChoice(stream, track);
+}

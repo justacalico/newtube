@@ -25,7 +25,8 @@ List<PlayableStream> dedupeStreams(List<PlayableStream> streams) {
 
 String _key(PlayableStream s) => s.hasVideo
     ? s.quality
-    : '${s.quality} ${s.audioLanguage ?? s.audioTrackName ?? ''}';
+    : '${s.quality} ${s.container ?? ''} '
+          '${s.audioLanguage ?? s.audioTrackName ?? ''}';
 
 Future<List<PlayableStream>> playableStreams(
   List<PlayableStream> streams,
