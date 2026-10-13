@@ -10,6 +10,7 @@ class SideNav extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onSelected;
   final List<SideNavDestination> destinations;
+  final int footerCount;
   final Widget? header;
 
   const SideNav({
@@ -17,12 +18,14 @@ class SideNav extends StatelessWidget {
     required this.selectedIndex,
     required this.onSelected,
     required this.destinations,
+    this.footerCount = 0,
     this.header,
   });
 
   @override
   Widget build(BuildContext context) {
     final header = this.header;
+    final primaryCount = destinations.length - footerCount;
     return ColoredBox(
       color: Theme.of(context).colorScheme.surfaceContainerLow,
       child: SizedBox(
@@ -44,7 +47,7 @@ class SideNav extends StatelessWidget {
                   12,
                   16,
                 ),
-                itemCount: destinations.length,
+                itemCount: primaryCount,
                 itemBuilder: (context, index) => _SideNavItem(
                   destination: destinations[index],
                   selected: index == selectedIndex,
@@ -52,6 +55,20 @@ class SideNav extends StatelessWidget {
                 ),
               ),
             ),
+            if (footerCount > 0)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
+                child: Column(
+                  children: [
+                    for (var i = primaryCount; i < destinations.length; i++)
+                      _SideNavItem(
+                        destination: destinations[i],
+                        selected: i == selectedIndex,
+                        onTap: () => onSelected(i),
+                      ),
+                  ],
+                ),
+              ),
           ],
         ),
       ),

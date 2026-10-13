@@ -147,6 +147,7 @@ class _AppShellState extends State<AppShell> {
                   selectedIndex: index,
                   onSelected: onSelected,
                   destinations: [for (final d in destinations) d.destination],
+                  footerCount: 1,
                   header: isDesktopPlatform
                       ? SizedBox(
                           height: 28,
