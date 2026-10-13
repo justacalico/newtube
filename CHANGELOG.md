@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.12.0 - 2026-10-13
+#### Features
+- 播放列表与稍后观看 - (4bc6231) - HttpAnimations
+- OPML 订阅导入导出 - (c78b472) - HttpAnimations
+
+- - -
+
 ## v0.11.0 - 2026-10-13
 #### Features
 - 视频页评论 - (f5b0c83) - HttpAnimations
