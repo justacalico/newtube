@@ -109,6 +109,9 @@ void main() {
         searchResults: const SearchResults(
           videos: testVideos,
           channels: [testChannel],
+          playlists: [
+            PlaylistInfo(id: 'pl1', title: 'Search mix', videoCount: 3),
+          ],
         ),
       ),
       client: DeArrowClient(client: client),
@@ -173,6 +176,7 @@ void main() {
       final results = await a.search('x');
       expect(results.videos.first.title, 'Honest title');
       expect(results.channels.first, testChannel);
+      expect(results.playlists.single.title, 'Search mix');
       expect((await a.comments('v1')).comments, isEmpty);
       expect(await a.resolveChannel('https://www.youtube.com/@x'), isNull);
       expect((await a.playlist('pl1')).videos.first.title, 'Honest title');

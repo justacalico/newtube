@@ -189,7 +189,7 @@ void main() {
         subscriptions: SubscriptionsStore({
           'UCa': const ChannelInfo(id: 'UCa', name: 'Chan A'),
         }),
-        saveFile: (n, bytes) async {
+        saveFile: (n, bytes, {extension}) async {
           name = n;
           return '/tmp/$n';
         },
@@ -208,7 +208,9 @@ void main() {
     });
 
     testWidgets('reports a failed export', (tester) async {
-      final state = await testState(saveFile: (n, b) async => null);
+      final state = await testState(
+        saveFile: (n, b, {extension}) async => null,
+      );
       await pumpPage(tester, state, const SettingsPage());
       await tester.pumpAndSettle();
 

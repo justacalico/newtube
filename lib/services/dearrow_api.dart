@@ -50,6 +50,7 @@ class DeArrowApi implements YouTubeApi {
     return SearchResults(
       videos: await _applyAll(results.videos),
       channels: results.channels,
+      playlists: results.playlists,
     );
   }
 

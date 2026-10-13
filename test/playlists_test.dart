@@ -331,6 +331,26 @@ void main() {
       expect(find.text('Mix · 2/2'), findsOneWidget);
     });
 
+    testWidgets('advances while fullscreen is open', (tester) async {
+      final player = FakePlayerController();
+      final state = await testState(player: player);
+      await pumpPage(
+        tester,
+        state,
+        WatchPage(video: testVideos[0], playlist: playlist, index: 0),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.fullscreen));
+      await tester.pumpAndSettle();
+      player.emitCompleted();
+      await tester.pump();
+      await tester.pumpAndSettle();
+
+      expect(find.byIcon(Icons.fullscreen), findsOneWidget);
+      expect(find.text('Mix · 2/2'), findsOneWidget);
+    });
+
     testWidgets('stays put at the end of a playlist', (tester) async {
       final player = FakePlayerController();
       final state = await testState(player: player);

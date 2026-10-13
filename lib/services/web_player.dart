@@ -127,9 +127,15 @@ class WebPlayerController implements PlayerController {
     debugLog(
       '[player] open $url${audioUrl == null ? '' : ' + audio $audioUrl'}',
     );
+    if (_audioAttached) {
+      _audio.pause();
+      _audio.src = '';
+      _audioAttached = false;
+    }
     _video.src = url;
     _video.playbackRate = _rate;
     _video.defaultPlaybackRate = _rate;
+    _video.autoplay = true;
     if (audioUrl != null) {
       _audio = web.HTMLAudioElement()
         ..src = audioUrl

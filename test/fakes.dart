@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:newtube/l10n/app_localizations.dart';
+import 'package:newtube/services/file_saver.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -345,7 +346,7 @@ Future<AppState> testState({
   bool isWeb = false,
   McpServerFactory? createMcpServer,
   Future<PackageInfo> Function()? packageInfo,
-  Future<String?> Function(String name, Uint8List bytes)? saveFile,
+  SaveFile? saveFile,
   Future<String?> Function()? openFile,
   SponsorBlockClient? sponsorBlock,
   UploadsWatcher? uploads,
