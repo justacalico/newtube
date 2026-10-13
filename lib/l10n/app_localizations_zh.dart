@@ -371,6 +371,33 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get subscriptionsExportFailed => '导出已取消或失败';
+
+  @override
+  String get navWatchLater => '稍后观看';
+
+  @override
+  String get watchLaterEmpty => '没有稍后观看的视频';
+
+  @override
+  String get watchLaterAdd => '稍后观看';
+
+  @override
+  String get watchLaterRemove => '从稍后观看移除';
+
+  @override
+  String videoCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 个视频',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String playlistProgress(String playlist, int index, int total) {
+    return '$playlist · $index/$total';
+  }
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -739,4 +766,31 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get subscriptionsExportFailed => '导出已取消或失败';
+
+  @override
+  String get navWatchLater => '稍后观看';
+
+  @override
+  String get watchLaterEmpty => '没有稍后观看的视频';
+
+  @override
+  String get watchLaterAdd => '稍后观看';
+
+  @override
+  String get watchLaterRemove => '从稍后观看移除';
+
+  @override
+  String videoCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 个视频',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String playlistProgress(String playlist, int index, int total) {
+    return '$playlist · $index/$total';
+  }
 }

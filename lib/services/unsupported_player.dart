@@ -33,6 +33,8 @@ class UnsupportedPlayerController implements PlayerController {
   Stream<double> get volumeStream => const Stream.empty();
   @override
   Stream<bool> get mutedStream => const Stream.empty();
+  @override
+  Stream<bool> get completedStream => const Stream.empty();
 
   @override
   Future<void> open(String url, {String? audioUrl}) async {

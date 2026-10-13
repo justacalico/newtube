@@ -49,6 +49,8 @@ class MediaKitPlayerController implements PlayerController {
   Stream<double> get volumeStream => _player.stream.volume.map((v) => v / 100);
   @override
   Stream<bool> get mutedStream => _mutedChanges.stream;
+  @override
+  Stream<bool> get completedStream => _player.stream.completed;
 
   @override
   Future<void> open(String url, {String? audioUrl}) async {

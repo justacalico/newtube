@@ -7,6 +7,7 @@ import '../pages/home_page.dart';
 import '../pages/search_page.dart';
 import '../pages/settings_page.dart';
 import '../pages/subscriptions_page.dart';
+import '../pages/watch_later_page.dart';
 import '../pages/watch_page.dart';
 import 'side_nav.dart';
 import 'title_bar.dart';
@@ -54,6 +55,7 @@ class _AppShellState extends State<AppShell> {
       SearchPage(),
       SubscriptionsPage(),
       HistoryPage(),
+      WatchLaterPage(),
       SettingsPage(),
     ];
 
@@ -96,11 +98,19 @@ class _AppShellState extends State<AppShell> {
             ),
           (
             destination: (
+              icon: Icons.watch_later_outlined,
+              selectedIcon: Icons.watch_later,
+              label: l10n.navWatchLater,
+            ),
+            page: 4,
+          ),
+          (
+            destination: (
               icon: Icons.settings_outlined,
               selectedIcon: Icons.settings,
               label: l10n.navSettings,
             ),
-            page: 4,
+            page: 5,
           ),
         ];
 

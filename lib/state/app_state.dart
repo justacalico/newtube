@@ -17,6 +17,7 @@ import 'history_store.dart';
 import 'search_history_store.dart';
 import 'settings_store.dart';
 import 'subscriptions_store.dart';
+import 'watch_later_store.dart';
 
 class AppState extends ChangeNotifier {
   final SharedPreferences prefs;
@@ -24,6 +25,7 @@ class AppState extends ChangeNotifier {
   final WindowActions? windowActions;
   final SettingsStore settings;
   final SubscriptionsStore subscriptions;
+  final WatchLaterStore watchLater;
   final HistoryStore history;
   final SearchHistoryStore searchHistory;
   final UrlLaunch launch;
@@ -48,6 +50,7 @@ class AppState extends ChangeNotifier {
     required this.api,
     required this.settings,
     required this.subscriptions,
+    required this.watchLater,
     required this.history,
     required this.searchHistory,
     required this.launch,

@@ -232,6 +232,79 @@ Duration? _lockupDuration(dynamic node) {
   return null;
 }
 
+void collectPlaylistVideos(dynamic node, List<VideoInfo> out) {
+  if (node is Map<String, dynamic>) {
+    final renderer = node['playlistVideoRenderer'];
+    if (renderer is Map<String, dynamic>) {
+      final video = parsePlaylistVideo(renderer);
+      if (video != null) out.add(video);
+    }
+    for (final value in node.values) {
+      collectPlaylistVideos(value, out);
+    }
+  } else if (node is List) {
+    for (final item in node) {
+      collectPlaylistVideos(item, out);
+    }
+  }
+}
+
+VideoInfo? parsePlaylistVideo(Map<String, dynamic> r) {
+  final id = r['videoId'];
+  if (id is! String) return null;
+  return VideoInfo(
+    id: id,
+    title: runs(r['title']) ?? '',
+    author: runs(r['shortBylineText']) ?? '',
+    channelId: browseId(r['shortBylineText']) ?? '',
+    thumbnailUrl: thumbnail(r['thumbnail']),
+    duration: duration(r['lengthText']),
+    viewCount: 0,
+    uploaded: _lastRun(r['videoInfo']),
+  );
+}
+
+String? _lastRun(dynamic node) {
+  if (node is! Map<String, dynamic>) return null;
+  final runList = node['runs'];
+  if (runList is! List || runList.isEmpty) return null;
+  final last = runList.last;
+  if (last is! Map<String, dynamic>) return null;
+  final text = last['text'];
+  return text is String ? text : null;
+}
+
+void collectPlaylists(dynamic node, List<PlaylistInfo> out) {
+  if (node is Map<String, dynamic>) {
+    final renderer = node['playlistRenderer'];
+    if (renderer is Map<String, dynamic>) {
+      final playlist = parsePlaylist(renderer);
+      if (playlist != null) out.add(playlist);
+    }
+    for (final value in node.values) {
+      collectPlaylists(value, out);
+    }
+  } else if (node is List) {
+    for (final item in node) {
+      collectPlaylists(item, out);
+    }
+  }
+}
+
+PlaylistInfo? parsePlaylist(Map<String, dynamic> r) {
+  final id = r['playlistId'];
+  if (id is! String) return null;
+  return PlaylistInfo(
+    id: id,
+    title: runs(r['title']) ?? '',
+    author: runs(r['longBylineText']) ?? runs(r['shortBylineText']) ?? '',
+    thumbnailUrl: thumbnail(r['thumbnail']) ?? thumbnail(r['thumbnails']),
+    videoCount: compactCount(
+      runs(r['videoCountText']) ?? runs(r['videoCount']) ?? '',
+    ),
+  );
+}
+
 ChannelInfo? parseChannelRenderer(Map<String, dynamic> r) {
   final id = r['channelId'];
   if (id is! String) return null;

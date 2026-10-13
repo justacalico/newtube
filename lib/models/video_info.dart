@@ -96,8 +96,13 @@ class VideoDetails {
 class SearchResults {
   final List<VideoInfo> videos;
   final List<ChannelInfo> channels;
+  final List<PlaylistInfo> playlists;
 
-  const SearchResults({this.videos = const [], this.channels = const []});
+  const SearchResults({
+    this.videos = const [],
+    this.channels = const [],
+    this.playlists = const [],
+  });
 }
 
 class CommentInfo {
@@ -129,4 +134,22 @@ class CommentsResult {
   final String? continuation;
 
   const CommentsResult({this.comments = const [], this.continuation});
+}
+
+class PlaylistInfo {
+  final String id;
+  final String title;
+  final String author;
+  final String? thumbnailUrl;
+  final int videoCount;
+  final List<VideoInfo> videos;
+
+  const PlaylistInfo({
+    required this.id,
+    required this.title,
+    this.author = '',
+    this.thumbnailUrl,
+    this.videoCount = 0,
+    this.videos = const [],
+  });
 }

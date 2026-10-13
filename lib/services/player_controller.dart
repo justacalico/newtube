@@ -21,6 +21,7 @@ abstract class PlayerController {
   Stream<double> get rateStream;
   Stream<double> get volumeStream;
   Stream<bool> get mutedStream;
+  Stream<bool> get completedStream;
 
   Future<void> open(String url, {String? audioUrl});
   Future<void> play();

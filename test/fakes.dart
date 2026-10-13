@@ -21,6 +21,7 @@ import 'package:newtube/state/history_store.dart';
 import 'package:newtube/state/search_history_store.dart';
 import 'package:newtube/state/settings_store.dart';
 import 'package:newtube/state/subscriptions_store.dart';
+import 'package:newtube/state/watch_later_store.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -86,7 +87,16 @@ class FakeYouTubeApi implements YouTubeApi {
     this.uploads = const [],
     this.commentsResult = const CommentsResult(),
     this.commentPages = const {},
-  }) {
+    PlaylistInfo? playlistInfo,
+  }) : playlistInfo =
+           playlistInfo ??
+           const PlaylistInfo(
+             id: 'pl1',
+             title: 'Test playlist',
+             author: 'Channel One',
+             videoCount: 2,
+             videos: testVideos,
+           ) {
     details ??= VideoDetails(
       info: testVideos.first,
       description: 'A video description',
@@ -141,6 +151,12 @@ class FakeYouTubeApi implements YouTubeApi {
 
   @override
   Future<String?> resolveChannel(String url) async => channelResolutions[url];
+
+  PlaylistInfo playlistInfo;
+
+  @override
+  Future<PlaylistInfo> playlist(String playlistId) async =>
+      error != null ? _fail() : playlistInfo;
 }
 
 class FakePlayerController implements PlayerController {
@@ -151,6 +167,7 @@ class FakePlayerController implements PlayerController {
   final _rateChanges = StreamController<double>.broadcast();
   final _volumeChanges = StreamController<double>.broadcast();
   final _mutedChanges = StreamController<bool>.broadcast();
+  final _completed = StreamController<bool>.broadcast();
 
   @override
   Duration position = Duration.zero;
@@ -179,6 +196,7 @@ class FakePlayerController implements PlayerController {
   void emitDuration(Duration d) => _duration.add(d);
   void emitPlaying(bool v) => _playing.add(v);
   void emitBuffering(bool v) => _buffering.add(v);
+  void emitCompleted() => _completed.add(true);
 
   @override
   Stream<Duration> get positionStream => _position.stream;
@@ -194,6 +212,8 @@ class FakePlayerController implements PlayerController {
   Stream<double> get volumeStream => _volumeChanges.stream;
   @override
   Stream<bool> get mutedStream => _mutedChanges.stream;
+  @override
+  Stream<bool> get completedStream => _completed.stream;
 
   @override
   Future<void> open(String url, {String? audioUrl}) async {
@@ -315,6 +335,7 @@ Future<AppState> testState({
   FakeVersionChecker? versionChecker,
   SettingsStore? settings,
   SubscriptionsStore? subscriptions,
+  WatchLaterStore? watchLater,
   HistoryStore? history,
   SearchHistoryStore? searchHistory,
   List<Uri>? launched,
@@ -333,6 +354,7 @@ Future<AppState> testState({
     api: api ?? FakeYouTubeApi(feed: testVideos),
     settings: settings ?? await SettingsStore.load(p),
     subscriptions: subscriptions ?? await SubscriptionsStore.load(p),
+    watchLater: watchLater ?? await WatchLaterStore.load(p),
     history: history ?? await HistoryStore.load(p),
     searchHistory: searchHistory ?? await SearchHistoryStore.load(p),
     launch: (uri) async {

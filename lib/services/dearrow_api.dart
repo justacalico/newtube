@@ -78,6 +78,19 @@ class DeArrowApi implements YouTubeApi {
   Future<String?> resolveChannel(String url) => inner.resolveChannel(url);
 
   @override
+  Future<PlaylistInfo> playlist(String playlistId) async {
+    final playlist = await inner.playlist(playlistId);
+    return PlaylistInfo(
+      id: playlist.id,
+      title: playlist.title,
+      author: playlist.author,
+      thumbnailUrl: playlist.thumbnailUrl,
+      videoCount: playlist.videoCount,
+      videos: await _applyAll(playlist.videos),
+    );
+  }
+
+  @override
   Future<List<VideoInfo>> channelVideos(String channelId) =>
       inner.channelVideos(channelId).then(_applyAll);
 }

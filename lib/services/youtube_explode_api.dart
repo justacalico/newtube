@@ -272,6 +272,27 @@ class YouTubeExplodeApi implements YouTubeApi {
   Future<String?> resolveChannel(String url) => _innertube.resolveChannel(url);
 
   @override
+  Future<PlaylistInfo> playlist(String playlistId) async {
+    try {
+      final playlist = await _yt.playlists.get(playlistId);
+      final videos = <VideoInfo>[];
+      await for (final v in _yt.playlists.getVideos(playlistId)) {
+        videos.add(_mapVideo(v));
+      }
+      return PlaylistInfo(
+        id: playlist.id.value,
+        title: playlist.title,
+        author: playlist.author,
+        thumbnailUrl: _proxied(playlist.thumbnails.highResUrl),
+        videoCount: playlist.videoCount ?? videos.length,
+        videos: videos,
+      );
+    } catch (_) {
+      return _innertube.playlist(playlistId);
+    }
+  }
+
+  @override
   Future<List<VideoInfo>> channelVideos(String channelId) =>
       _innertube.channelVideos(channelId);
 }

@@ -382,4 +382,35 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get subscriptionsExportFailed => 'Cealaíodh nó theip ar an easpórtáil';
+
+  @override
+  String get navWatchLater => 'Féach níos déanaí';
+
+  @override
+  String get watchLaterEmpty => 'Níl aon rud sábháilte';
+
+  @override
+  String get watchLaterAdd => 'Féach níos déanaí';
+
+  @override
+  String get watchLaterRemove => 'Bain as Féach níos déanaí';
+
+  @override
+  String videoCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count físeán',
+      many: '$count bhfíseán',
+      few: '$count físeán',
+      two: '$count físeán',
+      one: '$count físeán',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String playlistProgress(String playlist, int index, int total) {
+    return '$playlist · $index/$total';
+  }
 }

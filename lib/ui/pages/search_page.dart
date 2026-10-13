@@ -6,6 +6,7 @@ import '../../state/app_state.dart';
 import '../widgets/thumbnail.dart';
 import '../widgets/video_grid.dart';
 import 'channel_page.dart';
+import 'playlist_page.dart';
 import 'watch_page.dart';
 
 class SearchPage extends StatefulWidget {
@@ -134,6 +135,67 @@ class _SearchPageState extends State<SearchPage> {
                                                 channel.name,
                                                 maxLines: 2,
                                                 overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      if (_results.playlists.isNotEmpty)
+                        SizedBox(
+                          height: 96,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            children: [
+                              for (final playlist in _results.playlists)
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 8),
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(8),
+                                      onTap: () =>
+                                          openPlaylistPage(context, playlist),
+                                      child: SizedBox(
+                                        width: 180,
+                                        child: Row(
+                                          children: [
+                                            VideoThumbnail(
+                                              url: playlist.thumbnailUrl,
+                                              width: 48,
+                                              height: 48,
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    playlist.title,
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                  Text(
+                                                    l10n.videoCount(
+                                                      playlist.videoCount,
+                                                    ),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodySmall,
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           ],
