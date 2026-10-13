@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -10,7 +12,7 @@ import '../../services/sponsor_block.dart';
 import '../../utils/chapters.dart';
 import '../../utils/format.dart';
 
-class PlayerView extends StatelessWidget {
+class PlayerView extends StatefulWidget {
   final PlayerController player;
   final List<PlayableStream> streams;
   final PlayableStream? current;
@@ -40,7 +42,71 @@ class PlayerView extends StatelessWidget {
     this.pipActions,
   });
 
+  @override
+  State<PlayerView> createState() => _PlayerViewState();
+}
+
+class _PlayerViewState extends State<PlayerView> {
   static const _rates = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
+  static const _hideDelay = Duration(seconds: 3);
+
+  PlayerController get _player => widget.player;
+
+  StreamSubscription<bool>? _playingSub;
+  Timer? _hideTimer;
+  bool _controlsVisible = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _playingSub = _player.playingStream.listen(_onPlayingChanged);
+    if (_player.playing) _scheduleHide();
+  }
+
+  @override
+  void didUpdateWidget(PlayerView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.player != widget.player) {
+      _playingSub?.cancel();
+      _playingSub = _player.playingStream.listen(_onPlayingChanged);
+    }
+  }
+
+  @override
+  void dispose() {
+    _hideTimer?.cancel();
+    _playingSub?.cancel();
+    super.dispose();
+  }
+
+  void _onPlayingChanged(bool playing) {
+    if (playing) {
+      _scheduleHide();
+    } else {
+      _hideTimer?.cancel();
+      if (!_controlsVisible) setState(() => _controlsVisible = true);
+    }
+  }
+
+  void _scheduleHide() {
+    _hideTimer?.cancel();
+    _hideTimer = Timer(_hideDelay, () {
+      if (mounted && _player.playing && _controlsVisible) {
+        setState(() => _controlsVisible = false);
+      }
+    });
+  }
+
+  void _showControls() {
+    if (!_controlsVisible) setState(() => _controlsVisible = true);
+    _scheduleHide();
+  }
+
+  void _hideControls() {
+    if (_player.playing && _controlsVisible) {
+      setState(() => _controlsVisible = false);
+    }
+  }
 
   List<Widget> _streamItems(
     Iterable<PlayableStream> list,
@@ -59,8 +125,8 @@ class PlayerView extends StatelessWidget {
   ];
 
   Widget _settingsMenu(AppLocalizations l10n, double rate) {
-    final timer = sleepTimer;
-    final audioStreams = streams.where((s) => !s.hasVideo);
+    final timer = widget.sleepTimer;
+    final audioStreams = widget.streams.where((s) => !s.hasVideo);
     return MenuAnchor(
       builder: (context, controller, child) => IconButton(
         icon: const Icon(Icons.settings, color: Colors.white),
@@ -72,10 +138,10 @@ class PlayerView extends StatelessWidget {
         SubmenuButton(
           leadingIcon: const Icon(Icons.video_settings),
           menuChildren: _streamItems(
-            streams.where((s) => s.hasVideo),
-            current,
+            widget.streams.where((s) => s.hasVideo),
+            widget.current,
             (s) => s.quality,
-            onQualitySelected,
+            widget.onQualitySelected,
           ),
           child: Text(l10n.quality),
         ),
@@ -84,9 +150,10 @@ class PlayerView extends StatelessWidget {
             leadingIcon: const Icon(Icons.audiotrack),
             menuChildren: _streamItems(
               audioStreams,
-              currentAudio ?? (current?.hasVideo == false ? current : null),
+              widget.currentAudio ??
+                  (widget.current?.hasVideo == false ? widget.current : null),
               (s) => s.audioTrackName ?? s.audioLanguage ?? s.quality,
-              onAudioSelected,
+              widget.onAudioSelected,
             ),
             child: Text(l10n.audio),
           ),
@@ -95,7 +162,7 @@ class PlayerView extends StatelessWidget {
           menuChildren: [
             for (final r in _rates)
               MenuItemButton(
-                onPressed: () => player.setRate(r),
+                onPressed: () => _player.setRate(r),
                 leadingIcon: r == rate
                     ? const Icon(Icons.check, size: 18)
                     : const SizedBox(width: 18),
@@ -132,25 +199,35 @@ class PlayerView extends StatelessWidget {
     );
   }
 
-  void _togglePlayback() => player.playing ? player.pause() : player.play();
+  void _togglePlayback() {
+    _showControls();
+    _player.playing ? _player.pause() : _player.play();
+  }
 
-  void _toggleMute() => player.setMuted(!player.muted);
+  void _toggleMute() {
+    _showControls();
+    _player.setMuted(!_player.muted);
+  }
 
-  void _adjustVolume(double delta) =>
-      player.setVolume((player.volume + delta).clamp(0.0, 1.0));
+  void _adjustVolume(double delta) {
+    _showControls();
+    _player.setVolume((_player.volume + delta).clamp(0.0, 1.0));
+  }
 
   void _stepRate(int direction) {
-    var index = _rates.indexWhere((r) => r >= player.rate - 0.001);
+    _showControls();
+    var index = _rates.indexWhere((r) => r >= _player.rate - 0.001);
     if (index < 0) index = _rates.length - 1;
-    player.setRate(_rates[(index + direction).clamp(0, _rates.length - 1)]);
+    _player.setRate(_rates[(index + direction).clamp(0, _rates.length - 1)]);
   }
 
   void _skipBy(Duration delta) {
-    var target = player.position + delta;
-    final total = player.duration;
+    _showControls();
+    var target = _player.position + delta;
+    final total = _player.duration;
     if (target < Duration.zero) target = Duration.zero;
     if (total > Duration.zero && target > total) target = total;
-    player.seek(target);
+    _player.seek(target);
   }
 
   @override
@@ -169,7 +246,10 @@ class PlayerView extends StatelessWidget {
         const SingleActivator(LogicalKeyboardKey.space): _togglePlayback,
         const SingleActivator(LogicalKeyboardKey.keyK): _togglePlayback,
         const SingleActivator(LogicalKeyboardKey.keyM): _toggleMute,
-        const SingleActivator(LogicalKeyboardKey.keyF): onToggleFullscreen,
+        const SingleActivator(LogicalKeyboardKey.keyF): () {
+          _showControls();
+          widget.onToggleFullscreen();
+        },
         const SingleActivator(LogicalKeyboardKey.arrowUp): () =>
             _adjustVolume(0.05),
         const SingleActivator(LogicalKeyboardKey.arrowDown): () =>
@@ -179,255 +259,285 @@ class PlayerView extends StatelessWidget {
       },
       child: Focus(
         autofocus: true,
-        child: ColoredBox(
-          color: Colors.black,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Center(child: player.buildView(context)),
-              Positioned.fill(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: _togglePlayback,
-                ),
-              ),
-              if (segmentSkipper != null)
-                Positioned(
-                  right: 8,
-                  bottom: 56,
-                  child: ListenableBuilder(
-                    listenable: segmentSkipper!,
-                    builder: (context, _) {
-                      if (segmentSkipper!.active == null) {
-                        return const SizedBox.shrink();
-                      }
-                      return FilledButton.icon(
-                        style: FilledButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.black,
-                        ),
-                        onPressed: segmentSkipper!.skip,
-                        icon: const Icon(Icons.skip_next, size: 18),
-                        label: Text(l10n.skipSegment),
-                      );
-                    },
+        child: MouseRegion(
+          cursor: _controlsVisible
+              ? MouseCursor.defer
+              : SystemMouseCursors.none,
+          onHover: (_) => _showControls(),
+          onExit: (_) => _hideControls(),
+          child: ColoredBox(
+            color: Colors.black,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Center(child: _player.buildView(context)),
+                Positioned.fill(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: _togglePlayback,
                   ),
                 ),
-              Positioned(
-                left: 0,
-                right: 0,
-                top: 0,
-                child: StreamBuilder<bool>(
-                  stream: player.bufferingStream,
-                  initialData: player.buffering,
-                  builder: (context, snapshot) => snapshot.data == true
-                      ? const LinearProgressIndicator(minHeight: 3)
-                      : const SizedBox(height: 3),
-                ),
-              ),
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  color: Colors.black54,
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Row(
-                    children: [
-                      StreamBuilder<bool>(
-                        stream: player.playingStream,
-                        initialData: player.playing,
-                        builder: (context, snapshot) => IconButton(
-                          icon: Icon(
-                            snapshot.data == true
-                                ? Icons.pause
-                                : Icons.play_arrow,
+                if (widget.segmentSkipper != null)
+                  Positioned(
+                    right: 8,
+                    bottom: 56,
+                    child: ListenableBuilder(
+                      listenable: widget.segmentSkipper!,
+                      builder: (context, _) {
+                        if (widget.segmentSkipper!.active == null) {
+                          return const SizedBox.shrink();
+                        }
+                        return FilledButton.icon(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black,
                           ),
-                          color: Colors.white,
-                          onPressed: () => snapshot.data == true
-                              ? player.pause()
-                              : player.play(),
-                        ),
-                      ),
-                      StreamBuilder<Duration>(
-                        stream: player.durationStream,
-                        initialData: player.duration,
-                        builder: (context, durationSnap) {
-                          final total = durationSnap.data ?? Duration.zero;
-                          return StreamBuilder<Duration>(
-                            stream: player.positionStream,
-                            initialData: player.position,
-                            builder: (context, posSnap) {
-                              final pos = posSnap.data ?? Duration.zero;
-                              final clamped = pos > total ? total : pos;
-                              final chapter = chapterAt(chapters, clamped);
-                              return Expanded(
-                                child: Row(
-                                  children: [
-                                    Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          formatDuration(clamped),
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                        if (chapter != null)
-                                          ConstrainedBox(
-                                            constraints: const BoxConstraints(
-                                              maxWidth: 120,
-                                            ),
-                                            child: Text(
-                                              chapter.title,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(
-                                                color: Colors.white70,
-                                                fontSize: 10,
-                                              ),
-                                            ),
-                                          ),
-                                      ],
-                                    ),
-                                    Expanded(
-                                      child: Stack(
-                                        alignment: Alignment.center,
-                                        children: [
-                                          Slider(
-                                            value: clamped.inMilliseconds
-                                                .toDouble()
-                                                .clamp(
-                                                  0,
-                                                  (total.inMilliseconds)
-                                                      .toDouble(),
+                          onPressed: widget.segmentSkipper!.skip,
+                          icon: const Icon(Icons.skip_next, size: 18),
+                          label: Text(l10n.skipSegment),
+                        );
+                      },
+                    ),
+                  ),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  child: StreamBuilder<bool>(
+                    stream: _player.bufferingStream,
+                    initialData: _player.buffering,
+                    builder: (context, snapshot) => snapshot.data == true
+                        ? const LinearProgressIndicator(minHeight: 3)
+                        : const SizedBox(height: 3),
+                  ),
+                ),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: AnimatedOpacity(
+                    opacity: _controlsVisible ? 1.0 : 0.0,
+                    duration: const Duration(milliseconds: 200),
+                    child: IgnorePointer(
+                      ignoring: !_controlsVisible,
+                      child: Listener(
+                        onPointerDown: (_) => _showControls(),
+                        child: Container(
+                          color: Colors.black54,
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Row(
+                            children: [
+                              StreamBuilder<bool>(
+                                stream: _player.playingStream,
+                                initialData: _player.playing,
+                                builder: (context, snapshot) => IconButton(
+                                  icon: Icon(
+                                    snapshot.data == true
+                                        ? Icons.pause
+                                        : Icons.play_arrow,
+                                  ),
+                                  color: Colors.white,
+                                  onPressed: () => snapshot.data == true
+                                      ? _player.pause()
+                                      : _player.play(),
+                                ),
+                              ),
+                              StreamBuilder<Duration>(
+                                stream: _player.durationStream,
+                                initialData: _player.duration,
+                                builder: (context, durationSnap) {
+                                  final total =
+                                      durationSnap.data ?? Duration.zero;
+                                  return StreamBuilder<Duration>(
+                                    stream: _player.positionStream,
+                                    initialData: _player.position,
+                                    builder: (context, posSnap) {
+                                      final pos = posSnap.data ?? Duration.zero;
+                                      final clamped = pos > total ? total : pos;
+                                      final chapter = chapterAt(
+                                        widget.chapters,
+                                        clamped,
+                                      );
+                                      return Expanded(
+                                        child: Row(
+                                          children: [
+                                            Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  formatDuration(clamped),
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 12,
+                                                  ),
                                                 ),
-                                            max: total.inMilliseconds
-                                                .toDouble()
-                                                .clamp(1, double.infinity),
-                                            onChanged: total == Duration.zero
-                                                ? null
-                                                : (v) => player.seek(
-                                                    Duration(
-                                                      milliseconds: v.round(),
+                                                if (chapter != null)
+                                                  ConstrainedBox(
+                                                    constraints:
+                                                        const BoxConstraints(
+                                                          maxWidth: 120,
+                                                        ),
+                                                    child: Text(
+                                                      chapter.title,
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: const TextStyle(
+                                                        color: Colors.white70,
+                                                        fontSize: 10,
+                                                      ),
                                                     ),
                                                   ),
-                                          ),
-                                          if (total > Duration.zero)
-                                            Positioned.fill(
-                                              child: IgnorePointer(
-                                                child: LayoutBuilder(
-                                                  builder: (context, cons) => Stack(
-                                                    children: [
-                                                      for (final marker
-                                                          in chapters)
-                                                        if (marker.start >
-                                                                Duration.zero &&
-                                                            marker.start <
-                                                                total)
-                                                          Positioned(
-                                                            left:
-                                                                12 +
-                                                                (cons.maxWidth -
-                                                                        24) *
-                                                                    (marker
-                                                                            .start
-                                                                            .inMilliseconds /
-                                                                        total
-                                                                            .inMilliseconds),
-                                                            top:
-                                                                (cons.maxHeight -
-                                                                    10) /
-                                                                2,
-                                                            child: Container(
-                                                              width: 2,
-                                                              height: 10,
-                                                              color: Colors
-                                                                  .white38,
+                                              ],
+                                            ),
+                                            Expanded(
+                                              child: Stack(
+                                                alignment: Alignment.center,
+                                                children: [
+                                                  Slider(
+                                                    value: clamped
+                                                        .inMilliseconds
+                                                        .toDouble()
+                                                        .clamp(
+                                                          0,
+                                                          (total.inMilliseconds)
+                                                              .toDouble(),
+                                                        ),
+                                                    max: total.inMilliseconds
+                                                        .toDouble()
+                                                        .clamp(
+                                                          1,
+                                                          double.infinity,
+                                                        ),
+                                                    onChanged:
+                                                        total == Duration.zero
+                                                        ? null
+                                                        : (v) => _player.seek(
+                                                            Duration(
+                                                              milliseconds: v
+                                                                  .round(),
                                                             ),
                                                           ),
-                                                    ],
                                                   ),
-                                                ),
+                                                  if (total > Duration.zero)
+                                                    Positioned.fill(
+                                                      child: IgnorePointer(
+                                                        child: LayoutBuilder(
+                                                          builder: (context, cons) => Stack(
+                                                            children: [
+                                                              for (final marker
+                                                                  in widget
+                                                                      .chapters)
+                                                                if (marker.start >
+                                                                        Duration
+                                                                            .zero &&
+                                                                    marker.start <
+                                                                        total)
+                                                                  Positioned(
+                                                                    left:
+                                                                        12 +
+                                                                        (cons.maxWidth -
+                                                                                24) *
+                                                                            (marker.start.inMilliseconds /
+                                                                                total.inMilliseconds),
+                                                                    top:
+                                                                        (cons.maxHeight -
+                                                                            10) /
+                                                                        2,
+                                                                    child: Container(
+                                                                      width: 2,
+                                                                      height:
+                                                                          10,
+                                                                      color: Colors
+                                                                          .white38,
+                                                                    ),
+                                                                  ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                ],
                                               ),
                                             ),
-                                        ],
-                                      ),
-                                    ),
-                                    Text(
-                                      formatDuration(total),
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                      if (pipActions != null)
-                        IconButton(
-                          icon: const Icon(
-                            Icons.picture_in_picture_alt_outlined,
-                            color: Colors.white,
-                          ),
-                          tooltip: l10n.pictureInPicture,
-                          onPressed: () => pipActions!.enterPip(),
-                        ),
-                      StreamBuilder<double>(
-                        stream: player.rateStream,
-                        initialData: player.rate,
-                        builder: (context, snapshot) {
-                          final timer = sleepTimer;
-                          if (timer == null) {
-                            return _settingsMenu(
-                              l10n,
-                              snapshot.data ?? player.rate,
-                            );
-                          }
-                          return ListenableBuilder(
-                            listenable: timer,
-                            builder: (context, _) => Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (timer.remaining != null)
-                                  Text(
-                                    formatDuration(timer.remaining!),
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                    ),
+                                            Text(
+                                              formatDuration(total),
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                              if (widget.pipActions != null)
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.picture_in_picture_alt_outlined,
+                                    color: Colors.white,
                                   ),
-                                _settingsMenu(
-                                  l10n,
-                                  snapshot.data ?? player.rate,
+                                  tooltip: l10n.pictureInPicture,
+                                  onPressed: () =>
+                                      widget.pipActions!.enterPip(),
                                 ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          isFullscreen
-                              ? Icons.fullscreen_exit
-                              : Icons.fullscreen,
+                              StreamBuilder<double>(
+                                stream: _player.rateStream,
+                                initialData: _player.rate,
+                                builder: (context, snapshot) {
+                                  final timer = widget.sleepTimer;
+                                  if (timer == null) {
+                                    return _settingsMenu(
+                                      l10n,
+                                      snapshot.data ?? _player.rate,
+                                    );
+                                  }
+                                  return ListenableBuilder(
+                                    listenable: timer,
+                                    builder: (context, _) => Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        if (timer.remaining != null)
+                                          Text(
+                                            formatDuration(timer.remaining!),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        _settingsMenu(
+                                          l10n,
+                                          snapshot.data ?? _player.rate,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  widget.isFullscreen
+                                      ? Icons.fullscreen_exit
+                                      : Icons.fullscreen,
+                                ),
+                                color: Colors.white,
+                                tooltip: l10n.fullscreen,
+                                onPressed: widget.onToggleFullscreen,
+                              ),
+                            ],
+                          ),
                         ),
-                        color: Colors.white,
-                        tooltip: l10n.fullscreen,
-                        onPressed: onToggleFullscreen,
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
