@@ -383,6 +383,16 @@ class _WatchPageState extends State<WatchPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    final pip = _pipActions;
+    if (pip == null) return _buildPage();
+    return ListenableBuilder(
+      listenable: pip.pipMode,
+      builder: (context, _) =>
+          pip.pipMode.value ? _PipSurface(player: _player) : _buildPage(),
+    );
+  }
+
+  Widget _buildPage() {
     final l10n = AppLocalizations.of(context);
     final state = AppScope.read(context);
     final player = _player;
@@ -647,6 +657,17 @@ class _FullscreenPlayerState extends State<_FullscreenPlayer> {
 
   @override
   Widget build(BuildContext context) {
+    final pip = widget.pipActions;
+    if (pip == null) return _buildPlayer();
+    return ListenableBuilder(
+      listenable: pip.pipMode,
+      builder: (context, _) => pip.pipMode.value
+          ? _PipSurface(player: widget.player)
+          : _buildPlayer(),
+    );
+  }
+
+  Widget _buildPlayer() {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
@@ -665,6 +686,23 @@ class _FullscreenPlayerState extends State<_FullscreenPlayer> {
           pipActions: widget.pipActions,
         ),
       ),
+    );
+  }
+}
+
+class _PipSurface extends StatelessWidget {
+  final PlayerController? player;
+
+  const _PipSurface({this.player});
+
+  @override
+  Widget build(BuildContext context) {
+    final player = this.player;
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: player == null
+          ? const SizedBox.shrink()
+          : Center(child: player.buildView(context)),
     );
   }
 }

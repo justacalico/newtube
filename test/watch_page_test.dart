@@ -633,6 +633,65 @@ void main() {
     expect(pip.exits, 1);
   });
 
+  testWidgets('pip mode shows only the video', (tester) async {
+    final pip = FakePipActions();
+    final state = await testState(
+      api: FakeYouTubeApi(),
+      player: FakePlayerController(),
+      pipActions: pip,
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+    expect(find.text('A video description'), findsOneWidget);
+
+    pip.pipMode.value = true;
+    await tester.pumpAndSettle();
+    expect(find.text('A video description'), findsNothing);
+    expect(find.byType(AppBar), findsNothing);
+    expect(find.byTooltip('Picture in picture'), findsNothing);
+
+    pip.pipMode.value = false;
+    await tester.pumpAndSettle();
+    expect(find.text('A video description'), findsOneWidget);
+  });
+
+  testWidgets('pip mode while fullscreen shows only the video', (tester) async {
+    final pip = FakePipActions();
+    final state = await testState(
+      api: FakeYouTubeApi(),
+      player: FakePlayerController(),
+      pipActions: pip,
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Fullscreen'));
+    await tester.pumpAndSettle();
+    expect(find.byIcon(Icons.fullscreen_exit), findsOneWidget);
+
+    pip.pipMode.value = true;
+    await tester.pumpAndSettle();
+    expect(find.byIcon(Icons.fullscreen_exit), findsNothing);
+    expect(find.byType(AppBar), findsNothing);
+
+    pip.pipMode.value = false;
+    await tester.pumpAndSettle();
+    expect(find.byIcon(Icons.fullscreen_exit), findsOneWidget);
+  });
+
+  testWidgets('pip mode before the player loads stays black', (tester) async {
+    final pip = FakePipActions();
+    final api = FakeYouTubeApi()..detailsGate = Completer<VideoDetails>();
+    final state = await testState(api: api, pipActions: pip);
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pump();
+
+    pip.pipMode.value = true;
+    await tester.pump();
+    expect(find.byType(AppBar), findsNothing);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+  });
+
   testWidgets('related videos failure still plays', (tester) async {
     final player = FakePlayerController();
     final state = await testState(api: _RelatedFailApi(), player: player);
