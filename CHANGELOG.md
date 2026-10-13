@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.16.0 - 2026-10-13
+#### Features
+- (**player**) 播放时自动隐藏播放控制栏 - (ee6d24d) - HttpAnimations
+- (**ui**) 已观看视频标记 - (8e1595f) - HttpAnimations
+- 本地播放列表 - (4c3d6f7) - HttpAnimations
+
+- - -
+
 ## v0.15.1 - 2026-10-13
 #### Bug Fixes
 - (**player**) 播放器随页面内容一起滚动 - (63e42e3) - HttpAnimations
