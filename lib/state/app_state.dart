@@ -10,6 +10,7 @@ import '../services/launcher.dart';
 import '../services/mcp_server.dart';
 import '../services/player_controller.dart';
 import '../services/sponsor_block.dart';
+import '../services/uploads_watcher.dart';
 import '../services/version_checker.dart';
 import '../services/window_actions.dart';
 import '../services/youtube_api.dart';
@@ -35,6 +36,7 @@ class AppState extends ChangeNotifier {
   final SaveFile? saveFile;
   final OpenFile? openFile;
   final SponsorBlockClient? sponsorBlock;
+  final UploadsWatcher? uploads;
   final bool isWeb;
 
   int _tabIndex = 0;
@@ -61,6 +63,7 @@ class AppState extends ChangeNotifier {
     this.saveFile,
     this.openFile,
     this.sponsorBlock,
+    this.uploads,
     this._versionChecker,
     this.isWeb = false,
   }) {

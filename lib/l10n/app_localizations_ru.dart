@@ -415,4 +415,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String playlistProgress(String playlist, int index, int total) {
     return '$playlist · $index/$total';
   }
+
+  @override
+  String get uploadNotifications => 'Уведомления о видео';
+
+  @override
+  String get uploadNotificationsHint =>
+      'Уведомлять о новых видео у подписанных каналов';
+
+  @override
+  String get uploadCheckInterval => 'Проверять загрузки';
+
+  @override
+  String everyMinutes(int minutes) {
+    return 'Каждые $minutes мин';
+  }
 }

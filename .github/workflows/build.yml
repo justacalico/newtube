@@ -175,7 +175,7 @@ jobs:
         if: startsWith(matrix.target, 'linux')
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev libmpv-dev dpkg-dev rpm flatpak flatpak-builder curl unzip zip
+          sudo apt-get install -y -qq clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev libmpv-dev libnotify-dev dpkg-dev rpm flatpak flatpak-builder curl unzip zip
 
       - name: Pub get
         run: flutter pub get

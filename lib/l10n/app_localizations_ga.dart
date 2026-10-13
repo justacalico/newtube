@@ -413,4 +413,19 @@ class AppLocalizationsGa extends AppLocalizations {
   String playlistProgress(String playlist, int index, int total) {
     return '$playlist · $index/$total';
   }
+
+  @override
+  String get uploadNotifications => 'Fógraí uaslódála';
+
+  @override
+  String get uploadNotificationsHint =>
+      'Cuir in iúl nuair a uaslódálann cainéil físeáin nua';
+
+  @override
+  String get uploadCheckInterval => 'Seiceáil uaslódáil';
+
+  @override
+  String everyMinutes(int minutes) {
+    return 'Gach $minutes nóiméad';
+  }
 }
