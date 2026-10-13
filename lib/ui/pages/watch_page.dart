@@ -38,6 +38,7 @@ class _WatchPageState extends State<WatchPage> {
   Object? _error;
   bool _fullscreen = false;
   bool _recorded = false;
+  int _switches = 0;
 
   @override
   void initState() {
@@ -158,11 +159,17 @@ class _WatchPageState extends State<WatchPage> {
   Future<void> _switchTo(String url, {String? audioUrl}) async {
     final player = _player;
     if (player == null) return;
+    final generation = ++_switches;
     final position = player.position;
     final wasPlaying = player.playing;
-    await player.open(url, audioUrl: audioUrl);
-    await player.seek(position);
-    if (!wasPlaying) await player.pause();
+    try {
+      await player.open(url, audioUrl: audioUrl);
+      if (!mounted || generation != _switches) return;
+      if (!wasPlaying) await player.pause();
+      await player.seek(position);
+    } catch (e) {
+      debugLog('[watch] ${widget.video.id}: stream switch failed: $e');
+    }
   }
 
   void _openFullscreen(PlayerController player) {
