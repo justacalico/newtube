@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/models/video_info.dart';
 import 'package:newtube/state/history_store.dart';
+import 'package:newtube/state/playlists_store.dart';
 import 'package:newtube/ui/widgets/subscribe_button.dart';
 import 'package:newtube/ui/widgets/thumbnail.dart';
+import 'package:newtube/ui/widgets/video_actions_menu.dart';
 import 'package:newtube/ui/widgets/video_card.dart';
 import 'package:newtube/ui/widgets/video_grid.dart';
 import 'package:newtube/ui/widgets/video_list_tile.dart';
@@ -155,10 +157,62 @@ void main() {
       VideoListTile(video: testVideos[1], onTap: () {}),
     );
     expect(find.text('Second video'), findsOneWidget);
-    expect(
-      find.byType(ListTile).evaluate().single.widget,
-      isA<ListTile>().having((t) => t.trailing, 'trailing', isNull),
+    final tile = tester.widget<ListTile>(find.byType(ListTile));
+    final trailing = tile.trailing! as Row;
+    expect(trailing.children.single, isA<VideoActionsMenu>());
+  });
+
+  testWidgets('VideoActionsMenu toggles watch later', (tester) async {
+    final state = await testState();
+    await pumpPage(
+      tester,
+      state,
+      VideoListTile(video: testVideos.first, onTap: () {}),
     );
+
+    await tester.tap(find.byIcon(Icons.more_vert));
+    await tester.pumpAndSettle();
+    expect(find.text('Watch later'), findsOneWidget);
+    expect(find.text('Add to playlist'), findsOneWidget);
+
+    await tester.tap(find.text('Watch later'));
+    await tester.pumpAndSettle();
+    expect(state.watchLater.contains('v1'), isTrue);
+
+    await tester.tap(find.byIcon(Icons.more_vert));
+    await tester.pumpAndSettle();
+    expect(find.text('Remove from Watch later'), findsOneWidget);
+    await tester.tap(find.text('Remove from Watch later'));
+    await tester.pumpAndSettle();
+    expect(state.watchLater.contains('v1'), isFalse);
+  });
+
+  testWidgets('VideoActionsMenu opens the playlist picker', (tester) async {
+    final store = PlaylistsStore([const PlaylistInfo(id: 'p1', title: 'Mix')]);
+    final state = await testState(playlists: store);
+    await pumpPage(
+      tester,
+      state,
+      SizedBox(
+        width: 400,
+        height: 400,
+        child: VideoCard(video: testVideos.first, onTap: () {}),
+      ),
+    );
+
+    await tester.tap(find.byIcon(Icons.more_vert));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Add to playlist'));
+    await tester.pumpAndSettle();
+    expect(find.text('Mix'), findsOneWidget);
+
+    await tester.tap(find.byType(CheckboxListTile));
+    await tester.pumpAndSettle();
+    expect(store.containsVideo('p1', 'v1'), isTrue);
+
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+    expect(find.text('Add to playlist'), findsNothing);
   });
 
   testWidgets('FeedStateView shows each state', (tester) async {

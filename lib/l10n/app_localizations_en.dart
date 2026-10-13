@@ -477,6 +477,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get playlistSaved => 'Saved to your playlists';
+
+  @override
+  String get videoActions => 'More options';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -951,4 +954,7 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get playlistSaved => 'Saved to your playlists';
+
+  @override
+  String get videoActions => 'More options';
 }

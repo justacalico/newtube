@@ -206,5 +206,6 @@
   "removeFromPlaylist": "Remove from playlist",
   "playlistEmpty": "This playlist is empty",
   "savePlaylist": "Save playlist",
-  "playlistSaved": "Saved to your playlists"
+  "playlistSaved": "Saved to your playlists",
+  "videoActions": "More options"
 }
