@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.15.0 - 2026-10-13
+#### Features
+- (**player**) 将视频设置合并到设置菜单 - (9229c41) - HttpAnimations
+
+- - -
+
 ## v0.14.1 - 2026-10-13
 #### Bug Fixes
 - 审查修复搜索播放列表与播放细节 - (e78789c) - HttpAnimations
