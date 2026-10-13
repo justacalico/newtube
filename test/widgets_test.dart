@@ -5,6 +5,7 @@ import 'package:newtube/ui/widgets/subscribe_button.dart';
 import 'package:newtube/ui/widgets/thumbnail.dart';
 import 'package:newtube/ui/widgets/video_card.dart';
 import 'package:newtube/ui/widgets/video_grid.dart';
+import 'package:newtube/ui/widgets/video_list_tile.dart';
 
 import 'fakes.dart';
 
@@ -99,6 +100,33 @@ void main() {
     expect(find.text('First video'), findsOneWidget);
     await tester.tap(find.text('First video'));
     expect(tapped, 1);
+  });
+
+  testWidgets('VideoListTile shows video and handles taps', (tester) async {
+    final state = await testState();
+    var tapped = 0;
+    await pumpPage(
+      tester,
+      state,
+      VideoListTile(video: testVideos.first, onTap: () => tapped++),
+    );
+    expect(find.text('First video'), findsOneWidget);
+    expect(find.text('Channel One'), findsOneWidget);
+    expect(find.text('3:21'), findsOneWidget);
+    await tester.tap(find.text('First video'));
+    expect(tapped, 1);
+  });
+
+  testWidgets('VideoListTile omits missing duration', (tester) async {
+    final state = await testState();
+    await pumpPage(
+      tester,
+      state,
+      VideoListTile(video: testVideos[1], onTap: () {}),
+    );
+    expect(find.text('Second video'), findsOneWidget);
+    expect(find.byType(ListTile).evaluate().single.widget, isA<ListTile>()
+        .having((t) => t.trailing, 'trailing', isNull));
   });
 
   testWidgets('FeedStateView shows each state', (tester) async {
