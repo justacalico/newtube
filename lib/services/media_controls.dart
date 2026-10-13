@@ -9,7 +9,7 @@ abstract class MediaControls {
     String? artist,
     String? artworkUri,
   });
-  Future<void> detach();
+  Future<void> detach(PlayerController player);
 }
 
 // coverage:ignore-start

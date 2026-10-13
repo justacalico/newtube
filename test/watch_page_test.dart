@@ -543,6 +543,32 @@ void main() {
     expect(controls.detaches, 1);
   });
 
+  testWidgets('stream open failure disposes the player', (tester) async {
+    final player = FakePlayerController()..openError = 'dead';
+    final state = await testState(
+      api: FakeYouTubeApi(),
+      player: player,
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+    expect(player.disposed, isTrue);
+    expect(find.text('Retry'), findsOneWidget);
+  });
+
+  testWidgets('media controls failure does not break playback', (
+    tester,
+  ) async {
+    final controls = FakeMediaControls()..attachThrows = true;
+    final state = await testState(
+      api: FakeYouTubeApi(),
+      player: FakePlayerController(),
+      mediaControls: controls,
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+    expect(find.text('A video description'), findsOneWidget);
+  });
+
   testWidgets('picture-in-picture button enters and exits pip', (tester) async {
     final pip = FakePipActions();
     final state = await testState(

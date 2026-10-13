@@ -570,6 +570,7 @@ class FakePipActions implements PipActions {
 class FakeMediaControls implements MediaControls {
   int attaches = 0;
   int detaches = 0;
+  bool attachThrows = false;
   String? lastTitle;
   String? lastArtist;
   String? lastArtwork;
@@ -581,6 +582,7 @@ class FakeMediaControls implements MediaControls {
     String? artist,
     String? artworkUri,
   }) async {
+    if (attachThrows) throw StateError('no audio service');
     attaches++;
     lastTitle = title;
     lastArtist = artist;
@@ -588,7 +590,7 @@ class FakeMediaControls implements MediaControls {
   }
 
   @override
-  Future<void> detach() async {
+  Future<void> detach(PlayerController player) async {
     detaches++;
   }
 }

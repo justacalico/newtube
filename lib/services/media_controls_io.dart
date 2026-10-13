@@ -17,12 +17,19 @@ class _PlaybackHandler extends BaseAudioHandler {
     }
     _subscriptions.clear();
     _player = player;
-    mediaItem.add(item);
+    mediaItem.add(item.copyWith(duration: player.duration));
     _subscriptions.add(
       player.playingStream.listen((playing) => _publish(playing)),
     );
     _subscriptions.add(
       player.positionStream.listen((_) => _publish(player.playing)),
+    );
+    _subscriptions.add(
+      player.durationStream.listen((duration) {
+        final item = mediaItem.value;
+        if (item != null) mediaItem.add(item.copyWith(duration: duration));
+        _publish(player.playing);
+      }),
     );
     _publish(player.playing);
   }
@@ -41,10 +48,10 @@ class _PlaybackHandler extends BaseAudioHandler {
     playbackState.add(
       PlaybackState(
         controls: [
-          MediaControl.pause,
-          MediaControl.play,
+          if (playing) MediaControl.pause else MediaControl.play,
           MediaControl.stop,
         ],
+        systemActions: const {MediaAction.seek},
         playing: playing,
         processingState: AudioProcessingState.ready,
         updatePosition: player.position,
@@ -63,14 +70,24 @@ class _PlaybackHandler extends BaseAudioHandler {
   Future<void> stop() async {
     await _player?.pause();
     clearPlayer();
+    mediaItem.add(null);
+    playbackState.add(
+      playbackState.value.copyWith(
+        processingState: AudioProcessingState.idle,
+        playing: false,
+      ),
+    );
+    await super.stop();
   }
 
   @override
-  Future<void> seek(Duration position) => _player?.seek(position) ?? Future.value();
+  Future<void> seek(Duration position) =>
+      _player?.seek(position) ?? Future.value();
 }
 
 class _AudioServiceControls implements MediaControls {
   _PlaybackHandler? _handler;
+  PlayerController? _attached;
 
   @override
   Future<void> attach(
@@ -79,6 +96,7 @@ class _AudioServiceControls implements MediaControls {
     String? artist,
     String? artworkUri,
   }) async {
+    _attached = player;
     final handler =
         _handler ??= await AudioService.init(
           builder: _PlaybackHandler.new,
@@ -89,10 +107,11 @@ class _AudioServiceControls implements MediaControls {
             androidStopForegroundOnPause: false,
           ),
         );
+    if (_attached != player) return;
     handler.setPlayer(
       player,
       MediaItem(
-        id: artworkUri ?? '',
+        id: artworkUri ?? player.hashCode.toString(),
         title: title,
         artist: artist,
         artUri: artworkUri == null ? null : Uri.parse(artworkUri),
@@ -101,7 +120,9 @@ class _AudioServiceControls implements MediaControls {
   }
 
   @override
-  Future<void> detach() async {
+  Future<void> detach(PlayerController player) async {
+    if (_attached != player) return;
+    _attached = null;
     _handler?.clearPlayer();
     await _handler?.stop();
   }
