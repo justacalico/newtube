@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 
 import '../models/video_info.dart';
 import '../utils/debug_log.dart';
+import '../utils/stream_probe.dart';
 import 'innertube.dart';
 import 'proxy_client.dart';
 import 'youtube_api.dart';
@@ -89,9 +90,9 @@ class InnertubeApi implements YouTubeApi {
     if (streaming is! Map<String, dynamic>) {
       debugLog('[api] $videoId: no streamingData in player response');
     }
-    final streams = <PlayableStream>[
+    final streams = await playableStreams(<PlayableStream>[
       if (streaming is Map<String, dynamic>) ..._streams(streaming),
-    ];
+    ], _http);
     debugLog('[api] $videoId: ${streams.length} playable streams');
     return VideoDetails(
       info: VideoInfo(

@@ -45,12 +45,14 @@ StreamChoice? pickDefaultStream(
   }
 
   if (desktop) {
-    final separate = videoStreams.firstWhere(
-      (s) => !s.hasAudio,
-      orElse: () => videoStreams.first,
-    );
-    final audio = separate.hasAudio ? null : bestAudioUrl(streams);
-    return StreamChoice(separate, audio);
+    final audio = bestAudioUrl(streams);
+    if (audio != null) {
+      final separate = videoStreams.firstWhere(
+        (s) => !s.hasAudio,
+        orElse: () => videoStreams.first,
+      );
+      if (!separate.hasAudio) return StreamChoice(separate, audio);
+    }
   }
 
   final muxed = videoStreams.firstWhere(
