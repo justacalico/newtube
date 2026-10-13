@@ -79,7 +79,10 @@ class SettingsStore extends ChangeNotifier {
           DeArrowMode.values.asNameMap()[prefs.getString(_deArrowModeKey)] ??
           DeArrowMode.off,
       uploadNotificationsEnabled: prefs.getBool(_uploadNotifyKey) ?? false,
-      uploadCheckIntervalMinutes: prefs.getInt(_uploadIntervalKey) ?? 30,
+      uploadCheckIntervalMinutes:
+          const {15, 30, 60, 120}.contains(prefs.getInt(_uploadIntervalKey))
+          ? prefs.getInt(_uploadIntervalKey)!
+          : 30,
     );
   }
 

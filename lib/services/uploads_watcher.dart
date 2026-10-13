@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xml/xml.dart';
 
-import '../models/video_info.dart';
 import '../state/settings_store.dart';
 import '../state/subscriptions_store.dart';
 import '../utils/debug_log.dart';
@@ -36,6 +35,7 @@ class UploadsWatcher {
   SettingsStore? _settings;
   Map<String, DateTime> _seen = {};
   bool _checking = false;
+  bool _disposed = false;
 
   UploadsWatcher({
     required this.prefs,
@@ -81,6 +81,7 @@ class UploadsWatcher {
   }
 
   void start(Duration interval) {
+    if (_disposed) return;
     if (_interval == interval && _timer != null) return;
     _interval = interval;
     _timer?.cancel();
@@ -95,6 +96,7 @@ class UploadsWatcher {
   }
 
   void dispose() {
+    _disposed = true;
     stop();
     _settings?.removeListener(_sync);
     _settings = null;
@@ -102,33 +104,36 @@ class UploadsWatcher {
   }
 
   Future<void> checkNow() async {
-    if (_checking) return;
+    if (_checking || _disposed) return;
     _checking = true;
     try {
       for (final channel in subscriptions.channels) {
-        final entry = await _tryLatest(channel);
-        if (entry == null) continue;
-        final seen = _seen[channel.id];
-        if (seen == null) {
-          _seen[channel.id] = entry.published;
-        } else if (entry.published.isAfter(seen)) {
-          _seen[channel.id] = entry.published;
-          await notify(channel.name, entry.title);
+        try {
+          final latest = await _latestUpload(channel.id);
+          if (latest == null) continue;
+          final seen = _seen[channel.id];
+          if (seen == null) {
+            _seen[channel.id] = latest.published;
+          } else if (latest.published.isAfter(seen)) {
+            _seen[channel.id] = latest.published;
+            await notify(channel.name, latest.title);
+          }
+        } on Object catch (e) {
+          debugLog('[uploads] ${channel.id}: check failed: $e');
         }
       }
+      final subscribed = {
+        for (final channel in subscriptions.channels) channel.id,
+      };
+      _seen.removeWhere((id, _) => !subscribed.contains(id));
       await _save();
+    } on Object catch (e) {
+      // coverage:ignore-start
+      debugLog('[uploads] check failed: $e');
+      // coverage:ignore-end
     } finally {
       _checking = false;
     }
-  }
-
-  Future<UploadEntry?> _tryLatest(ChannelInfo channel) => _latestUpload(
-    channel.id,
-  ).then((entry) => entry, onError: (Object e) => _logFailure(channel, e));
-
-  UploadEntry? _logFailure(ChannelInfo channel, Object error) {
-    debugLog('[uploads] ${channel.id}: check failed: $error');
-    return null;
   }
 
   Future<UploadEntry?> _latestUpload(String channelId) async {
