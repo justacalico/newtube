@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.17.0 - 2026-10-13
+#### Features
+- (**ui**) 视频卡片与列表的更多操作菜单 - (9103b16) - HttpAnimations
+
+- - -
+
 ## v0.16.0 - 2026-10-13
 #### Features
 - (**player**) 播放时自动隐藏播放控制栏 - (ee6d24d) - HttpAnimations
