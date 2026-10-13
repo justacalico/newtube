@@ -352,4 +352,34 @@ class AppLocalizationsGa extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get importSubscriptions => 'Iompórtáil síntiúis';
+
+  @override
+  String get importSubscriptionsHint =>
+      'Ó chomhad OPML (NewPipe, FreeTube, Takeout)';
+
+  @override
+  String get exportSubscriptions => 'Easpórtáil síntiúis';
+
+  @override
+  String get exportSubscriptionsHint => 'Sábháil an liosta síntiús mar OPML';
+
+  @override
+  String subscriptionsImported(int imported, int failed) {
+    return 'Iompórtáladh $imported cainéal, theip ar $failed';
+  }
+
+  @override
+  String get subscriptionsImportFailed =>
+      'Níorbh fhéidir an comhad OPML a léamh';
+
+  @override
+  String subscriptionsExportedTo(String path) {
+    return 'Síntiúis easpórtáilte chuig $path';
+  }
+
+  @override
+  String get subscriptionsExportFailed => 'Cealaíodh nó theip ar an easpórtáil';
 }

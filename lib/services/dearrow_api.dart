@@ -75,6 +75,9 @@ class DeArrowApi implements YouTubeApi {
   Future<ChannelInfo> channel(String channelId) => inner.channel(channelId);
 
   @override
+  Future<String?> resolveChannel(String url) => inner.resolveChannel(url);
+
+  @override
   Future<List<VideoInfo>> channelVideos(String channelId) =>
       inner.channelVideos(channelId).then(_applyAll);
 }

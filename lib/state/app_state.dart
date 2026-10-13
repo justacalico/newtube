@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/app_update.dart';
 import '../models/video_info.dart';
+import '../services/file_opener.dart';
 import '../services/file_saver.dart';
 import '../services/launcher.dart';
 import '../services/mcp_server.dart';
@@ -30,6 +31,7 @@ class AppState extends ChangeNotifier {
   final PlayerController Function() createPlayer;
   final McpServerFactory? createMcpServer;
   final SaveFile? saveFile;
+  final OpenFile? openFile;
   final SponsorBlockClient? sponsorBlock;
   final bool isWeb;
 
@@ -54,6 +56,7 @@ class AppState extends ChangeNotifier {
     this.windowActions,
     this.createMcpServer,
     this.saveFile,
+    this.openFile,
     this.sponsorBlock,
     this._versionChecker,
     this.isWeb = false,

@@ -269,6 +269,9 @@ class YouTubeExplodeApi implements YouTubeApi {
   }
 
   @override
+  Future<String?> resolveChannel(String url) => _innertube.resolveChannel(url);
+
+  @override
   Future<List<VideoInfo>> channelVideos(String channelId) =>
       _innertube.channelVideos(channelId);
 }

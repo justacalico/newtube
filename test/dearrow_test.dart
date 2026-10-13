@@ -174,6 +174,7 @@ void main() {
       expect(results.videos.first.title, 'Honest title');
       expect(results.channels.first, testChannel);
       expect((await a.comments('v1')).comments, isEmpty);
+      expect(await a.resolveChannel('https://www.youtube.com/@x'), isNull);
       expect(await a.channel('c1'), testChannel);
     });
 

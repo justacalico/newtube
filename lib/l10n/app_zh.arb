@@ -126,5 +126,30 @@
         "type": "int"
       }
     }
-  }
+  },
+  "importSubscriptions": "导入订阅",
+  "importSubscriptionsHint": "从 OPML 文件导入(NewPipe、FreeTube、Takeout)",
+  "exportSubscriptions": "导出订阅",
+  "exportSubscriptionsHint": "将订阅列表保存为 OPML",
+  "subscriptionsImported": "已导入 {imported} 个频道,{failed} 个失败",
+  "@subscriptionsImported": {
+    "placeholders": {
+      "imported": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "subscriptionsImportFailed": "无法读取 OPML 文件",
+  "subscriptionsExportedTo": "订阅已导出到 {path}",
+  "@subscriptionsExportedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionsExportFailed": "导出已取消或失败"
 }

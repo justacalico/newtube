@@ -739,6 +739,54 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'{count, plural, one{{count} reply} other{{count} replies}}'**
   String replyCount(int count);
+
+  /// No description provided for @importSubscriptions.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Import subscriptions'**
+  String get importSubscriptions;
+
+  /// No description provided for @importSubscriptionsHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'From an OPML file (NewPipe, FreeTube, Takeout)'**
+  String get importSubscriptionsHint;
+
+  /// No description provided for @exportSubscriptions.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Export subscriptions'**
+  String get exportSubscriptions;
+
+  /// No description provided for @exportSubscriptionsHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Save the subscription list as OPML'**
+  String get exportSubscriptionsHint;
+
+  /// No description provided for @subscriptionsImported.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Imported {imported} channels, {failed} failed'**
+  String subscriptionsImported(int imported, int failed);
+
+  /// No description provided for @subscriptionsImportFailed.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Could not read the OPML file'**
+  String get subscriptionsImportFailed;
+
+  /// No description provided for @subscriptionsExportedTo.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Subscriptions exported to {path}'**
+  String subscriptionsExportedTo(String path);
+
+  /// No description provided for @subscriptionsExportFailed.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Export cancelled or failed'**
+  String get subscriptionsExportFailed;
 }
 
 class _AppLocalizationsDelegate

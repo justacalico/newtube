@@ -136,6 +136,11 @@ class FakeYouTubeApi implements YouTubeApi {
   @override
   Future<List<VideoInfo>> channelVideos(String channelId) async =>
       error != null ? _fail() : uploads;
+
+  Map<String, String> channelResolutions = const {};
+
+  @override
+  Future<String?> resolveChannel(String url) async => channelResolutions[url];
 }
 
 class FakePlayerController implements PlayerController {
@@ -317,6 +322,7 @@ Future<AppState> testState({
   McpServerFactory? createMcpServer,
   Future<PackageInfo> Function()? packageInfo,
   Future<String?> Function(String name, Uint8List bytes)? saveFile,
+  Future<String?> Function()? openFile,
   SponsorBlockClient? sponsorBlock,
   Map<String, Object> initialPrefs = const {},
 }) async {
@@ -345,6 +351,7 @@ Future<AppState> testState({
     windowActions: windowActions,
     createMcpServer: createMcpServer,
     saveFile: saveFile,
+    openFile: openFile,
     sponsorBlock: sponsorBlock,
     versionChecker: versionChecker ?? FakeVersionChecker(),
     isWeb: isWeb,

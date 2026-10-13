@@ -126,5 +126,30 @@
         "type": "int"
       }
     }
-  }
+  },
+  "importSubscriptions": "Iompórtáil síntiúis",
+  "importSubscriptionsHint": "Ó chomhad OPML (NewPipe, FreeTube, Takeout)",
+  "exportSubscriptions": "Easpórtáil síntiúis",
+  "exportSubscriptionsHint": "Sábháil an liosta síntiús mar OPML",
+  "subscriptionsImported": "Iompórtáladh {imported} cainéal, theip ar {failed}",
+  "@subscriptionsImported": {
+    "placeholders": {
+      "imported": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "subscriptionsImportFailed": "Níorbh fhéidir an comhad OPML a léamh",
+  "subscriptionsExportedTo": "Síntiúis easpórtáilte chuig {path}",
+  "@subscriptionsExportedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionsExportFailed": "Cealaíodh nó theip ar an easpórtáil"
 }

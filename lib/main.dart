@@ -11,6 +11,7 @@ import 'services/launcher.dart';
 import 'services/mcp_server.dart';
 import 'services/dearrow.dart';
 import 'services/dearrow_api.dart';
+import 'services/file_opener.dart';
 import 'services/player_controller.dart';
 import 'services/sponsor_block.dart';
 import 'services/window_actions_impl.dart';
@@ -64,6 +65,7 @@ Future<AppState> createAppState(SharedPreferences prefs) async {
     windowActions: isDesktopPlatform ? WindowManagerActions() : null,
     createMcpServer: isDesktopPlatform ? createMcpServer : null,
     saveFile: isDesktopPlatform ? saveFileDialog : null,
+    openFile: kIsWeb ? null : openTextFileDialog,
     sponsorBlock: SponsorBlockClient(),
   );
 }
