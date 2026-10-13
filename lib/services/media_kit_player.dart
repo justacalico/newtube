@@ -45,7 +45,7 @@ class MediaKitPlayerController implements PlayerController {
           (Platform.isLinux || Platform.isWindows || Platform.isMacOS)) {
         final platform = _player.platform;
         if (platform is NativePlayer) {
-          await platform.setProperty('audio-files', audioUrl);
+          await platform.command(['audio-add', audioUrl]);
         }
       }
       await _player.play();
