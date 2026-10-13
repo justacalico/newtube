@@ -1,21 +1,21 @@
 import 'dart:io';
 
-import 'package:path_provider/path_provider.dart';
+import 'package:file_selector/file_selector.dart';
 
-Future<String> writeTextFile(
-  Directory dir,
-  String name,
-  String contents,
-) async {
-  final file = File('${dir.path}${Platform.pathSeparator}$name');
-  await file.writeAsString(contents);
-  return file.path;
+Future<String> writeTextFile(String path, String contents) async {
+  await File(path).writeAsString(contents);
+  return path;
 }
 
 // coverage:ignore-start
-Future<String?> downloadsFileSaver(String name, String contents) async {
-  final dir = await getDownloadsDirectory();
-  if (dir == null) return null;
-  return writeTextFile(dir, name, contents);
+Future<String?> saveFileDialog(String name, String contents) async {
+  final location = await getSaveLocation(
+    suggestedName: name,
+    acceptedTypeGroups: const [
+      XTypeGroup(label: 'MCP server', extensions: ['mcsp']),
+    ],
+  );
+  if (location == null) return null;
+  return writeTextFile(location.path, contents);
 }
 // coverage:ignore-end

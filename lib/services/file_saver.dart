@@ -5,5 +5,5 @@ import 'file_saver_stub.dart'
 typedef SaveTextFile = Future<String?> Function(String name, String contents);
 
 // coverage:ignore-start
-SaveTextFile get downloadsFileSaver => impl.downloadsFileSaver;
+SaveTextFile get saveFileDialog => impl.saveFileDialog;
 // coverage:ignore-end

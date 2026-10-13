@@ -374,11 +374,12 @@ void main() {
     expect(jsonDecode(encoded), doc);
   });
 
-  test('writeTextFile writes the export into a directory', () async {
+  test('writeTextFile writes the export to a path', () async {
     final dir = await Directory.systemTemp.createTemp('mcsp');
     addTearDown(() => dir.delete(recursive: true));
-    final path = await writeTextFile(dir, 'newtube.mcsp', '{"format":"mcsp"}');
-    expect(path, '${dir.path}${Platform.pathSeparator}newtube.mcsp');
+    final target = '${dir.path}${Platform.pathSeparator}newtube.mcsp';
+    final path = await writeTextFile(target, '{"format":"mcsp"}');
+    expect(path, target);
     expect(File(path).readAsStringSync(), '{"format":"mcsp"}');
   });
 

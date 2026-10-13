@@ -65,8 +65,8 @@ the app. Clients that only support stdio servers can reach it through a
 bridge such as `npx mcp-remote http://127.0.0.1:8642/mcp`.
 
 With the server on, Settings can export a `.mcsp` descriptor (name,
-version, endpoint and tool manifest) to the downloads folder. The same
-document can be written to disk without the app running:
+version, endpoint and tool manifest) through the native save dialog. The
+same document can be written to disk without the app running:
 
 ```
 dart run tool/export_mcsp.dart newtube.mcsp
