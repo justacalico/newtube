@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.11.0 - 2026-10-13
+#### Features
+- 视频页评论 - (f5b0c83) - HttpAnimations
+- DeArrow 众包标题与缩略图 - (48955ea) - HttpAnimations
+- SponsorBlock 跳过赞助片段 - (7f38a90) - HttpAnimations
+
+- - -
+
 ## v0.10.0 - 2026-10-13
 #### Features
 - 进度条章节标记 - (85df0f1) - HttpAnimations
