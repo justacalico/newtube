@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.14.0 - 2026-10-13
+#### Features
+- 移动端后台音频播放 - (ce7fe9e) - HttpAnimations
+#### Bug Fixes
+- 加固后台音频会话生命周期 - (92e2976) - HttpAnimations
+- 加固画中画实现 - (a69b9b5) - HttpAnimations
+- 加固上传通知与权限配置 - (2e3bbdd) - HttpAnimations
+- 修复 Linux 与 Android 构建依赖 - (c4fe53b) - HttpAnimations
+
+- - -
+
 ## v0.13.0 - 2026-10-13
 #### Features
 - 画中画播放 - (48c2bea) - HttpAnimations
