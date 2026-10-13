@@ -25,6 +25,8 @@ class WebPlayerController implements PlayerController {
   final _playing = StreamController<bool>.broadcast();
   final _buffering = StreamController<bool>.broadcast();
   final _rateChanges = StreamController<double>.broadcast();
+  final _volumeChanges = StreamController<double>.broadcast();
+  final _mutedChanges = StreamController<bool>.broadcast();
   double _rate = 1.0;
 
   Timer? _poll;
@@ -37,6 +39,10 @@ class WebPlayerController implements PlayerController {
     _video.onError.listen(
       (_) => debugLog('[player] video error: ${_video.error?.message}'),
     );
+    _video.onVolumeChange.listen((_) {
+      _volumeChanges.add(_video.volume.toDouble());
+      _mutedChanges.add(_video.muted);
+    });
   }
 
   @override
@@ -58,6 +64,12 @@ class WebPlayerController implements PlayerController {
   double get rate => _rate;
 
   @override
+  double get volume => _video.volume.toDouble();
+
+  @override
+  bool get muted => _video.muted;
+
+  @override
   Stream<Duration> get positionStream => _position.stream;
   @override
   Stream<Duration> get durationStream => _duration.stream;
@@ -67,6 +79,10 @@ class WebPlayerController implements PlayerController {
   Stream<bool> get bufferingStream => _buffering.stream;
   @override
   Stream<double> get rateStream => _rateChanges.stream;
+  @override
+  Stream<double> get volumeStream => _volumeChanges.stream;
+  @override
+  Stream<bool> get mutedStream => _mutedChanges.stream;
 
   void _syncAudio() {
     if (!_audioAttached) return;
@@ -110,7 +126,10 @@ class WebPlayerController implements PlayerController {
     _video.playbackRate = _rate;
     _video.defaultPlaybackRate = _rate;
     if (audioUrl != null) {
-      _audio = web.HTMLAudioElement()..src = audioUrl;
+      _audio = web.HTMLAudioElement()
+        ..src = audioUrl
+        ..volume = _video.volume
+        ..muted = _video.muted;
       _audioAttached = true;
     }
     _poll?.cancel();
@@ -152,6 +171,18 @@ class WebPlayerController implements PlayerController {
   }
 
   @override
+  Future<void> setVolume(double volume) async {
+    _video.volume = volume.clamp(0.0, 1.0);
+    if (_audioAttached) _audio.volume = _video.volume;
+  }
+
+  @override
+  Future<void> setMuted(bool muted) async {
+    _video.muted = muted;
+    if (_audioAttached) _audio.muted = muted;
+  }
+
+  @override
   Widget buildView(BuildContext context) =>
       HtmlElementView(viewType: _viewType);
 
@@ -171,6 +202,8 @@ class WebPlayerController implements PlayerController {
       _playing.close(),
       _buffering.close(),
       _rateChanges.close(),
+      _volumeChanges.close(),
+      _mutedChanges.close(),
     ]);
   }
 }

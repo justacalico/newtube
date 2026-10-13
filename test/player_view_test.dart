@@ -330,4 +330,143 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Normal'), findsOneWidget);
   });
+
+  testWidgets('J and L skip ten seconds', (tester) async {
+    final player = FakePlayerController()
+      ..duration = const Duration(minutes: 2)
+      ..position = const Duration(seconds: 30);
+    final state = await testState();
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
+          onToggleFullscreen: () {},
+        ),
+      ),
+    );
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyJ);
+    expect(player.lastSeek, const Duration(seconds: 20));
+
+    player.position = const Duration(seconds: 20);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyL);
+    expect(player.lastSeek, const Duration(seconds: 30));
+  });
+
+  testWidgets('K toggles playback and M toggles mute', (tester) async {
+    final player = FakePlayerController();
+    final state = await testState();
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
+          onToggleFullscreen: () {},
+        ),
+      ),
+    );
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyK);
+    expect(player.played, isTrue);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyM);
+    expect(player.muted, isTrue);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyM);
+    expect(player.muted, isFalse);
+  });
+
+  testWidgets('arrow keys adjust the volume', (tester) async {
+    final player = FakePlayerController()..volume = 0.5;
+    final state = await testState();
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
+          onToggleFullscreen: () {},
+        ),
+      ),
+    );
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
+    expect(player.volume, closeTo(0.55, 0.001));
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+    expect(player.volume, closeTo(0.5, 0.001));
+
+    player.volume = 0.02;
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+    expect(player.volume, 0.0);
+    player.volume = 0.99;
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
+    expect(player.volume, 1.0);
+  });
+
+  testWidgets('F toggles fullscreen', (tester) async {
+    final player = FakePlayerController();
+    final state = await testState();
+    var toggled = false;
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
+          onToggleFullscreen: () => toggled = true,
+        ),
+      ),
+    );
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyF);
+    expect(toggled, isTrue);
+  });
+
+  testWidgets('comma and period step the playback rate', (tester) async {
+    final player = FakePlayerController();
+    final state = await testState();
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
+          onToggleFullscreen: () {},
+        ),
+      ),
+    );
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.period);
+    expect(player.rate, 1.25);
+    await tester.sendKeyEvent(LogicalKeyboardKey.comma);
+    expect(player.rate, 1.0);
+    await tester.sendKeyEvent(LogicalKeyboardKey.comma);
+    expect(player.rate, 0.75);
+
+    for (var i = 0; i < 10; i++) {
+      await tester.sendKeyEvent(LogicalKeyboardKey.comma);
+    }
+    expect(player.rate, 0.25);
+    for (var i = 0; i < 10; i++) {
+      await tester.sendKeyEvent(LogicalKeyboardKey.period);
+    }
+    expect(player.rate, 2.0);
+  });
 }

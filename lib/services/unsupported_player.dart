@@ -14,6 +14,10 @@ class UnsupportedPlayerController implements PlayerController {
   bool get buffering => false;
   @override
   double get rate => 1.0;
+  @override
+  double get volume => 1.0;
+  @override
+  bool get muted => false;
 
   @override
   Stream<Duration> get positionStream => const Stream.empty();
@@ -25,6 +29,10 @@ class UnsupportedPlayerController implements PlayerController {
   Stream<bool> get bufferingStream => const Stream.empty();
   @override
   Stream<double> get rateStream => const Stream.empty();
+  @override
+  Stream<double> get volumeStream => const Stream.empty();
+  @override
+  Stream<bool> get mutedStream => const Stream.empty();
 
   @override
   Future<void> open(String url, {String? audioUrl}) async {
@@ -39,6 +47,10 @@ class UnsupportedPlayerController implements PlayerController {
   Future<void> seek(Duration position) async {}
   @override
   Future<void> setRate(double rate) async {}
+  @override
+  Future<void> setVolume(double volume) async {}
+  @override
+  Future<void> setMuted(bool muted) async {}
   @override
   Widget buildView(BuildContext context) => const SizedBox.shrink();
   @override

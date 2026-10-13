@@ -1,4 +1,5 @@
 // coverage:ignore-file
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
@@ -11,6 +12,9 @@ import 'player_controller.dart';
 class MediaKitPlayerController implements PlayerController {
   final Player _player;
   late final VideoController _videoController;
+  final _mutedChanges = StreamController<bool>.broadcast();
+  bool _muted = false;
+  double _unmutedVolume = 1.0;
 
   MediaKitPlayerController({Player? player}) : _player = player ?? Player() {
     _videoController = VideoController(_player);
@@ -26,6 +30,10 @@ class MediaKitPlayerController implements PlayerController {
   bool get buffering => _player.state.buffering;
   @override
   double get rate => _player.state.rate;
+  @override
+  double get volume => _player.state.volume / 100;
+  @override
+  bool get muted => _muted;
 
   @override
   Stream<Duration> get positionStream => _player.stream.position;
@@ -37,6 +45,10 @@ class MediaKitPlayerController implements PlayerController {
   Stream<bool> get bufferingStream => _player.stream.buffering;
   @override
   Stream<double> get rateStream => _player.stream.rate;
+  @override
+  Stream<double> get volumeStream => _player.stream.volume.map((v) => v / 100);
+  @override
+  Stream<bool> get mutedStream => _mutedChanges.stream;
 
   @override
   Future<void> open(String url, {String? audioUrl}) async {
@@ -74,9 +86,26 @@ class MediaKitPlayerController implements PlayerController {
   Future<void> setRate(double rate) => _player.setRate(rate);
 
   @override
+  Future<void> setVolume(double volume) async {
+    _unmutedVolume = volume.clamp(0.0, 1.0);
+    if (!_muted) await _player.setVolume(_unmutedVolume * 100);
+  }
+
+  @override
+  Future<void> setMuted(bool muted) async {
+    if (_muted == muted) return;
+    _muted = muted;
+    await _player.setVolume(muted ? 0 : _unmutedVolume * 100);
+    _mutedChanges.add(muted);
+  }
+
+  @override
   Widget buildView(BuildContext context) =>
       Video(controller: _videoController, controls: NoVideoControls);
 
   @override
-  Future<void> dispose() => _player.dispose();
+  Future<void> dispose() {
+    _mutedChanges.close();
+    return _player.dispose();
+  }
 }
