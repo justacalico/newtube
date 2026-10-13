@@ -518,4 +518,34 @@ void main() {
     await tester.pumpAndSettle();
     expect(sleepTimer.active, isFalse);
   });
+
+  testWidgets('chapters label follows the position', (tester) async {
+    final player = FakePlayerController()
+      ..duration = const Duration(minutes: 2);
+    final state = await testState();
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
+          onToggleFullscreen: () {},
+          chapters: const [
+            VideoChapter(start: Duration.zero, title: 'Intro'),
+            VideoChapter(start: Duration(minutes: 1), title: 'Main part'),
+          ],
+        ),
+      ),
+    );
+
+    expect(find.text('Intro'), findsOneWidget);
+
+    player.emitPosition(const Duration(seconds: 75));
+    await tester.pump();
+    expect(find.text('Main part'), findsOneWidget);
+    expect(find.text('Intro'), findsNothing);
+  });
 }

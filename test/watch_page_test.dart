@@ -193,6 +193,36 @@ void main() {
     expect(player.rate, 1.5);
   });
 
+  testWidgets('description timestamps show chapter title on the seek bar', (
+    tester,
+  ) async {
+    final player = FakePlayerController()
+      ..duration = const Duration(minutes: 2);
+    final api = FakeYouTubeApi(
+      details: const VideoDetails(
+        info: VideoInfo(
+          id: 'v1',
+          title: 'First video',
+          author: 'Channel One',
+          channelId: 'c1',
+        ),
+        description: '0:00 Intro\n1:00 The good part',
+        streams: testStreams,
+      ),
+    );
+    final state = await testState(api: api, player: player);
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Intro'), findsOneWidget);
+
+    player.position = const Duration(seconds: 75);
+    player.emitPosition(const Duration(seconds: 75));
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('The good part'), findsOneWidget);
+  });
+
   testWidgets('failed stream switch keeps playing the old stream', (
     tester,
   ) async {
