@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.8.0 - 2026-10-13
+#### Features
+- 播放速度调节 - (dbf0120) - HttpAnimations
+
+- - -
+
 ## v0.7.0 - 2026-10-13
 #### Features
 - 空格键切换播放暂停 - (a96f0d7) - HttpAnimations
