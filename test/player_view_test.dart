@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/l10n/app_localizations.dart';
 import 'package:newtube/models/video_info.dart';
@@ -161,5 +162,61 @@ void main() {
     await tester.tap(find.text('Audio only'));
     await tester.pumpAndSettle();
     expect(selected, testStreams[2]);
+  });
+
+  testWidgets('arrow keys skip five seconds', (tester) async {
+    final player = FakePlayerController()
+      ..duration = const Duration(minutes: 2)
+      ..position = const Duration(seconds: 30);
+    final state = await testState();
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onToggleFullscreen: () {},
+        ),
+      ),
+    );
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+    expect(player.lastSeek, const Duration(seconds: 35));
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+    expect(player.lastSeek, const Duration(seconds: 25));
+  });
+
+  testWidgets('arrow key seeks clamp to the video bounds', (tester) async {
+    final player = FakePlayerController()
+      ..duration = const Duration(minutes: 2)
+      ..position = const Duration(seconds: 2);
+    final state = await testState();
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onToggleFullscreen: () {},
+        ),
+      ),
+    );
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+    expect(player.lastSeek, Duration.zero);
+
+    player.position = const Duration(seconds: 119);
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+    expect(player.lastSeek, const Duration(minutes: 2));
+
+    player.duration = Duration.zero;
+    player.position = Duration.zero;
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+    expect(player.lastSeek, const Duration(seconds: 5));
   });
 }
