@@ -33,6 +33,15 @@ Widget _wrap(AppState state, Widget child) => AppScope(
 );
 
 void main() {
+  double controlsOpacity(WidgetTester tester) => tester
+      .widget<AnimatedOpacity>(
+        find.descendant(
+          of: find.byType(PlayerView),
+          matching: find.byType(AnimatedOpacity),
+        ),
+      )
+      .opacity;
+
   testWidgets('play and pause buttons drive the player', (tester) async {
     final player = FakePlayerController();
     final state = await testState();
@@ -125,7 +134,9 @@ void main() {
     expect(slider.onChanged, isNull);
   });
 
-  testWidgets('tapping the video toggles playback', (tester) async {
+  testWidgets('touch tap toggles the controls without pausing', (
+    tester,
+  ) async {
     final player = FakePlayerController()..playing = true;
     final state = await testState();
     await tester.pumpWidget(
@@ -142,11 +153,49 @@ void main() {
       ),
     );
 
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pump();
+    expect(controlsOpacity(tester), 0.0);
+
     await tester.tapAt(tester.getCenter(find.byType(PlayerView)));
+    await tester.pump();
+    expect(player.paused, isFalse);
+    expect(controlsOpacity(tester), 1.0);
+
+    await tester.tapAt(tester.getCenter(find.byType(PlayerView)));
+    await tester.pump();
+    expect(player.paused, isFalse);
+    expect(controlsOpacity(tester), 0.0);
+  });
+
+  testWidgets('mouse click toggles playback', (tester) async {
+    final player = FakePlayerController()..playing = true;
+    final state = await testState();
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
+          onToggleFullscreen: () {},
+        ),
+      ),
+    );
+
+    await tester.tapAt(
+      tester.getCenter(find.byType(PlayerView)),
+      kind: PointerDeviceKind.mouse,
+    );
     expect(player.paused, isTrue);
 
     player.playing = false;
-    await tester.tapAt(tester.getCenter(find.byType(PlayerView)));
+    await tester.tapAt(
+      tester.getCenter(find.byType(PlayerView)),
+      kind: PointerDeviceKind.mouse,
+    );
     expect(player.played, isTrue);
   });
 
@@ -550,15 +599,6 @@ void main() {
     expect(find.text('Intro'), findsNothing);
   });
 
-  double controlsOpacity(WidgetTester tester) => tester
-      .widget<AnimatedOpacity>(
-        find.descendant(
-          of: find.byType(PlayerView),
-          matching: find.byType(AnimatedOpacity),
-        ),
-      )
-      .opacity;
-
   testWidgets('controls auto-hide while playing and reappear on tap', (
     tester,
   ) async {
@@ -585,7 +625,7 @@ void main() {
 
     await tester.tapAt(tester.getCenter(find.byType(PlayerView)));
     await tester.pump();
-    expect(player.paused, isTrue);
+    expect(player.paused, isFalse);
     expect(controlsOpacity(tester), 1.0);
   });
 
