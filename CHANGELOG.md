@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.14.1 - 2026-10-13
+#### Bug Fixes
+- 审查修复搜索播放列表与播放细节 - (e78789c) - HttpAnimations
+
+- - -
+
 ## v0.14.0 - 2026-10-13
 #### Features
 - 移动端后台音频播放 - (ce7fe9e) - HttpAnimations
