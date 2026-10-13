@@ -607,6 +607,84 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Off'**
   String get sleepTimerOff;
+
+  /// No description provided for @sponsorBlock.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'SponsorBlock'**
+  String get sponsorBlock;
+
+  /// No description provided for @sponsorBlockHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Skip sponsored segments in videos'**
+  String get sponsorBlockHint;
+
+  /// No description provided for @sponsorBlockAutoSkip.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Skip automatically'**
+  String get sponsorBlockAutoSkip;
+
+  /// No description provided for @sponsorBlockAutoSkipHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Show a skip button on the player instead when off'**
+  String get sponsorBlockAutoSkipHint;
+
+  /// No description provided for @sponsorBlockCategories.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Skipped categories'**
+  String get sponsorBlockCategories;
+
+  /// No description provided for @skipSegment.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Skip'**
+  String get skipSegment;
+
+  /// No description provided for @done.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Done'**
+  String get done;
+
+  /// No description provided for @sponsorCategorySponsor.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Sponsor'**
+  String get sponsorCategorySponsor;
+
+  /// No description provided for @sponsorCategorySelfpromo.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Self-promotion'**
+  String get sponsorCategorySelfpromo;
+
+  /// No description provided for @sponsorCategoryIntro.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Intro'**
+  String get sponsorCategoryIntro;
+
+  /// No description provided for @sponsorCategoryOutro.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Outro'**
+  String get sponsorCategoryOutro;
+
+  /// No description provided for @sponsorCategoryInteraction.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Interaction reminder'**
+  String get sponsorCategoryInteraction;
+
+  /// No description provided for @sponsorCategoryMusicOfftopic.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Off-topic music'**
+  String get sponsorCategoryMusicOfftopic;
 }
 
 class _AppLocalizationsDelegate

@@ -97,5 +97,18 @@
     }
   },
   "sleepTimerEndOfVideo": "End of video",
-  "sleepTimerOff": "Off"
+  "sleepTimerOff": "Off",
+  "sponsorBlock": "SponsorBlock",
+  "sponsorBlockHint": "Skip sponsored segments in videos",
+  "sponsorBlockAutoSkip": "Skip automatically",
+  "sponsorBlockAutoSkipHint": "Show a skip button on the player instead when off",
+  "sponsorBlockCategories": "Skipped categories",
+  "skipSegment": "Skip",
+  "done": "Done",
+  "sponsorCategorySponsor": "Sponsor",
+  "sponsorCategorySelfpromo": "Self-promotion",
+  "sponsorCategoryIntro": "Intro",
+  "sponsorCategoryOutro": "Outro",
+  "sponsorCategoryInteraction": "Interaction reminder",
+  "sponsorCategoryMusicOfftopic": "Off-topic music"
 }

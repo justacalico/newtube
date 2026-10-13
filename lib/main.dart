@@ -10,6 +10,7 @@ import 'services/innertube_api.dart';
 import 'services/launcher.dart';
 import 'services/mcp_server.dart';
 import 'services/player_controller.dart';
+import 'services/sponsor_block.dart';
 import 'services/window_actions_impl.dart';
 import 'services/youtube_explode_api.dart';
 import 'state/app_state.dart';
@@ -57,6 +58,7 @@ Future<AppState> createAppState(SharedPreferences prefs) async {
     windowActions: isDesktopPlatform ? WindowManagerActions() : null,
     createMcpServer: isDesktopPlatform ? createMcpServer : null,
     saveFile: isDesktopPlatform ? saveFileDialog : null,
+    sponsorBlock: SponsorBlockClient(),
   );
 }
 

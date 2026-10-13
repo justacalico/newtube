@@ -4,6 +4,7 @@ import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../services/player_controller.dart';
 import '../../services/sleep_timer.dart';
+import '../../services/sponsor_block.dart';
 import '../../state/app_state.dart';
 import '../../utils/chapters.dart';
 import '../../utils/debug_log.dart';
@@ -33,6 +34,7 @@ class WatchPage extends StatefulWidget {
 class _WatchPageState extends State<WatchPage> {
   PlayerController? _player;
   SleepTimer? _sleepTimer;
+  SegmentSkipper? _skipper;
   VideoDetails? _details;
   ChannelInfo? _channel;
   List<VideoInfo> _related = const [];
@@ -112,10 +114,33 @@ class _WatchPageState extends State<WatchPage> {
         _currentStream = current;
         _currentAudio = currentAudio;
       });
+      _loadSegments(player);
     } catch (e) {
       debugLog('[watch] ${widget.video.id}: load failed: $e');
       if (!mounted) return;
       setState(() => _error = e);
+    }
+  }
+
+  Future<void> _loadSegments(PlayerController player) async {
+    final state = AppScope.read(context);
+    final client = state.sponsorBlock;
+    if (client == null || !state.settings.sponsorBlockEnabled) return;
+    try {
+      final segments = await client.segments(
+        widget.video.id,
+        state.settings.sponsorBlockCategories,
+      );
+      if (!mounted || _player != player || segments.isEmpty) return;
+      setState(
+        () => _skipper = SegmentSkipper(
+          player: player,
+          segments: segments,
+          autoSkip: state.settings.sponsorBlockAutoSkip,
+        ),
+      );
+    } catch (e) {
+      debugLog('[watch] ${widget.video.id}: sponsorblock failed: $e');
     }
   }
 
@@ -194,6 +219,7 @@ class _WatchPageState extends State<WatchPage> {
               onAudioSelected: _selectAudio,
               sleepTimer: _sleepTimer,
               chapters: _chapters,
+              segmentSkipper: _skipper,
             ),
           ),
         )
@@ -204,6 +230,7 @@ class _WatchPageState extends State<WatchPage> {
 
   @override
   void dispose() {
+    _skipper?.dispose();
     _sleepTimer?.dispose();
     _player?.dispose();
     super.dispose();
@@ -246,6 +273,7 @@ class _WatchPageState extends State<WatchPage> {
                           onToggleFullscreen: () => _openFullscreen(player),
                           sleepTimer: _sleepTimer,
                           chapters: _chapters,
+                          segmentSkipper: _skipper,
                         ),
                 ),
                 Expanded(
@@ -357,6 +385,7 @@ class _FullscreenPlayer extends StatefulWidget {
   final ValueChanged<PlayableStream> onAudioSelected;
   final SleepTimer? sleepTimer;
   final List<VideoChapter> chapters;
+  final SegmentSkipper? segmentSkipper;
 
   const _FullscreenPlayer({
     required this.player,
@@ -367,6 +396,7 @@ class _FullscreenPlayer extends StatefulWidget {
     required this.onAudioSelected,
     this.sleepTimer,
     this.chapters = const [],
+    this.segmentSkipper,
   });
 
   @override
@@ -406,6 +436,7 @@ class _FullscreenPlayerState extends State<_FullscreenPlayer> {
           isFullscreen: true,
           sleepTimer: widget.sleepTimer,
           chapters: widget.chapters,
+          segmentSkipper: widget.segmentSkipper,
         ),
       ),
     );

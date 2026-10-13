@@ -5,6 +5,7 @@ import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../services/player_controller.dart';
 import '../../services/sleep_timer.dart';
+import '../../services/sponsor_block.dart';
 import '../../utils/chapters.dart';
 import '../../utils/format.dart';
 
@@ -19,6 +20,7 @@ class PlayerView extends StatelessWidget {
   final bool isFullscreen;
   final SleepTimer? sleepTimer;
   final List<VideoChapter> chapters;
+  final SegmentSkipper? segmentSkipper;
 
   const PlayerView({
     super.key,
@@ -32,6 +34,7 @@ class PlayerView extends StatelessWidget {
     this.isFullscreen = false,
     this.sleepTimer,
     this.chapters = const [],
+    this.segmentSkipper,
   });
 
   static const _rates = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
@@ -116,6 +119,28 @@ class PlayerView extends StatelessWidget {
                   onTap: _togglePlayback,
                 ),
               ),
+              if (segmentSkipper != null)
+                Positioned(
+                  right: 8,
+                  bottom: 56,
+                  child: ListenableBuilder(
+                    listenable: segmentSkipper!,
+                    builder: (context, _) {
+                      if (segmentSkipper!.active == null) {
+                        return const SizedBox.shrink();
+                      }
+                      return FilledButton.icon(
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                        ),
+                        onPressed: segmentSkipper!.skip,
+                        icon: const Icon(Icons.skip_next, size: 18),
+                        label: Text(l10n.skipSegment),
+                      );
+                    },
+                  ),
+                ),
               Positioned(
                 left: 0,
                 right: 0,

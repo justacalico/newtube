@@ -86,6 +86,7 @@ void main() {
     expect(state.settings.autoplay, isFalse);
 
     expect(find.text('About'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Version 1.2.3'), 200);
     expect(find.text('Version 1.2.3'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('Check for updates'), 200);
     expect(find.text('Check for updates'), findsOneWidget);
@@ -96,6 +97,7 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
+    await tester.scrollUntilVisible(find.text('Version 1.2.3'), 200);
     expect(find.text('Version 1.2.3'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('Check for updates'), 200);
     await tester.ensureVisible(find.text('Check for updates'));
@@ -322,5 +324,39 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Could not save the export'), findsOneWidget);
     debugDefaultTargetPlatformOverride = null;
+  });
+
+  testWidgets('toggles sponsorblock and edits categories', (tester) async {
+    final state = await testState();
+    await pumpPage(tester, state, const SettingsPage());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(SwitchListTile, 'SponsorBlock'));
+    await tester.pump();
+    expect(state.settings.sponsorBlockEnabled, isTrue);
+    expect(find.text('Skip automatically'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(SwitchListTile, 'Skip automatically'));
+    await tester.pump();
+    expect(state.settings.sponsorBlockAutoSkip, isFalse);
+
+    await tester.tap(find.text('Skipped categories'));
+    await tester.pumpAndSettle();
+    expect(find.text('Interaction reminder'), findsOneWidget);
+    await tester.tap(find.text('Interaction reminder'));
+    await tester.pump();
+    await tester.tap(find.text('Self-promotion'));
+    await tester.pump();
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+    expect(
+      state.settings.sponsorBlockCategories.contains('interaction'),
+      isTrue,
+    );
+    expect(
+      state.settings.sponsorBlockCategories.contains('selfpromo'),
+      isFalse,
+    );
+    expect(find.textContaining('Interaction reminder'), findsOneWidget);
   });
 }

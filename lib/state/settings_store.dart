@@ -18,6 +18,10 @@ class SettingsStore extends ChangeNotifier {
   static const _searchHistoryKey = 'search_history_enabled';
   static const _mcpEnabledKey = 'mcp_enabled';
   static const _sidebarCollapsedKey = 'sidebar_collapsed';
+  static const _sponsorBlockKey = 'sponsorblock_enabled';
+  static const _sponsorBlockAutoSkipKey = 'sponsorblock_autoskip';
+  static const _sponsorBlockCategoriesKey = 'sponsorblock_categories';
+  static const defaultSponsorBlockCategories = {'sponsor', 'selfpromo'};
 
   AppTheme _theme;
   Locale? _locale;
@@ -26,6 +30,9 @@ class SettingsStore extends ChangeNotifier {
   bool _searchHistoryEnabled;
   bool _mcpEnabled;
   bool _sidebarCollapsed;
+  bool _sponsorBlockEnabled;
+  bool _sponsorBlockAutoSkip;
+  Set<String> _sponsorBlockCategories;
 
   SettingsStore({
     this._theme = AppTheme.system,
@@ -35,7 +42,11 @@ class SettingsStore extends ChangeNotifier {
     this._searchHistoryEnabled = true,
     this._mcpEnabled = false,
     this._sidebarCollapsed = false,
-  });
+    this._sponsorBlockEnabled = false,
+    this._sponsorBlockAutoSkip = true,
+    Set<String>? sponsorBlockCategories,
+  }) : _sponsorBlockCategories =
+           sponsorBlockCategories ?? Set.of(defaultSponsorBlockCategories);
 
   static Future<SettingsStore> load(SharedPreferences prefs) async {
     return SettingsStore(
@@ -48,6 +59,11 @@ class SettingsStore extends ChangeNotifier {
       searchHistoryEnabled: prefs.getBool(_searchHistoryKey) ?? true,
       mcpEnabled: prefs.getBool(_mcpEnabledKey) ?? false,
       sidebarCollapsed: prefs.getBool(_sidebarCollapsedKey) ?? false,
+      sponsorBlockEnabled: prefs.getBool(_sponsorBlockKey) ?? false,
+      sponsorBlockAutoSkip: prefs.getBool(_sponsorBlockAutoSkipKey) ?? true,
+      sponsorBlockCategories: prefs
+          .getStringList(_sponsorBlockCategoriesKey)
+          ?.toSet(),
     );
   }
 
@@ -72,6 +88,9 @@ class SettingsStore extends ChangeNotifier {
   bool get searchHistoryEnabled => _searchHistoryEnabled;
   bool get mcpEnabled => _mcpEnabled;
   bool get sidebarCollapsed => _sidebarCollapsed;
+  bool get sponsorBlockEnabled => _sponsorBlockEnabled;
+  bool get sponsorBlockAutoSkip => _sponsorBlockAutoSkip;
+  Set<String> get sponsorBlockCategories => _sponsorBlockCategories;
 
   Future<void> setTheme(AppTheme theme, SharedPreferences prefs) async {
     _theme = theme;
@@ -115,6 +134,36 @@ class SettingsStore extends ChangeNotifier {
   Future<void> setSidebarCollapsed(bool value, SharedPreferences prefs) async {
     _sidebarCollapsed = value;
     await prefs.setBool(_sidebarCollapsedKey, value);
+    notifyListeners();
+  }
+
+  Future<void> setSponsorBlockEnabled(
+    bool value,
+    SharedPreferences prefs,
+  ) async {
+    _sponsorBlockEnabled = value;
+    await prefs.setBool(_sponsorBlockKey, value);
+    notifyListeners();
+  }
+
+  Future<void> setSponsorBlockAutoSkip(
+    bool value,
+    SharedPreferences prefs,
+  ) async {
+    _sponsorBlockAutoSkip = value;
+    await prefs.setBool(_sponsorBlockAutoSkipKey, value);
+    notifyListeners();
+  }
+
+  Future<void> setSponsorBlockCategories(
+    Set<String> value,
+    SharedPreferences prefs,
+  ) async {
+    _sponsorBlockCategories = Set.of(value);
+    await prefs.setStringList(
+      _sponsorBlockCategoriesKey,
+      _sponsorBlockCategories.toList(),
+    );
     notifyListeners();
   }
 }

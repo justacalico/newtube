@@ -8,6 +8,7 @@ import '../services/file_saver.dart';
 import '../services/launcher.dart';
 import '../services/mcp_server.dart';
 import '../services/player_controller.dart';
+import '../services/sponsor_block.dart';
 import '../services/version_checker.dart';
 import '../services/window_actions.dart';
 import '../services/youtube_api.dart';
@@ -29,6 +30,7 @@ class AppState extends ChangeNotifier {
   final PlayerController Function() createPlayer;
   final McpServerFactory? createMcpServer;
   final SaveFile? saveFile;
+  final SponsorBlockClient? sponsorBlock;
   final bool isWeb;
 
   int _tabIndex = 0;
@@ -52,6 +54,7 @@ class AppState extends ChangeNotifier {
     this.windowActions,
     this.createMcpServer,
     this.saveFile,
+    this.sponsorBlock,
     this._versionChecker,
     this.isWeb = false,
   }) {

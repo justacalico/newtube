@@ -16,6 +16,15 @@ const languageNames = {
   'ga': 'Gaeilge',
 };
 
+const sponsorBlockCategoryIds = [
+  'sponsor',
+  'selfpromo',
+  'intro',
+  'outro',
+  'interaction',
+  'music_offtopic',
+];
+
 String _localeKey(Locale locale) => locale.countryCode == null
     ? locale.languageCode
     : '${locale.languageCode}_${locale.countryCode}';
@@ -87,6 +96,54 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       ),
     );
+  }
+
+  String _categoryLabel(AppLocalizations l10n, String id) => switch (id) {
+    'selfpromo' => l10n.sponsorCategorySelfpromo,
+    'intro' => l10n.sponsorCategoryIntro,
+    'outro' => l10n.sponsorCategoryOutro,
+    'interaction' => l10n.sponsorCategoryInteraction,
+    'music_offtopic' => l10n.sponsorCategoryMusicOfftopic,
+    _ => l10n.sponsorCategorySponsor,
+  };
+
+  Future<void> _editSponsorBlockCategories() async {
+    final state = AppScope.read(context);
+    final l10n = AppLocalizations.of(context);
+    final selected = {...state.settings.sponsorBlockCategories};
+    await showDialog<void>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setLocal) => AlertDialog(
+          title: Text(l10n.sponsorBlockCategories),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (final id in sponsorBlockCategoryIds)
+                CheckboxListTile(
+                  dense: true,
+                  controlAffinity: ListTileControlAffinity.leading,
+                  title: Text(_categoryLabel(l10n, id)),
+                  value: selected.contains(id),
+                  onChanged: (checked) => setLocal(
+                    () => checked == true
+                        ? selected.add(id)
+                        : selected.remove(id),
+                  ),
+                ),
+            ],
+          ),
+          actions: [
+            FilledButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(l10n.done),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (!mounted) return;
+    state.settings.setSponsorBlockCategories(selected, state.prefs);
   }
 
   Future<void> _check() async {
@@ -190,6 +247,36 @@ class _SettingsPageState extends State<SettingsPage> {
               value: settings.autoplay,
               onChanged: (value) => settings.setAutoplay(value, state.prefs),
             ),
+            SwitchListTile(
+              secondary: const Icon(Icons.content_cut_outlined),
+              title: Text(l10n.sponsorBlock),
+              subtitle: Text(l10n.sponsorBlockHint),
+              value: settings.sponsorBlockEnabled,
+              onChanged: (value) =>
+                  settings.setSponsorBlockEnabled(value, state.prefs),
+            ),
+            if (settings.sponsorBlockEnabled) ...[
+              SwitchListTile(
+                secondary: const Icon(Icons.fast_forward_outlined),
+                title: Text(l10n.sponsorBlockAutoSkip),
+                subtitle: Text(l10n.sponsorBlockAutoSkipHint),
+                value: settings.sponsorBlockAutoSkip,
+                onChanged: (value) =>
+                    settings.setSponsorBlockAutoSkip(value, state.prefs),
+              ),
+              ListTile(
+                leading: const Icon(Icons.category_outlined),
+                title: Text(l10n.sponsorBlockCategories),
+                subtitle: Text(
+                  [
+                    for (final id in sponsorBlockCategoryIds)
+                      if (settings.sponsorBlockCategories.contains(id))
+                        _categoryLabel(l10n, id),
+                  ].join(', '),
+                ),
+                onTap: _editSponsorBlockCategories,
+              ),
+            ],
             if (state.isWeb) ...[
               const Divider(),
               ListTile(

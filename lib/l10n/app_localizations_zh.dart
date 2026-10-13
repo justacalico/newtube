@@ -270,6 +270,45 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get sleepTimerOff => '关闭';
+
+  @override
+  String get sponsorBlock => 'SponsorBlock';
+
+  @override
+  String get sponsorBlockHint => '跳过视频中的赞助片段';
+
+  @override
+  String get sponsorBlockAutoSkip => '自动跳过';
+
+  @override
+  String get sponsorBlockAutoSkipHint => '关闭时在播放器上显示跳过按钮';
+
+  @override
+  String get sponsorBlockCategories => '跳过的片段类别';
+
+  @override
+  String get skipSegment => '跳过';
+
+  @override
+  String get done => '完成';
+
+  @override
+  String get sponsorCategorySponsor => '赞助';
+
+  @override
+  String get sponsorCategorySelfpromo => '自我推广';
+
+  @override
+  String get sponsorCategoryIntro => '片头';
+
+  @override
+  String get sponsorCategoryOutro => '片尾';
+
+  @override
+  String get sponsorCategoryInteraction => '互动提醒';
+
+  @override
+  String get sponsorCategoryMusicOfftopic => '离题音乐';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -537,4 +576,43 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get sleepTimerOff => '关闭';
+
+  @override
+  String get sponsorBlock => 'SponsorBlock';
+
+  @override
+  String get sponsorBlockHint => '跳过视频中的赞助片段';
+
+  @override
+  String get sponsorBlockAutoSkip => '自动跳过';
+
+  @override
+  String get sponsorBlockAutoSkipHint => '关闭时在播放器上显示跳过按钮';
+
+  @override
+  String get sponsorBlockCategories => '跳过的片段类别';
+
+  @override
+  String get skipSegment => '跳过';
+
+  @override
+  String get done => '完成';
+
+  @override
+  String get sponsorCategorySponsor => '赞助';
+
+  @override
+  String get sponsorCategorySelfpromo => '自我推广';
+
+  @override
+  String get sponsorCategoryIntro => '片头';
+
+  @override
+  String get sponsorCategoryOutro => '片尾';
+
+  @override
+  String get sponsorCategoryInteraction => '互动提醒';
+
+  @override
+  String get sponsorCategoryMusicOfftopic => '离题音乐';
 }
