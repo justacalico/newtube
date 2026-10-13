@@ -231,4 +231,18 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get mcpServerFailed => 'Не удалось запустить MCP-сервер';
+
+  @override
+  String get mcpExport => 'Экспорт файла сервера';
+
+  @override
+  String get mcpExportHint => 'Сохранить .mcsp-файл для импорта клиентами';
+
+  @override
+  String mcpExportedTo(String path) {
+    return 'Сохранено в $path';
+  }
+
+  @override
+  String get mcpExportFailed => 'Не удалось сохранить экспорт';
 }

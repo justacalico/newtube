@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'app.dart';
+import 'services/file_saver.dart';
 import 'services/innertube_api.dart';
 import 'services/launcher.dart';
 import 'services/mcp_server.dart';
@@ -55,6 +56,7 @@ Future<AppState> createAppState(SharedPreferences prefs) async {
     createPlayer: createPlayerController,
     windowActions: isDesktopPlatform ? WindowManagerActions() : null,
     createMcpServer: isDesktopPlatform ? createMcpServer : null,
+    saveTextFile: isDesktopPlatform ? downloadsFileSaver : null,
   );
 }
 

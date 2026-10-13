@@ -4,6 +4,10 @@ import 'mcp_server_stub.dart'
     as impl;
 import 'youtube_api.dart';
 
+const mcpDefaultPort = 8642;
+const mcpEndpointPath = '/mcp';
+const mcpDefaultUrl = 'http://127.0.0.1:$mcpDefaultPort$mcpEndpointPath';
+
 abstract class McpServer {
   bool get running;
   String? get url;

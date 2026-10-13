@@ -64,9 +64,9 @@ clients search YouTube, read channel and video details and play videos in
 the app. Clients that only support stdio servers can reach it through a
 bridge such as `npx mcp-remote http://127.0.0.1:8642/mcp`.
 
-The running server exports a `.mcsp` descriptor (name, version, endpoint
-and tool manifest) at `GET http://127.0.0.1:8642/`. The same document can
-be written to disk without the app running:
+With the server on, Settings can export a `.mcsp` descriptor (name,
+version, endpoint and tool manifest) to the downloads folder. The same
+document can be written to disk without the app running:
 
 ```
 dart run tool/export_mcsp.dart newtube.mcsp

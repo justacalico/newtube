@@ -229,6 +229,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get mcpServerFailed => 'Could not start the MCP server';
+
+  @override
+  String get mcpExport => 'Export server file';
+
+  @override
+  String get mcpExportHint => 'Save a .mcsp file clients can import';
+
+  @override
+  String mcpExportedTo(String path) {
+    return 'Saved to $path';
+  }
+
+  @override
+  String get mcpExportFailed => 'Could not save the export';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -455,4 +469,18 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get mcpServerFailed => 'Could not start the MCP server';
+
+  @override
+  String get mcpExport => 'Export server file';
+
+  @override
+  String get mcpExportHint => 'Save a .mcsp file clients can import';
+
+  @override
+  String mcpExportedTo(String path) {
+    return 'Saved to $path';
+  }
+
+  @override
+  String get mcpExportFailed => 'Could not save the export';
 }

@@ -71,5 +71,16 @@
   "corsProxyHint": "视频地址会以 URL 编码形式附加，例如 https://proxy.example/?url=",
   "mcpServer": "MCP 服务器",
   "mcpServerHint": "允许 AI 工具搜索和播放视频",
-  "mcpServerFailed": "无法启动 MCP 服务器"
+  "mcpServerFailed": "无法启动 MCP 服务器",
+  "mcpExport": "导出服务器文件",
+  "mcpExportHint": "保存客户端可导入的 .mcsp 文件",
+  "mcpExportedTo": "已保存到 {path}",
+  "@mcpExportedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "mcpExportFailed": "无法保存导出文件"
 }

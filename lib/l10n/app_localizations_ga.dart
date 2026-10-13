@@ -232,4 +232,19 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get mcpServerFailed => 'Níorbh fhéidir an freastalaí MCP a thosú';
+
+  @override
+  String get mcpExport => 'Easpórtáil comhad an fhreastalaí';
+
+  @override
+  String get mcpExportHint =>
+      'Sábháil comhad .mcsp ar féidir le cliaint é a iompórtáil';
+
+  @override
+  String mcpExportedTo(String path) {
+    return 'Sábháilte go $path';
+  }
+
+  @override
+  String get mcpExportFailed => 'Níorbh fhéidir an t-easpórtáil a shábháil';
 }

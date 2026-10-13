@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/app_update.dart';
+import '../../services/mcp_export.dart';
+import '../../services/mcp_server.dart';
 import '../../services/version_checker.dart';
 import '../../state/app_state.dart';
 import '../../state/settings_store.dart';
@@ -63,6 +65,28 @@ class _SettingsPageState extends State<SettingsPage> {
     AppScope.read(context).packageInfo().then((info) {
       if (mounted) setState(() => _version = info.version);
     });
+  }
+
+  Future<void> _exportMcsp() async {
+    final state = AppScope.read(context);
+    final save = state.saveTextFile;
+    if (save == null) return;
+    final info = await state.packageInfo();
+    final document = mcspExport(
+      name: 'newtube',
+      version: info.version,
+      url: state.mcpServer?.url ?? mcpDefaultUrl,
+    );
+    final path = await save('newtube.mcsp', '${encodeMcsp(document)}\n');
+    if (!mounted) return;
+    final l10n = AppLocalizations.of(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          path == null ? l10n.mcpExportFailed : l10n.mcpExportedTo(path),
+        ),
+      ),
+    );
   }
 
   Future<void> _check() async {
@@ -185,7 +209,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
             ],
-            if (isDesktopPlatform)
+            if (isDesktopPlatform) ...[
               SwitchListTile(
                 secondary: const Icon(Icons.hub_outlined),
                 title: Text(l10n.mcpServer),
@@ -200,6 +224,14 @@ class _SettingsPageState extends State<SettingsPage> {
                 onChanged: (value) =>
                     settings.setMcpEnabled(value, state.prefs),
               ),
+              if (settings.mcpEnabled)
+                ListTile(
+                  leading: const Icon(Icons.download_outlined),
+                  title: Text(l10n.mcpExport),
+                  subtitle: Text(l10n.mcpExportHint),
+                  onTap: _exportMcsp,
+                ),
+            ],
             const Divider(),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),

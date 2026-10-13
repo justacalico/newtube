@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/app_update.dart';
 import '../models/video_info.dart';
+import '../services/file_saver.dart';
 import '../services/launcher.dart';
 import '../services/mcp_server.dart';
 import '../services/player_controller.dart';
@@ -27,6 +28,7 @@ class AppState extends ChangeNotifier {
   final Future<PackageInfo> Function() packageInfo;
   final PlayerController Function() createPlayer;
   final McpServerFactory? createMcpServer;
+  final SaveTextFile? saveTextFile;
   final bool isWeb;
 
   int _tabIndex = 0;
@@ -49,6 +51,7 @@ class AppState extends ChangeNotifier {
     required this.createPlayer,
     this.windowActions,
     this.createMcpServer,
+    this.saveTextFile,
     this._versionChecker,
     this.isWeb = false,
   }) {

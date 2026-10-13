@@ -71,5 +71,16 @@
   "corsProxyHint": "URL видео добавляется в кодированном виде, например https://proxy.example/?url=",
   "mcpServer": "MCP-сервер",
   "mcpServerHint": "Разрешить ИИ-инструментам искать и воспроизводить видео",
-  "mcpServerFailed": "Не удалось запустить MCP-сервер"
+  "mcpServerFailed": "Не удалось запустить MCP-сервер",
+  "mcpExport": "Экспорт файла сервера",
+  "mcpExportHint": "Сохранить .mcsp-файл для импорта клиентами",
+  "mcpExportedTo": "Сохранено в {path}",
+  "@mcpExportedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "mcpExportFailed": "Не удалось сохранить экспорт"
 }

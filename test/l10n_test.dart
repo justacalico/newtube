@@ -79,6 +79,10 @@ void touchAll(AppLocalizations l) {
   l.mcpServer;
   l.mcpServerHint;
   l.mcpServerFailed;
+  l.mcpExport;
+  l.mcpExportHint;
+  l.mcpExportedTo('x');
+  l.mcpExportFailed;
 }
 
 void main() {

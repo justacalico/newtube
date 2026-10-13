@@ -261,6 +261,7 @@ Future<AppState> testState({
   bool isWeb = false,
   McpServerFactory? createMcpServer,
   Future<PackageInfo> Function()? packageInfo,
+  Future<String?> Function(String name, String contents)? saveTextFile,
   Map<String, Object> initialPrefs = const {},
 }) async {
   SharedPreferences.setMockInitialValues(initialPrefs);
@@ -287,6 +288,7 @@ Future<AppState> testState({
     createPlayer: () => player ?? FakePlayerController(),
     windowActions: windowActions,
     createMcpServer: createMcpServer,
+    saveTextFile: saveTextFile,
     versionChecker: versionChecker ?? FakeVersionChecker(),
     isWeb: isWeb,
   );

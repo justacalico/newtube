@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/models/video_info.dart';
+import 'package:newtube/services/file_saver_io.dart';
 import 'package:newtube/services/mcp_export.dart';
 import 'package:newtube/services/mcp_server.dart';
 import 'package:newtube/services/mcp_server_io.dart';
@@ -316,22 +317,13 @@ void main() {
     });
   });
 
-  test('GET / serves the mcsp export document', () async {
-    final reply = await _request(_port(server), method: 'GET', path: '/');
-    expect(reply.status, HttpStatus.ok);
-    final doc = jsonDecode(reply.body) as Map<String, Object?>;
-    expect(doc['format'], 'mcsp');
-    expect(doc['version'], 1);
-    final srv = doc['server'] as Map;
-    expect(srv['name'], 'newtube');
-    expect(srv['version'], '1.2.3');
-    expect(srv['url'], server.url);
-    expect((doc['tools'] as List).length, 7);
-  });
-
   test('rejects wrong paths, non-POST methods and foreign origins', () async {
     expect(
       (await _request(_port(server), path: '/nope')).status,
+      HttpStatus.notFound,
+    );
+    expect(
+      (await _request(_port(server), method: 'GET', path: '/')).status,
       HttpStatus.notFound,
     );
     expect(
@@ -380,6 +372,14 @@ void main() {
     final encoded = encodeMcsp(doc);
     expect(encoded, contains('"format": "mcsp"'));
     expect(jsonDecode(encoded), doc);
+  });
+
+  test('writeTextFile writes the export into a directory', () async {
+    final dir = await Directory.systemTemp.createTemp('mcsp');
+    addTearDown(() => dir.delete(recursive: true));
+    final path = await writeTextFile(dir, 'newtube.mcsp', '{"format":"mcsp"}');
+    expect(path, '${dir.path}${Platform.pathSeparator}newtube.mcsp');
+    expect(File(path).readAsStringSync(), '{"format":"mcsp"}');
   });
 
   test('default port constant', () {

@@ -535,6 +535,30 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Could not start the MCP server'**
   String get mcpServerFailed;
+
+  /// No description provided for @mcpExport.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Export server file'**
+  String get mcpExport;
+
+  /// No description provided for @mcpExportHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Save a .mcsp file clients can import'**
+  String get mcpExportHint;
+
+  /// No description provided for @mcpExportedTo.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Saved to {path}'**
+  String mcpExportedTo(String path);
+
+  /// No description provided for @mcpExportFailed.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Could not save the export'**
+  String get mcpExportFailed;
 }
 
 class _AppLocalizationsDelegate

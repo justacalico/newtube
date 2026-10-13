@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import '../models/video_info.dart';
-import 'mcp_export.dart';
 import 'mcp_server.dart';
 import 'youtube_api.dart';
 
@@ -18,8 +17,8 @@ McpServer createMcpServer({
 class _InvalidArgs implements Exception {}
 
 class HttpMcpServer implements McpServer {
-  static const defaultPort = 8642;
-  static const endpointPath = '/mcp';
+  static const defaultPort = mcpDefaultPort;
+  static const endpointPath = mcpEndpointPath;
   static const protocolVersion = '2025-06-18';
   static const _supportedVersions = {'2025-03-26', '2025-06-18'};
 
@@ -76,23 +75,17 @@ class HttpMcpServer implements McpServer {
   }
 
   Future<void> _handle(HttpRequest request) async {
-    if (!_originAllowed(request)) {
-      return _respond(request, HttpStatus.forbidden);
-    }
-    if (request.method == 'GET' && request.uri.path == '/') {
-      return _respondJson(request, HttpStatus.ok, _export());
-    }
     if (request.uri.path != endpointPath) {
       return _respond(request, HttpStatus.notFound);
+    }
+    if (!_originAllowed(request)) {
+      return _respond(request, HttpStatus.forbidden);
     }
     if (request.method != 'POST') {
       return _respond(request, HttpStatus.methodNotAllowed);
     }
     await _handlePost(request);
   }
-
-  Map<String, Object?> _export() =>
-      mcspExport(name: 'newtube', version: version, url: url ?? '');
 
   bool _originAllowed(HttpRequest request) {
     final origin = request.headers.value('origin');
