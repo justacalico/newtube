@@ -466,6 +466,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get playlistSaved => '已保存到你的播放列表';
+
+  @override
+  String get videoActions => '更多选项';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -929,4 +932,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get playlistSaved => '已保存到你的播放列表';
+
+  @override
+  String get videoActions => '更多选项';
 }

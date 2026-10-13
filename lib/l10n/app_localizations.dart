@@ -955,6 +955,12 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Saved to your playlists'**
   String get playlistSaved;
+
+  /// No description provided for @videoActions.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'More options'**
+  String get videoActions;
 }
 
 class _AppLocalizationsDelegate

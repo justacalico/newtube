@@ -206,5 +206,6 @@
   "removeFromPlaylist": "Bain as an seinmliosta",
   "playlistEmpty": "Tá an seinmliosta seo folamh",
   "savePlaylist": "Sábháil an seinmliosta",
-  "playlistSaved": "Sábháilte i do sheinmliostaí"
+  "playlistSaved": "Sábháilte i do sheinmliostaí",
+  "videoActions": "Tuilleadh roghanna"
 }

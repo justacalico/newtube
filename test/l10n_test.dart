@@ -149,6 +149,7 @@ void touchAll(AppLocalizations l) {
   l.playlistEmpty;
   l.savePlaylist;
   l.playlistSaved;
+  l.videoActions;
 }
 
 void main() {

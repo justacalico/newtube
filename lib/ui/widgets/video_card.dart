@@ -4,6 +4,7 @@ import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../utils/format.dart';
 import 'thumbnail.dart';
+import 'video_actions_menu.dart';
 import 'watched_badge.dart';
 
 class VideoCard extends StatelessWidget {
@@ -98,15 +99,24 @@ class VideoCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (meta.isNotEmpty)
-                    Text(
-                      meta,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
+                  Row(
+                    children: [
+                      if (meta.isNotEmpty)
+                        Expanded(
+                          child: Text(
+                            meta,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        )
+                      else
+                        const Spacer(),
+                      VideoActionsMenu(video: video),
+                    ],
+                  ),
                 ],
               ),
             ),

@@ -485,4 +485,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get playlistSaved => 'Сохранено в ваших плейлистах';
+
+  @override
+  String get videoActions => 'Ещё';
 }

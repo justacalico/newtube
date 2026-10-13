@@ -206,5 +206,6 @@
   "removeFromPlaylist": "Удалить из плейлиста",
   "playlistEmpty": "Этот плейлист пуст",
   "savePlaylist": "Сохранить плейлист",
-  "playlistSaved": "Сохранено в ваших плейлистах"
+  "playlistSaved": "Сохранено в ваших плейлистах",
+  "videoActions": "Ещё"
 }

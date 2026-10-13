@@ -483,4 +483,7 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get playlistSaved => 'Sábháilte i do sheinmliostaí';
+
+  @override
+  String get videoActions => 'Tuilleadh roghanna';
 }

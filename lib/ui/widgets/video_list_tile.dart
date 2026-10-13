@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/video_info.dart';
 import '../../utils/format.dart';
 import 'thumbnail.dart';
+import 'video_actions_menu.dart';
 import 'watched_badge.dart';
 
 class VideoListTile extends StatelessWidget {
@@ -43,11 +44,16 @@ class VideoListTile extends StatelessWidget {
       ),
       title: Text(video.title, maxLines: 2, overflow: TextOverflow.ellipsis),
       subtitle: Text(video.author),
-      trailing:
-          trailing ??
-          (video.duration == null
-              ? null
-              : Text(formatDuration(video.duration))),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (trailing != null)
+            trailing!
+          else if (video.duration != null)
+            Text(formatDuration(video.duration)),
+          VideoActionsMenu(video: video),
+        ],
+      ),
       onTap: onTap,
     );
   }
