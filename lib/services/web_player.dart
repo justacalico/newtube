@@ -24,6 +24,8 @@ class WebPlayerController implements PlayerController {
   final _duration = StreamController<Duration>.broadcast();
   final _playing = StreamController<bool>.broadcast();
   final _buffering = StreamController<bool>.broadcast();
+  final _rateChanges = StreamController<double>.broadcast();
+  double _rate = 1.0;
 
   Timer? _poll;
   bool _lastPlaying = false;
@@ -53,6 +55,9 @@ class WebPlayerController implements PlayerController {
   bool get buffering => playing && _video.readyState < 3;
 
   @override
+  double get rate => _rate;
+
+  @override
   Stream<Duration> get positionStream => _position.stream;
   @override
   Stream<Duration> get durationStream => _duration.stream;
@@ -60,6 +65,8 @@ class WebPlayerController implements PlayerController {
   Stream<bool> get playingStream => _playing.stream;
   @override
   Stream<bool> get bufferingStream => _buffering.stream;
+  @override
+  Stream<double> get rateStream => _rateChanges.stream;
 
   void _syncAudio() {
     if (!_audioAttached) return;
@@ -100,6 +107,8 @@ class WebPlayerController implements PlayerController {
       '[player] open $url${audioUrl == null ? '' : ' + audio $audioUrl'}',
     );
     _video.src = url;
+    _video.playbackRate = _rate;
+    _video.defaultPlaybackRate = _rate;
     if (audioUrl != null) {
       _audio = web.HTMLAudioElement()..src = audioUrl;
       _audioAttached = true;
@@ -131,6 +140,18 @@ class WebPlayerController implements PlayerController {
   }
 
   @override
+  Future<void> setRate(double rate) async {
+    _rate = rate;
+    _video.playbackRate = rate;
+    _video.defaultPlaybackRate = rate;
+    if (_audioAttached) {
+      _audio.playbackRate = rate;
+      _audio.defaultPlaybackRate = rate;
+    }
+    _rateChanges.add(rate);
+  }
+
+  @override
   Widget buildView(BuildContext context) =>
       HtmlElementView(viewType: _viewType);
 
@@ -149,6 +170,7 @@ class WebPlayerController implements PlayerController {
       _duration.close(),
       _playing.close(),
       _buffering.close(),
+      _rateChanges.close(),
     ]);
   }
 }

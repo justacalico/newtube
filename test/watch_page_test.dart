@@ -172,6 +172,27 @@ void main() {
     expect(player.seeks, [Duration.zero]);
   });
 
+  testWidgets('stream switch keeps the playback rate', (tester) async {
+    final player = FakePlayerController();
+    final state = await testState(api: FakeYouTubeApi(), player: player);
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Playback speed'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('1.5x'));
+    await tester.pumpAndSettle();
+    expect(player.rate, 1.5);
+
+    await tester.tap(find.byTooltip('Quality'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('360p').last);
+    await tester.pumpAndSettle();
+
+    expect(player.opened.last, contains('360'));
+    expect(player.rate, 1.5);
+  });
+
   testWidgets('failed stream switch keeps playing the old stream', (
     tester,
   ) async {

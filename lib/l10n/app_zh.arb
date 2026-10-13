@@ -64,6 +64,8 @@
   "audio": "音频",
   "fullscreen": "全屏",
   "quality": "画质",
+  "playbackSpeed": "播放速度",
+  "speedNormal": "正常",
   "searchResultsFor": "搜索结果",
   "corsNoticeTitle": "视频在浏览器里被拦截",
   "corsNoticeBody": "YouTube 不允许网页应用直接请求。请安装 CORS 扩展，或在设置中填写代理。",

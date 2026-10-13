@@ -128,6 +128,7 @@ class FakePlayerController implements PlayerController {
   final _duration = StreamController<Duration>.broadcast();
   final _playing = StreamController<bool>.broadcast();
   final _buffering = StreamController<bool>.broadcast();
+  final _rateChanges = StreamController<double>.broadcast();
 
   @override
   Duration position = Duration.zero;
@@ -137,6 +138,8 @@ class FakePlayerController implements PlayerController {
   bool playing = false;
   @override
   bool buffering = false;
+  @override
+  double rate = 1.0;
   bool disposed = false;
   Completer<void>? openGate;
   Object? openError;
@@ -159,6 +162,8 @@ class FakePlayerController implements PlayerController {
   Stream<bool> get playingStream => _playing.stream;
   @override
   Stream<bool> get bufferingStream => _buffering.stream;
+  @override
+  Stream<double> get rateStream => _rateChanges.stream;
 
   @override
   Future<void> open(String url, {String? audioUrl}) async {
@@ -167,6 +172,7 @@ class FakePlayerController implements PlayerController {
     opened.add(audioUrl == null ? url : '$url+$audioUrl');
     playing = true;
     position = Duration.zero;
+    rate = 1.0;
     await openGate?.future;
   }
 
@@ -186,6 +192,12 @@ class FakePlayerController implements PlayerController {
   Future<void> seek(Duration position) async {
     lastSeek = position;
     seeks.add(position);
+  }
+
+  @override
+  Future<void> setRate(double rate) async {
+    this.rate = rate;
+    _rateChanges.add(rate);
   }
 
   @override

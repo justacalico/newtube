@@ -202,6 +202,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get quality => '画质';
 
   @override
+  String get playbackSpeed => '播放速度';
+
+  @override
+  String get speedNormal => '正常';
+
+  @override
   String get searchResultsFor => '搜索结果';
 
   @override
@@ -442,6 +448,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get quality => '画质';
+
+  @override
+  String get playbackSpeed => '播放速度';
+
+  @override
+  String get speedNormal => '正常';
 
   @override
   String get searchResultsFor => '搜索结果';

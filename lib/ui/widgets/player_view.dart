@@ -28,6 +28,8 @@ class PlayerView extends StatelessWidget {
     this.isFullscreen = false,
   });
 
+  static const _rates = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
+
   List<PopupMenuEntry<PlayableStream>> _streamItems(
     Iterable<PlayableStream> list,
     PlayableStream? selected,
@@ -174,6 +176,31 @@ class PlayerView extends StatelessWidget {
                             },
                           );
                         },
+                      ),
+                      StreamBuilder<double>(
+                        stream: player.rateStream,
+                        initialData: player.rate,
+                        builder: (context, snapshot) => PopupMenuButton<double>(
+                          icon: const Icon(Icons.speed, color: Colors.white),
+                          tooltip: l10n.playbackSpeed,
+                          onSelected: player.setRate,
+                          itemBuilder: (context) => [
+                            for (final r in _rates)
+                              PopupMenuItem(
+                                value: r,
+                                child: Row(
+                                  children: [
+                                    if (r == snapshot.data)
+                                      const Icon(Icons.check, size: 18)
+                                    else
+                                      const SizedBox(width: 18),
+                                    const SizedBox(width: 8),
+                                    Text(r == 1.0 ? l10n.speedNormal : '${r}x'),
+                                  ],
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                       PopupMenuButton<PlayableStream>(
                         icon: const Icon(Icons.settings, color: Colors.white),

@@ -205,6 +205,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get quality => 'Quality';
 
   @override
+  String get playbackSpeed => 'Playback speed';
+
+  @override
+  String get speedNormal => 'Normal';
+
+  @override
   String get searchResultsFor => 'Results';
 
   @override
@@ -449,6 +455,12 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get quality => 'Quality';
+
+  @override
+  String get playbackSpeed => 'Playback speed';
+
+  @override
+  String get speedNormal => 'Normal';
 
   @override
   String get searchResultsFor => 'Results';

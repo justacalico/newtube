@@ -55,3 +55,4 @@ public/
 web-app/
 landing/build/
 build/
+test/failures/

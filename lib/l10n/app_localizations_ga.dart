@@ -207,6 +207,12 @@ class AppLocalizationsGa extends AppLocalizations {
   String get quality => 'Cáilíocht';
 
   @override
+  String get playbackSpeed => 'Luas athsheinnte';
+
+  @override
+  String get speedNormal => 'Gnáth';
+
+  @override
   String get searchResultsFor => 'Torthaí';
 
   @override
