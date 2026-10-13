@@ -32,6 +32,7 @@ void main() {
       expect(store.autoplay, isTrue);
       expect(store.searchHistoryEnabled, isTrue);
       expect(store.mcpEnabled, isFalse);
+      expect(store.sidebarCollapsed, isFalse);
     });
 
     test('persists theme, locale and autoplay', () async {
@@ -42,6 +43,7 @@ void main() {
       await store.setAutoplay(false, p);
       await store.setSearchHistoryEnabled(false, p);
       await store.setMcpEnabled(true, p);
+      await store.setSidebarCollapsed(true, p);
 
       final reloaded = await SettingsStore.load(
         await SharedPreferences.getInstance(),
@@ -51,6 +53,7 @@ void main() {
       expect(reloaded.autoplay, isFalse);
       expect(reloaded.searchHistoryEnabled, isFalse);
       expect(reloaded.mcpEnabled, isTrue);
+      expect(reloaded.sidebarCollapsed, isTrue);
     });
 
     test('system locale persists as null', () async {

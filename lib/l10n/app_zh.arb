@@ -6,6 +6,8 @@
   "navSubscriptions": "订阅",
   "navHistory": "历史记录",
   "navSettings": "设置",
+  "collapseSidebar": "收起侧边栏",
+  "expandSidebar": "展开侧边栏",
   "searchHint": "搜索",
   "loading": "加载中…",
   "errorLoading": "出错了",

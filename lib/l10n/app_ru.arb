@@ -6,6 +6,8 @@
   "navSubscriptions": "Подписки",
   "navHistory": "История",
   "navSettings": "Настройки",
+  "collapseSidebar": "Свернуть боковую панель",
+  "expandSidebar": "Развернуть боковую панель",
   "searchHint": "Поиск",
   "loading": "Загрузка…",
   "errorLoading": "Что-то пошло не так",

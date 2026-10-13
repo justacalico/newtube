@@ -140,6 +140,7 @@ class _AppShellState extends State<AppShell> {
         );
 
         if (wide) {
+          final collapsed = state.settings.sidebarCollapsed;
           return Scaffold(
             body: Row(
               children: [
@@ -148,6 +149,14 @@ class _AppShellState extends State<AppShell> {
                   onSelected: onSelected,
                   destinations: [for (final d in destinations) d.destination],
                   footerCount: 1,
+                  collapsed: collapsed,
+                  onToggleCollapsed: () => state.settings.setSidebarCollapsed(
+                    !collapsed,
+                    state.prefs,
+                  ),
+                  toggleLabel: collapsed
+                      ? l10n.expandSidebar
+                      : l10n.collapseSidebar,
                   header: isDesktopPlatform
                       ? SizedBox(
                           height: 28,
