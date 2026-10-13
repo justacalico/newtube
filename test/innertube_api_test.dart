@@ -431,6 +431,72 @@ void main() {
     );
 
     test(
+      'videoDetails keeps VISIONOS streams when their probes all fail',
+      () async {
+        final api = InnertubeApi(
+          httpClient: MockClient((request) async {
+            if (request.method != 'POST') {
+              final url = request.url.toString();
+              if (url.contains('sw.js_data')) {
+                final row = List<dynamic>.filled(14, null)
+                  ..[13] = 'CgtlOnRfNDUz';
+                return http.Response(
+                  ")]}'${jsonEncode([
+                    [
+                      null,
+                      null,
+                      [
+                        [row],
+                      ],
+                    ],
+                  ])}",
+                  200,
+                );
+              }
+              return http.Response.bytes(
+                const [],
+                url.contains('gated') ? 403 : 206,
+              );
+            }
+            final body = jsonDecode(request.body) as Map<String, dynamic>;
+            final client = body['context']['client'] as Map<String, dynamic>;
+            return http.Response.bytes(
+              utf8.encode(
+                jsonEncode({
+                  'videoDetails': {'title': 'Vid'},
+                  'streamingData': {
+                    'formats': [
+                      {
+                        'url': client['clientName'] == 'ANDROID'
+                            ? 'https://v/mux'
+                            : 'https://v/gated-mux',
+                        'mimeType': 'video/mp4',
+                        'audioQuality': 'x',
+                        'qualityLabel': '360p',
+                      },
+                    ],
+                    'adaptiveFormats': [
+                      {
+                        'url': client['clientName'] == 'ANDROID'
+                            ? 'https://v/gated'
+                            : 'https://v/gated-hd',
+                        'mimeType': 'video/mp4',
+                        'qualityLabel': '1080p',
+                      },
+                    ],
+                  },
+                }),
+              ),
+              200,
+            );
+          }),
+        );
+        final d = await api.videoDetails('v');
+        expect(d.streams.map((s) => s.quality), ['360p', '1080p']);
+      },
+    );
+
+    test(
       'videoDetails keeps android streams when visitor data fails',
       () async {
         var posts = 0;

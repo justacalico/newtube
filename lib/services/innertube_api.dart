@@ -120,8 +120,12 @@ class InnertubeApi implements YouTubeApi {
       debugLog('[api] $videoId: adaptive streams gated, retrying via VISIONOS');
       final fallback = await _visionosStreaming(videoId);
       if (fallback != null) {
-        final extra = await playableStreams(_streams(fallback), _probe);
-        streams = dedupeStreams([...streams, ...extra]);
+        final retry = _streams(fallback);
+        final extra = await playableStreams(retry, _probe);
+        streams = dedupeStreams([
+          ...streams,
+          ...(extra.isEmpty ? retry : extra),
+        ]);
       }
     }
     debugLog('[api] $videoId: ${streams.length} playable streams');

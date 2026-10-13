@@ -38,6 +38,7 @@ class _WatchPageState extends State<WatchPage> {
   Object? _error;
   bool _fullscreen = false;
   bool _recorded = false;
+  int _switches = 0;
 
   @override
   void initState() {
@@ -126,7 +127,7 @@ class _WatchPageState extends State<WatchPage> {
       _currentStream = stream;
       _currentAudio = choice.audio;
     });
-    _player?.open(choice.stream.url, audioUrl: choice.audioUrl);
+    _switchTo(choice.stream.url, audioUrl: choice.audioUrl);
   }
 
   void _selectAudio(PlayableStream audio) {
@@ -135,7 +136,7 @@ class _WatchPageState extends State<WatchPage> {
     if (!current.hasVideo) {
       debugLog('[watch] ${widget.video.id}: switching to ${audio.quality}');
       setState(() => _currentStream = audio);
-      _player?.open(audio.url);
+      _switchTo(audio.url);
       return;
     }
     var video = current;
@@ -152,7 +153,23 @@ class _WatchPageState extends State<WatchPage> {
       _currentStream = video;
       _currentAudio = audio;
     });
-    _player?.open(video.url, audioUrl: audio.url);
+    _switchTo(video.url, audioUrl: audio.url);
+  }
+
+  Future<void> _switchTo(String url, {String? audioUrl}) async {
+    final player = _player;
+    if (player == null) return;
+    final generation = ++_switches;
+    final position = player.position;
+    final wasPlaying = player.playing;
+    try {
+      await player.open(url, audioUrl: audioUrl);
+      if (!mounted || generation != _switches) return;
+      if (!wasPlaying) await player.pause();
+      await player.seek(position);
+    } catch (e) {
+      debugLog('[watch] ${widget.video.id}: stream switch failed: $e');
+    }
   }
 
   void _openFullscreen(PlayerController player) {
