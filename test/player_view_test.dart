@@ -112,6 +112,30 @@ void main() {
     expect(slider.onChanged, isNull);
   });
 
+  testWidgets('tapping the video toggles playback', (tester) async {
+    final player = FakePlayerController()..playing = true;
+    final state = await testState();
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onToggleFullscreen: () {},
+        ),
+      ),
+    );
+
+    await tester.tapAt(tester.getCenter(find.byType(PlayerView)));
+    expect(player.paused, isTrue);
+
+    player.playing = false;
+    await tester.tapAt(tester.getCenter(find.byType(PlayerView)));
+    expect(player.played, isTrue);
+  });
+
   testWidgets('quality menu lists streams and selects', (tester) async {
     final player = FakePlayerController();
     final state = await testState();
