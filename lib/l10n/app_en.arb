@@ -110,5 +110,11 @@
   "sponsorCategoryIntro": "Intro",
   "sponsorCategoryOutro": "Outro",
   "sponsorCategoryInteraction": "Interaction reminder",
-  "sponsorCategoryMusicOfftopic": "Off-topic music"
+  "sponsorCategoryMusicOfftopic": "Off-topic music",
+  "deArrow": "DeArrow",
+  "deArrowHint": "Crowd-sourced titles and thumbnails",
+  "deArrowOff": "Off",
+  "deArrowTitles": "Titles only",
+  "deArrowThumbnails": "Thumbnails only",
+  "deArrowBoth": "Titles and thumbnails"
 }

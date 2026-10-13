@@ -315,6 +315,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sponsorCategoryMusicOfftopic => 'Off-topic music';
+
+  @override
+  String get deArrow => 'DeArrow';
+
+  @override
+  String get deArrowHint => 'Crowd-sourced titles and thumbnails';
+
+  @override
+  String get deArrowOff => 'Off';
+
+  @override
+  String get deArrowTitles => 'Titles only';
+
+  @override
+  String get deArrowThumbnails => 'Thumbnails only';
+
+  @override
+  String get deArrowBoth => 'Titles and thumbnails';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -627,4 +645,22 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get sponsorCategoryMusicOfftopic => 'Off-topic music';
+
+  @override
+  String get deArrow => 'DeArrow';
+
+  @override
+  String get deArrowHint => 'Crowd-sourced titles and thumbnails';
+
+  @override
+  String get deArrowOff => 'Off';
+
+  @override
+  String get deArrowTitles => 'Titles only';
+
+  @override
+  String get deArrowThumbnails => 'Thumbnails only';
+
+  @override
+  String get deArrowBoth => 'Titles and thumbnails';
 }

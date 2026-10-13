@@ -10,6 +10,8 @@ const supportedLocales = [
 
 enum AppTheme { system, light, dark, oled }
 
+enum DeArrowMode { off, titles, thumbnails, both }
+
 class SettingsStore extends ChangeNotifier {
   static const _themeKey = 'theme';
   static const _localeKey = 'locale';
@@ -21,6 +23,7 @@ class SettingsStore extends ChangeNotifier {
   static const _sponsorBlockKey = 'sponsorblock_enabled';
   static const _sponsorBlockAutoSkipKey = 'sponsorblock_autoskip';
   static const _sponsorBlockCategoriesKey = 'sponsorblock_categories';
+  static const _deArrowModeKey = 'dearrow_mode';
   static const defaultSponsorBlockCategories = {'sponsor', 'selfpromo'};
 
   AppTheme _theme;
@@ -33,6 +36,7 @@ class SettingsStore extends ChangeNotifier {
   bool _sponsorBlockEnabled;
   bool _sponsorBlockAutoSkip;
   Set<String> _sponsorBlockCategories;
+  DeArrowMode _deArrowMode;
 
   SettingsStore({
     this._theme = AppTheme.system,
@@ -45,6 +49,7 @@ class SettingsStore extends ChangeNotifier {
     this._sponsorBlockEnabled = false,
     this._sponsorBlockAutoSkip = true,
     Set<String>? sponsorBlockCategories,
+    this._deArrowMode = DeArrowMode.off,
   }) : _sponsorBlockCategories =
            sponsorBlockCategories ?? Set.of(defaultSponsorBlockCategories);
 
@@ -64,6 +69,9 @@ class SettingsStore extends ChangeNotifier {
       sponsorBlockCategories: prefs
           .getStringList(_sponsorBlockCategoriesKey)
           ?.toSet(),
+      deArrowMode:
+          DeArrowMode.values.asNameMap()[prefs.getString(_deArrowModeKey)] ??
+          DeArrowMode.off,
     );
   }
 
@@ -91,6 +99,12 @@ class SettingsStore extends ChangeNotifier {
   bool get sponsorBlockEnabled => _sponsorBlockEnabled;
   bool get sponsorBlockAutoSkip => _sponsorBlockAutoSkip;
   Set<String> get sponsorBlockCategories => _sponsorBlockCategories;
+  DeArrowMode get deArrowMode => _deArrowMode;
+  bool get deArrowTitles =>
+      _deArrowMode == DeArrowMode.titles || _deArrowMode == DeArrowMode.both;
+  bool get deArrowThumbnails =>
+      _deArrowMode == DeArrowMode.thumbnails ||
+      _deArrowMode == DeArrowMode.both;
 
   Future<void> setTheme(AppTheme theme, SharedPreferences prefs) async {
     _theme = theme;
@@ -164,6 +178,15 @@ class SettingsStore extends ChangeNotifier {
       _sponsorBlockCategoriesKey,
       _sponsorBlockCategories.toList(),
     );
+    notifyListeners();
+  }
+
+  Future<void> setDeArrowMode(
+    DeArrowMode value,
+    SharedPreferences prefs,
+  ) async {
+    _deArrowMode = value;
+    await prefs.setString(_deArrowModeKey, value.name);
     notifyListeners();
   }
 }

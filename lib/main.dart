@@ -9,6 +9,8 @@ import 'services/file_saver.dart';
 import 'services/innertube_api.dart';
 import 'services/launcher.dart';
 import 'services/mcp_server.dart';
+import 'services/dearrow.dart';
+import 'services/dearrow_api.dart';
 import 'services/player_controller.dart';
 import 'services/sponsor_block.dart';
 import 'services/window_actions_impl.dart';
@@ -41,12 +43,16 @@ Future<AppState> createAppState(SharedPreferences prefs) async {
   final settings = await SettingsStore.load(prefs);
   return AppState(
     prefs: prefs,
-    api:
-        kIsWeb // coverage:ignore-start
-        ? InnertubeApi(proxyPrefix: () => settings.proxyPrefix)
-        : YouTubeExplodeApi(
-            proxyPrefix: () => settings.proxyPrefix,
-          ), // coverage:ignore-end
+    api: DeArrowApi(
+      settings: settings,
+      client: DeArrowClient(),
+      inner:
+          kIsWeb // coverage:ignore-start
+          ? InnertubeApi(proxyPrefix: () => settings.proxyPrefix)
+          : YouTubeExplodeApi(
+              proxyPrefix: () => settings.proxyPrefix,
+            ), // coverage:ignore-end
+    ),
     isWeb: kIsWeb,
     settings: settings,
     subscriptions: await SubscriptionsStore.load(prefs),

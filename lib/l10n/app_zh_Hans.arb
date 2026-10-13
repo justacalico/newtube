@@ -110,5 +110,11 @@
   "sponsorCategoryIntro": "片头",
   "sponsorCategoryOutro": "片尾",
   "sponsorCategoryInteraction": "互动提醒",
-  "sponsorCategoryMusicOfftopic": "离题音乐"
+  "sponsorCategoryMusicOfftopic": "离题音乐",
+  "deArrow": "DeArrow",
+  "deArrowHint": "社区贡献的标题和缩略图",
+  "deArrowOff": "关闭",
+  "deArrowTitles": "仅标题",
+  "deArrowThumbnails": "仅缩略图",
+  "deArrowBoth": "标题和缩略图"
 }

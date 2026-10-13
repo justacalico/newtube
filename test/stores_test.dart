@@ -39,6 +39,9 @@ void main() {
         store.sponsorBlockCategories,
         SettingsStore.defaultSponsorBlockCategories,
       );
+      expect(store.deArrowMode, DeArrowMode.off);
+      expect(store.deArrowTitles, isFalse);
+      expect(store.deArrowThumbnails, isFalse);
     });
 
     test('persists theme, locale and autoplay', () async {
@@ -53,6 +56,7 @@ void main() {
       await store.setSponsorBlockEnabled(true, p);
       await store.setSponsorBlockAutoSkip(false, p);
       await store.setSponsorBlockCategories({'sponsor', 'intro'}, p);
+      await store.setDeArrowMode(DeArrowMode.both, p);
 
       final reloaded = await SettingsStore.load(
         await SharedPreferences.getInstance(),
@@ -66,6 +70,9 @@ void main() {
       expect(reloaded.sponsorBlockEnabled, isTrue);
       expect(reloaded.sponsorBlockAutoSkip, isFalse);
       expect(reloaded.sponsorBlockCategories, {'sponsor', 'intro'});
+      expect(reloaded.deArrowMode, DeArrowMode.both);
+      expect(reloaded.deArrowTitles, isTrue);
+      expect(reloaded.deArrowThumbnails, isTrue);
     });
 
     test('system locale persists as null', () async {

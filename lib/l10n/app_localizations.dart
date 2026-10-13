@@ -685,6 +685,42 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Off-topic music'**
   String get sponsorCategoryMusicOfftopic;
+
+  /// No description provided for @deArrow.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'DeArrow'**
+  String get deArrow;
+
+  /// No description provided for @deArrowHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Crowd-sourced titles and thumbnails'**
+  String get deArrowHint;
+
+  /// No description provided for @deArrowOff.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Off'**
+  String get deArrowOff;
+
+  /// No description provided for @deArrowTitles.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Titles only'**
+  String get deArrowTitles;
+
+  /// No description provided for @deArrowThumbnails.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Thumbnails only'**
+  String get deArrowThumbnails;
+
+  /// No description provided for @deArrowBoth.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Titles and thumbnails'**
+  String get deArrowBoth;
 }
 
 class _AppLocalizationsDelegate

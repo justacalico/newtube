@@ -110,5 +110,11 @@
   "sponsorCategoryIntro": "Вступление",
   "sponsorCategoryOutro": "Концовка",
   "sponsorCategoryInteraction": "Призыв к действию",
-  "sponsorCategoryMusicOfftopic": "Музыка не по теме"
+  "sponsorCategoryMusicOfftopic": "Музыка не по теме",
+  "deArrow": "DeArrow",
+  "deArrowHint": "Заголовки и обложки от сообщества",
+  "deArrowOff": "Выкл",
+  "deArrowTitles": "Только заголовки",
+  "deArrowThumbnails": "Только обложки",
+  "deArrowBoth": "Заголовки и обложки"
 }

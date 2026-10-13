@@ -309,6 +309,24 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get sponsorCategoryMusicOfftopic => '离题音乐';
+
+  @override
+  String get deArrow => 'DeArrow';
+
+  @override
+  String get deArrowHint => '社区贡献的标题和缩略图';
+
+  @override
+  String get deArrowOff => '关闭';
+
+  @override
+  String get deArrowTitles => '仅标题';
+
+  @override
+  String get deArrowThumbnails => '仅缩略图';
+
+  @override
+  String get deArrowBoth => '标题和缩略图';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -615,4 +633,22 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get sponsorCategoryMusicOfftopic => '离题音乐';
+
+  @override
+  String get deArrow => 'DeArrow';
+
+  @override
+  String get deArrowHint => '社区贡献的标题和缩略图';
+
+  @override
+  String get deArrowOff => '关闭';
+
+  @override
+  String get deArrowTitles => '仅标题';
+
+  @override
+  String get deArrowThumbnails => '仅缩略图';
+
+  @override
+  String get deArrowBoth => '标题和缩略图';
 }

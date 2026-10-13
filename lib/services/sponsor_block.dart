@@ -71,15 +71,15 @@ class SponsorBlockClient {
 class SegmentSkipper extends ChangeNotifier {
   SegmentSkipper({
     required this.player,
-    required List<SponsorSegment> segments,
+    required this.segments,
     this.autoSkip = true,
-  }) : _segments = segments {
+  }) {
     _positionSub = player.positionStream.listen(_onPosition);
     _onPosition(player.position);
   }
 
   final PlayerController player;
-  final List<SponsorSegment> _segments;
+  final List<SponsorSegment> segments;
   final bool autoSkip;
   final _skipped = <SponsorSegment>{};
 
@@ -90,7 +90,7 @@ class SegmentSkipper extends ChangeNotifier {
 
   void _onPosition(Duration position) {
     SponsorSegment? hit;
-    for (final segment in _segments) {
+    for (final segment in segments) {
       if (position >= segment.start && position < segment.end) {
         hit = segment;
         break;
