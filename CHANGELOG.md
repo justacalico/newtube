@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.6.0 - 2026-10-13
+#### Features
+- 导出时使用系统保存对话框 - (48763ab) - HttpAnimations
+- 设置中导出 mcsp 文件 - (9fe88ed) - HttpAnimations
+- 新增 mcsp 导出文件 - (743d32a) - HttpAnimations
+- 桌面端新增 MCP 服务器 - (fa02dd8) - HttpAnimations
+
+- - -
+
 ## v0.5.0 - 2026-10-12
 #### Features
 - 播放页改为内嵌页面 - (62b1c5c) - HttpAnimations
