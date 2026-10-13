@@ -89,6 +89,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get watchHistory => 'История просмотра';
 
   @override
+  String get watched => 'Просмотрено';
+
+  @override
   String get clearHistory => 'Очистить историю';
 
   @override

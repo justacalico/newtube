@@ -260,6 +260,12 @@ abstract class AppLocalizations {
   /// **'Watch history'**
   String get watchHistory;
 
+  /// No description provided for @watched.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Watched'**
+  String get watched;
+
   /// No description provided for @clearHistory.
   ///
   /// In en_GB, this message translates to:

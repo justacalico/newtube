@@ -89,6 +89,9 @@ class AppLocalizationsGa extends AppLocalizations {
   String get watchHistory => 'Stair breathnaithe';
 
   @override
+  String get watched => 'Féachtha';
+
+  @override
   String get clearHistory => 'Glan an stair';
 
   @override
