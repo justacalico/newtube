@@ -13,6 +13,8 @@ void touchAll(AppLocalizations l) {
   l.navSubscriptions;
   l.navHistory;
   l.navSettings;
+  l.collapseSidebar;
+  l.expandSidebar;
   l.searchHint;
   l.loading;
   l.errorLoading;

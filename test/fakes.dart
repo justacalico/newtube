@@ -139,6 +139,7 @@ class FakePlayerController implements PlayerController {
   bool buffering = false;
   bool disposed = false;
   Completer<void>? openGate;
+  Object? openError;
   final opened = <String>[];
   Duration? lastSeek;
   final seeks = <Duration>[];
@@ -161,6 +162,8 @@ class FakePlayerController implements PlayerController {
 
   @override
   Future<void> open(String url, {String? audioUrl}) async {
+    final error = openError;
+    if (error != null) throw error;
     opened.add(audioUrl == null ? url : '$url+$audioUrl');
     playing = true;
     position = Duration.zero;

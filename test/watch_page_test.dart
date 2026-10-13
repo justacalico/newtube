@@ -172,6 +172,24 @@ void main() {
     expect(player.seeks, [Duration.zero]);
   });
 
+  testWidgets('failed stream switch keeps playing the old stream', (
+    tester,
+  ) async {
+    final player = FakePlayerController();
+    final state = await testState(api: FakeYouTubeApi(), player: player);
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+
+    player.openError = StateError('nope');
+    await tester.tap(find.byTooltip('Quality'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('360p').last);
+    await tester.pumpAndSettle();
+
+    expect(player.opened, hasLength(1));
+    expect(player.playing, isTrue);
+  });
+
   testWidgets('audio menu switches the audio track', (tester) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.linux;
     const streams = [
