@@ -47,6 +47,12 @@ void main() {
     expect(choice.audioUrl, isNull);
   });
 
+  test('desktop falls back to muxed when every stream has audio', () {
+    final choice = pickDefaultStream(const [m360, m180, a128], desktop: true)!;
+    expect(choice.stream, m360);
+    expect(choice.audioUrl, isNull);
+  });
+
   test('mobile prefers best muxed stream', () {
     final choice = pickDefaultStream(const [
       v720,

@@ -118,6 +118,9 @@ InnertubeApi _api(
   return InnertubeApi(
     proxyPrefix: prefix == null ? null : () => prefix,
     httpClient: MockClient((request) async {
+      if (request.method != 'POST') {
+        return http.Response.bytes(const [], 206);
+      }
       final endpoint = request.url.path.split('/').last.split('?').first;
       final body = jsonDecode(request.body) as Map<String, dynamic>;
       final out = handler(endpoint, body);

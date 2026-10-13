@@ -6,6 +6,7 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart' as yt;
 
 import '../models/video_info.dart';
 import '../utils/debug_log.dart';
+import '../utils/stream_probe.dart';
 import 'innertube_api.dart';
 import 'proxy_client.dart';
 import 'youtube_api.dart';
@@ -230,7 +231,7 @@ class YouTubeExplodeApi implements YouTubeApi {
   Future<VideoDetails> videoDetails(String videoId) async {
     final video = await _yt.videos.get(yt.VideoId(videoId));
     final manifest = await _yt.videos.streams.getManifest(videoId);
-    final streams = <PlayableStream>[
+    final streams = await playableStreams(<PlayableStream>[
       for (final s in manifest.videoOnly)
         PlayableStream(
           url: s.url.toString(),
@@ -253,7 +254,7 @@ class YouTubeExplodeApi implements YouTubeApi {
           url: _proxied(s.url.toString()),
           quality: s.qualityLabel,
         ),
-    ];
+    ], _http);
     debugLog('[api] $videoId: ${streams.length} playable streams');
     return VideoDetails(
       info: VideoInfo(
