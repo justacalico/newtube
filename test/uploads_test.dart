@@ -119,6 +119,56 @@ void main() {
     expect(notified, ['Chan|A']);
   });
 
+  test('notify failure does not abort the channel loop', () async {
+    final prefs = await _prefs({
+      'upload_seen': '{"UC1": "2020-01-01T00:00:00Z", "UC2": "2020-01-01T00:00:00Z", "GONE": "2020-01-01T00:00:00Z"}',
+    });
+    final notified = <String>[];
+    var first = true;
+    final w = UploadsWatcher(
+      prefs: prefs,
+      subscriptions: SubscriptionsStore({'UC1': channel, 'UC2': channel2}),
+      notify: (title, body) async {
+        notified.add('$title|$body');
+        if (first) {
+          first = false;
+          throw StateError('boom');
+        }
+      },
+      client: MockClient(
+        (_) async =>
+            http.Response(_feed('v1', 'A', '2026-01-02T00:00:00Z'), 200),
+      ),
+    );
+    await w.checkNow();
+    expect(notified, hasLength(2));
+    expect(prefs.getString('upload_seen'), isNot(contains('GONE')));
+  });
+
+  test('dispose stops and disables the watcher', () async {
+    final prefs = await _prefs();
+    final w = watcher(
+      prefs,
+      subs: SubscriptionsStore(),
+      client: MockClient((_) async => http.Response('x', 500)),
+      notified: <String>[],
+    );
+    w.start(const Duration(minutes: 30));
+    expect(w.running, isTrue);
+    w.dispose();
+    expect(w.running, isFalse);
+    w.start(const Duration(minutes: 30));
+    await w.checkNow();
+    expect(w.running, isFalse);
+  });
+
+  test('loads a snapped interval from storage', () async {
+    final prefs = await _prefs({'upload_interval': 42});
+    expect((await SettingsStore.load(prefs)).uploadCheckIntervalMinutes, 30);
+    final prefs2 = await _prefs({'upload_interval': 120});
+    expect((await SettingsStore.load(prefs2)).uploadCheckIntervalMinutes, 120);
+  });
+
   test('attach starts and stops with the setting', () async {
     final prefs = await _prefs();
     final notified = <String>[];
