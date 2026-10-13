@@ -26,6 +26,7 @@ class UnsupportedPlayerController implements PlayerController {
   Future<void> open(String url, {String? audioUrl}) async {
     debugLog('[player] playback unsupported on this platform: $url');
   }
+
   @override
   Future<void> play() async {}
   @override

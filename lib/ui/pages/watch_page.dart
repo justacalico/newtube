@@ -51,9 +51,7 @@ class _WatchPageState extends State<WatchPage> {
         state.history.record(widget.video, state.prefs);
       }
       final details = await state.api.videoDetails(widget.video.id);
-      debugLog(
-        '[watch] ${widget.video.id}: ${details.streams.length} streams',
-      );
+      debugLog('[watch] ${widget.video.id}: ${details.streams.length} streams');
       state.api
           .relatedVideos(widget.video.id)
           .then((related) {

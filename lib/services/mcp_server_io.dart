@@ -115,11 +115,7 @@ class HttpMcpServer implements McpServer {
     if (responses.isEmpty) {
       return _respond(request, HttpStatus.accepted);
     }
-    _respondJson(
-      request,
-      HttpStatus.ok,
-      batch ? responses : responses.single,
-    );
+    _respondJson(request, HttpStatus.ok, batch ? responses : responses.single);
   }
 
   Future<Map<String, Object?>?> _dispatch(Object? message) async {

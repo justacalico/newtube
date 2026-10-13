@@ -1,7 +1,5 @@
 import '../models/video_info.dart';
-import 'mcp_server_stub.dart'
-    if (dart.library.io) 'mcp_server_io.dart'
-    as impl;
+import 'mcp_server_stub.dart' if (dart.library.io) 'mcp_server_io.dart' as impl;
 import 'youtube_api.dart';
 
 const mcpDefaultPort = 8642;
@@ -27,11 +25,8 @@ McpServer createMcpServer({
   required YouTubeApi api,
   required String version,
   void Function(VideoInfo video)? onPlayVideo,
-}) => impl.createMcpServer(
-  api: api,
-  version: version,
-  onPlayVideo: onPlayVideo,
-);
+}) =>
+    impl.createMcpServer(api: api, version: version, onPlayVideo: onPlayVideo);
 // coverage:ignore-end
 
 class UnsupportedMcpServer implements McpServer {

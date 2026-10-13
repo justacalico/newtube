@@ -127,10 +127,7 @@ void main() {
             }))['result']
             as Map<String, Object?>;
     expect(result['protocolVersion'], '2025-03-26');
-    expect(
-      result['serverInfo'],
-      {'name': 'newtube', 'version': '1.2.3'},
-    );
+    expect(result['serverInfo'], {'name': 'newtube', 'version': '1.2.3'});
     expect(result['capabilities'], isA<Map>());
 
     final fallback =
@@ -138,8 +135,8 @@ void main() {
             as Map<String, Object?>;
     expect(fallback['protocolVersion'], HttpMcpServer.protocolVersion);
 
-    final noParams = (await call('initialize'))['result']
-        as Map<String, Object?>;
+    final noParams =
+        (await call('initialize'))['result'] as Map<String, Object?>;
     expect(noParams['protocolVersion'], HttpMcpServer.protocolVersion);
   });
 
@@ -152,11 +149,8 @@ void main() {
   });
 
   test('tools/list describes every tool', () async {
-    final tools =
-        (await call('tools/list'))['result'] as Map<String, Object?>;
-    final names = [
-      for (final t in tools['tools'] as List) (t as Map)['name'],
-    ];
+    final tools = (await call('tools/list'))['result'] as Map<String, Object?>;
+    final names = [for (final t in tools['tools'] as List) (t as Map)['name']];
     expect(names, [
       'search',
       'home_feed',
@@ -245,7 +239,10 @@ void main() {
     for (final params in [
       {'name': 'nope'},
       {'name': 'search', 'arguments': <String, Object?>{}},
-      {'name': 'video_details', 'arguments': {'video_id': ''}},
+      {
+        'name': 'video_details',
+        'arguments': {'video_id': ''},
+      },
       <String, Object?>{},
       'nope',
     ]) {
@@ -271,7 +268,10 @@ void main() {
   test('notifications get an empty 202 response', () async {
     final reply = await _request(
       _port(server),
-      body: jsonEncode({'jsonrpc': '2.0', 'method': 'notifications/initialized'}),
+      body: jsonEncode({
+        'jsonrpc': '2.0',
+        'method': 'notifications/initialized',
+      }),
     );
     expect(reply.status, HttpStatus.accepted);
     expect(reply.body, isEmpty);

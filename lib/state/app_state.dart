@@ -65,11 +65,7 @@ class AppState extends ChangeNotifier {
     try {
       version = (await packageInfo()).version;
     } catch (_) {}
-    _mcpServer = factory(
-      api: api,
-      version: version,
-      onPlayVideo: requestWatch,
-    );
+    _mcpServer = factory(api: api, version: version, onPlayVideo: requestWatch);
     _syncMcpServer();
   }
 
@@ -80,13 +76,16 @@ class AppState extends ChangeNotifier {
     final server = _mcpServer;
     if (server == null || settings.mcpEnabled == server.running) return;
     final action = settings.mcpEnabled ? server.start : server.stop;
-    action().then((_) {
-      _mcpError = null;
-      notifyListeners();
-    }, onError: (Object e) {
-      _mcpError = e;
-      notifyListeners();
-    });
+    action().then(
+      (_) {
+        _mcpError = null;
+        notifyListeners();
+      },
+      onError: (Object e) {
+        _mcpError = e;
+        notifyListeners();
+      },
+    );
   }
 
   VideoInfo? get watchRequest => _watchRequest;
