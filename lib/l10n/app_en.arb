@@ -26,6 +26,7 @@
   "noSubscriptionsHint": "Subscribe to channels to see their latest videos here.",
   "unsubscribe": "Unsubscribe",
   "watchHistory": "Watch history",
+  "watched": "Watched",
   "clearHistory": "Clear history",
   "clearHistoryConfirm": "This removes all watched videos and searches.",
   "cancel": "Cancel",

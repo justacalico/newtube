@@ -44,6 +44,8 @@ class HistoryStore extends ChangeNotifier {
 
   List<VideoInfo> get entries => List.unmodifiable(_entries);
 
+  bool contains(String videoId) => _entries.any((v) => v.id == videoId);
+
   Future<void> record(VideoInfo video, SharedPreferences prefs) async {
     _entries.removeWhere((v) => v.id == video.id);
     _entries.insert(0, video);

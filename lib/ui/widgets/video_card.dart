@@ -4,6 +4,7 @@ import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../utils/format.dart';
 import 'thumbnail.dart';
+import 'watched_badge.dart';
 
 class VideoCard extends StatelessWidget {
   final VideoInfo video;
@@ -43,6 +44,11 @@ class VideoCard extends StatelessWidget {
                   VideoThumbnail(
                     url: video.thumbnailUrl,
                     borderRadius: BorderRadius.zero,
+                  ),
+                  Positioned(
+                    left: 6,
+                    top: 6,
+                    child: WatchedBadge(videoId: video.id),
                   ),
                   if (duration.isNotEmpty)
                     Positioned(

@@ -26,6 +26,7 @@
   "noSubscriptionsHint": "订阅频道后，他们的最新视频会显示在这里。",
   "unsubscribe": "取消订阅",
   "watchHistory": "观看历史",
+  "watched": "已观看",
   "clearHistory": "清除历史记录",
   "clearHistoryConfirm": "将删除所有观看记录和搜索记录。",
   "cancel": "取消",

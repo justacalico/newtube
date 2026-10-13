@@ -88,6 +88,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get watchHistory => '观看历史';
 
   @override
+  String get watched => '已观看';
+
+  @override
   String get clearHistory => '清除历史记录';
 
   @override
@@ -498,6 +501,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get watchHistory => '观看历史';
+
+  @override
+  String get watched => '已观看';
 
   @override
   String get clearHistory => '清除历史记录';

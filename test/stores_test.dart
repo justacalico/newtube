@@ -164,6 +164,12 @@ void main() {
       expect(store.entries.first.duration, const Duration(seconds: 61));
     });
 
+    test('contains reports watched videos', () {
+      final store = HistoryStore([video]);
+      expect(store.contains('v1'), isTrue);
+      expect(store.contains('v9'), isFalse);
+    });
+
     test('persists across reloads', () async {
       final p = await prefs();
       await HistoryStore().record(video, p);

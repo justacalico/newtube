@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/models/video_info.dart';
+import 'package:newtube/state/history_store.dart';
 import 'package:newtube/ui/widgets/subscribe_button.dart';
 import 'package:newtube/ui/widgets/thumbnail.dart';
 import 'package:newtube/ui/widgets/video_card.dart';
@@ -81,6 +82,24 @@ void main() {
     expect(find.textContaining('views'), findsNothing);
   });
 
+  testWidgets('VideoCard badge follows watch history', (tester) async {
+    final state = await testState();
+    await pumpPage(
+      tester,
+      state,
+      SizedBox(
+        width: 400,
+        height: 400,
+        child: VideoCard(video: testVideos.first, onTap: () {}),
+      ),
+    );
+    expect(find.text('Watched'), findsNothing);
+
+    await state.history.record(testVideos.first, state.prefs);
+    await tester.pump();
+    expect(find.text('Watched'), findsOneWidget);
+  });
+
   testWidgets('VideoGrid lays out cards', (tester) async {
     final state = await testState();
     var tapped = 0;
@@ -115,6 +134,19 @@ void main() {
     expect(find.text('3:21'), findsOneWidget);
     await tester.tap(find.text('First video'));
     expect(tapped, 1);
+  });
+
+  testWidgets('VideoListTile shows watched badge', (tester) async {
+    final state = await testState(
+      history: HistoryStore([testVideos.first]),
+    );
+    await pumpPage(
+      tester,
+      state,
+      VideoListTile(video: testVideos.first, onTap: () {}),
+    );
+    expect(find.text('Watched'), findsOneWidget);
+    expect(find.byIcon(Icons.check), findsOneWidget);
   });
 
   testWidgets('VideoListTile omits missing duration', (tester) async {
