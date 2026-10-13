@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.9.0 - 2026-10-13
+#### Features
+- 播放器键盘快捷键 - (e2b5ada) - HttpAnimations
+
+- - -
+
 ## v0.8.0 - 2026-10-13
 #### Features
 - 播放速度调节 - (dbf0120) - HttpAnimations
