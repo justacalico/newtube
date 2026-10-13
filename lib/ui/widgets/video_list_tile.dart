@@ -10,6 +10,7 @@ class VideoListTile extends StatelessWidget {
   final VoidCallback onTap;
   final EdgeInsetsGeometry? contentPadding;
   final bool selected;
+  final Widget? trailing;
 
   const VideoListTile({
     super.key,
@@ -17,6 +18,7 @@ class VideoListTile extends StatelessWidget {
     required this.onTap,
     this.contentPadding,
     this.selected = false,
+    this.trailing,
   });
 
   @override
@@ -41,9 +43,11 @@ class VideoListTile extends StatelessWidget {
       ),
       title: Text(video.title, maxLines: 2, overflow: TextOverflow.ellipsis),
       subtitle: Text(video.author),
-      trailing: video.duration == null
-          ? null
-          : Text(formatDuration(video.duration)),
+      trailing:
+          trailing ??
+          (video.duration == null
+              ? null
+              : Text(formatDuration(video.duration))),
       onTap: onTap,
     );
   }

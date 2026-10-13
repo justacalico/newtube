@@ -33,6 +33,7 @@ void touchAll(AppLocalizations l) {
   l.noSubscriptionsHint;
   l.unsubscribe;
   l.watchHistory;
+  l.watched;
   l.clearHistory;
   l.clearHistoryConfirm;
   l.cancel;
@@ -132,6 +133,22 @@ void touchAll(AppLocalizations l) {
   l.mcpExportHint;
   l.mcpExportedTo('x');
   l.mcpExportFailed;
+  l.navPlaylists;
+  l.playlistsEmpty;
+  l.playlistsEmptyHint;
+  l.newPlaylist;
+  l.playlistNameHint;
+  l.create;
+  l.rename;
+  l.renamePlaylist;
+  l.delete;
+  l.deletePlaylist;
+  l.deletePlaylistConfirm;
+  l.addToPlaylist;
+  l.removeFromPlaylist;
+  l.playlistEmpty;
+  l.savePlaylist;
+  l.playlistSaved;
 }
 
 void main() {

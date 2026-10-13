@@ -72,9 +72,30 @@ class _PlaylistPageState extends State<PlaylistPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final state = AppScope.read(context);
     final playlist = _playlist ?? widget.summary;
+    final loaded = _playlist;
     return Scaffold(
-      appBar: AppBar(title: Text(playlist?.title ?? '')),
+      appBar: AppBar(
+        title: Text(playlist?.title ?? ''),
+        actions: [
+          if (loaded != null)
+            ListenableBuilder(
+              listenable: state.playlists,
+              builder: (context, _) {
+                final saved = state.playlists.byId(loaded.id) != null;
+                return IconButton(
+                  tooltip: saved ? l10n.playlistSaved : l10n.savePlaylist,
+                  icon: Icon(
+                    saved ? Icons.playlist_add_check : Icons.playlist_add,
+                  ),
+                  onPressed: () =>
+                      state.playlists.toggleSaved(loaded, state.prefs),
+                );
+              },
+            ),
+        ],
+      ),
       body: FeedStateView(
         loading: _loading && playlist == null,
         error: _error,

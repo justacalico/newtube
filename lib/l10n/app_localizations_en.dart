@@ -428,6 +428,55 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pictureInPicture => 'Picture in picture';
+
+  @override
+  String get navPlaylists => 'Playlists';
+
+  @override
+  String get playlistsEmpty => 'No playlists yet';
+
+  @override
+  String get playlistsEmptyHint =>
+      'Create a playlist to keep videos organised.';
+
+  @override
+  String get newPlaylist => 'New playlist';
+
+  @override
+  String get playlistNameHint => 'Playlist name';
+
+  @override
+  String get create => 'Create';
+
+  @override
+  String get rename => 'Rename';
+
+  @override
+  String get renamePlaylist => 'Rename playlist';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get deletePlaylist => 'Delete playlist';
+
+  @override
+  String get deletePlaylistConfirm => 'The videos stay in your history.';
+
+  @override
+  String get addToPlaylist => 'Add to playlist';
+
+  @override
+  String get removeFromPlaylist => 'Remove from playlist';
+
+  @override
+  String get playlistEmpty => 'This playlist is empty';
+
+  @override
+  String get savePlaylist => 'Save playlist';
+
+  @override
+  String get playlistSaved => 'Saved to your playlists';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -853,4 +902,53 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get pictureInPicture => 'Picture in picture';
+
+  @override
+  String get navPlaylists => 'Playlists';
+
+  @override
+  String get playlistsEmpty => 'No playlists yet';
+
+  @override
+  String get playlistsEmptyHint =>
+      'Create a playlist to keep videos organised.';
+
+  @override
+  String get newPlaylist => 'New playlist';
+
+  @override
+  String get playlistNameHint => 'Playlist name';
+
+  @override
+  String get create => 'Create';
+
+  @override
+  String get rename => 'Rename';
+
+  @override
+  String get renamePlaylist => 'Rename playlist';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get deletePlaylist => 'Delete playlist';
+
+  @override
+  String get deletePlaylistConfirm => 'The videos stay in your history.';
+
+  @override
+  String get addToPlaylist => 'Add to playlist';
+
+  @override
+  String get removeFromPlaylist => 'Remove from playlist';
+
+  @override
+  String get playlistEmpty => 'This playlist is empty';
+
+  @override
+  String get savePlaylist => 'Save playlist';
+
+  @override
+  String get playlistSaved => 'Saved to your playlists';
 }

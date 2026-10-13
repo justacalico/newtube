@@ -4,6 +4,7 @@ import '../../l10n/app_localizations.dart';
 import '../../state/app_state.dart';
 import '../pages/history_page.dart';
 import '../pages/home_page.dart';
+import '../pages/playlists_page.dart';
 import '../pages/search_page.dart';
 import '../pages/settings_page.dart';
 import '../pages/subscriptions_page.dart';
@@ -56,6 +57,7 @@ class _AppShellState extends State<AppShell> {
       SubscriptionsPage(),
       HistoryPage(),
       WatchLaterPage(),
+      PlaylistsPage(),
       SettingsPage(),
     ];
 
@@ -106,11 +108,19 @@ class _AppShellState extends State<AppShell> {
           ),
           (
             destination: (
+              icon: Icons.video_library_outlined,
+              selectedIcon: Icons.video_library,
+              label: l10n.navPlaylists,
+            ),
+            page: 5,
+          ),
+          (
+            destination: (
               icon: Icons.settings_outlined,
               selectedIcon: Icons.settings,
               label: l10n.navSettings,
             ),
-            page: 5,
+            page: 6,
           ),
         ];
 

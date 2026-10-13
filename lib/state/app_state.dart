@@ -17,6 +17,7 @@ import '../services/version_checker.dart';
 import '../services/window_actions.dart';
 import '../services/youtube_api.dart';
 import 'history_store.dart';
+import 'playlists_store.dart';
 import 'search_history_store.dart';
 import 'settings_store.dart';
 import 'subscriptions_store.dart';
@@ -29,6 +30,7 @@ class AppState extends ChangeNotifier {
   final SettingsStore settings;
   final SubscriptionsStore subscriptions;
   final WatchLaterStore watchLater;
+  final PlaylistsStore playlists;
   final HistoryStore history;
   final SearchHistoryStore searchHistory;
   final UrlLaunch launch;
@@ -57,6 +59,7 @@ class AppState extends ChangeNotifier {
     required this.settings,
     required this.subscriptions,
     required this.watchLater,
+    required this.playlists,
     required this.history,
     required this.searchHistory,
     required this.launch,

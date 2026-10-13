@@ -22,6 +22,7 @@ import 'services/window_actions_impl.dart';
 import 'services/youtube_explode_api.dart';
 import 'state/app_state.dart';
 import 'state/history_store.dart';
+import 'state/playlists_store.dart';
 import 'state/search_history_store.dart';
 import 'state/settings_store.dart';
 import 'state/subscriptions_store.dart';
@@ -64,6 +65,7 @@ Future<AppState> createAppState(SharedPreferences prefs) async {
     settings: settings,
     subscriptions: subscriptions,
     watchLater: await WatchLaterStore.load(prefs),
+    playlists: await PlaylistsStore.load(prefs),
     history: await HistoryStore.load(prefs),
     searchHistory: await SearchHistoryStore.load(prefs),
     launch: defaultLaunch,

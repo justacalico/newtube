@@ -48,7 +48,7 @@ void main() {
 
     await tester.tap(find.byIcon(Icons.settings_outlined));
     await tester.pumpAndSettle();
-    expect(state.tabIndex, 5);
+    expect(state.tabIndex, 6);
     expect(find.text('Theme'), findsOneWidget);
     debugDefaultTargetPlatformOverride = null;
   });
@@ -145,7 +145,7 @@ void main() {
 
     await tester.tap(find.descendant(of: nav, matching: find.text('Settings')));
     await tester.pumpAndSettle();
-    expect(state.tabIndex, 5);
+    expect(state.tabIndex, 6);
     expect(find.text('Search history'), findsOneWidget);
 
     await state.settings.setSearchHistoryEnabled(true, state.prefs);
@@ -269,7 +269,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(state.tabIndex, 5);
+    expect(state.tabIndex, 6);
     expect(find.text('Theme'), findsOneWidget);
     expect(find.text('A video description'), findsNothing);
     expect(player.disposed, isTrue);

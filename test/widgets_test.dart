@@ -137,9 +137,7 @@ void main() {
   });
 
   testWidgets('VideoListTile shows watched badge', (tester) async {
-    final state = await testState(
-      history: HistoryStore([testVideos.first]),
-    );
+    final state = await testState(history: HistoryStore([testVideos.first]));
     await pumpPage(
       tester,
       state,
