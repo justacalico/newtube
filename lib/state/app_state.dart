@@ -8,6 +8,7 @@ import '../services/file_opener.dart';
 import '../services/file_saver.dart';
 import '../services/launcher.dart';
 import '../services/mcp_server.dart';
+import '../services/pip_actions.dart';
 import '../services/player_controller.dart';
 import '../services/sponsor_block.dart';
 import '../services/uploads_watcher.dart';
@@ -37,6 +38,7 @@ class AppState extends ChangeNotifier {
   final OpenFile? openFile;
   final SponsorBlockClient? sponsorBlock;
   final UploadsWatcher? uploads;
+  final PipActions? pipActions;
   final bool isWeb;
 
   int _tabIndex = 0;
@@ -64,6 +66,7 @@ class AppState extends ChangeNotifier {
     this.openFile,
     this.sponsorBlock,
     this.uploads,
+    this.pipActions,
     this._versionChecker,
     this.isWeb = false,
   }) {

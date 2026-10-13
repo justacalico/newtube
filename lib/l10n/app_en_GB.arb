@@ -188,5 +188,6 @@
         "type": "int"
       }
     }
-  }
+  },
+  "pictureInPicture": "Picture in picture"
 }

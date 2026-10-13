@@ -13,6 +13,7 @@ import 'package:newtube/models/video_info.dart';
 import 'package:newtube/services/mcp_server.dart';
 import 'package:newtube/services/player_controller.dart';
 import 'package:newtube/services/sponsor_block.dart';
+import 'package:newtube/services/pip_actions.dart';
 import 'package:newtube/services/uploads_watcher.dart';
 import 'package:newtube/services/version_checker.dart';
 import 'package:newtube/services/window_actions.dart';
@@ -347,6 +348,7 @@ Future<AppState> testState({
   Future<String?> Function()? openFile,
   SponsorBlockClient? sponsorBlock,
   UploadsWatcher? uploads,
+  PipActions? pipActions,
   Map<String, Object> initialPrefs = const {},
 }) async {
   SharedPreferences.setMockInitialValues(initialPrefs);
@@ -378,6 +380,7 @@ Future<AppState> testState({
     openFile: openFile,
     sponsorBlock: sponsorBlock,
     uploads: uploads,
+    pipActions: pipActions,
     versionChecker: versionChecker ?? FakeVersionChecker(),
     isWeb: isWeb,
   );
@@ -542,4 +545,21 @@ Future<void> pumpPage(
       ),
     ),
   );
+}
+
+class FakePipActions implements PipActions {
+  int enters = 0;
+  int exits = 0;
+  bool supported = true;
+
+  @override
+  Future<bool> enterPip() async {
+    enters++;
+    return supported;
+  }
+
+  @override
+  Future<void> exitPip() async {
+    exits++;
+  }
 }

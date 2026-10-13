@@ -847,6 +847,12 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Every {minutes} min'**
   String everyMinutes(int minutes);
+
+  /// No description provided for @pictureInPicture.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Picture in picture'**
+  String get pictureInPicture;
 }
 
 class _AppLocalizationsDelegate

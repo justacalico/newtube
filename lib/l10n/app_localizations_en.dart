@@ -422,6 +422,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String everyMinutes(int minutes) {
     return 'Every $minutes min';
   }
+
+  @override
+  String get pictureInPicture => 'Picture in picture';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -841,4 +844,7 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   String everyMinutes(int minutes) {
     return 'Every $minutes min';
   }
+
+  @override
+  String get pictureInPicture => 'Picture in picture';
 }
