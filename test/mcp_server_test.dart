@@ -351,15 +351,15 @@ void main() {
     );
   });
 
-  test('mcspExport produces a portable document', () {
-    final doc = mcspExport(
+  test('mspbExport produces a portable document', () {
+    final doc = mspbExport(
       name: 'newtube',
       version: '0.5.0',
       url: 'http://127.0.0.1:8642/mcp',
       exportedAt: DateTime.utc(2026, 1, 2, 3, 4, 5),
     );
-    expect(doc['format'], mcspFormat);
-    expect(doc['version'], mcspFormatVersion);
+    expect(doc['format'], mspbFormat);
+    expect(doc['version'], mspbFormatVersion);
     expect(doc['exported'], '2026-01-02T03:04:05.000Z');
     expect(doc['server'], {
       'name': 'newtube',
@@ -369,18 +369,18 @@ void main() {
     });
     expect(doc['tools'], mcpToolDefinitions);
 
-    final encoded = encodeMcsp(doc);
-    expect(encoded, contains('"format": "mcsp"'));
+    final encoded = encodeMspb(doc);
+    expect(encoded, contains('"format": "mspb"'));
     expect(jsonDecode(encoded), doc);
   });
 
   test('writeTextFile writes the export to a path', () async {
-    final dir = await Directory.systemTemp.createTemp('mcsp');
+    final dir = await Directory.systemTemp.createTemp('mspb');
     addTearDown(() => dir.delete(recursive: true));
-    final target = '${dir.path}${Platform.pathSeparator}newtube.mcsp';
-    final path = await writeTextFile(target, '{"format":"mcsp"}');
+    final target = '${dir.path}${Platform.pathSeparator}newtube.mspb';
+    final path = await writeTextFile(target, '{"format":"mspb"}');
     expect(path, target);
-    expect(File(path).readAsStringSync(), '{"format":"mcsp"}');
+    expect(File(path).readAsStringSync(), '{"format":"mspb"}');
   });
 
   test('default port constant', () {

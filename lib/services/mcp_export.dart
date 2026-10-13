@@ -2,17 +2,17 @@ import 'dart:convert';
 
 import 'mcp_server.dart';
 
-const mcspFormat = 'mcsp';
-const mcspFormatVersion = 1;
+const mspbFormat = 'mspb';
+const mspbFormatVersion = 1;
 
-Map<String, Object?> mcspExport({
+Map<String, Object?> mspbExport({
   required String name,
   required String version,
   required String url,
   DateTime? exportedAt,
 }) => {
-  'format': mcspFormat,
-  'version': mcspFormatVersion,
+  'format': mspbFormat,
+  'version': mspbFormatVersion,
   'exported': (exportedAt ?? DateTime.now()).toUtc().toIso8601String(),
   'server': {
     'name': name,
@@ -23,5 +23,5 @@ Map<String, Object?> mcspExport({
   'tools': mcpToolDefinitions,
 };
 
-String encodeMcsp(Map<String, Object?> document) =>
+String encodeMspb(Map<String, Object?> document) =>
     const JsonEncoder.withIndent('  ').convert(document);

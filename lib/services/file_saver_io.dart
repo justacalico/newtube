@@ -12,7 +12,7 @@ Future<String?> saveFileDialog(String name, String contents) async {
   final location = await getSaveLocation(
     suggestedName: name,
     acceptedTypeGroups: const [
-      XTypeGroup(label: 'MCP server', extensions: ['mcsp']),
+      XTypeGroup(label: 'MCP server', extensions: ['mspb']),
     ],
   );
   if (location == null) return null;
