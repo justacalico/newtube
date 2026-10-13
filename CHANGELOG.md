@@ -2,6 +2,29 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.7.0 - 2026-10-13
+#### Features
+- 空格键切换播放暂停 - (a96f0d7) - HttpAnimations
+- 画质与音轨拆分为两个下拉菜单 - (c6ec0cf) - HttpAnimations
+- 左右方向键快进快退五秒 - (909c1ce) - HttpAnimations
+- 点击视频画面切换播放暂停 - (0461f19) - HttpAnimations
+- 侧边栏可折叠为小图标栏 - (a60f292) - HttpAnimations
+- 设置项固定在侧边栏底部 - (a9e5f44) - HttpAnimations
+- 播放页作者旁显示频道头像 - (3b9118b) - HttpAnimations
+- 相关视频显示缩略图并抽取列表项组件 - (35d076a) - HttpAnimations
+- 导出标准 mcpb 扩展包 - (9d76440) - HttpAnimations
+#### Bug Fixes
+- 切换流时跳过期 seek 并处理切换失败 - (a92c11a) - HttpAnimations
+- VISIONOS 回退流全部探测失败时不再丢弃 - (97b6400) - HttpAnimations
+- 切换视频流时保留播放进度与暂停状态 - (6db7bb9) - HttpAnimations
+- 桌面端分离音轨未附加导致视频无声 - (c6ac24f) - HttpAnimations
+- 探测全部失败时仍重试并避免双代理前缀 - (8eecb03) - HttpAnimations
+- 部分视频自适应清晰度因 poToken 校验只剩 360p - (edd4bb5) - HttpAnimations
+- 搜索结果视频缩略图无法显示 - (0d79afe) - HttpAnimations
+- 探测并过滤不可播放的流 - (3d0912b) - HttpAnimations
+
+- - -
+
 ## v0.6.0 - 2026-10-13
 #### Features
 - 导出时使用系统保存对话框 - (48763ab) - HttpAnimations
