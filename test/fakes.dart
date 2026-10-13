@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:newtube/models/app_update.dart';
 import 'package:newtube/models/video_info.dart';
+import 'package:newtube/services/mcp_server.dart';
 import 'package:newtube/services/player_controller.dart';
 import 'package:newtube/services/version_checker.dart';
 import 'package:newtube/services/window_actions.dart';
@@ -191,6 +192,27 @@ class FakePlayerController implements PlayerController {
   }
 }
 
+class FakeMcpServer implements McpServer {
+  @override
+  bool running = false;
+  Object? startError;
+
+  @override
+  String? get url => running ? 'http://127.0.0.1:8642/mcp' : null;
+
+  @override
+  Future<void> start() async {
+    final error = startError;
+    if (error != null) throw error;
+    running = true;
+  }
+
+  @override
+  Future<void> stop() async {
+    running = false;
+  }
+}
+
 class FakeWindowActions implements WindowActions {
   int minimized = 0;
   int maximized = 0;
@@ -237,6 +259,9 @@ Future<AppState> testState({
   SearchHistoryStore? searchHistory,
   List<Uri>? launched,
   bool isWeb = false,
+  McpServerFactory? createMcpServer,
+  Future<PackageInfo> Function()? packageInfo,
+  Future<String?> Function(String name, String contents)? saveTextFile,
   Map<String, Object> initialPrefs = const {},
 }) async {
   SharedPreferences.setMockInitialValues(initialPrefs);
@@ -252,14 +277,18 @@ Future<AppState> testState({
       launched?.add(uri);
       return true;
     },
-    packageInfo: () async => PackageInfo(
-      appName: 'NewTube',
-      packageName: 'gitlab.httpanimations.newtube',
-      version: '1.2.3',
-      buildNumber: '4',
-    ),
+    packageInfo:
+        packageInfo ??
+        () async => PackageInfo(
+          appName: 'NewTube',
+          packageName: 'gitlab.httpanimations.newtube',
+          version: '1.2.3',
+          buildNumber: '4',
+        ),
     createPlayer: () => player ?? FakePlayerController(),
     windowActions: windowActions,
+    createMcpServer: createMcpServer,
+    saveTextFile: saveTextFile,
     versionChecker: versionChecker ?? FakeVersionChecker(),
     isWeb: isWeb,
   );

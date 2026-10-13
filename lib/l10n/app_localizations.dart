@@ -517,6 +517,48 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'The video URL is appended URL-encoded, for example https://proxy.example/?url='**
   String get corsProxyHint;
+
+  /// No description provided for @mcpServer.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'MCP server'**
+  String get mcpServer;
+
+  /// No description provided for @mcpServerHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Allow AI tools to search and play videos'**
+  String get mcpServerHint;
+
+  /// No description provided for @mcpServerFailed.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Could not start the MCP server'**
+  String get mcpServerFailed;
+
+  /// No description provided for @mcpExport.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Export server file'**
+  String get mcpExport;
+
+  /// No description provided for @mcpExportHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Save a .mcsp file clients can import'**
+  String get mcpExportHint;
+
+  /// No description provided for @mcpExportedTo.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Saved to {path}'**
+  String mcpExportedTo(String path);
+
+  /// No description provided for @mcpExportFailed.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Could not save the export'**
+  String get mcpExportFailed;
 }
 
 class _AppLocalizationsDelegate

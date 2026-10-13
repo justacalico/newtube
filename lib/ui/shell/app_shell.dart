@@ -7,6 +7,7 @@ import '../pages/home_page.dart';
 import '../pages/search_page.dart';
 import '../pages/settings_page.dart';
 import '../pages/subscriptions_page.dart';
+import '../pages/watch_page.dart';
 import 'side_nav.dart';
 import 'title_bar.dart';
 
@@ -19,6 +20,28 @@ class AppShell extends StatefulWidget {
 
 class _AppShellState extends State<AppShell> {
   final _contentNavigator = GlobalKey<NavigatorState>();
+  late final AppState _state;
+
+  @override
+  void initState() {
+    super.initState();
+    _state = AppScope.read(context)..addListener(_openRequestedVideo);
+  }
+
+  @override
+  void dispose() {
+    _state.removeListener(_openRequestedVideo);
+    super.dispose();
+  }
+
+  void _openRequestedVideo() {
+    final video = _state.watchRequest;
+    if (video == null) return;
+    _state.clearWatchRequest();
+    _contentNavigator.currentState?.push(
+      MaterialPageRoute<void>(builder: (_) => WatchPage(video: video)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

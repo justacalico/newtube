@@ -55,6 +55,23 @@ flatpak remote-add newtube https://httpanimations.gitlab.io/newtube/flatpak
 flatpak install newtube gitlab.httpanimations.newtube
 ```
 
+### MCP server (Linux, Windows, macOS)
+
+Settings can turn on a local
+[Model Context Protocol](https://modelcontextprotocol.io) server at
+`http://127.0.0.1:8642/mcp` (Streamable HTTP, loopback only). It lets AI
+clients search YouTube, read channel and video details and play videos in
+the app. Clients that only support stdio servers can reach it through a
+bridge such as `npx mcp-remote http://127.0.0.1:8642/mcp`.
+
+With the server on, Settings can export a `.mcsp` descriptor (name,
+version, endpoint and tool manifest) through the native save dialog. The
+same document can be written to disk without the app running:
+
+```
+dart run tool/export_mcsp.dart newtube.mcsp
+```
+
 ## Screenshots
 
 ![Desktop app](test/goldens/app_shell.png)

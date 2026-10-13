@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/models/video_info.dart';
 import 'package:newtube/state/settings_store.dart';
+import 'package:newtube/ui/pages/watch_page.dart';
 import 'package:newtube/ui/shell/app_shell.dart';
 import 'package:newtube/ui/shell/side_nav.dart';
 import 'package:newtube/ui/shell/title_bar.dart';
@@ -246,6 +247,26 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Results: kittens'), findsOneWidget);
     expect(find.text('First video'), findsOneWidget);
+    debugDefaultTargetPlatformOverride = null;
+  });
+
+  testWidgets('watch request pushes the watch page', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    final state = await testState();
+    await pumpPage(
+      tester,
+      state,
+      const AppShell(),
+      size: const Size(1200, 800),
+    );
+    await tester.pumpAndSettle();
+
+    state.requestWatch(testVideos.first);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(WatchPage), findsOneWidget);
+    expect(find.text('A video description'), findsOneWidget);
+    expect(state.watchRequest, isNull);
     debugDefaultTargetPlatformOverride = null;
   });
 }

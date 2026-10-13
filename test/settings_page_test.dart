@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/models/app_update.dart';
@@ -213,5 +216,105 @@ void main() {
       'https://gitlab.com/HttpAnimations/newtube',
       'https://www.gnu.org/licenses/agpl-3.0.html',
     ]);
+  });
+
+  testWidgets('toggles the MCP server', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    final fake = FakeMcpServer();
+    final state = await testState(
+      createMcpServer: ({required api, required version, onPlayVideo}) => fake,
+    );
+    await pumpPage(tester, state, const SettingsPage());
+    await tester.pumpAndSettle();
+
+    final tile = find.widgetWithText(SwitchListTile, 'MCP server');
+    expect(tile, findsOneWidget);
+    expect(
+      find.text('Allow AI tools to search and play videos'),
+      findsOneWidget,
+    );
+    expect(find.text('Export server file'), findsNothing);
+
+    await tester.tap(tile);
+    await tester.pumpAndSettle();
+    expect(state.settings.mcpEnabled, isTrue);
+    expect(fake.running, isTrue);
+    expect(find.text('http://127.0.0.1:8642/mcp'), findsOneWidget);
+    expect(find.text('Export server file'), findsOneWidget);
+
+    await tester.tap(find.text('Export server file'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(tile);
+    await tester.pumpAndSettle();
+    expect(state.settings.mcpEnabled, isFalse);
+    expect(fake.running, isFalse);
+    debugDefaultTargetPlatformOverride = null;
+  });
+
+  testWidgets('shows an error when the MCP server fails to start', (
+    tester,
+  ) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    final state = await testState(
+      settings: SettingsStore(mcpEnabled: true),
+      createMcpServer: ({required api, required version, onPlayVideo}) =>
+          FakeMcpServer()..startError = 'port busy',
+    );
+    await pumpPage(tester, state, const SettingsPage());
+    await tester.pumpAndSettle();
+
+    expect(find.text('Could not start the MCP server'), findsOneWidget);
+    debugDefaultTargetPlatformOverride = null;
+  });
+
+  testWidgets('exports the server file', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    final saved = <String>[];
+    final state = await testState(
+      settings: SettingsStore(mcpEnabled: true),
+      createMcpServer: ({required api, required version, onPlayVideo}) =>
+          FakeMcpServer()..running = true,
+      saveTextFile: (name, contents) async {
+        saved.addAll([name, contents]);
+        return '/home/u/Downloads/$name';
+      },
+    );
+    await pumpPage(tester, state, const SettingsPage());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Export server file'));
+    await tester.pumpAndSettle();
+
+    expect(saved.first, 'newtube.mcsp');
+    final doc = jsonDecode(saved[1]) as Map<String, Object?>;
+    expect(doc['format'], 'mcsp');
+    expect(doc['server'], {
+      'name': 'newtube',
+      'version': '1.2.3',
+      'transport': 'streamable-http',
+      'url': 'http://127.0.0.1:8642/mcp',
+    });
+    expect((doc['tools'] as List).length, 7);
+    expect(
+      find.text('Saved to /home/u/Downloads/newtube.mcsp'),
+      findsOneWidget,
+    );
+    debugDefaultTargetPlatformOverride = null;
+  });
+
+  testWidgets('reports a failed export', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    final state = await testState(
+      settings: SettingsStore(mcpEnabled: true),
+      saveTextFile: (name, contents) async => null,
+    );
+    await pumpPage(tester, state, const SettingsPage());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Export server file'));
+    await tester.pumpAndSettle();
+    expect(find.text('Could not save the export'), findsOneWidget);
+    debugDefaultTargetPlatformOverride = null;
   });
 }

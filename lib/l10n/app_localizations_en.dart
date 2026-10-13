@@ -220,6 +220,29 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get corsProxyHint =>
       'The video URL is appended URL-encoded, for example https://proxy.example/?url=';
+
+  @override
+  String get mcpServer => 'MCP server';
+
+  @override
+  String get mcpServerHint => 'Allow AI tools to search and play videos';
+
+  @override
+  String get mcpServerFailed => 'Could not start the MCP server';
+
+  @override
+  String get mcpExport => 'Export server file';
+
+  @override
+  String get mcpExportHint => 'Save a .mcsp file clients can import';
+
+  @override
+  String mcpExportedTo(String path) {
+    return 'Saved to $path';
+  }
+
+  @override
+  String get mcpExportFailed => 'Could not save the export';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -437,4 +460,27 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   @override
   String get corsProxyHint =>
       'The video URL is appended URL-encoded, for example https://proxy.example/?url=';
+
+  @override
+  String get mcpServer => 'MCP server';
+
+  @override
+  String get mcpServerHint => 'Allow AI tools to search and play videos';
+
+  @override
+  String get mcpServerFailed => 'Could not start the MCP server';
+
+  @override
+  String get mcpExport => 'Export server file';
+
+  @override
+  String get mcpExportHint => 'Save a .mcsp file clients can import';
+
+  @override
+  String mcpExportedTo(String path) {
+    return 'Saved to $path';
+  }
+
+  @override
+  String get mcpExportFailed => 'Could not save the export';
 }

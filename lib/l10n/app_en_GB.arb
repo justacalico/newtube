@@ -68,5 +68,19 @@
   "corsFirefox": "Firefox add-on",
   "corsChrome": "Chrome extension",
   "corsProxyLabel": "CORS proxy prefix",
-  "corsProxyHint": "The video URL is appended URL-encoded, for example https://proxy.example/?url="
+  "corsProxyHint": "The video URL is appended URL-encoded, for example https://proxy.example/?url=",
+  "mcpServer": "MCP server",
+  "mcpServerHint": "Allow AI tools to search and play videos",
+  "mcpServerFailed": "Could not start the MCP server",
+  "mcpExport": "Export server file",
+  "mcpExportHint": "Save a .mcsp file clients can import",
+  "mcpExportedTo": "Saved to {path}",
+  "@mcpExportedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "mcpExportFailed": "Could not save the export"
 }

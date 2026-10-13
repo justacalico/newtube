@@ -3,7 +3,10 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/app_update.dart';
+import '../models/video_info.dart';
+import '../services/file_saver.dart';
 import '../services/launcher.dart';
+import '../services/mcp_server.dart';
 import '../services/player_controller.dart';
 import '../services/version_checker.dart';
 import '../services/window_actions.dart';
@@ -24,12 +27,17 @@ class AppState extends ChangeNotifier {
   final UrlLaunch launch;
   final Future<PackageInfo> Function() packageInfo;
   final PlayerController Function() createPlayer;
+  final McpServerFactory? createMcpServer;
+  final SaveTextFile? saveTextFile;
   final bool isWeb;
 
   int _tabIndex = 0;
   AppUpdate? _update;
   Future<AppUpdate?>? _updateCheck;
   VersionChecker? _versionChecker;
+  McpServer? _mcpServer;
+  Object? _mcpError;
+  VideoInfo? _watchRequest;
 
   AppState({
     required this.prefs,
@@ -42,9 +50,53 @@ class AppState extends ChangeNotifier {
     required this.packageInfo,
     required this.createPlayer,
     this.windowActions,
+    this.createMcpServer,
+    this.saveTextFile,
     this._versionChecker,
     this.isWeb = false,
-  });
+  }) {
+    settings.addListener(_syncMcpServer);
+    final factory = createMcpServer;
+    if (factory != null) _initMcp(factory);
+  }
+
+  Future<void> _initMcp(McpServerFactory factory) async {
+    var version = 'dev';
+    try {
+      version = (await packageInfo()).version;
+    } catch (_) {}
+    _mcpServer = factory(
+      api: api,
+      version: version,
+      onPlayVideo: requestWatch,
+    );
+    _syncMcpServer();
+  }
+
+  McpServer? get mcpServer => _mcpServer;
+  Object? get mcpError => _mcpError;
+
+  void _syncMcpServer() {
+    final server = _mcpServer;
+    if (server == null || settings.mcpEnabled == server.running) return;
+    final action = settings.mcpEnabled ? server.start : server.stop;
+    action().then((_) {
+      _mcpError = null;
+      notifyListeners();
+    }, onError: (Object e) {
+      _mcpError = e;
+      notifyListeners();
+    });
+  }
+
+  VideoInfo? get watchRequest => _watchRequest;
+
+  void requestWatch(VideoInfo video) {
+    _watchRequest = video;
+    notifyListeners();
+  }
+
+  void clearWatchRequest() => _watchRequest = null;
 
   int get tabIndex => _tabIndex;
 

@@ -16,12 +16,14 @@ class SettingsStore extends ChangeNotifier {
   static const _autoplayKey = 'autoplay';
   static const _proxyPrefixKey = 'proxy_prefix';
   static const _searchHistoryKey = 'search_history_enabled';
+  static const _mcpEnabledKey = 'mcp_enabled';
 
   AppTheme _theme;
   Locale? _locale;
   bool _autoplay;
   String _proxyPrefix;
   bool _searchHistoryEnabled;
+  bool _mcpEnabled;
 
   SettingsStore({
     this._theme = AppTheme.system,
@@ -29,6 +31,7 @@ class SettingsStore extends ChangeNotifier {
     this._autoplay = true,
     this._proxyPrefix = '',
     this._searchHistoryEnabled = true,
+    this._mcpEnabled = false,
   });
 
   static Future<SettingsStore> load(SharedPreferences prefs) async {
@@ -40,6 +43,7 @@ class SettingsStore extends ChangeNotifier {
       autoplay: prefs.getBool(_autoplayKey) ?? true,
       proxyPrefix: prefs.getString(_proxyPrefixKey) ?? '',
       searchHistoryEnabled: prefs.getBool(_searchHistoryKey) ?? true,
+      mcpEnabled: prefs.getBool(_mcpEnabledKey) ?? false,
     );
   }
 
@@ -62,6 +66,7 @@ class SettingsStore extends ChangeNotifier {
   bool get autoplay => _autoplay;
   String get proxyPrefix => _proxyPrefix;
   bool get searchHistoryEnabled => _searchHistoryEnabled;
+  bool get mcpEnabled => _mcpEnabled;
 
   Future<void> setTheme(AppTheme theme, SharedPreferences prefs) async {
     _theme = theme;
@@ -93,6 +98,12 @@ class SettingsStore extends ChangeNotifier {
   ) async {
     _searchHistoryEnabled = value;
     await prefs.setBool(_searchHistoryKey, value);
+    notifyListeners();
+  }
+
+  Future<void> setMcpEnabled(bool value, SharedPreferences prefs) async {
+    _mcpEnabled = value;
+    await prefs.setBool(_mcpEnabledKey, value);
     notifyListeners();
   }
 }

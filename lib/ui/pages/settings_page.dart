@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/app_update.dart';
+import '../../services/mcp_export.dart';
+import '../../services/mcp_server.dart';
 import '../../services/version_checker.dart';
 import '../../state/app_state.dart';
 import '../../state/settings_store.dart';
+import '../shell/title_bar.dart' show isDesktopPlatform;
 
 const languageNames = {
   'en_GB': 'Traditional English',
@@ -64,6 +67,28 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
+  Future<void> _exportMcsp() async {
+    final state = AppScope.read(context);
+    final save = state.saveTextFile;
+    if (save == null) return;
+    final info = await state.packageInfo();
+    final document = mcspExport(
+      name: 'newtube',
+      version: info.version,
+      url: state.mcpServer?.url ?? mcpDefaultUrl,
+    );
+    final path = await save('newtube.mcsp', '${encodeMcsp(document)}\n');
+    if (!mounted) return;
+    final l10n = AppLocalizations.of(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          path == null ? l10n.mcpExportFailed : l10n.mcpExportedTo(path),
+        ),
+      ),
+    );
+  }
+
   Future<void> _check() async {
     setState(() {
       _checking = true;
@@ -87,12 +112,14 @@ class _SettingsPageState extends State<SettingsPage> {
 
     return ListenableBuilder(
       listenable: Listenable.merge([
+        state,
         state.settings,
         state.history,
         state.searchHistory,
       ]),
       builder: (context, _) {
         final settings = state.settings;
+        final mcp = state.mcpServer;
         return ListView(
           children: [
             ListTile(
@@ -181,6 +208,29 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
               ),
+            ],
+            if (isDesktopPlatform) ...[
+              SwitchListTile(
+                secondary: const Icon(Icons.hub_outlined),
+                title: Text(l10n.mcpServer),
+                subtitle: Text(
+                  mcp != null && mcp.running
+                      ? mcp.url!
+                      : state.mcpError != null
+                      ? l10n.mcpServerFailed
+                      : l10n.mcpServerHint,
+                ),
+                value: settings.mcpEnabled,
+                onChanged: (value) =>
+                    settings.setMcpEnabled(value, state.prefs),
+              ),
+              if (settings.mcpEnabled)
+                ListTile(
+                  leading: const Icon(Icons.download_outlined),
+                  title: Text(l10n.mcpExport),
+                  subtitle: Text(l10n.mcpExportHint),
+                  onTap: _exportMcsp,
+                ),
             ],
             const Divider(),
             Padding(

@@ -216,6 +216,29 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get corsProxyHint =>
       '视频地址会以 URL 编码形式附加，例如 https://proxy.example/?url=';
+
+  @override
+  String get mcpServer => 'MCP 服务器';
+
+  @override
+  String get mcpServerHint => '允许 AI 工具搜索和播放视频';
+
+  @override
+  String get mcpServerFailed => '无法启动 MCP 服务器';
+
+  @override
+  String get mcpExport => '导出服务器文件';
+
+  @override
+  String get mcpExportHint => '保存客户端可导入的 .mcsp 文件';
+
+  @override
+  String mcpExportedTo(String path) {
+    return '已保存到 $path';
+  }
+
+  @override
+  String get mcpExportFailed => '无法保存导出文件';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -429,4 +452,27 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   @override
   String get corsProxyHint =>
       '视频地址会以 URL 编码形式附加，例如 https://proxy.example/?url=';
+
+  @override
+  String get mcpServer => 'MCP 服务器';
+
+  @override
+  String get mcpServerHint => '允许 AI 工具搜索和播放视频';
+
+  @override
+  String get mcpServerFailed => '无法启动 MCP 服务器';
+
+  @override
+  String get mcpExport => '导出服务器文件';
+
+  @override
+  String get mcpExportHint => '保存客户端可导入的 .mcsp 文件';
+
+  @override
+  String mcpExportedTo(String path) {
+    return '已保存到 $path';
+  }
+
+  @override
+  String get mcpExportFailed => '无法保存导出文件';
 }
