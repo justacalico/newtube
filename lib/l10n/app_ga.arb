@@ -190,5 +190,21 @@
       }
     }
   },
-  "pictureInPicture": "Pictiúr i bpictiúr"
+  "pictureInPicture": "Pictiúr i bpictiúr",
+  "navPlaylists": "Seinmliostaí",
+  "playlistsEmpty": "Níl aon seinmliosta fós",
+  "playlistsEmptyHint": "Cruthaigh seinmliosta chun físeáin a eagrú.",
+  "newPlaylist": "Seinmliosta nua",
+  "playlistNameHint": "Ainm an tseinmliosta",
+  "create": "Cruthaigh",
+  "rename": "Athainmnigh",
+  "renamePlaylist": "Athainmnigh an seinmliosta",
+  "delete": "Scrios",
+  "deletePlaylist": "Scrios an seinmliosta",
+  "deletePlaylistConfirm": "Fanfaidh na físeáin i do stair.",
+  "addToPlaylist": "Cuir le seinmliosta",
+  "removeFromPlaylist": "Bain as an seinmliosta",
+  "playlistEmpty": "Tá an seinmliosta seo folamh",
+  "savePlaylist": "Sábháil an seinmliosta",
+  "playlistSaved": "Sábháilte i do sheinmliostaí"
 }

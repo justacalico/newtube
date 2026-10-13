@@ -17,6 +17,7 @@ import '../../utils/stream_picker.dart';
 import '../shell/title_bar.dart';
 import '../widgets/comment_tile.dart';
 import '../widgets/player_view.dart';
+import '../widgets/playlist_dialogs.dart';
 import '../widgets/subscribe_button.dart';
 import '../widgets/thumbnail.dart';
 import '../widgets/video_list_tile.dart';
@@ -481,6 +482,12 @@ class _WatchPageState extends State<WatchPage> {
                                   ),
                                 );
                               },
+                            ),
+                            IconButton(
+                              tooltip: l10n.addToPlaylist,
+                              icon: const Icon(Icons.playlist_add),
+                              onPressed: () =>
+                                  showPlaylistPicker(context, widget.video),
                             ),
                           ],
                         ),

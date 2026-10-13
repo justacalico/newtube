@@ -434,4 +434,53 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get pictureInPicture => 'Pictiúr i bpictiúr';
+
+  @override
+  String get navPlaylists => 'Seinmliostaí';
+
+  @override
+  String get playlistsEmpty => 'Níl aon seinmliosta fós';
+
+  @override
+  String get playlistsEmptyHint =>
+      'Cruthaigh seinmliosta chun físeáin a eagrú.';
+
+  @override
+  String get newPlaylist => 'Seinmliosta nua';
+
+  @override
+  String get playlistNameHint => 'Ainm an tseinmliosta';
+
+  @override
+  String get create => 'Cruthaigh';
+
+  @override
+  String get rename => 'Athainmnigh';
+
+  @override
+  String get renamePlaylist => 'Athainmnigh an seinmliosta';
+
+  @override
+  String get delete => 'Scrios';
+
+  @override
+  String get deletePlaylist => 'Scrios an seinmliosta';
+
+  @override
+  String get deletePlaylistConfirm => 'Fanfaidh na físeáin i do stair.';
+
+  @override
+  String get addToPlaylist => 'Cuir le seinmliosta';
+
+  @override
+  String get removeFromPlaylist => 'Bain as an seinmliosta';
+
+  @override
+  String get playlistEmpty => 'Tá an seinmliosta seo folamh';
+
+  @override
+  String get savePlaylist => 'Sábháil an seinmliosta';
+
+  @override
+  String get playlistSaved => 'Sábháilte i do sheinmliostaí';
 }

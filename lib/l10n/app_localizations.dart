@@ -859,6 +859,102 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Picture in picture'**
   String get pictureInPicture;
+
+  /// No description provided for @navPlaylists.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Playlists'**
+  String get navPlaylists;
+
+  /// No description provided for @playlistsEmpty.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'No playlists yet'**
+  String get playlistsEmpty;
+
+  /// No description provided for @playlistsEmptyHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Create a playlist to keep videos organised.'**
+  String get playlistsEmptyHint;
+
+  /// No description provided for @newPlaylist.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'New playlist'**
+  String get newPlaylist;
+
+  /// No description provided for @playlistNameHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Playlist name'**
+  String get playlistNameHint;
+
+  /// No description provided for @create.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Create'**
+  String get create;
+
+  /// No description provided for @rename.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Rename'**
+  String get rename;
+
+  /// No description provided for @renamePlaylist.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Rename playlist'**
+  String get renamePlaylist;
+
+  /// No description provided for @delete.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @deletePlaylist.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Delete playlist'**
+  String get deletePlaylist;
+
+  /// No description provided for @deletePlaylistConfirm.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'The videos stay in your history.'**
+  String get deletePlaylistConfirm;
+
+  /// No description provided for @addToPlaylist.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Add to playlist'**
+  String get addToPlaylist;
+
+  /// No description provided for @removeFromPlaylist.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Remove from playlist'**
+  String get removeFromPlaylist;
+
+  /// No description provided for @playlistEmpty.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'This playlist is empty'**
+  String get playlistEmpty;
+
+  /// No description provided for @savePlaylist.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Save playlist'**
+  String get savePlaylist;
+
+  /// No description provided for @playlistSaved.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Saved to your playlists'**
+  String get playlistSaved;
 }
 
 class _AppLocalizationsDelegate

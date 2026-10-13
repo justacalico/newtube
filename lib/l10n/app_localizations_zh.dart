@@ -418,6 +418,54 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get pictureInPicture => '画中画';
+
+  @override
+  String get navPlaylists => '播放列表';
+
+  @override
+  String get playlistsEmpty => '还没有播放列表';
+
+  @override
+  String get playlistsEmptyHint => '创建播放列表来整理视频。';
+
+  @override
+  String get newPlaylist => '新建播放列表';
+
+  @override
+  String get playlistNameHint => '播放列表名称';
+
+  @override
+  String get create => '创建';
+
+  @override
+  String get rename => '重命名';
+
+  @override
+  String get renamePlaylist => '重命名播放列表';
+
+  @override
+  String get delete => '删除';
+
+  @override
+  String get deletePlaylist => '删除播放列表';
+
+  @override
+  String get deletePlaylistConfirm => '播放列表中的视频会保留在历史记录里。';
+
+  @override
+  String get addToPlaylist => '添加到播放列表';
+
+  @override
+  String get removeFromPlaylist => '从播放列表中移除';
+
+  @override
+  String get playlistEmpty => '这个播放列表是空的';
+
+  @override
+  String get savePlaylist => '保存播放列表';
+
+  @override
+  String get playlistSaved => '已保存到你的播放列表';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -833,4 +881,52 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get pictureInPicture => '画中画';
+
+  @override
+  String get navPlaylists => '播放列表';
+
+  @override
+  String get playlistsEmpty => '还没有播放列表';
+
+  @override
+  String get playlistsEmptyHint => '创建播放列表来整理视频。';
+
+  @override
+  String get newPlaylist => '新建播放列表';
+
+  @override
+  String get playlistNameHint => '播放列表名称';
+
+  @override
+  String get create => '创建';
+
+  @override
+  String get rename => '重命名';
+
+  @override
+  String get renamePlaylist => '重命名播放列表';
+
+  @override
+  String get delete => '删除';
+
+  @override
+  String get deletePlaylist => '删除播放列表';
+
+  @override
+  String get deletePlaylistConfirm => '播放列表中的视频会保留在历史记录里。';
+
+  @override
+  String get addToPlaylist => '添加到播放列表';
+
+  @override
+  String get removeFromPlaylist => '从播放列表中移除';
+
+  @override
+  String get playlistEmpty => '这个播放列表是空的';
+
+  @override
+  String get savePlaylist => '保存播放列表';
+
+  @override
+  String get playlistSaved => '已保存到你的播放列表';
 }

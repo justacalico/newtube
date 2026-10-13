@@ -22,6 +22,7 @@ import 'package:newtube/services/window_actions.dart';
 import 'package:newtube/services/youtube_api.dart';
 import 'package:newtube/state/app_state.dart';
 import 'package:newtube/state/history_store.dart';
+import 'package:newtube/state/playlists_store.dart';
 import 'package:newtube/state/search_history_store.dart';
 import 'package:newtube/state/settings_store.dart';
 import 'package:newtube/state/subscriptions_store.dart';
@@ -340,6 +341,7 @@ Future<AppState> testState({
   SettingsStore? settings,
   SubscriptionsStore? subscriptions,
   WatchLaterStore? watchLater,
+  PlaylistsStore? playlists,
   HistoryStore? history,
   SearchHistoryStore? searchHistory,
   List<Uri>? launched,
@@ -362,6 +364,7 @@ Future<AppState> testState({
     settings: settings ?? await SettingsStore.load(p),
     subscriptions: subscriptions ?? await SubscriptionsStore.load(p),
     watchLater: watchLater ?? await WatchLaterStore.load(p),
+    playlists: playlists ?? await PlaylistsStore.load(p),
     history: history ?? await HistoryStore.load(p),
     searchHistory: searchHistory ?? await SearchHistoryStore.load(p),
     launch: (uri) async {

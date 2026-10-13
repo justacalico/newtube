@@ -436,4 +436,53 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get pictureInPicture => 'Картинка в картинке';
+
+  @override
+  String get navPlaylists => 'Плейлисты';
+
+  @override
+  String get playlistsEmpty => 'Плейлистов пока нет';
+
+  @override
+  String get playlistsEmptyHint =>
+      'Создайте плейлист, чтобы упорядочить видео.';
+
+  @override
+  String get newPlaylist => 'Новый плейлист';
+
+  @override
+  String get playlistNameHint => 'Название плейлиста';
+
+  @override
+  String get create => 'Создать';
+
+  @override
+  String get rename => 'Переименовать';
+
+  @override
+  String get renamePlaylist => 'Переименовать плейлист';
+
+  @override
+  String get delete => 'Удалить';
+
+  @override
+  String get deletePlaylist => 'Удалить плейлист';
+
+  @override
+  String get deletePlaylistConfirm => 'Видео останутся в вашей истории.';
+
+  @override
+  String get addToPlaylist => 'Добавить в плейлист';
+
+  @override
+  String get removeFromPlaylist => 'Удалить из плейлиста';
+
+  @override
+  String get playlistEmpty => 'Этот плейлист пуст';
+
+  @override
+  String get savePlaylist => 'Сохранить плейлист';
+
+  @override
+  String get playlistSaved => 'Сохранено в ваших плейлистах';
 }

@@ -190,5 +190,21 @@
       }
     }
   },
-  "pictureInPicture": "Картинка в картинке"
+  "pictureInPicture": "Картинка в картинке",
+  "navPlaylists": "Плейлисты",
+  "playlistsEmpty": "Плейлистов пока нет",
+  "playlistsEmptyHint": "Создайте плейлист, чтобы упорядочить видео.",
+  "newPlaylist": "Новый плейлист",
+  "playlistNameHint": "Название плейлиста",
+  "create": "Создать",
+  "rename": "Переименовать",
+  "renamePlaylist": "Переименовать плейлист",
+  "delete": "Удалить",
+  "deletePlaylist": "Удалить плейлист",
+  "deletePlaylistConfirm": "Видео останутся в вашей истории.",
+  "addToPlaylist": "Добавить в плейлист",
+  "removeFromPlaylist": "Удалить из плейлиста",
+  "playlistEmpty": "Этот плейлист пуст",
+  "savePlaylist": "Сохранить плейлист",
+  "playlistSaved": "Сохранено в ваших плейлистах"
 }

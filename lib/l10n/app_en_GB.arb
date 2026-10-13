@@ -190,5 +190,21 @@
       }
     }
   },
-  "pictureInPicture": "Picture in picture"
+  "pictureInPicture": "Picture in picture",
+  "navPlaylists": "Playlists",
+  "playlistsEmpty": "No playlists yet",
+  "playlistsEmptyHint": "Create a playlist to keep videos organised.",
+  "newPlaylist": "New playlist",
+  "playlistNameHint": "Playlist name",
+  "create": "Create",
+  "rename": "Rename",
+  "renamePlaylist": "Rename playlist",
+  "delete": "Delete",
+  "deletePlaylist": "Delete playlist",
+  "deletePlaylistConfirm": "The videos stay in your history.",
+  "addToPlaylist": "Add to playlist",
+  "removeFromPlaylist": "Remove from playlist",
+  "playlistEmpty": "This playlist is empty",
+  "savePlaylist": "Save playlist",
+  "playlistSaved": "Saved to your playlists"
 }
