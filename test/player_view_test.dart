@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -547,5 +548,180 @@ void main() {
     await tester.pump();
     expect(find.text('Main part'), findsOneWidget);
     expect(find.text('Intro'), findsNothing);
+  });
+
+  double controlsOpacity(WidgetTester tester) => tester
+      .widget<AnimatedOpacity>(
+        find.descendant(
+          of: find.byType(PlayerView),
+          matching: find.byType(AnimatedOpacity),
+        ),
+      )
+      .opacity;
+
+  testWidgets('controls auto-hide while playing and reappear on tap', (
+    tester,
+  ) async {
+    final player = FakePlayerController()..playing = true;
+    final state = await testState();
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
+          onToggleFullscreen: () {},
+        ),
+      ),
+    );
+
+    expect(controlsOpacity(tester), 1.0);
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pump();
+    expect(controlsOpacity(tester), 0.0);
+
+    await tester.tapAt(tester.getCenter(find.byType(PlayerView)));
+    await tester.pump();
+    expect(player.paused, isTrue);
+    expect(controlsOpacity(tester), 1.0);
+  });
+
+  testWidgets('controls stay visible while paused', (tester) async {
+    final player = FakePlayerController()..playing = true;
+    final state = await testState();
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
+          onToggleFullscreen: () {},
+        ),
+      ),
+    );
+
+    player.playing = false;
+    player.emitPlaying(false);
+    await tester.pump(const Duration(seconds: 4));
+    expect(controlsOpacity(tester), 1.0);
+  });
+
+  testWidgets('controls hide on resume and reappear when paused', (
+    tester,
+  ) async {
+    final player = FakePlayerController()..playing = true;
+    final state = await testState();
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
+          onToggleFullscreen: () {},
+        ),
+      ),
+    );
+
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pump();
+    expect(controlsOpacity(tester), 0.0);
+
+    player.playing = false;
+    player.emitPlaying(false);
+    await tester.pump();
+    expect(controlsOpacity(tester), 1.0);
+
+    player.playing = true;
+    player.emitPlaying(true);
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pump();
+    expect(controlsOpacity(tester), 0.0);
+  });
+
+  testWidgets('mouse hover wakes the controls and leaving hides them', (
+    tester,
+  ) async {
+    final player = FakePlayerController()..playing = true;
+    final state = await testState();
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        Center(
+          child: SizedBox(
+            width: 400,
+            height: 225,
+            child: PlayerView(
+              player: player,
+              streams: testStreams,
+              current: testStreams[1],
+              onQualitySelected: (_) {},
+              onAudioSelected: (_) {},
+              onToggleFullscreen: () {},
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+    await mouse.addPointer();
+    await mouse.moveTo(tester.getCenter(find.byType(PlayerView)));
+    await tester.pump();
+    expect(controlsOpacity(tester), 1.0);
+
+    await mouse.moveTo(const Offset(10, 10));
+    await tester.pump();
+    expect(controlsOpacity(tester), 0.0);
+
+    await mouse.moveTo(tester.getCenter(find.byType(PlayerView)));
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pump();
+    expect(controlsOpacity(tester), 0.0);
+
+    await mouse.moveTo(const Offset(10, 10));
+    await tester.pump();
+    expect(controlsOpacity(tester), 0.0);
+  });
+
+  testWidgets('swapping the player resubscribes to play state', (tester) async {
+    final first = FakePlayerController()..playing = true;
+    final second = FakePlayerController()..playing = true;
+    final state = await testState();
+    Widget host(FakePlayerController p) => _wrap(
+      state,
+      PlayerView(
+        player: p,
+        streams: testStreams,
+        current: testStreams[1],
+        onQualitySelected: (_) {},
+        onAudioSelected: (_) {},
+        onToggleFullscreen: () {},
+      ),
+    );
+
+    await tester.pumpWidget(host(first));
+    await tester.pumpWidget(host(first));
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pump();
+    expect(controlsOpacity(tester), 0.0);
+
+    await tester.pumpWidget(host(second));
+    first.emitPlaying(false);
+    await tester.pump();
+    expect(controlsOpacity(tester), 0.0);
+
+    second.playing = false;
+    second.emitPlaying(false);
+    await tester.pump();
+    expect(controlsOpacity(tester), 1.0);
   });
 }
