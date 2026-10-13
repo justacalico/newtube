@@ -21,6 +21,7 @@ import 'state/history_store.dart';
 import 'state/search_history_store.dart';
 import 'state/settings_store.dart';
 import 'state/subscriptions_store.dart';
+import 'state/watch_later_store.dart';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -57,6 +58,7 @@ Future<AppState> createAppState(SharedPreferences prefs) async {
     isWeb: kIsWeb,
     settings: settings,
     subscriptions: await SubscriptionsStore.load(prefs),
+    watchLater: await WatchLaterStore.load(prefs),
     history: await HistoryStore.load(prefs),
     searchHistory: await SearchHistoryStore.load(prefs),
     launch: defaultLaunch,

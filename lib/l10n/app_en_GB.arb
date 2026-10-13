@@ -151,5 +151,31 @@
       }
     }
   },
-  "subscriptionsExportFailed": "Export cancelled or failed"
+  "subscriptionsExportFailed": "Export cancelled or failed",
+  "navWatchLater": "Watch later",
+  "watchLaterEmpty": "Nothing saved for later",
+  "watchLaterAdd": "Watch later",
+  "watchLaterRemove": "Remove from Watch later",
+  "videoCount": "{count, plural, one{{count} video} other{{count} videos}}",
+  "@videoCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "playlistProgress": "{playlist} · {index}/{total}",
+  "@playlistProgress": {
+    "placeholders": {
+      "playlist": {
+        "type": "String"
+      },
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -787,6 +787,42 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Export cancelled or failed'**
   String get subscriptionsExportFailed;
+
+  /// No description provided for @navWatchLater.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Watch later'**
+  String get navWatchLater;
+
+  /// No description provided for @watchLaterEmpty.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Nothing saved for later'**
+  String get watchLaterEmpty;
+
+  /// No description provided for @watchLaterAdd.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Watch later'**
+  String get watchLaterAdd;
+
+  /// No description provided for @watchLaterRemove.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Remove from Watch later'**
+  String get watchLaterRemove;
+
+  /// No description provided for @videoCount.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'{count, plural, one{{count} video} other{{count} videos}}'**
+  String videoCount(int count);
+
+  /// No description provided for @playlistProgress.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'{playlist} · {index}/{total}'**
+  String playlistProgress(String playlist, int index, int total);
 }
 
 class _AppLocalizationsDelegate

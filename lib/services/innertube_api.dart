@@ -73,11 +73,49 @@ class InnertubeApi implements YouTubeApi {
     final r = await _post('search', {'query': query});
     final videos = <VideoInfo>[];
     final channels = <ChannelInfo>[];
+    final playlists = <PlaylistInfo>[];
     collectVideos(r, videos);
     collectChannels(r, channels);
+    collectPlaylists(r, playlists);
     return SearchResults(
       videos: _proxiedThumbs(videos),
       channels: _proxiedChannels(channels),
+      playlists: playlists,
+    );
+  }
+
+  @override
+  Future<PlaylistInfo> playlist(String playlistId) async {
+    final browseId = playlistId.startsWith('VL') ? playlistId : 'VL$playlistId';
+    final r = await _post('browse', {'browseId': browseId});
+    final videos = <VideoInfo>[];
+    collectPlaylistVideos(r, videos);
+    final header = r['header'];
+    final renderer = header is Map<String, dynamic>
+        ? header['playlistHeaderRenderer']
+        : null;
+    final metadata = r['metadata'];
+    final meta = metadata is Map<String, dynamic>
+        ? metadata['playlistMetadataRenderer']
+        : null;
+    String? title;
+    String author = '';
+    var count = 0;
+    String? thumb;
+    if (renderer is Map<String, dynamic>) {
+      title = runs(renderer['title']);
+      author = runs(renderer['ownerText']) ?? runs(renderer['byline']) ?? '';
+      count = compactCount(runs(renderer['numVideosText']) ?? '');
+      thumb = thumbnail(renderer['avatar']);
+    }
+    title ??= meta is Map<String, dynamic> ? meta['title'] as String? : null;
+    return PlaylistInfo(
+      id: playlistId,
+      title: title ?? '',
+      author: author,
+      thumbnailUrl: _thumbField(thumb) ?? videos.firstOrNull?.thumbnailUrl,
+      videoCount: count == 0 ? videos.length : count,
+      videos: _proxiedThumbs(videos),
     );
   }
 

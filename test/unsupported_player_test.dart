@@ -19,6 +19,7 @@ void main() {
     expect(await player.rateStream.isEmpty, isTrue);
     expect(await player.volumeStream.isEmpty, isTrue);
     expect(await player.mutedStream.isEmpty, isTrue);
+    expect(await player.completedStream.isEmpty, isTrue);
     await player.open('https://x', audioUrl: 'a');
     await player.play();
     await player.pause();

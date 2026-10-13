@@ -1,0 +1,123 @@
+import 'package:flutter/material.dart';
+
+import '../../l10n/app_localizations.dart';
+import '../../models/video_info.dart';
+import '../../state/app_state.dart';
+import '../widgets/video_grid.dart';
+import '../widgets/video_list_tile.dart';
+import 'watch_page.dart';
+
+void openPlaylistPage(BuildContext context, PlaylistInfo playlist) {
+  Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => PlaylistPage(playlistId: playlist.id, summary: playlist),
+    ),
+  );
+}
+
+class PlaylistPage extends StatefulWidget {
+  final String playlistId;
+  final PlaylistInfo? summary;
+
+  const PlaylistPage({super.key, required this.playlistId, this.summary});
+
+  @override
+  State<PlaylistPage> createState() => _PlaylistPageState();
+}
+
+class _PlaylistPageState extends State<PlaylistPage> {
+  PlaylistInfo? _playlist;
+  bool _loading = true;
+  Object? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    try {
+      final playlist = await AppScope.read(context).api
+          .playlist(widget.playlistId);
+      if (!mounted) return;
+      setState(() {
+        _playlist = playlist;
+        _loading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _error = e;
+        _loading = false;
+      });
+    }
+  }
+
+  void _openVideo(VideoInfo video) {
+    final playlist = _playlist;
+    final index = playlist?.videos.indexOf(video) ?? -1;
+    openWatchPage(
+      context,
+      video,
+      playlist: playlist,
+      index: index < 0 ? null : index,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final playlist = _playlist ?? widget.summary;
+    return Scaffold(
+      appBar: AppBar(title: Text(playlist?.title ?? '')),
+      body: FeedStateView(
+        loading: _loading && playlist == null,
+        error: _error,
+        videos: playlist?.videos ?? const [],
+        onRetry: _load,
+        child: CustomScrollView(
+          slivers: [
+            if (playlist != null)
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        playlist.title,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        [
+                          if (playlist.author.isNotEmpty) playlist.author,
+                          l10n.videoCount(playlist.videoCount),
+                        ].join(' · '),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            SliverList.builder(
+              itemCount: playlist?.videos.length ?? 0,
+              itemBuilder: (context, index) {
+                final video = playlist!.videos[index];
+                return VideoListTile(
+                  video: video,
+                  onTap: () => _openVideo(video),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

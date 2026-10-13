@@ -151,5 +151,31 @@
       }
     }
   },
-  "subscriptionsExportFailed": "Экспорт отменён или не удался"
+  "subscriptionsExportFailed": "Экспорт отменён или не удался",
+  "navWatchLater": "Смотреть позже",
+  "watchLaterEmpty": "Ничего не сохранено",
+  "watchLaterAdd": "Смотреть позже",
+  "watchLaterRemove": "Убрать из «Смотреть позже»",
+  "videoCount": "{count, plural, one{{count} видео} few{{count} видео} many{{count} видео} other{{count} видео}}",
+  "@videoCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "playlistProgress": "{playlist} · {index}/{total}",
+  "@playlistProgress": {
+    "placeholders": {
+      "playlist": {
+        "type": "String"
+      },
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  }
 }

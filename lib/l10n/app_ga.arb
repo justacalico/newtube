@@ -151,5 +151,31 @@
       }
     }
   },
-  "subscriptionsExportFailed": "Cealaíodh nó theip ar an easpórtáil"
+  "subscriptionsExportFailed": "Cealaíodh nó theip ar an easpórtáil",
+  "navWatchLater": "Féach níos déanaí",
+  "watchLaterEmpty": "Níl aon rud sábháilte",
+  "watchLaterAdd": "Féach níos déanaí",
+  "watchLaterRemove": "Bain as Féach níos déanaí",
+  "videoCount": "{count, plural, one{{count} físeán} two{{count} físeán} few{{count} físeán} many{{count} bhfíseán} other{{count} físeán}}",
+  "@videoCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "playlistProgress": "{playlist} · {index}/{total}",
+  "@playlistProgress": {
+    "placeholders": {
+      "playlist": {
+        "type": "String"
+      },
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  }
 }

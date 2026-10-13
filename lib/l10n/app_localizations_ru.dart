@@ -385,4 +385,34 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get subscriptionsExportFailed => 'Экспорт отменён или не удался';
+
+  @override
+  String get navWatchLater => 'Смотреть позже';
+
+  @override
+  String get watchLaterEmpty => 'Ничего не сохранено';
+
+  @override
+  String get watchLaterAdd => 'Смотреть позже';
+
+  @override
+  String get watchLaterRemove => 'Убрать из «Смотреть позже»';
+
+  @override
+  String videoCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count видео',
+      many: '$count видео',
+      few: '$count видео',
+      one: '$count видео',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String playlistProgress(String playlist, int index, int total) {
+    return '$playlist · $index/$total';
+  }
 }

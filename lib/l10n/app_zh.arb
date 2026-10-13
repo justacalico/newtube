@@ -151,5 +151,31 @@
       }
     }
   },
-  "subscriptionsExportFailed": "导出已取消或失败"
+  "subscriptionsExportFailed": "导出已取消或失败",
+  "navWatchLater": "稍后观看",
+  "watchLaterEmpty": "没有稍后观看的视频",
+  "watchLaterAdd": "稍后观看",
+  "watchLaterRemove": "从稍后观看移除",
+  "videoCount": "{count, plural, other{{count} 个视频}}",
+  "@videoCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "playlistProgress": "{playlist} · {index}/{total}",
+  "@playlistProgress": {
+    "placeholders": {
+      "playlist": {
+        "type": "String"
+      },
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  }
 }

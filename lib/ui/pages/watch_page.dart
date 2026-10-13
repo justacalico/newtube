@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
@@ -18,15 +20,25 @@ import '../widgets/thumbnail.dart';
 import '../widgets/video_list_tile.dart';
 import 'channel_page.dart';
 
-void openWatchPage(BuildContext context, VideoInfo video) {
-  Navigator.of(context)
-      .push(MaterialPageRoute<void>(builder: (_) => WatchPage(video: video)));
+void openWatchPage(
+  BuildContext context,
+  VideoInfo video, {
+  PlaylistInfo? playlist,
+  int? index,
+}) {
+  Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => WatchPage(video: video, playlist: playlist, index: index),
+    ),
+  );
 }
 
 class WatchPage extends StatefulWidget {
   final VideoInfo video;
+  final PlaylistInfo? playlist;
+  final int? index;
 
-  const WatchPage({super.key, required this.video});
+  const WatchPage({super.key, required this.video, this.playlist, this.index});
 
   @override
   State<WatchPage> createState() => _WatchPageState();
@@ -49,6 +61,7 @@ class _WatchPageState extends State<WatchPage> {
   bool _fullscreen = false;
   bool _recorded = false;
   int _switches = 0;
+  StreamSubscription<bool>? _completedSub;
 
   @override
   void initState() {
@@ -131,11 +144,45 @@ class _WatchPageState extends State<WatchPage> {
         _currentAudio = currentAudio;
       });
       _loadSegments(player);
+      _completedSub = player.completedStream.listen((done) {
+        if (done) _advancePlaylist();
+      });
     } catch (e) {
       debugLog('[watch] ${widget.video.id}: load failed: $e');
       if (!mounted) return;
       setState(() => _error = e);
     }
+  }
+
+  void _advancePlaylist() {
+    final playlist = widget.playlist;
+    final index = widget.index;
+    if (!mounted || playlist == null || index == null) return;
+    final next = index + 1;
+    if (next >= playlist.videos.length) return;
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(
+        builder: (_) => WatchPage(
+          video: playlist.videos[next],
+          playlist: playlist,
+          index: next,
+        ),
+      ),
+    );
+  }
+
+  void _openPlaylistVideo(int index) {
+    final playlist = widget.playlist;
+    if (playlist == null || index == widget.index) return;
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(
+        builder: (_) => WatchPage(
+          video: playlist.videos[index],
+          playlist: playlist,
+          index: index,
+        ),
+      ),
+    );
   }
 
   Future<void> _loadSegments(PlayerController player) async {
@@ -265,6 +312,7 @@ class _WatchPageState extends State<WatchPage> {
 
   @override
   void dispose() {
+    _completedSub?.cancel();
     _skipper?.dispose();
     _sleepTimer?.dispose();
     _player?.dispose();
@@ -274,6 +322,7 @@ class _WatchPageState extends State<WatchPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final state = AppScope.read(context);
     final player = _player;
 
     return Scaffold(
@@ -371,6 +420,28 @@ class _WatchPageState extends State<WatchPage> {
                                     name: _details!.info.author,
                                   ),
                             ),
+                            ListenableBuilder(
+                              listenable: state.watchLater,
+                              builder: (context, _) {
+                                final saved = state.watchLater.contains(
+                                  widget.video.id,
+                                );
+                                return IconButton(
+                                  tooltip: saved
+                                      ? l10n.watchLaterRemove
+                                      : l10n.watchLaterAdd,
+                                  icon: Icon(
+                                    saved
+                                        ? Icons.bookmark
+                                        : Icons.bookmark_border,
+                                  ),
+                                  onPressed: () => state.watchLater.toggle(
+                                    widget.video,
+                                    state.prefs,
+                                  ),
+                                );
+                              },
+                            ),
                           ],
                         ),
                         if (_details!.description.isNotEmpty) ...[
@@ -381,6 +452,29 @@ class _WatchPageState extends State<WatchPage> {
                           ),
                           const SizedBox(height: 4),
                           Text(_details!.description),
+                        ],
+                        if (widget.playlist != null) ...[
+                          const SizedBox(height: 16),
+                          Text(
+                            l10n.playlistProgress(
+                              widget.playlist!.title,
+                              widget.index! + 1,
+                              widget.playlist!.videos.length,
+                            ),
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                          const SizedBox(height: 4),
+                          for (
+                            var i = 0;
+                            i < widget.playlist!.videos.length;
+                            i++
+                          )
+                            VideoListTile(
+                              video: widget.playlist!.videos[i],
+                              contentPadding: EdgeInsets.zero,
+                              selected: i == widget.index,
+                              onTap: () => _openPlaylistVideo(i),
+                            ),
                         ],
                         if (_comments.isNotEmpty) ...[
                           const SizedBox(height: 16),

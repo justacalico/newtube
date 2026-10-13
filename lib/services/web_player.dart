@@ -27,6 +27,7 @@ class WebPlayerController implements PlayerController {
   final _rateChanges = StreamController<double>.broadcast();
   final _volumeChanges = StreamController<double>.broadcast();
   final _mutedChanges = StreamController<bool>.broadcast();
+  final _completed = StreamController<bool>.broadcast();
   double _rate = 1.0;
 
   Timer? _poll;
@@ -43,6 +44,7 @@ class WebPlayerController implements PlayerController {
       _volumeChanges.add(_video.volume.toDouble());
       _mutedChanges.add(_video.muted);
     });
+    _video.onEnded.listen((_) => _completed.add(true));
   }
 
   @override
@@ -83,6 +85,9 @@ class WebPlayerController implements PlayerController {
   Stream<double> get volumeStream => _volumeChanges.stream;
   @override
   Stream<bool> get mutedStream => _mutedChanges.stream;
+
+  @override
+  Stream<bool> get completedStream => _completed.stream;
 
   void _syncAudio() {
     if (!_audioAttached) return;
@@ -204,6 +209,7 @@ class WebPlayerController implements PlayerController {
       _rateChanges.close(),
       _volumeChanges.close(),
       _mutedChanges.close(),
+      _completed.close(),
     ]);
   }
 }

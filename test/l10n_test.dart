@@ -107,6 +107,12 @@ void touchAll(AppLocalizations l) {
   l.subscriptionsImportFailed;
   l.subscriptionsExportedTo('/tmp/x.opml');
   l.subscriptionsExportFailed;
+  l.navWatchLater;
+  l.watchLaterEmpty;
+  l.watchLaterAdd;
+  l.watchLaterRemove;
+  l.videoCount(3);
+  l.playlistProgress('P', 1, 2);
   l.corsNoticeTitle;
   l.corsNoticeBody;
   l.corsFirefox;

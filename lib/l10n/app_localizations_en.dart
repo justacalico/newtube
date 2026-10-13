@@ -379,6 +379,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get subscriptionsExportFailed => 'Export cancelled or failed';
+
+  @override
+  String get navWatchLater => 'Watch later';
+
+  @override
+  String get watchLaterEmpty => 'Nothing saved for later';
+
+  @override
+  String get watchLaterAdd => 'Watch later';
+
+  @override
+  String get watchLaterRemove => 'Remove from Watch later';
+
+  @override
+  String videoCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count videos',
+      one: '$count video',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String playlistProgress(String playlist, int index, int total) {
+    return '$playlist · $index/$total';
+  }
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -755,4 +783,32 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get subscriptionsExportFailed => 'Export cancelled or failed';
+
+  @override
+  String get navWatchLater => 'Watch later';
+
+  @override
+  String get watchLaterEmpty => 'Nothing saved for later';
+
+  @override
+  String get watchLaterAdd => 'Watch later';
+
+  @override
+  String get watchLaterRemove => 'Remove from Watch later';
+
+  @override
+  String videoCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count videos',
+      one: '$count video',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String playlistProgress(String playlist, int index, int total) {
+    return '$playlist · $index/$total';
+  }
 }
