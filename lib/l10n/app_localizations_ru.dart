@@ -319,4 +319,22 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get sponsorCategoryMusicOfftopic => 'Музыка не по теме';
+
+  @override
+  String get deArrow => 'DeArrow';
+
+  @override
+  String get deArrowHint => 'Заголовки и обложки от сообщества';
+
+  @override
+  String get deArrowOff => 'Выкл';
+
+  @override
+  String get deArrowTitles => 'Только заголовки';
+
+  @override
+  String get deArrowThumbnails => 'Только обложки';
+
+  @override
+  String get deArrowBoth => 'Заголовки и обложки';
 }

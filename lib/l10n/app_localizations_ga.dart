@@ -318,4 +318,22 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get sponsorCategoryMusicOfftopic => 'Ceol neamhábhartha';
+
+  @override
+  String get deArrow => 'DeArrow';
+
+  @override
+  String get deArrowHint => 'Teidil agus mionsamhlacha ón bpobal';
+
+  @override
+  String get deArrowOff => 'Múchta';
+
+  @override
+  String get deArrowTitles => 'Teidil amháin';
+
+  @override
+  String get deArrowThumbnails => 'Mionsamhlacha amháin';
+
+  @override
+  String get deArrowBoth => 'Teidil agus mionsamhlacha';
 }

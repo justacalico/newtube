@@ -255,6 +255,35 @@ class _SettingsPageState extends State<SettingsPage> {
               onChanged: (value) =>
                   settings.setSponsorBlockEnabled(value, state.prefs),
             ),
+            ListTile(
+              leading: const Icon(Icons.title_outlined),
+              title: Text(l10n.deArrow),
+              subtitle: Text(l10n.deArrowHint),
+              trailing: _SettingsDropdown<DeArrowMode>(
+                value: settings.deArrowMode,
+                onChanged: (mode) {
+                  if (mode != null) settings.setDeArrowMode(mode, state.prefs);
+                },
+                items: [
+                  DropdownMenuItem(
+                    value: DeArrowMode.off,
+                    child: Text(l10n.deArrowOff),
+                  ),
+                  DropdownMenuItem(
+                    value: DeArrowMode.titles,
+                    child: Text(l10n.deArrowTitles),
+                  ),
+                  DropdownMenuItem(
+                    value: DeArrowMode.thumbnails,
+                    child: Text(l10n.deArrowThumbnails),
+                  ),
+                  DropdownMenuItem(
+                    value: DeArrowMode.both,
+                    child: Text(l10n.deArrowBoth),
+                  ),
+                ],
+              ),
+            ),
             if (settings.sponsorBlockEnabled) ...[
               SwitchListTile(
                 secondary: const Icon(Icons.fast_forward_outlined),

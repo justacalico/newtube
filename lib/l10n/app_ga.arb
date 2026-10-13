@@ -110,5 +110,11 @@
   "sponsorCategoryIntro": "Intreoir",
   "sponsorCategoryOutro": "Coda deiridh",
   "sponsorCategoryInteraction": "Meabhrúchán idirghnímh",
-  "sponsorCategoryMusicOfftopic": "Ceol neamhábhartha"
+  "sponsorCategoryMusicOfftopic": "Ceol neamhábhartha",
+  "deArrow": "DeArrow",
+  "deArrowHint": "Teidil agus mionsamhlacha ón bpobal",
+  "deArrowOff": "Múchta",
+  "deArrowTitles": "Teidil amháin",
+  "deArrowThumbnails": "Mionsamhlacha amháin",
+  "deArrowBoth": "Teidil agus mionsamhlacha"
 }

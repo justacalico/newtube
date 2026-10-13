@@ -208,10 +208,16 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.scrollUntilVisible(find.text('All releases'), 200);
+    await tester.ensureVisible(find.text('All releases'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('All releases'));
     await tester.scrollUntilVisible(find.text('Source code'), 200);
+    await tester.ensureVisible(find.text('Source code'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Source code'));
     await tester.scrollUntilVisible(find.text('Licence'), 200);
+    await tester.ensureVisible(find.text('Licence'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Licence'));
     await tester.pump();
     expect(launched.map((u) => u.toString()), [
@@ -358,5 +364,17 @@ void main() {
       isFalse,
     );
     expect(find.textContaining('Interaction reminder'), findsOneWidget);
+  });
+
+  testWidgets('changes the dearrow mode', (tester) async {
+    final state = await testState();
+    await pumpPage(tester, state, const SettingsPage());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(DropdownButton<DeArrowMode>));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Titles and thumbnails'));
+    await tester.pumpAndSettle();
+    expect(state.settings.deArrowMode, DeArrowMode.both);
   });
 }

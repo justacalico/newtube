@@ -90,6 +90,12 @@ void touchAll(AppLocalizations l) {
   l.sponsorCategoryOutro;
   l.sponsorCategoryInteraction;
   l.sponsorCategoryMusicOfftopic;
+  l.deArrow;
+  l.deArrowHint;
+  l.deArrowOff;
+  l.deArrowTitles;
+  l.deArrowThumbnails;
+  l.deArrowBoth;
   l.corsNoticeTitle;
   l.corsNoticeBody;
   l.corsFirefox;
