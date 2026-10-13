@@ -10,6 +10,7 @@ import '../pages/settings_page.dart';
 import '../pages/subscriptions_page.dart';
 import '../pages/watch_later_page.dart';
 import '../pages/watch_page.dart';
+import '../widgets/mini_player.dart';
 import 'side_nav.dart';
 import 'title_bar.dart';
 
@@ -42,6 +43,21 @@ class _AppShellState extends State<AppShell> {
     _state.clearWatchRequest();
     _contentNavigator.currentState?.push(
       MaterialPageRoute<void>(builder: (_) => WatchPage(video: video)),
+    );
+  }
+
+  void _expandMiniPlayer() {
+    final session = _state.playback;
+    final video = session.video;
+    if (video == null) return;
+    _contentNavigator.currentState?.push(
+      MaterialPageRoute<void>(
+        builder: (_) => WatchPage(
+          video: video,
+          playlist: session.playlist,
+          index: session.index,
+        ),
+      ),
     );
   }
 
@@ -145,6 +161,7 @@ class _AppShellState extends State<AppShell> {
             Expanded(
               child: Navigator(
                 key: _contentNavigator,
+                observers: [watchRouteObserver],
                 onGenerateRoute: (_) => MaterialPageRoute<void>(
                   builder: (context) => Material(
                     type: MaterialType.transparency,
@@ -156,6 +173,7 @@ class _AppShellState extends State<AppShell> {
                 ),
               ),
             ),
+            MiniPlayer(session: state.playback, onExpand: _expandMiniPlayer),
           ],
         );
 

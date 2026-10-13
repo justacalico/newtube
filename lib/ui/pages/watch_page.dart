@@ -23,6 +23,8 @@ import '../widgets/thumbnail.dart';
 import '../widgets/video_list_tile.dart';
 import 'channel_page.dart';
 
+final watchRouteObserver = RouteObserver<ModalRoute<void>>();
+
 void openWatchPage(
   BuildContext context,
   VideoInfo video, {
@@ -47,7 +49,9 @@ class WatchPage extends StatefulWidget {
   State<WatchPage> createState() => _WatchPageState();
 }
 
-class _WatchPageState extends State<WatchPage> with WidgetsBindingObserver {
+class _WatchPageState extends State<WatchPage>
+    with WidgetsBindingObserver, RouteAware {
+  late final AppState _state;
   PlayerController? _player;
   SleepTimer? _sleepTimer;
   SegmentSkipper? _skipper;
@@ -63,6 +67,7 @@ class _WatchPageState extends State<WatchPage> with WidgetsBindingObserver {
   Object? _error;
   bool _fullscreen = false;
   bool _recorded = false;
+  bool _sharedPlayer = false;
   int _switches = 0;
   StreamSubscription<bool>? _completedSub;
   PipActions? _pipActions;
@@ -72,6 +77,8 @@ class _WatchPageState extends State<WatchPage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _state = AppScope.read(context);
+    _state.playback.addListener(_onSessionChanged);
     _load();
   }
 
@@ -93,6 +100,27 @@ class _WatchPageState extends State<WatchPage> with WidgetsBindingObserver {
     final state = AppScope.read(context);
     _pipActions = state.pipActions;
     _mediaControls = state.mediaControls;
+    final route = ModalRoute.of(context);
+    if (route != null) watchRouteObserver.subscribe(this, route);
+  }
+
+  void _onSessionChanged() {
+    final player = _player;
+    if (!mounted || player == null || !_sharedPlayer) return;
+    if (identical(_state.playback.player, player)) return;
+    _sharedPlayer = false;
+    _completedSub?.cancel();
+    _completedSub = null;
+    _skipper?.dispose();
+    _skipper = null;
+    _sleepTimer = null;
+    setState(() => _player = null);
+    if (ModalRoute.of(context)?.isCurrent ?? true) _load();
+  }
+
+  @override
+  void didPopNext() {
+    if (_player == null && _details != null) _load();
   }
 
   Future<void> _load() async {
@@ -136,59 +164,90 @@ class _WatchPageState extends State<WatchPage> with WidgetsBindingObserver {
           });
       if (!mounted) return;
 
-      final player = state.createPlayer();
-      final choice = pickDefaultStream(
-        details.streams,
-        desktop: isDesktopPlatform,
-      );
-      PlayableStream? current;
-      PlayableStream? currentAudio;
-      if (choice != null) {
-        current = choice.stream;
-        currentAudio = choice.audio;
-        debugLog(
-          '[watch] ${widget.video.id}: opening ${choice.stream.quality}'
-          '${choice.audioUrl == null ? '' : ' + separate audio'}',
-        );
-        try {
-          await player.open(choice.stream.url, audioUrl: choice.audioUrl);
-          if (!state.settings.autoplay) {
-            await player.pause();
-          }
-        } catch (e) {
-          await player.dispose();
-          rethrow;
-        }
+      final session = state.playback;
+      final shared = session.player;
+      final PlayerController player;
+      final PlayableStream? current;
+      final PlayableStream? currentAudio;
+      var adopted = false;
+      if (shared != null &&
+          !session.attached &&
+          session.video?.id == widget.video.id) {
+        adopted = true;
+        player = shared;
+        current = session.stream;
+        currentAudio = session.audio;
       } else {
-        debugLog('[watch] ${widget.video.id}: no playable streams');
-      }
-      if (!mounted) {
-        await player.dispose();
-        return;
+        player = state.createPlayer();
+        final choice = pickDefaultStream(
+          details.streams,
+          desktop: isDesktopPlatform,
+        );
+        PlayableStream? picked;
+        PlayableStream? pickedAudio;
+        if (choice != null) {
+          picked = choice.stream;
+          pickedAudio = choice.audio;
+          debugLog(
+            '[watch] ${widget.video.id}: opening ${choice.stream.quality}'
+            '${choice.audioUrl == null ? '' : ' + separate audio'}',
+          );
+          try {
+            await player.open(choice.stream.url, audioUrl: choice.audioUrl);
+            if (!state.settings.autoplay) {
+              await player.pause();
+            }
+          } catch (e) {
+            await player.dispose();
+            rethrow;
+          }
+        } else {
+          debugLog('[watch] ${widget.video.id}: no playable streams');
+        }
+        if (!mounted) {
+          await player.dispose();
+          return;
+        }
+        current = picked;
+        currentAudio = pickedAudio;
       }
       setState(() {
         _details = details;
         _player = player;
-        _sleepTimer = SleepTimer(player);
+        _sharedPlayer = true;
+        _sleepTimer = adopted
+            ? session.sleepTimer ?? SleepTimer(player)
+            : SleepTimer(player);
         _chapters = parseChapters(details.description);
         _currentStream = current;
         _currentAudio = currentAudio;
       });
+      session.attach(
+        player,
+        widget.video,
+        playlist: widget.playlist,
+        index: widget.index,
+        stream: current,
+        audio: currentAudio,
+        sleepTimer: _sleepTimer,
+      );
       final lifecycle = WidgetsBinding.instance.lifecycleState;
       if (lifecycle == AppLifecycleState.paused ||
           lifecycle == AppLifecycleState.hidden) {
         unawaited(player.setVideoEnabled(false));
       }
-      _mediaControls
-          ?.attach(
-            player,
-            title: details.info.title,
-            artist: details.info.author,
-            artworkUri: details.info.thumbnailUrl,
-          )
-          .catchError((Object e) {
-            debugLog('[watch] ${widget.video.id}: media controls failed: $e');
-          });
+      if (!adopted) {
+        _mediaControls
+            ?.attach(
+              player,
+              title: details.info.title,
+              artist: details.info.author,
+              artworkUri: details.info.thumbnailUrl,
+            )
+            .catchError((Object e) {
+              debugLog('[watch] ${widget.video.id}: media controls failed: $e');
+            });
+      }
       _loadSegments(player);
       _completedSub = player.completedStream.listen((done) {
         if (done && state.settings.autoplay) _openNext();
@@ -217,9 +276,8 @@ class _WatchPageState extends State<WatchPage> with WidgetsBindingObserver {
     if (_fullscreen) {
       Navigator.of(context, rootNavigator: true).pop();
     }
-    Navigator.of(
-      context,
-    ).pushReplacement(MaterialPageRoute<void>(builder: (_) => page));
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute<void>(builder: (_) => page));
   }
 
   void _openNext() {
@@ -312,6 +370,7 @@ class _WatchPageState extends State<WatchPage> with WidgetsBindingObserver {
       _currentStream = stream;
       _currentAudio = choice.audio;
     });
+    _state.playback.updateStream(stream, choice.audio);
     _switchTo(choice.stream.url, audioUrl: choice.audioUrl);
   }
 
@@ -324,6 +383,7 @@ class _WatchPageState extends State<WatchPage> with WidgetsBindingObserver {
         _currentStream = audio;
         _currentAudio = null;
       });
+      _state.playback.updateStream(audio, null);
       _switchTo(audio.url);
       return;
     }
@@ -344,6 +404,7 @@ class _WatchPageState extends State<WatchPage> with WidgetsBindingObserver {
       _currentStream = video;
       _currentAudio = audio;
     });
+    _state.playback.updateStream(video, audio);
     _switchTo(video.url, audioUrl: audio.url);
   }
 
@@ -393,14 +454,12 @@ class _WatchPageState extends State<WatchPage> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    watchRouteObserver.unsubscribe(this);
+    _state.playback.removeListener(_onSessionChanged);
     _completedSub?.cancel();
     _skipper?.dispose();
-    _sleepTimer?.dispose();
     final player = _player;
-    if (player != null) {
-      player.dispose();
-      _mediaControls?.detach(player);
-    }
+    if (player != null) _state.playback.release(player);
     _pipActions?.exitPip();
     super.dispose();
   }
@@ -617,8 +676,7 @@ class _WatchPageState extends State<WatchPage> with WidgetsBindingObserver {
                             VideoListTile(
                               video: v,
                               contentPadding: EdgeInsets.zero,
-                              onTap: () =>
-                                  _replaceWith(WatchPage(video: v)),
+                              onTap: () => _replaceWith(WatchPage(video: v)),
                             ),
                         ],
                       ],
@@ -720,11 +778,7 @@ class _EndScreen extends StatelessWidget {
   final VoidCallback onReplay;
   final VoidCallback? onNext;
 
-  const _EndScreen({
-    this.thumbnailUrl,
-    required this.onReplay,
-    this.onNext,
-  });
+  const _EndScreen({this.thumbnailUrl, required this.onReplay, this.onNext});
 
   @override
   Widget build(BuildContext context) {
@@ -762,11 +816,7 @@ class _EndButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
 
-  const _EndButton({
-    required this.icon,
-    required this.label,
-    this.onPressed,
-  });
+  const _EndButton({required this.icon, required this.label, this.onPressed});
 
   @override
   Widget build(BuildContext context) {

@@ -86,9 +86,7 @@ void main() {
     expect(player.paused, isTrue);
   });
 
-  testWidgets('autoplay off shows an end screen on completion', (
-    tester,
-  ) async {
+  testWidgets('autoplay off shows an end screen on completion', (tester) async {
     final player = FakePlayerController();
     final state = await testState(
       api: FakeYouTubeApi(related: [testVideos[1]]),
@@ -184,9 +182,7 @@ void main() {
     expect(find.text('Replay'), findsOneWidget);
     expect(
       tester
-          .widget<IconButton>(
-            find.widgetWithIcon(IconButton, Icons.skip_next),
-          )
+          .widget<IconButton>(find.widgetWithIcon(IconButton, Icons.skip_next))
           .onPressed,
       isNull,
     );
@@ -216,10 +212,7 @@ void main() {
 
   testWidgets('autoplay stays put without a next video', (tester) async {
     final player = FakePlayerController();
-    final state = await testState(
-      api: FakeYouTubeApi(),
-      player: player,
-    );
+    final state = await testState(api: FakeYouTubeApi(), player: player);
     await pumpPage(tester, state, WatchPage(video: testVideos.first));
     await tester.pumpAndSettle();
 
@@ -788,6 +781,9 @@ void main() {
 
     await pumpPage(tester, state, const SizedBox());
     await tester.pumpAndSettle();
+    expect(controls.detaches, 0);
+
+    await state.playback.stop();
     expect(controls.detaches, 1);
   });
 

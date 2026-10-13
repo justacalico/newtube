@@ -17,6 +17,7 @@ import '../services/version_checker.dart';
 import '../services/window_actions.dart';
 import '../services/youtube_api.dart';
 import 'history_store.dart';
+import 'playback_session.dart';
 import 'playlists_store.dart';
 import 'search_history_store.dart';
 import 'settings_store.dart';
@@ -43,6 +44,7 @@ class AppState extends ChangeNotifier {
   final UploadsWatcher? uploads;
   final PipActions? pipActions;
   final MediaControls? mediaControls;
+  final PlaybackSession playback;
   final bool isWeb;
 
   int _tabIndex = 0;
@@ -75,7 +77,7 @@ class AppState extends ChangeNotifier {
     this.mediaControls,
     this._versionChecker,
     this.isWeb = false,
-  }) {
+  }) : playback = PlaybackSession(mediaControls: mediaControls) {
     settings.addListener(_syncMcpServer);
     final factory = createMcpServer;
     if (factory != null) _initMcp(factory);

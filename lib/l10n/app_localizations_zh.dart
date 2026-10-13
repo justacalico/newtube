@@ -202,6 +202,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get nextVideo => '下一个视频';
 
   @override
+  String get play => '播放';
+
+  @override
+  String get pause => '暂停';
+
+  @override
+  String get close => '关闭';
+
+  @override
   String get audio => '音频';
 
   @override
@@ -672,6 +681,15 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get nextVideo => '下一个视频';
+
+  @override
+  String get play => '播放';
+
+  @override
+  String get pause => '暂停';
+
+  @override
+  String get close => '关闭';
 
   @override
   String get audio => '音频';

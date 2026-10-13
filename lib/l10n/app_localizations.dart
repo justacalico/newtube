@@ -488,6 +488,24 @@ abstract class AppLocalizations {
   /// **'Next video'**
   String get nextVideo;
 
+  /// No description provided for @play.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Play'**
+  String get play;
+
+  /// No description provided for @pause.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Pause'**
+  String get pause;
+
+  /// No description provided for @close.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Close'**
+  String get close;
+
   /// No description provided for @audio.
   ///
   /// In en_GB, this message translates to:
