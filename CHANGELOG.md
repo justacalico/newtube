@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.18.0 - 2026-10-13
+#### Features
+- (**home**) 基于观看历史个性化首页推荐 - (2df8711) - HttpAnimations
+- (**player**) 离开播放页时以迷你播放器继续播放 - (766a1ca) - HttpAnimations
+- (**player**) 视频结束后显示重播和下一个视频的结束画面 - (0f77547) - HttpAnimations
+
+- - -
+
 ## v0.17.2 - 2026-10-13
 #### Bug Fixes
 - (**player**) 画中画只渲染视频画面 - (2b2a269) - HttpAnimations
