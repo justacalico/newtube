@@ -140,6 +140,18 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get navSettings;
 
+  /// No description provided for @collapseSidebar.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Collapse sidebar'**
+  String get collapseSidebar;
+
+  /// No description provided for @expandSidebar.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Expand sidebar'**
+  String get expandSidebar;
+
   /// No description provided for @searchHint.
   ///
   /// In en_GB, this message translates to:

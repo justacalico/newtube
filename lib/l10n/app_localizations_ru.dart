@@ -28,6 +28,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get navSettings => 'Настройки';
 
   @override
+  String get collapseSidebar => 'Свернуть боковую панель';
+
+  @override
+  String get expandSidebar => 'Развернуть боковую панель';
+
+  @override
   String get searchHint => 'Поиск';
 
   @override

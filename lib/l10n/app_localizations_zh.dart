@@ -28,6 +28,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get navSettings => '设置';
 
   @override
+  String get collapseSidebar => '收起侧边栏';
+
+  @override
+  String get expandSidebar => '展开侧边栏';
+
+  @override
   String get searchHint => '搜索';
 
   @override
@@ -262,6 +268,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get navSettings => '设置';
+
+  @override
+  String get collapseSidebar => '收起侧边栏';
+
+  @override
+  String get expandSidebar => '展开侧边栏';
 
   @override
   String get searchHint => '搜索';

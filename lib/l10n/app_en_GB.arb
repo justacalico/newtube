@@ -6,6 +6,8 @@
   "navSubscriptions": "Subscriptions",
   "navHistory": "History",
   "navSettings": "Settings",
+  "collapseSidebar": "Collapse sidebar",
+  "expandSidebar": "Expand sidebar",
   "searchHint": "Search",
   "loading": "Loading…",
   "errorLoading": "Something went wrong",

@@ -6,6 +6,8 @@
   "navSubscriptions": "Síntiúis",
   "navHistory": "Stair",
   "navSettings": "Socruithe",
+  "collapseSidebar": "Fill an barra taobh",
+  "expandSidebar": "Leathnaigh an barra taobh",
   "searchHint": "Cuardaigh",
   "loading": "Ag lódáil…",
   "errorLoading": "Chuaigh rud éigin mícheart",

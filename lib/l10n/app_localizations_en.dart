@@ -28,6 +28,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navSettings => 'Settings';
 
   @override
+  String get collapseSidebar => 'Collapse sidebar';
+
+  @override
+  String get expandSidebar => 'Expand sidebar';
+
+  @override
   String get searchHint => 'Search';
 
   @override
@@ -266,6 +272,12 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get navSettings => 'Settings';
+
+  @override
+  String get collapseSidebar => 'Collapse sidebar';
+
+  @override
+  String get expandSidebar => 'Expand sidebar';
 
   @override
   String get searchHint => 'Search';

@@ -12,6 +12,9 @@ class SideNav extends StatelessWidget {
   final List<SideNavDestination> destinations;
   final int footerCount;
   final Widget? header;
+  final bool collapsed;
+  final VoidCallback? onToggleCollapsed;
+  final String? toggleLabel;
 
   const SideNav({
     super.key,
@@ -20,6 +23,9 @@ class SideNav extends StatelessWidget {
     required this.destinations,
     this.footerCount = 0,
     this.header,
+    this.collapsed = false,
+    this.onToggleCollapsed,
+    this.toggleLabel,
   });
 
   @override
@@ -28,16 +34,25 @@ class SideNav extends StatelessWidget {
     final primaryCount = destinations.length - footerCount;
     return ColoredBox(
       color: Theme.of(context).colorScheme.surfaceContainerLow,
-      child: SizedBox(
-        width: 208,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOutCubic,
+        width: collapsed ? 72 : 208,
         height: double.infinity,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (header != null)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
-                child: header,
+              LayoutBuilder(
+                builder: (context, constraints) => Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    constraints.maxWidth < 100 ? 8 : 16,
+                    14,
+                    constraints.maxWidth < 100 ? 8 : 16,
+                    8,
+                  ),
+                  child: header,
+                ),
               ),
             Expanded(
               child: ListView.builder(
@@ -55,7 +70,7 @@ class SideNav extends StatelessWidget {
                 ),
               ),
             ),
-            if (footerCount > 0)
+            if (footerCount > 0 || onToggleCollapsed != null)
               Padding(
                 padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
                 child: Column(
@@ -65,6 +80,20 @@ class SideNav extends StatelessWidget {
                         destination: destinations[i],
                         selected: i == selectedIndex,
                         onTap: () => onSelected(i),
+                      ),
+                    if (onToggleCollapsed != null)
+                      _SideNavItem(
+                        destination: (
+                          icon: collapsed
+                              ? Icons.keyboard_double_arrow_right
+                              : Icons.keyboard_double_arrow_left,
+                          selectedIcon: collapsed
+                              ? Icons.keyboard_double_arrow_right
+                              : Icons.keyboard_double_arrow_left,
+                          label: toggleLabel ?? '',
+                        ),
+                        selected: false,
+                        onTap: onToggleCollapsed!,
                       ),
                   ],
                 ),
@@ -93,6 +122,11 @@ class _SideNavItem extends StatelessWidget {
     final foreground = selected
         ? colors.onSecondaryContainer
         : colors.onSurfaceVariant;
+    final icon = Icon(
+      selected ? destination.selectedIcon : destination.icon,
+      size: 22,
+      color: foreground,
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Material(
@@ -101,32 +135,45 @@ class _SideNavItem extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
-            child: Row(
-              children: [
-                Icon(
-                  selected ? destination.selectedIcon : destination.icon,
-                  size: 22,
-                  color: foreground,
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Text(
-                    destination.label,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: selected
-                          ? FontWeight.w600
-                          : FontWeight.normal,
-                      color: foreground,
-                    ),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth < 100) {
+                return Tooltip(
+                  message: destination.label,
+                  waitDuration: const Duration(milliseconds: 400),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 11),
+                    child: Center(child: icon),
                   ),
+                );
+              }
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 11,
                 ),
-              ],
-            ),
+                child: Row(
+                  children: [
+                    icon,
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Text(
+                        destination.label,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: selected
+                              ? FontWeight.w600
+                              : FontWeight.normal,
+                          color: foreground,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ),
       ),

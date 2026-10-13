@@ -28,6 +28,12 @@ class AppLocalizationsGa extends AppLocalizations {
   String get navSettings => 'Socruithe';
 
   @override
+  String get collapseSidebar => 'Fill an barra taobh';
+
+  @override
+  String get expandSidebar => 'Leathnaigh an barra taobh';
+
+  @override
   String get searchHint => 'Cuardaigh';
 
   @override

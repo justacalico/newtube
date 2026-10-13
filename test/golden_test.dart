@@ -64,6 +64,18 @@ void main() {
     );
   });
 
+  testWidgets('app shell collapsed', (tester) async {
+    await golden(
+      tester,
+      'app_shell_collapsed',
+      const AppShell(),
+      state: await testState(
+        settings: SettingsStore(sidebarCollapsed: true),
+        windowActions: FakeWindowActions(),
+      ),
+    );
+  });
+
   testWidgets('app shell mobile', (tester) async {
     await golden(
       tester,

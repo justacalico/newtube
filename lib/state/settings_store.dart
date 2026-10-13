@@ -17,6 +17,7 @@ class SettingsStore extends ChangeNotifier {
   static const _proxyPrefixKey = 'proxy_prefix';
   static const _searchHistoryKey = 'search_history_enabled';
   static const _mcpEnabledKey = 'mcp_enabled';
+  static const _sidebarCollapsedKey = 'sidebar_collapsed';
 
   AppTheme _theme;
   Locale? _locale;
@@ -24,6 +25,7 @@ class SettingsStore extends ChangeNotifier {
   String _proxyPrefix;
   bool _searchHistoryEnabled;
   bool _mcpEnabled;
+  bool _sidebarCollapsed;
 
   SettingsStore({
     this._theme = AppTheme.system,
@@ -32,6 +34,7 @@ class SettingsStore extends ChangeNotifier {
     this._proxyPrefix = '',
     this._searchHistoryEnabled = true,
     this._mcpEnabled = false,
+    this._sidebarCollapsed = false,
   });
 
   static Future<SettingsStore> load(SharedPreferences prefs) async {
@@ -44,6 +47,7 @@ class SettingsStore extends ChangeNotifier {
       proxyPrefix: prefs.getString(_proxyPrefixKey) ?? '',
       searchHistoryEnabled: prefs.getBool(_searchHistoryKey) ?? true,
       mcpEnabled: prefs.getBool(_mcpEnabledKey) ?? false,
+      sidebarCollapsed: prefs.getBool(_sidebarCollapsedKey) ?? false,
     );
   }
 
@@ -67,6 +71,7 @@ class SettingsStore extends ChangeNotifier {
   String get proxyPrefix => _proxyPrefix;
   bool get searchHistoryEnabled => _searchHistoryEnabled;
   bool get mcpEnabled => _mcpEnabled;
+  bool get sidebarCollapsed => _sidebarCollapsed;
 
   Future<void> setTheme(AppTheme theme, SharedPreferences prefs) async {
     _theme = theme;
@@ -104,6 +109,12 @@ class SettingsStore extends ChangeNotifier {
   Future<void> setMcpEnabled(bool value, SharedPreferences prefs) async {
     _mcpEnabled = value;
     await prefs.setBool(_mcpEnabledKey, value);
+    notifyListeners();
+  }
+
+  Future<void> setSidebarCollapsed(bool value, SharedPreferences prefs) async {
+    _sidebarCollapsed = value;
+    await prefs.setBool(_sidebarCollapsedKey, value);
     notifyListeners();
   }
 }

@@ -69,15 +69,55 @@ void main() {
     final nav = find.byType(SideNav);
     final settings = find.descendant(of: nav, matching: find.text('Settings'));
     final history = find.descendant(of: nav, matching: find.text('History'));
+    final collapse = find.descendant(
+      of: nav,
+      matching: find.text('Collapse sidebar'),
+    );
 
     expect(
       tester.getTopLeft(settings).dy,
       greaterThan(tester.getBottomLeft(history).dy),
     );
     expect(
-      tester.getRect(nav).bottom - tester.getBottomLeft(settings).dy,
+      tester.getTopLeft(collapse).dy,
+      greaterThan(tester.getBottomLeft(settings).dy),
+    );
+    expect(
+      tester.getRect(nav).bottom - tester.getBottomLeft(collapse).dy,
       lessThan(48),
     );
+    debugDefaultTargetPlatformOverride = null;
+  });
+
+  testWidgets('sidebar collapses to a small icon rail', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    final state = await testState(windowActions: FakeWindowActions());
+    await pumpPage(
+      tester,
+      state,
+      const AppShell(),
+      size: const Size(1200, 800),
+    );
+    await tester.pumpAndSettle();
+
+    final nav = find.byType(SideNav);
+    expect(tester.getSize(nav).width, 208);
+    expect(find.text('Home'), findsOneWidget);
+
+    await tester.tap(find.text('Collapse sidebar'));
+    await tester.pumpAndSettle();
+
+    expect(state.settings.sidebarCollapsed, isTrue);
+    expect(tester.getSize(nav).width, 72);
+    expect(find.text('Home'), findsNothing);
+    expect(find.byIcon(Icons.home), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.keyboard_double_arrow_right));
+    await tester.pumpAndSettle();
+
+    expect(state.settings.sidebarCollapsed, isFalse);
+    expect(tester.getSize(nav).width, 208);
+    expect(find.text('Home'), findsOneWidget);
     debugDefaultTargetPlatformOverride = null;
   });
 
