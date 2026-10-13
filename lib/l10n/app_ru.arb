@@ -97,5 +97,18 @@
     }
   },
   "sleepTimerEndOfVideo": "В конце видео",
-  "sleepTimerOff": "Выкл"
+  "sleepTimerOff": "Выкл",
+  "sponsorBlock": "SponsorBlock",
+  "sponsorBlockHint": "Пропускать спонсорские вставки в видео",
+  "sponsorBlockAutoSkip": "Пропускать автоматически",
+  "sponsorBlockAutoSkipHint": "Если выключено, показывать кнопку пропуска",
+  "sponsorBlockCategories": "Категории для пропуска",
+  "skipSegment": "Пропустить",
+  "done": "Готово",
+  "sponsorCategorySponsor": "Реклама",
+  "sponsorCategorySelfpromo": "Самопиар",
+  "sponsorCategoryIntro": "Вступление",
+  "sponsorCategoryOutro": "Концовка",
+  "sponsorCategoryInteraction": "Призыв к действию",
+  "sponsorCategoryMusicOfftopic": "Музыка не по теме"
 }

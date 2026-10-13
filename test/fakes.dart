@@ -12,6 +12,7 @@ import 'package:newtube/models/app_update.dart';
 import 'package:newtube/models/video_info.dart';
 import 'package:newtube/services/mcp_server.dart';
 import 'package:newtube/services/player_controller.dart';
+import 'package:newtube/services/sponsor_block.dart';
 import 'package:newtube/services/version_checker.dart';
 import 'package:newtube/services/window_actions.dart';
 import 'package:newtube/services/youtube_api.dart';
@@ -302,6 +303,7 @@ Future<AppState> testState({
   McpServerFactory? createMcpServer,
   Future<PackageInfo> Function()? packageInfo,
   Future<String?> Function(String name, Uint8List bytes)? saveFile,
+  SponsorBlockClient? sponsorBlock,
   Map<String, Object> initialPrefs = const {},
 }) async {
   SharedPreferences.setMockInitialValues(initialPrefs);
@@ -329,6 +331,7 @@ Future<AppState> testState({
     windowActions: windowActions,
     createMcpServer: createMcpServer,
     saveFile: saveFile,
+    sponsorBlock: sponsorBlock,
     versionChecker: versionChecker ?? FakeVersionChecker(),
     isWeb: isWeb,
   );

@@ -33,6 +33,12 @@ void main() {
       expect(store.searchHistoryEnabled, isTrue);
       expect(store.mcpEnabled, isFalse);
       expect(store.sidebarCollapsed, isFalse);
+      expect(store.sponsorBlockEnabled, isFalse);
+      expect(store.sponsorBlockAutoSkip, isTrue);
+      expect(
+        store.sponsorBlockCategories,
+        SettingsStore.defaultSponsorBlockCategories,
+      );
     });
 
     test('persists theme, locale and autoplay', () async {
@@ -44,6 +50,9 @@ void main() {
       await store.setSearchHistoryEnabled(false, p);
       await store.setMcpEnabled(true, p);
       await store.setSidebarCollapsed(true, p);
+      await store.setSponsorBlockEnabled(true, p);
+      await store.setSponsorBlockAutoSkip(false, p);
+      await store.setSponsorBlockCategories({'sponsor', 'intro'}, p);
 
       final reloaded = await SettingsStore.load(
         await SharedPreferences.getInstance(),
@@ -54,6 +63,9 @@ void main() {
       expect(reloaded.searchHistoryEnabled, isFalse);
       expect(reloaded.mcpEnabled, isTrue);
       expect(reloaded.sidebarCollapsed, isTrue);
+      expect(reloaded.sponsorBlockEnabled, isTrue);
+      expect(reloaded.sponsorBlockAutoSkip, isFalse);
+      expect(reloaded.sponsorBlockCategories, {'sponsor', 'intro'});
     });
 
     test('system locale persists as null', () async {

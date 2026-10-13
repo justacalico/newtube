@@ -97,5 +97,18 @@
     }
   },
   "sleepTimerEndOfVideo": "Deireadh an fhíseáin",
-  "sleepTimerOff": "Múchta"
+  "sleepTimerOff": "Múchta",
+  "sponsorBlock": "SponsorBlock",
+  "sponsorBlockHint": "Scip míreanna urraithe sna físeáin",
+  "sponsorBlockAutoSkip": "Scip go huathoibríoch",
+  "sponsorBlockAutoSkipHint": "Taispeáin cnaipe scipeála ar an seinnteoir mura bhfuil sé ar siúl",
+  "sponsorBlockCategories": "Catagóirí le scipeáil",
+  "skipSegment": "Scip",
+  "done": "Déanta",
+  "sponsorCategorySponsor": "Urraíocht",
+  "sponsorCategorySelfpromo": "Féinbholscaireacht",
+  "sponsorCategoryIntro": "Intreoir",
+  "sponsorCategoryOutro": "Coda deiridh",
+  "sponsorCategoryInteraction": "Meabhrúchán idirghnímh",
+  "sponsorCategoryMusicOfftopic": "Ceol neamhábhartha"
 }

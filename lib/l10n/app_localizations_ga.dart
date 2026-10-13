@@ -278,4 +278,44 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get sleepTimerOff => 'Múchta';
+
+  @override
+  String get sponsorBlock => 'SponsorBlock';
+
+  @override
+  String get sponsorBlockHint => 'Scip míreanna urraithe sna físeáin';
+
+  @override
+  String get sponsorBlockAutoSkip => 'Scip go huathoibríoch';
+
+  @override
+  String get sponsorBlockAutoSkipHint =>
+      'Taispeáin cnaipe scipeála ar an seinnteoir mura bhfuil sé ar siúl';
+
+  @override
+  String get sponsorBlockCategories => 'Catagóirí le scipeáil';
+
+  @override
+  String get skipSegment => 'Scip';
+
+  @override
+  String get done => 'Déanta';
+
+  @override
+  String get sponsorCategorySponsor => 'Urraíocht';
+
+  @override
+  String get sponsorCategorySelfpromo => 'Féinbholscaireacht';
+
+  @override
+  String get sponsorCategoryIntro => 'Intreoir';
+
+  @override
+  String get sponsorCategoryOutro => 'Coda deiridh';
+
+  @override
+  String get sponsorCategoryInteraction => 'Meabhrúchán idirghnímh';
+
+  @override
+  String get sponsorCategoryMusicOfftopic => 'Ceol neamhábhartha';
 }

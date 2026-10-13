@@ -279,4 +279,44 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get sleepTimerOff => 'Выкл';
+
+  @override
+  String get sponsorBlock => 'SponsorBlock';
+
+  @override
+  String get sponsorBlockHint => 'Пропускать спонсорские вставки в видео';
+
+  @override
+  String get sponsorBlockAutoSkip => 'Пропускать автоматически';
+
+  @override
+  String get sponsorBlockAutoSkipHint =>
+      'Если выключено, показывать кнопку пропуска';
+
+  @override
+  String get sponsorBlockCategories => 'Категории для пропуска';
+
+  @override
+  String get skipSegment => 'Пропустить';
+
+  @override
+  String get done => 'Готово';
+
+  @override
+  String get sponsorCategorySponsor => 'Реклама';
+
+  @override
+  String get sponsorCategorySelfpromo => 'Самопиар';
+
+  @override
+  String get sponsorCategoryIntro => 'Вступление';
+
+  @override
+  String get sponsorCategoryOutro => 'Концовка';
+
+  @override
+  String get sponsorCategoryInteraction => 'Призыв к действию';
+
+  @override
+  String get sponsorCategoryMusicOfftopic => 'Музыка не по теме';
 }

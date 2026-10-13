@@ -97,5 +97,18 @@
     }
   },
   "sleepTimerEndOfVideo": "视频播完时",
-  "sleepTimerOff": "关闭"
+  "sleepTimerOff": "关闭",
+  "sponsorBlock": "SponsorBlock",
+  "sponsorBlockHint": "跳过视频中的赞助片段",
+  "sponsorBlockAutoSkip": "自动跳过",
+  "sponsorBlockAutoSkipHint": "关闭时在播放器上显示跳过按钮",
+  "sponsorBlockCategories": "跳过的片段类别",
+  "skipSegment": "跳过",
+  "done": "完成",
+  "sponsorCategorySponsor": "赞助",
+  "sponsorCategorySelfpromo": "自我推广",
+  "sponsorCategoryIntro": "片头",
+  "sponsorCategoryOutro": "片尾",
+  "sponsorCategoryInteraction": "互动提醒",
+  "sponsorCategoryMusicOfftopic": "离题音乐"
 }

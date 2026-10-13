@@ -275,6 +275,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sleepTimerOff => 'Off';
+
+  @override
+  String get sponsorBlock => 'SponsorBlock';
+
+  @override
+  String get sponsorBlockHint => 'Skip sponsored segments in videos';
+
+  @override
+  String get sponsorBlockAutoSkip => 'Skip automatically';
+
+  @override
+  String get sponsorBlockAutoSkipHint =>
+      'Show a skip button on the player instead when off';
+
+  @override
+  String get sponsorBlockCategories => 'Skipped categories';
+
+  @override
+  String get skipSegment => 'Skip';
+
+  @override
+  String get done => 'Done';
+
+  @override
+  String get sponsorCategorySponsor => 'Sponsor';
+
+  @override
+  String get sponsorCategorySelfpromo => 'Self-promotion';
+
+  @override
+  String get sponsorCategoryIntro => 'Intro';
+
+  @override
+  String get sponsorCategoryOutro => 'Outro';
+
+  @override
+  String get sponsorCategoryInteraction => 'Interaction reminder';
+
+  @override
+  String get sponsorCategoryMusicOfftopic => 'Off-topic music';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -547,4 +587,44 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get sleepTimerOff => 'Off';
+
+  @override
+  String get sponsorBlock => 'SponsorBlock';
+
+  @override
+  String get sponsorBlockHint => 'Skip sponsored segments in videos';
+
+  @override
+  String get sponsorBlockAutoSkip => 'Skip automatically';
+
+  @override
+  String get sponsorBlockAutoSkipHint =>
+      'Show a skip button on the player instead when off';
+
+  @override
+  String get sponsorBlockCategories => 'Skipped categories';
+
+  @override
+  String get skipSegment => 'Skip';
+
+  @override
+  String get done => 'Done';
+
+  @override
+  String get sponsorCategorySponsor => 'Sponsor';
+
+  @override
+  String get sponsorCategorySelfpromo => 'Self-promotion';
+
+  @override
+  String get sponsorCategoryIntro => 'Intro';
+
+  @override
+  String get sponsorCategoryOutro => 'Outro';
+
+  @override
+  String get sponsorCategoryInteraction => 'Interaction reminder';
+
+  @override
+  String get sponsorCategoryMusicOfftopic => 'Off-topic music';
 }
