@@ -32,6 +32,12 @@ class PlayerView extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           Center(child: player.buildView(context)),
+          Positioned.fill(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => player.playing ? player.pause() : player.play(),
+            ),
+          ),
           Positioned(
             left: 0,
             right: 0,
