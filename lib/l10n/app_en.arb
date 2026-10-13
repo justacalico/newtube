@@ -86,5 +86,16 @@
       }
     }
   },
-  "mcpExportFailed": "Could not save the export"
+  "mcpExportFailed": "Could not save the export",
+  "sleepTimer": "Sleep timer",
+  "sleepTimerMinutes": "{count, plural, one{{count} minute} other{{count} minutes}}",
+  "@sleepTimerMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sleepTimerEndOfVideo": "End of video",
+  "sleepTimerOff": "Off"
 }

@@ -73,6 +73,10 @@ void touchAll(AppLocalizations l) {
   l.quality;
   l.playbackSpeed;
   l.speedNormal;
+  l.sleepTimer;
+  l.sleepTimerMinutes(5);
+  l.sleepTimerEndOfVideo;
+  l.sleepTimerOff;
   l.corsNoticeTitle;
   l.corsNoticeBody;
   l.corsFirefox;

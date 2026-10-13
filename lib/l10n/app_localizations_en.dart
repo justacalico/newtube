@@ -255,6 +255,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get mcpExportFailed => 'Could not save the export';
+
+  @override
+  String get sleepTimer => 'Sleep timer';
+
+  @override
+  String sleepTimerMinutes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minutes',
+      one: '$count minute',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sleepTimerEndOfVideo => 'End of video';
+
+  @override
+  String get sleepTimerOff => 'Off';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -507,4 +527,24 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get mcpExportFailed => 'Could not save the export';
+
+  @override
+  String get sleepTimer => 'Sleep timer';
+
+  @override
+  String sleepTimerMinutes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minutes',
+      one: '$count minute',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sleepTimerEndOfVideo => 'End of video';
+
+  @override
+  String get sleepTimerOff => 'Off';
 }

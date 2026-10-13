@@ -257,4 +257,26 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get mcpExportFailed => 'Не удалось сохранить экспорт';
+
+  @override
+  String get sleepTimer => 'Таймер сна';
+
+  @override
+  String sleepTimerMinutes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count минуты',
+      many: '$count минут',
+      few: '$count минуты',
+      one: '$count минута',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sleepTimerEndOfVideo => 'В конце видео';
+
+  @override
+  String get sleepTimerOff => 'Выкл';
 }

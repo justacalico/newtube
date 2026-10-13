@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/l10n/app_localizations.dart';
 import 'package:newtube/models/video_info.dart';
+import 'package:newtube/services/sleep_timer.dart';
 import 'package:newtube/state/app_state.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:newtube/ui/widgets/player_view.dart';
@@ -468,5 +469,53 @@ void main() {
       await tester.sendKeyEvent(LogicalKeyboardKey.period);
     }
     expect(player.rate, 2.0);
+  });
+
+  testWidgets('sleep timer menu starts and cancels the timer', (tester) async {
+    final player = FakePlayerController();
+    final sleepTimer = SleepTimer(player);
+    addTearDown(sleepTimer.dispose);
+    final state = await testState();
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
+          onToggleFullscreen: () {},
+          sleepTimer: sleepTimer,
+        ),
+      ),
+    );
+
+    await tester.tap(find.byTooltip('Sleep timer'));
+    await tester.pumpAndSettle();
+    expect(find.text('15 minutes'), findsOneWidget);
+    expect(find.text('End of video'), findsOneWidget);
+    expect(find.text('Off'), findsNothing);
+
+    await tester.tap(find.text('15 minutes'));
+    await tester.pumpAndSettle();
+    expect(sleepTimer.active, isTrue);
+    expect(find.text('15:00'), findsOneWidget);
+
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.text('14:59'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Sleep timer'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('End of video'));
+    await tester.pumpAndSettle();
+    expect(sleepTimer.endOfVideo, isTrue);
+    expect(find.text('15:00'), findsNothing);
+
+    await tester.tap(find.byTooltip('Sleep timer'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Off'));
+    await tester.pumpAndSettle();
+    expect(sleepTimer.active, isFalse);
   });
 }

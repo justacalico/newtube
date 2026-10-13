@@ -259,4 +259,23 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get mcpExportFailed => 'Níorbh fhéidir an t-easpórtáil a shábháil';
+
+  @override
+  String get sleepTimer => 'Amchodlata';
+
+  @override
+  String sleepTimerMinutes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nóiméad',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sleepTimerEndOfVideo => 'Deireadh an fhíseáin';
+
+  @override
+  String get sleepTimerOff => 'Múchta';
 }
