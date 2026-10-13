@@ -1,6 +1,5 @@
 // coverage:ignore-file
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:media_kit/media_kit.dart';
@@ -59,8 +58,7 @@ class MediaKitPlayerController implements PlayerController {
     );
     try {
       await _player.open(Media(url), play: false);
-      if (audioUrl != null &&
-          (Platform.isLinux || Platform.isWindows || Platform.isMacOS)) {
+      if (audioUrl != null) {
         final platform = _player.platform;
         if (platform is NativePlayer) {
           await platform.command(['audio-add', audioUrl]);

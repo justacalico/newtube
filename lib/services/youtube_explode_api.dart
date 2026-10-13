@@ -184,6 +184,7 @@ class YouTubeExplodeApi implements YouTubeApi {
     final results = await _yt.search.searchContent(query);
     final videos = <VideoInfo>[];
     final channels = <ChannelInfo>[];
+    final playlists = <PlaylistInfo>[];
     for (final r in results) {
       if (r is yt.SearchVideo) {
         videos.add(
@@ -208,9 +209,24 @@ class YouTubeExplodeApi implements YouTubeApi {
                 : r.thumbnails.last.url.toString(),
           ),
         );
+      } else if (r is yt.SearchPlaylist) {
+        playlists.add(
+          PlaylistInfo(
+            id: r.id.value,
+            title: r.title,
+            videoCount: r.videoCount,
+            thumbnailUrl: r.thumbnails.isEmpty
+                ? null
+                : _proxied(r.thumbnails.last.url.toString()),
+          ),
+        );
       }
     }
-    return SearchResults(videos: videos, channels: channels);
+    return SearchResults(
+      videos: videos,
+      channels: channels,
+      playlists: playlists,
+    );
   }
 
   @override

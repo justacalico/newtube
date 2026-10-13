@@ -9,11 +9,16 @@ Future<String> writeFile(String path, List<int> bytes) async {
 }
 
 // coverage:ignore-start
-Future<String?> saveFileDialog(String name, Uint8List bytes) async {
+Future<String?> saveFileDialog(
+  String name,
+  Uint8List bytes, {
+  String? extension,
+}) async {
   final location = await getSaveLocation(
     suggestedName: name,
-    acceptedTypeGroups: const [
-      XTypeGroup(label: 'MCP server', extensions: ['mcpb']),
+    acceptedTypeGroups: [
+      if (extension != null)
+        XTypeGroup(label: extension, extensions: [extension]),
     ],
   );
   if (location == null) return null;

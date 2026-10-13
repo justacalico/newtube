@@ -187,6 +187,9 @@ class _WatchPageState extends State<WatchPage> {
     if (!mounted || playlist == null || index == null) return;
     final next = index + 1;
     if (next >= playlist.videos.length) return;
+    if (_fullscreen) {
+      Navigator.of(context, rootNavigator: true).pop();
+    }
     Navigator.of(context).pushReplacement(
       MaterialPageRoute<void>(
         builder: (_) => WatchPage(
@@ -275,7 +278,10 @@ class _WatchPageState extends State<WatchPage> {
     if (current == null) return;
     if (!current.hasVideo) {
       debugLog('[watch] ${widget.video.id}: switching to ${audio.quality}');
-      setState(() => _currentStream = audio);
+      setState(() {
+        _currentStream = audio;
+        _currentAudio = null;
+      });
       _switchTo(audio.url);
       return;
     }
@@ -487,7 +493,8 @@ class _WatchPageState extends State<WatchPage> {
                           const SizedBox(height: 4),
                           Text(_details!.description),
                         ],
-                        if (widget.playlist != null) ...[
+                        if (widget.playlist != null &&
+                            widget.index != null) ...[
                           const SizedBox(height: 16),
                           Text(
                             l10n.playlistProgress(

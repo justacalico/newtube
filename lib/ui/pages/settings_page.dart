@@ -90,7 +90,7 @@ class _SettingsPageState extends State<SettingsPage> {
       version: info.version,
       url: state.mcpServer?.url ?? mcpDefaultUrl,
     );
-    final path = await save('newtube.mcpb', bundle);
+    final path = await save('newtube.mcpb', bundle, extension: 'mcpb');
     if (!mounted) return;
     final l10n = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
@@ -140,6 +140,7 @@ class _SettingsPageState extends State<SettingsPage> {
     final l10n = AppLocalizations.of(context);
     final path = await save(
       'newtube_subscriptions.opml',
+      extension: 'opml',
       utf8.encode(buildOpml(state.subscriptions.channels)),
     );
     if (!mounted) return;

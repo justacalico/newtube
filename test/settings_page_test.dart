@@ -284,7 +284,7 @@ void main() {
       settings: SettingsStore(mcpEnabled: true),
       createMcpServer: ({required api, required version, onPlayVideo}) =>
           FakeMcpServer()..running = true,
-      saveFile: (name, bytes) async {
+      saveFile: (name, bytes, {extension}) async {
         saved.addAll([name, bytes]);
         return '/home/u/Downloads/$name';
       },
@@ -321,7 +321,7 @@ void main() {
     debugDefaultTargetPlatformOverride = TargetPlatform.linux;
     final state = await testState(
       settings: SettingsStore(mcpEnabled: true),
-      saveFile: (name, bytes) async => null,
+      saveFile: (name, bytes, {extension}) async => null,
     );
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();

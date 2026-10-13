@@ -115,8 +115,8 @@ class UploadsWatcher {
           if (seen == null) {
             _seen[channel.id] = latest.published;
           } else if (latest.published.isAfter(seen)) {
-            _seen[channel.id] = latest.published;
             await notify(channel.name, latest.title);
+            _seen[channel.id] = latest.published;
           }
         } on Object catch (e) {
           debugLog('[uploads] ${channel.id}: check failed: $e');

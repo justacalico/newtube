@@ -27,7 +27,12 @@ Future<void> _setupMobile(FlutterLocalNotificationsPlugin plugins) async {
 
 Future<void> _notifyMobile(String title, String body) async {
   final plugins = _mobile ??= FlutterLocalNotificationsPlugin();
-  await (_initMobile ??= _setupMobile(plugins));
+  try {
+    await (_initMobile ??= _setupMobile(plugins));
+  } on Object {
+    _initMobile = null;
+    rethrow;
+  }
   await plugins.show(
     id: (_notificationId++) & 0x7FFFFFFF,
     title: title,

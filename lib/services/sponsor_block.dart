@@ -55,7 +55,11 @@ class SponsorBlockClient {
     if (decoded is! List) return const [];
     return [
       for (final entry in decoded)
-        if (entry is Map<String, dynamic> && entry['segment'] is List)
+        if (entry is Map<String, dynamic> &&
+            entry['segment'] is List &&
+            (entry['segment'] as List).length >= 2 &&
+            (entry['segment'] as List).first is num &&
+            (entry['segment'] as List).last is num)
           SponsorSegment(
             category: entry['category'] as String? ?? '',
             start: _seconds((entry['segment'] as List).first),
