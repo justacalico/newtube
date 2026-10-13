@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/video_info.dart';
+import '../../services/home_feed.dart';
 import '../../state/app_state.dart';
 import '../widgets/video_grid.dart';
 import 'channel_page.dart';
@@ -29,8 +30,15 @@ class _HomePageState extends State<HomePage> {
       _loading = true;
       _error = null;
     });
+    final state = AppScope.read(context);
     try {
-      final videos = await AppScope.read(context).api.homeFeed();
+      final videos = await HomeFeed(
+        api: state.api,
+        history: state.history,
+        subscriptions: state.subscriptions,
+        searchHistory: state.searchHistory,
+        watchLater: state.watchLater,
+      ).fetch();
       if (!mounted) return;
       setState(() {
         _videos = videos;

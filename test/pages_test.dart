@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/models/video_info.dart';
+import 'package:newtube/state/history_store.dart';
 import 'package:newtube/state/settings_store.dart';
 import 'package:newtube/state/subscriptions_store.dart';
 import 'package:newtube/ui/pages/channel_page.dart';
@@ -49,6 +50,57 @@ void main() {
       await pumpPage(tester, state, const HomePage());
       await tester.pumpAndSettle();
       expect(find.text('No videos found'), findsOneWidget);
+    });
+
+    testWidgets('personalizes feed from watch history', (tester) async {
+      final api = FakeYouTubeApi(
+        feed: const [
+          VideoInfo(
+            id: 'g1',
+            title: 'Generic One',
+            author: 'Other',
+            channelId: 'cg',
+          ),
+          VideoInfo(
+            id: 'g2',
+            title: 'Generic Two',
+            author: 'Other',
+            channelId: 'cg',
+          ),
+          VideoInfo(
+            id: 'g3',
+            title: 'Generic Three',
+            author: 'Other',
+            channelId: 'cg',
+          ),
+        ],
+        related: const [
+          VideoInfo(
+            id: 'r1',
+            title: 'More flutter',
+            author: 'ChanA',
+            channelId: 'ca',
+          ),
+        ],
+      );
+      final state = await testState(
+        api: api,
+        history: HistoryStore(const [
+          VideoInfo(
+            id: 'w1',
+            title: 'flutter tutorial',
+            author: 'ChanA',
+            channelId: 'ca',
+          ),
+        ]),
+      );
+      await pumpPage(tester, state, const HomePage());
+      await tester.pumpAndSettle();
+
+      expect(find.text('More flutter'), findsOneWidget);
+      final related = tester.getTopLeft(find.text('More flutter'));
+      final generic = tester.getTopLeft(find.text('Generic Three'));
+      expect(related.dy, lessThan(generic.dy));
     });
   });
 
