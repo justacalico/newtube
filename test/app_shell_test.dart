@@ -53,6 +53,34 @@ void main() {
     debugDefaultTargetPlatformOverride = null;
   });
 
+  testWidgets('settings is pinned to the bottom of the sidebar', (
+    tester,
+  ) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    final state = await testState(windowActions: FakeWindowActions());
+    await pumpPage(
+      tester,
+      state,
+      const AppShell(),
+      size: const Size(1200, 800),
+    );
+    await tester.pumpAndSettle();
+
+    final nav = find.byType(SideNav);
+    final settings = find.descendant(of: nav, matching: find.text('Settings'));
+    final history = find.descendant(of: nav, matching: find.text('History'));
+
+    expect(
+      tester.getTopLeft(settings).dy,
+      greaterThan(tester.getBottomLeft(history).dy),
+    );
+    expect(
+      tester.getRect(nav).bottom - tester.getBottomLeft(settings).dy,
+      lessThan(48),
+    );
+    debugDefaultTargetPlatformOverride = null;
+  });
+
   testWidgets('hides history tab when search history is disabled', (
     tester,
   ) async {
