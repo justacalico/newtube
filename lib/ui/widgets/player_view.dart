@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../services/player_controller.dart';
+import '../../services/sleep_timer.dart';
 import '../../utils/format.dart';
 
 class PlayerView extends StatelessWidget {
@@ -15,6 +16,7 @@ class PlayerView extends StatelessWidget {
   final ValueChanged<PlayableStream> onAudioSelected;
   final VoidCallback onToggleFullscreen;
   final bool isFullscreen;
+  final SleepTimer? sleepTimer;
 
   const PlayerView({
     super.key,
@@ -26,6 +28,7 @@ class PlayerView extends StatelessWidget {
     required this.onAudioSelected,
     required this.onToggleFullscreen,
     this.isFullscreen = false,
+    this.sleepTimer,
   });
 
   static const _rates = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
@@ -226,6 +229,63 @@ class PlayerView extends StatelessWidget {
                           ],
                         ),
                       ),
+                      if (sleepTimer != null)
+                        ListenableBuilder(
+                          listenable: sleepTimer!,
+                          builder: (context, _) {
+                            final timer = sleepTimer!;
+                            final left = timer.remaining;
+                            return Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (left != null)
+                                  Text(
+                                    formatDuration(left),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                PopupMenuButton<int>(
+                                  icon: Icon(
+                                    Icons.bedtime_outlined,
+                                    color: timer.active
+                                        ? Colors.amber
+                                        : Colors.white,
+                                  ),
+                                  tooltip: l10n.sleepTimer,
+                                  onSelected: (value) {
+                                    if (value == 0) {
+                                      timer.cancel();
+                                    } else if (value < 0) {
+                                      timer.startAtEndOfVideo();
+                                    } else {
+                                      timer.startAfter(
+                                        Duration(minutes: value),
+                                      );
+                                    }
+                                  },
+                                  itemBuilder: (context) => [
+                                    for (final m in const [15, 30, 45, 60])
+                                      PopupMenuItem(
+                                        value: m,
+                                        child: Text(l10n.sleepTimerMinutes(m)),
+                                      ),
+                                    PopupMenuItem(
+                                      value: -1,
+                                      child: Text(l10n.sleepTimerEndOfVideo),
+                                    ),
+                                    if (timer.active)
+                                      PopupMenuItem(
+                                        value: 0,
+                                        child: Text(l10n.sleepTimerOff),
+                                      ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          },
+                        ),
                       PopupMenuButton<PlayableStream>(
                         icon: const Icon(Icons.settings, color: Colors.white),
                         tooltip: l10n.quality,

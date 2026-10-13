@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../services/player_controller.dart';
+import '../../services/sleep_timer.dart';
 import '../../state/app_state.dart';
 import '../../utils/debug_log.dart';
 import '../../utils/format.dart';
@@ -30,6 +31,7 @@ class WatchPage extends StatefulWidget {
 
 class _WatchPageState extends State<WatchPage> {
   PlayerController? _player;
+  SleepTimer? _sleepTimer;
   VideoDetails? _details;
   ChannelInfo? _channel;
   List<VideoInfo> _related = const [];
@@ -103,6 +105,7 @@ class _WatchPageState extends State<WatchPage> {
       setState(() {
         _details = details;
         _player = player;
+        _sleepTimer = SleepTimer(player);
         _currentStream = current;
         _currentAudio = currentAudio;
       });
@@ -186,6 +189,7 @@ class _WatchPageState extends State<WatchPage> {
               currentAudio: _currentAudio,
               onQualitySelected: _selectStream,
               onAudioSelected: _selectAudio,
+              sleepTimer: _sleepTimer,
             ),
           ),
         )
@@ -196,6 +200,7 @@ class _WatchPageState extends State<WatchPage> {
 
   @override
   void dispose() {
+    _sleepTimer?.dispose();
     _player?.dispose();
     super.dispose();
   }
@@ -235,6 +240,7 @@ class _WatchPageState extends State<WatchPage> {
                           onQualitySelected: _selectStream,
                           onAudioSelected: _selectAudio,
                           onToggleFullscreen: () => _openFullscreen(player),
+                          sleepTimer: _sleepTimer,
                         ),
                 ),
                 Expanded(
@@ -344,6 +350,7 @@ class _FullscreenPlayer extends StatefulWidget {
   final PlayableStream? currentAudio;
   final ValueChanged<PlayableStream> onQualitySelected;
   final ValueChanged<PlayableStream> onAudioSelected;
+  final SleepTimer? sleepTimer;
 
   const _FullscreenPlayer({
     required this.player,
@@ -352,6 +359,7 @@ class _FullscreenPlayer extends StatefulWidget {
     required this.currentAudio,
     required this.onQualitySelected,
     required this.onAudioSelected,
+    this.sleepTimer,
   });
 
   @override
@@ -389,6 +397,7 @@ class _FullscreenPlayerState extends State<_FullscreenPlayer> {
           onAudioSelected: _selectAudio,
           onToggleFullscreen: () => Navigator.of(context).pop(),
           isFullscreen: true,
+          sleepTimer: widget.sleepTimer,
         ),
       ),
     );

@@ -86,5 +86,16 @@
       }
     }
   },
-  "mcpExportFailed": "无法保存导出文件"
+  "mcpExportFailed": "无法保存导出文件",
+  "sleepTimer": "睡眠定时器",
+  "sleepTimerMinutes": "{count, plural, other{{count} 分钟}}",
+  "@sleepTimerMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sleepTimerEndOfVideo": "视频播完时",
+  "sleepTimerOff": "关闭"
 }

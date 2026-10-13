@@ -251,6 +251,25 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get mcpExportFailed => '无法保存导出文件';
+
+  @override
+  String get sleepTimer => '睡眠定时器';
+
+  @override
+  String sleepTimerMinutes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 分钟',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sleepTimerEndOfVideo => '视频播完时';
+
+  @override
+  String get sleepTimerOff => '关闭';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -499,4 +518,23 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get mcpExportFailed => '无法保存导出文件';
+
+  @override
+  String get sleepTimer => '睡眠定时器';
+
+  @override
+  String sleepTimerMinutes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 分钟',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sleepTimerEndOfVideo => '视频播完时';
+
+  @override
+  String get sleepTimerOff => '关闭';
 }

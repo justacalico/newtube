@@ -583,6 +583,30 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Could not save the export'**
   String get mcpExportFailed;
+
+  /// No description provided for @sleepTimer.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Sleep timer'**
+  String get sleepTimer;
+
+  /// No description provided for @sleepTimerMinutes.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'{count, plural, one{{count} minute} other{{count} minutes}}'**
+  String sleepTimerMinutes(int count);
+
+  /// No description provided for @sleepTimerEndOfVideo.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'End of video'**
+  String get sleepTimerEndOfVideo;
+
+  /// No description provided for @sleepTimerOff.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Off'**
+  String get sleepTimerOff;
 }
 
 class _AppLocalizationsDelegate

@@ -86,5 +86,16 @@
       }
     }
   },
-  "mcpExportFailed": "Не удалось сохранить экспорт"
+  "mcpExportFailed": "Не удалось сохранить экспорт",
+  "sleepTimer": "Таймер сна",
+  "sleepTimerMinutes": "{count, plural, one{{count} минута} few{{count} минуты} many{{count} минут} other{{count} минуты}}",
+  "@sleepTimerMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sleepTimerEndOfVideo": "В конце видео",
+  "sleepTimerOff": "Выкл"
 }

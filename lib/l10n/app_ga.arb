@@ -86,5 +86,16 @@
       }
     }
   },
-  "mcpExportFailed": "Níorbh fhéidir an t-easpórtáil a shábháil"
+  "mcpExportFailed": "Níorbh fhéidir an t-easpórtáil a shábháil",
+  "sleepTimer": "Amchodlata",
+  "sleepTimerMinutes": "{count, plural, other{{count} nóiméad}}",
+  "@sleepTimerMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sleepTimerEndOfVideo": "Deireadh an fhíseáin",
+  "sleepTimerOff": "Múchta"
 }
