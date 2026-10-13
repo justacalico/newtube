@@ -126,5 +126,30 @@
         "type": "int"
       }
     }
-  }
+  },
+  "importSubscriptions": "Import subscriptions",
+  "importSubscriptionsHint": "From an OPML file (NewPipe, FreeTube, Takeout)",
+  "exportSubscriptions": "Export subscriptions",
+  "exportSubscriptionsHint": "Save the subscription list as OPML",
+  "subscriptionsImported": "Imported {imported} channels, {failed} failed",
+  "@subscriptionsImported": {
+    "placeholders": {
+      "imported": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "subscriptionsImportFailed": "Could not read the OPML file",
+  "subscriptionsExportedTo": "Subscriptions exported to {path}",
+  "@subscriptionsExportedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionsExportFailed": "Export cancelled or failed"
 }

@@ -343,6 +343,34 @@ class AppLocalizationsZh extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get importSubscriptions => '导入订阅';
+
+  @override
+  String get importSubscriptionsHint => '从 OPML 文件导入(NewPipe、FreeTube、Takeout)';
+
+  @override
+  String get exportSubscriptions => '导出订阅';
+
+  @override
+  String get exportSubscriptionsHint => '将订阅列表保存为 OPML';
+
+  @override
+  String subscriptionsImported(int imported, int failed) {
+    return '已导入 $imported 个频道,$failed 个失败';
+  }
+
+  @override
+  String get subscriptionsImportFailed => '无法读取 OPML 文件';
+
+  @override
+  String subscriptionsExportedTo(String path) {
+    return '订阅已导出到 $path';
+  }
+
+  @override
+  String get subscriptionsExportFailed => '导出已取消或失败';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -683,4 +711,32 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
     );
     return '$_temp0';
   }
+
+  @override
+  String get importSubscriptions => '导入订阅';
+
+  @override
+  String get importSubscriptionsHint => '从 OPML 文件导入(NewPipe、FreeTube、Takeout)';
+
+  @override
+  String get exportSubscriptions => '导出订阅';
+
+  @override
+  String get exportSubscriptionsHint => '将订阅列表保存为 OPML';
+
+  @override
+  String subscriptionsImported(int imported, int failed) {
+    return '已导入 $imported 个频道,$failed 个失败';
+  }
+
+  @override
+  String get subscriptionsImportFailed => '无法读取 OPML 文件';
+
+  @override
+  String subscriptionsExportedTo(String path) {
+    return '订阅已导出到 $path';
+  }
+
+  @override
+  String get subscriptionsExportFailed => '导出已取消或失败';
 }

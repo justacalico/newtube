@@ -350,6 +350,35 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get importSubscriptions => 'Import subscriptions';
+
+  @override
+  String get importSubscriptionsHint =>
+      'From an OPML file (NewPipe, FreeTube, Takeout)';
+
+  @override
+  String get exportSubscriptions => 'Export subscriptions';
+
+  @override
+  String get exportSubscriptionsHint => 'Save the subscription list as OPML';
+
+  @override
+  String subscriptionsImported(int imported, int failed) {
+    return 'Imported $imported channels, $failed failed';
+  }
+
+  @override
+  String get subscriptionsImportFailed => 'Could not read the OPML file';
+
+  @override
+  String subscriptionsExportedTo(String path) {
+    return 'Subscriptions exported to $path';
+  }
+
+  @override
+  String get subscriptionsExportFailed => 'Export cancelled or failed';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -697,4 +726,33 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
     );
     return '$_temp0';
   }
+
+  @override
+  String get importSubscriptions => 'Import subscriptions';
+
+  @override
+  String get importSubscriptionsHint =>
+      'From an OPML file (NewPipe, FreeTube, Takeout)';
+
+  @override
+  String get exportSubscriptions => 'Export subscriptions';
+
+  @override
+  String get exportSubscriptionsHint => 'Save the subscription list as OPML';
+
+  @override
+  String subscriptionsImported(int imported, int failed) {
+    return 'Imported $imported channels, $failed failed';
+  }
+
+  @override
+  String get subscriptionsImportFailed => 'Could not read the OPML file';
+
+  @override
+  String subscriptionsExportedTo(String path) {
+    return 'Subscriptions exported to $path';
+  }
+
+  @override
+  String get subscriptionsExportFailed => 'Export cancelled or failed';
 }

@@ -356,4 +356,33 @@ class AppLocalizationsRu extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get importSubscriptions => 'Импорт подписок';
+
+  @override
+  String get importSubscriptionsHint =>
+      'Из файла OPML (NewPipe, FreeTube, Takeout)';
+
+  @override
+  String get exportSubscriptions => 'Экспорт подписок';
+
+  @override
+  String get exportSubscriptionsHint => 'Сохранить подписки в файл OPML';
+
+  @override
+  String subscriptionsImported(int imported, int failed) {
+    return 'Импортировано каналов: $imported, ошибок: $failed';
+  }
+
+  @override
+  String get subscriptionsImportFailed => 'Не удалось прочитать файл OPML';
+
+  @override
+  String subscriptionsExportedTo(String path) {
+    return 'Подписки сохранены в $path';
+  }
+
+  @override
+  String get subscriptionsExportFailed => 'Экспорт отменён или не удался';
 }

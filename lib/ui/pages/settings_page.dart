@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/app_update.dart';
 import '../../services/mcp_export.dart';
 import '../../services/mcp_server.dart';
+import '../../services/opml.dart';
+import '../../utils/debug_log.dart';
 import '../../services/version_checker.dart';
 import '../../state/app_state.dart';
 import '../../state/settings_store.dart';
@@ -93,6 +97,58 @@ class _SettingsPageState extends State<SettingsPage> {
       SnackBar(
         content: Text(
           path == null ? l10n.mcpExportFailed : l10n.mcpExportedTo(path),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _importSubscriptions() async {
+    final state = AppScope.read(context);
+    final open = state.openFile;
+    if (open == null) return;
+    final text = await open();
+    if (!mounted || text == null) return;
+    final l10n = AppLocalizations.of(context);
+    try {
+      final result = await importOpml(
+        text,
+        state.api,
+        state.subscriptions,
+        state.prefs,
+      );
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            l10n.subscriptionsImported(result.imported, result.failed),
+          ),
+        ),
+      );
+    } catch (e) {
+      debugLog('[settings] opml import failed: $e');
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.subscriptionsImportFailed)));
+    }
+  }
+
+  Future<void> _exportSubscriptions() async {
+    final state = AppScope.read(context);
+    final save = state.saveFile;
+    if (save == null) return;
+    final l10n = AppLocalizations.of(context);
+    final path = await save(
+      'newtube_subscriptions.opml',
+      utf8.encode(buildOpml(state.subscriptions.channels)),
+    );
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          path == null
+              ? l10n.subscriptionsExportFailed
+              : l10n.subscriptionsExportedTo(path),
         ),
       ),
     );
@@ -255,6 +311,20 @@ class _SettingsPageState extends State<SettingsPage> {
               onChanged: (value) =>
                   settings.setSponsorBlockEnabled(value, state.prefs),
             ),
+            if (state.openFile != null)
+              ListTile(
+                leading: const Icon(Icons.upload_file_outlined),
+                title: Text(l10n.importSubscriptions),
+                subtitle: Text(l10n.importSubscriptionsHint),
+                onTap: _importSubscriptions,
+              ),
+            if (state.saveFile != null)
+              ListTile(
+                leading: const Icon(Icons.download_outlined),
+                title: Text(l10n.exportSubscriptions),
+                subtitle: Text(l10n.exportSubscriptionsHint),
+                onTap: _exportSubscriptions,
+              ),
             ListTile(
               leading: const Icon(Icons.title_outlined),
               title: Text(l10n.deArrow),

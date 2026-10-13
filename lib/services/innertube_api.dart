@@ -483,6 +483,17 @@ class InnertubeApi implements YouTubeApi {
   }
 
   @override
+  Future<String?> resolveChannel(String url) async {
+    final r = await _post('navigation/resolve_url', {'url': url});
+    final endpoint = r['endpoint'];
+    if (endpoint is! Map<String, dynamic>) return null;
+    final browse = endpoint['browseEndpoint'];
+    if (browse is! Map<String, dynamic>) return null;
+    final id = browse['browseId'];
+    return id is String && id.startsWith('UC') ? id : null;
+  }
+
+  @override
   Future<List<VideoInfo>> channelVideos(String channelId) async {
     final r = await _post('browse', {'browseId': channelId});
     final params = _videosTabParams(r);

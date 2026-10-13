@@ -99,6 +99,14 @@ void touchAll(AppLocalizations l) {
   l.comments;
   l.loadMoreComments;
   l.replyCount(3);
+  l.importSubscriptions;
+  l.importSubscriptionsHint;
+  l.exportSubscriptions;
+  l.exportSubscriptionsHint;
+  l.subscriptionsImported(2, 1);
+  l.subscriptionsImportFailed;
+  l.subscriptionsExportedTo('/tmp/x.opml');
+  l.subscriptionsExportFailed;
   l.corsNoticeTitle;
   l.corsNoticeBody;
   l.corsFirefox;

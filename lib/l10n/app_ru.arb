@@ -126,5 +126,30 @@
         "type": "int"
       }
     }
-  }
+  },
+  "importSubscriptions": "Импорт подписок",
+  "importSubscriptionsHint": "Из файла OPML (NewPipe, FreeTube, Takeout)",
+  "exportSubscriptions": "Экспорт подписок",
+  "exportSubscriptionsHint": "Сохранить подписки в файл OPML",
+  "subscriptionsImported": "Импортировано каналов: {imported}, ошибок: {failed}",
+  "@subscriptionsImported": {
+    "placeholders": {
+      "imported": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "subscriptionsImportFailed": "Не удалось прочитать файл OPML",
+  "subscriptionsExportedTo": "Подписки сохранены в {path}",
+  "@subscriptionsExportedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionsExportFailed": "Экспорт отменён или не удался"
 }
