@@ -53,6 +53,17 @@ class PlayerView extends StatelessWidget {
 
   void _togglePlayback() => player.playing ? player.pause() : player.play();
 
+  void _toggleMute() => player.setMuted(!player.muted);
+
+  void _adjustVolume(double delta) =>
+      player.setVolume((player.volume + delta).clamp(0.0, 1.0));
+
+  void _stepRate(int direction) {
+    var index = _rates.indexWhere((r) => r >= player.rate - 0.001);
+    if (index < 0) index = _rates.length - 1;
+    player.setRate(_rates[(index + direction).clamp(0, _rates.length - 1)]);
+  }
+
   void _skipBy(Duration delta) {
     var target = player.position + delta;
     final total = player.duration;
@@ -70,7 +81,20 @@ class PlayerView extends StatelessWidget {
             _skipBy(const Duration(seconds: -5)),
         const SingleActivator(LogicalKeyboardKey.arrowRight): () =>
             _skipBy(const Duration(seconds: 5)),
+        const SingleActivator(LogicalKeyboardKey.keyJ): () =>
+            _skipBy(const Duration(seconds: -10)),
+        const SingleActivator(LogicalKeyboardKey.keyL): () =>
+            _skipBy(const Duration(seconds: 10)),
         const SingleActivator(LogicalKeyboardKey.space): _togglePlayback,
+        const SingleActivator(LogicalKeyboardKey.keyK): _togglePlayback,
+        const SingleActivator(LogicalKeyboardKey.keyM): _toggleMute,
+        const SingleActivator(LogicalKeyboardKey.keyF): onToggleFullscreen,
+        const SingleActivator(LogicalKeyboardKey.arrowUp): () =>
+            _adjustVolume(0.05),
+        const SingleActivator(LogicalKeyboardKey.arrowDown): () =>
+            _adjustVolume(-0.05),
+        const SingleActivator(LogicalKeyboardKey.comma): () => _stepRate(-1),
+        const SingleActivator(LogicalKeyboardKey.period): () => _stepRate(1),
       },
       child: Focus(
         autofocus: true,
