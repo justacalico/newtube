@@ -236,12 +236,14 @@ class FakePlayerController implements PlayerController {
   Future<void> play() async {
     played = true;
     playing = true;
+    _playing.add(true);
   }
 
   @override
   Future<void> pause() async {
     paused = true;
     playing = false;
+    _playing.add(false);
   }
 
   @override
@@ -342,6 +344,7 @@ Future<AppState> testState({
   SharedPreferences? prefs,
   FakeYouTubeApi? api,
   FakePlayerController? player,
+  PlayerController Function()? createPlayer,
   FakeWindowActions? windowActions,
   FakeVersionChecker? versionChecker,
   SettingsStore? settings,
@@ -385,7 +388,7 @@ Future<AppState> testState({
           version: '1.2.3',
           buildNumber: '4',
         ),
-    createPlayer: () => player ?? FakePlayerController(),
+    createPlayer: createPlayer ?? () => player ?? FakePlayerController(),
     windowActions: windowActions,
     createMcpServer: createMcpServer,
     saveFile: saveFile,

@@ -5,6 +5,7 @@ import 'package:newtube/models/video_info.dart';
 import 'package:newtube/state/settings_store.dart';
 import 'package:newtube/ui/pages/watch_page.dart';
 import 'package:newtube/ui/shell/app_shell.dart';
+import 'package:newtube/ui/widgets/mini_player.dart';
 import 'package:newtube/ui/shell/side_nav.dart';
 import 'package:newtube/ui/shell/title_bar.dart';
 
@@ -238,11 +239,13 @@ void main() {
     await tester.pageBack();
     await tester.pumpAndSettle();
     expect(find.text('A video description'), findsNothing);
-    expect(find.text('First video'), findsOneWidget);
+    expect(find.text('First video'), findsWidgets);
     debugDefaultTargetPlatformOverride = null;
   });
 
-  testWidgets('switching tabs pops pushed pages', (tester) async {
+  testWidgets('switching tabs docks playback in the mini player', (
+    tester,
+  ) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.linux;
     final player = FakePlayerController();
     final state = await testState(
@@ -260,6 +263,13 @@ void main() {
     await tester.tap(find.text('First video'));
     await tester.pumpAndSettle();
     expect(find.text('A video description'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(MiniPlayer),
+        matching: find.text('First video'),
+      ),
+      findsNothing,
+    );
 
     await tester.tap(
       find.descendant(
@@ -272,7 +282,14 @@ void main() {
     expect(state.tabIndex, 6);
     expect(find.text('Theme'), findsOneWidget);
     expect(find.text('A video description'), findsNothing);
-    expect(player.disposed, isTrue);
+    expect(player.disposed, isFalse);
+    expect(
+      find.descendant(
+        of: find.byType(MiniPlayer),
+        matching: find.text('First video'),
+      ),
+      findsOneWidget,
+    );
     debugDefaultTargetPlatformOverride = null;
   });
 

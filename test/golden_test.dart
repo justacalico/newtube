@@ -148,6 +148,26 @@ void main() {
     );
   });
 
+  testWidgets('mini player in shell', (tester) async {
+    await golden(
+      tester,
+      'mini_player',
+      const AppShell(),
+      state: await testState(
+        api: FakeYouTubeApi(feed: testVideos, related: testVideos),
+        player: FakePlayerController(),
+        windowActions: FakeWindowActions(),
+      ),
+      interact: (tester) async {
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('First video'));
+        await tester.pumpAndSettle();
+        await tester.pageBack();
+        await tester.pumpAndSettle();
+      },
+    );
+  });
+
   testWidgets('channel page', (tester) async {
     final api = FakeYouTubeApi(uploads: testVideos);
     await golden(

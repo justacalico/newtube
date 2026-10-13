@@ -206,6 +206,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get nextVideo => 'Следующее видео';
 
   @override
+  String get play => 'Воспроизвести';
+
+  @override
+  String get pause => 'Пауза';
+
+  @override
+  String get close => 'Закрыть';
+
+  @override
   String get audio => 'Аудио';
 
   @override

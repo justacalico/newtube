@@ -205,6 +205,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nextVideo => 'Next video';
 
   @override
+  String get play => 'Play';
+
+  @override
+  String get pause => 'Pause';
+
+  @override
+  String get close => 'Close';
+
+  @override
   String get audio => 'Audio';
 
   @override
@@ -686,6 +695,15 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get nextVideo => 'Next video';
+
+  @override
+  String get play => 'Play';
+
+  @override
+  String get pause => 'Pause';
+
+  @override
+  String get close => 'Close';
 
   @override
   String get audio => 'Audio';

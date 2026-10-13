@@ -71,6 +71,9 @@ void touchAll(AppLocalizations l) {
   l.openVideo;
   l.replay;
   l.nextVideo;
+  l.play;
+  l.pause;
+  l.close;
   l.audio;
   l.fullscreen;
   l.quality;

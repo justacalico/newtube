@@ -207,6 +207,15 @@ class AppLocalizationsGa extends AppLocalizations {
   String get nextVideo => 'An chéad físeán eile';
 
   @override
+  String get play => 'Seinn';
+
+  @override
+  String get pause => 'Cuir ar sos';
+
+  @override
+  String get close => 'Dún';
+
+  @override
   String get audio => 'Fuaim';
 
   @override
