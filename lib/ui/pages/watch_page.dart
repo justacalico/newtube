@@ -10,6 +10,7 @@ import '../../utils/stream_picker.dart';
 import '../shell/title_bar.dart';
 import '../widgets/player_view.dart';
 import '../widgets/subscribe_button.dart';
+import '../widgets/thumbnail.dart';
 import '../widgets/video_list_tile.dart';
 import 'channel_page.dart';
 
@@ -30,6 +31,7 @@ class WatchPage extends StatefulWidget {
 class _WatchPageState extends State<WatchPage> {
   PlayerController? _player;
   VideoDetails? _details;
+  ChannelInfo? _channel;
   List<VideoInfo> _related = const [];
   PlayableStream? _currentStream;
   Object? _error;
@@ -53,6 +55,14 @@ class _WatchPageState extends State<WatchPage> {
       }
       final details = await state.api.videoDetails(widget.video.id);
       debugLog('[watch] ${widget.video.id}: ${details.streams.length} streams');
+      state.api
+          .channel(details.info.channelId)
+          .then((channel) {
+            if (mounted) setState(() => _channel = channel);
+          })
+          .catchError((e) {
+            debugLog('[watch] ${widget.video.id}: channel failed: $e');
+          });
       state.api
           .relatedVideos(widget.video.id)
           .then((related) {
@@ -181,35 +191,51 @@ class _WatchPageState extends State<WatchPage> {
                         Row(
                           children: [
                             Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  InkWell(
-                                    onTap: () => openChannelPage(
-                                      context,
-                                      _details!.info.channelId,
+                              child: InkWell(
+                                onTap: () => openChannelPage(
+                                  context,
+                                  _details!.info.channelId,
+                                ),
+                                child: Row(
+                                  children: [
+                                    VideoThumbnail(
+                                      url: _channel?.thumbnailUrl,
+                                      width: 40,
+                                      height: 40,
+                                      borderRadius: BorderRadius.circular(20),
                                     ),
-                                    child: Text(
-                                      _details!.info.author,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium,
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            _details!.info.author,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium,
+                                          ),
+                                          Text(
+                                            '${formatViewCount(_details!.info.viewCount)} ${l10n.views}',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall,
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    '${formatViewCount(_details!.info.viewCount)} ${l10n.views}',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall,
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                             SubscribeButton(
-                              channel: ChannelInfo(
-                                id: _details!.info.channelId,
-                                name: _details!.info.author,
-                              ),
+                              channel:
+                                  _channel ??
+                                  ChannelInfo(
+                                    id: _details!.info.channelId,
+                                    name: _details!.info.author,
+                                  ),
                             ),
                           ],
                         ),

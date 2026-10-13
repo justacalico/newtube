@@ -12,6 +12,12 @@ class _RelatedFailApi extends FakeYouTubeApi {
       throw StateError('nope');
 }
 
+class _ChannelFailApi extends FakeYouTubeApi {
+  @override
+  Future<ChannelInfo> channel(String channelId) async =>
+      throw StateError('nope');
+}
+
 void main() {
   testWidgets('plays video, shows details and related', (tester) async {
     final player = FakePlayerController();
@@ -39,6 +45,15 @@ void main() {
     expect(find.text('First video'), findsWidgets);
     expect(find.text('A video description'), findsOneWidget);
     expect(find.text('12.3K views'), findsOneWidget);
+    expect(
+      find.byWidgetPredicate(
+        (w) =>
+            w is Image &&
+            w.image is NetworkImage &&
+            (w.image as NetworkImage).url == testChannel.thumbnailUrl,
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Related videos'), findsOneWidget);
     expect(find.text('Second video'), findsOneWidget);
 
@@ -137,6 +152,19 @@ void main() {
     final state = await testState(api: FakeYouTubeApi());
     await pumpPage(tester, state, WatchPage(video: testVideos.first));
     await tester.pumpAndSettle();
+    await tester.tap(find.text('Subscribe'));
+    await tester.pump();
+    expect(state.subscriptions.isSubscribed('c1'), isTrue);
+  });
+
+  testWidgets('channel lookup failure still plays', (tester) async {
+    final player = FakePlayerController();
+    final state = await testState(api: _ChannelFailApi(), player: player);
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+    expect(player.opened, isNotEmpty);
+    expect(find.text('A video description'), findsOneWidget);
+
     await tester.tap(find.text('Subscribe'));
     await tester.pump();
     expect(state.subscriptions.isSubscribed('c1'), isTrue);
