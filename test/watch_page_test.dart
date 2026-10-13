@@ -69,6 +69,7 @@ void main() {
     expect(find.text('Related videos'), findsOneWidget);
     expect(find.text('Second video'), findsOneWidget);
 
+    await tester.ensureVisible(find.text('Second video'));
     await tester.tap(find.text('Second video'));
     await tester.pumpAndSettle();
   });
