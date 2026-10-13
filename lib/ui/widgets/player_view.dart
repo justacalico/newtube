@@ -42,26 +42,95 @@ class PlayerView extends StatelessWidget {
 
   static const _rates = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
 
-  List<PopupMenuEntry<PlayableStream>> _streamItems(
+  List<Widget> _streamItems(
     Iterable<PlayableStream> list,
     PlayableStream? selected,
     String Function(PlayableStream) label,
+    ValueChanged<PlayableStream> onSelected,
   ) => [
     for (final s in list)
-      PopupMenuItem(
-        value: s,
-        child: Row(
-          children: [
-            if (s == selected)
-              const Icon(Icons.check, size: 18)
-            else
-              const SizedBox(width: 18),
-            const SizedBox(width: 8),
-            Text(label(s)),
-          ],
-        ),
+      MenuItemButton(
+        onPressed: () => onSelected(s),
+        leadingIcon: s == selected
+            ? const Icon(Icons.check, size: 18)
+            : const SizedBox(width: 18),
+        child: Text(label(s)),
       ),
   ];
+
+  Widget _settingsMenu(AppLocalizations l10n, double rate) {
+    final timer = sleepTimer;
+    final audioStreams = streams.where((s) => !s.hasVideo);
+    return MenuAnchor(
+      builder: (context, controller, child) => IconButton(
+        icon: const Icon(Icons.settings, color: Colors.white),
+        tooltip: l10n.navSettings,
+        onPressed: () =>
+            controller.isOpen ? controller.close() : controller.open(),
+      ),
+      menuChildren: [
+        SubmenuButton(
+          leadingIcon: const Icon(Icons.video_settings),
+          menuChildren: _streamItems(
+            streams.where((s) => s.hasVideo),
+            current,
+            (s) => s.quality,
+            onQualitySelected,
+          ),
+          child: Text(l10n.quality),
+        ),
+        if (audioStreams.isNotEmpty)
+          SubmenuButton(
+            leadingIcon: const Icon(Icons.audiotrack),
+            menuChildren: _streamItems(
+              audioStreams,
+              currentAudio ?? (current?.hasVideo == false ? current : null),
+              (s) => s.audioTrackName ?? s.audioLanguage ?? s.quality,
+              onAudioSelected,
+            ),
+            child: Text(l10n.audio),
+          ),
+        SubmenuButton(
+          leadingIcon: const Icon(Icons.speed),
+          menuChildren: [
+            for (final r in _rates)
+              MenuItemButton(
+                onPressed: () => player.setRate(r),
+                leadingIcon: r == rate
+                    ? const Icon(Icons.check, size: 18)
+                    : const SizedBox(width: 18),
+                child: Text(r == 1.0 ? l10n.speedNormal : '${r}x'),
+              ),
+          ],
+          child: Text(l10n.playbackSpeed),
+        ),
+        if (timer != null)
+          SubmenuButton(
+            leadingIcon: Icon(
+              Icons.bedtime_outlined,
+              color: timer.active ? Colors.amber : null,
+            ),
+            menuChildren: [
+              for (final m in const [15, 30, 45, 60])
+                MenuItemButton(
+                  onPressed: () => timer.startAfter(Duration(minutes: m)),
+                  child: Text(l10n.sleepTimerMinutes(m)),
+                ),
+              MenuItemButton(
+                onPressed: timer.startAtEndOfVideo,
+                child: Text(l10n.sleepTimerEndOfVideo),
+              ),
+              if (timer.active)
+                MenuItemButton(
+                  onPressed: timer.cancel,
+                  child: Text(l10n.sleepTimerOff),
+                ),
+            ],
+            child: Text(l10n.sleepTimer),
+          ),
+      ],
+    );
+  }
 
   void _togglePlayback() => player.playing ? player.pause() : player.play();
 
@@ -314,113 +383,36 @@ class PlayerView extends StatelessWidget {
                       StreamBuilder<double>(
                         stream: player.rateStream,
                         initialData: player.rate,
-                        builder: (context, snapshot) => PopupMenuButton<double>(
-                          icon: const Icon(Icons.speed, color: Colors.white),
-                          tooltip: l10n.playbackSpeed,
-                          onSelected: player.setRate,
-                          itemBuilder: (context) => [
-                            for (final r in _rates)
-                              PopupMenuItem(
-                                value: r,
-                                child: Row(
-                                  children: [
-                                    if (r == snapshot.data)
-                                      const Icon(Icons.check, size: 18)
-                                    else
-                                      const SizedBox(width: 18),
-                                    const SizedBox(width: 8),
-                                    Text(r == 1.0 ? l10n.speedNormal : '${r}x'),
-                                  ],
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                      if (sleepTimer != null)
-                        ListenableBuilder(
-                          listenable: sleepTimer!,
-                          builder: (context, _) {
-                            final timer = sleepTimer!;
-                            final left = timer.remaining;
-                            return Row(
+                        builder: (context, snapshot) {
+                          final timer = sleepTimer;
+                          if (timer == null) {
+                            return _settingsMenu(
+                              l10n,
+                              snapshot.data ?? player.rate,
+                            );
+                          }
+                          return ListenableBuilder(
+                            listenable: timer,
+                            builder: (context, _) => Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                if (left != null)
+                                if (timer.remaining != null)
                                   Text(
-                                    formatDuration(left),
+                                    formatDuration(timer.remaining!),
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 12,
                                     ),
                                   ),
-                                PopupMenuButton<int>(
-                                  icon: Icon(
-                                    Icons.bedtime_outlined,
-                                    color: timer.active
-                                        ? Colors.amber
-                                        : Colors.white,
-                                  ),
-                                  tooltip: l10n.sleepTimer,
-                                  onSelected: (value) {
-                                    if (value == 0) {
-                                      timer.cancel();
-                                    } else if (value < 0) {
-                                      timer.startAtEndOfVideo();
-                                    } else {
-                                      timer.startAfter(
-                                        Duration(minutes: value),
-                                      );
-                                    }
-                                  },
-                                  itemBuilder: (context) => [
-                                    for (final m in const [15, 30, 45, 60])
-                                      PopupMenuItem(
-                                        value: m,
-                                        child: Text(l10n.sleepTimerMinutes(m)),
-                                      ),
-                                    PopupMenuItem(
-                                      value: -1,
-                                      child: Text(l10n.sleepTimerEndOfVideo),
-                                    ),
-                                    if (timer.active)
-                                      PopupMenuItem(
-                                        value: 0,
-                                        child: Text(l10n.sleepTimerOff),
-                                      ),
-                                  ],
+                                _settingsMenu(
+                                  l10n,
+                                  snapshot.data ?? player.rate,
                                 ),
                               ],
-                            );
-                          },
-                        ),
-                      PopupMenuButton<PlayableStream>(
-                        icon: const Icon(Icons.settings, color: Colors.white),
-                        tooltip: l10n.quality,
-                        onSelected: onQualitySelected,
-                        itemBuilder: (context) => _streamItems(
-                          streams.where((s) => s.hasVideo),
-                          current,
-                          (s) => s.quality,
-                        ),
+                            ),
+                          );
+                        },
                       ),
-                      if (streams.any((s) => !s.hasVideo))
-                        PopupMenuButton<PlayableStream>(
-                          icon: const Icon(
-                            Icons.audiotrack,
-                            color: Colors.white,
-                          ),
-                          tooltip: l10n.audio,
-                          onSelected: onAudioSelected,
-                          itemBuilder: (context) => _streamItems(
-                            streams.where((s) => !s.hasVideo),
-                            currentAudio ??
-                                (current?.hasVideo == false ? current : null),
-                            (s) =>
-                                s.audioTrackName ??
-                                s.audioLanguage ??
-                                s.quality,
-                          ),
-                        ),
                       IconButton(
                         icon: Icon(
                           isFullscreen

@@ -10,6 +10,13 @@ import 'package:newtube/ui/widgets/player_view.dart';
 
 import 'fakes.dart';
 
+Future<void> _openSettings(WidgetTester tester, String entry) async {
+  await tester.tap(find.byTooltip('Settings'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text(entry));
+  await tester.pumpAndSettle();
+}
+
 Widget _wrap(AppState state, Widget child) => AppScope(
   state: state,
   child: MaterialApp(
@@ -160,8 +167,7 @@ void main() {
       ),
     );
 
-    await tester.tap(find.byTooltip('Quality'));
-    await tester.pumpAndSettle();
+    await _openSettings(tester, 'Quality');
     expect(find.text('720p'), findsOneWidget);
     expect(find.text('360p'), findsOneWidget);
     expect(find.text('audio 128kbps'), findsNothing);
@@ -207,8 +213,7 @@ void main() {
       ),
     );
 
-    await tester.tap(find.byTooltip('Audio'));
-    await tester.pumpAndSettle();
+    await _openSettings(tester, 'Audio');
     expect(find.text('audio 128kbps'), findsOneWidget);
     expect(find.text('English original'), findsOneWidget);
     expect(find.text('es'), findsOneWidget);
@@ -318,8 +323,7 @@ void main() {
       ),
     );
 
-    await tester.tap(find.byTooltip('Playback speed'));
-    await tester.pumpAndSettle();
+    await _openSettings(tester, 'Playback speed');
     expect(find.text('Normal'), findsOneWidget);
     expect(find.text('1.5x'), findsOneWidget);
 
@@ -327,8 +331,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(player.rate, 1.5);
 
-    await tester.tap(find.byTooltip('Playback speed'));
-    await tester.pumpAndSettle();
+    await _openSettings(tester, 'Playback speed');
     expect(find.text('Normal'), findsOneWidget);
   });
 
@@ -491,8 +494,7 @@ void main() {
       ),
     );
 
-    await tester.tap(find.byTooltip('Sleep timer'));
-    await tester.pumpAndSettle();
+    await _openSettings(tester, 'Sleep timer');
     expect(find.text('15 minutes'), findsOneWidget);
     expect(find.text('End of video'), findsOneWidget);
     expect(find.text('Off'), findsNothing);
@@ -505,15 +507,13 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
     expect(find.text('14:59'), findsOneWidget);
 
-    await tester.tap(find.byTooltip('Sleep timer'));
-    await tester.pumpAndSettle();
+    await _openSettings(tester, 'Sleep timer');
     await tester.tap(find.text('End of video'));
     await tester.pumpAndSettle();
     expect(sleepTimer.endOfVideo, isTrue);
     expect(find.text('15:00'), findsNothing);
 
-    await tester.tap(find.byTooltip('Sleep timer'));
-    await tester.pumpAndSettle();
+    await _openSettings(tester, 'Sleep timer');
     await tester.tap(find.text('Off'));
     await tester.pumpAndSettle();
     expect(sleepTimer.active, isFalse);
