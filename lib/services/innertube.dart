@@ -2,23 +2,45 @@ import '../models/video_info.dart';
 
 const innertubeKey = 'AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8';
 
-Map<String, dynamic> innertubeContext({String client = 'WEB'}) => {
-  'client': switch (client) {
-    'ANDROID' => {
-      'clientName': 'ANDROID',
-      'clientVersion': '20.10.38',
-      'androidSdkVersion': 34,
-      'osName': 'Android',
-      'osVersion': '14',
-      'hl': 'en',
-      'gl': 'US',
+Map<String, dynamic> innertubeContext({
+  String client = 'WEB',
+  String? visitorData,
+}) => {
+  'client': {
+    ...switch (client) {
+      'ANDROID' => {
+        'clientName': 'ANDROID',
+        'clientVersion': '20.10.38',
+        'androidSdkVersion': 34,
+        'osName': 'Android',
+        'osVersion': '14',
+        'hl': 'en',
+        'gl': 'US',
+      },
+      'VISIONOS' => {
+        'clientName': 'VISIONOS',
+        'clientVersion': '1.02',
+        'deviceMake': 'Apple',
+        'deviceModel': 'RealityDevice17,1',
+        'userAgent':
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 15_7_3) '
+            'AppleWebKit/605.1.15 (KHTML, like Gecko) '
+            'Version/26.0 Safari/605.1.15',
+        'osName': 'visionOS',
+        'osVersion': '26.5.23O471',
+        'hl': 'en',
+        'gl': 'US',
+        'timeZone': 'UTC',
+        'utcOffsetMinutes': 0,
+      },
+      _ => {
+        'clientName': 'WEB',
+        'clientVersion': '2.20250814.01.00',
+        'hl': 'en',
+        'gl': 'US',
+      },
     },
-    _ => {
-      'clientName': 'WEB',
-      'clientVersion': '2.20250814.01.00',
-      'hl': 'en',
-      'gl': 'US',
-    },
+    'visitorData': ?visitorData,
   },
 };
 

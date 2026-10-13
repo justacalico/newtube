@@ -15,6 +15,14 @@ Future<bool> streamPlayable(http.Client client, String url) async {
   }
 }
 
+List<PlayableStream> dedupeStreams(List<PlayableStream> streams) {
+  final seen = <String>{};
+  return [
+    for (final s in streams)
+      if (seen.add(s.quality)) s,
+  ];
+}
+
 Future<List<PlayableStream>> playableStreams(
   List<PlayableStream> streams,
   http.Client client,

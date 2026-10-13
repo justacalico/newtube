@@ -223,7 +223,7 @@ void main() {
               {
                 'url': 'https://v/vid',
                 'mimeType': 'video/mp4',
-                'audioTrack': {},
+                'audioQuality': 'x',
                 'qualityLabel': '1080p',
               },
               {'signatureCipher': 'x', 'qualityLabel': '720p'},
@@ -245,6 +245,259 @@ void main() {
       expect(d.streams[0].hasAudio, isTrue);
       expect(d.streams[1].hasVideo, isFalse);
       expect(d.streams[2].hasAudio, isTrue);
+    });
+
+    test('videoDetails retries gated adaptive streams via VISIONOS', () async {
+      final clients = <String>[];
+      Map<String, dynamic>? visionosClient;
+      final api = InnertubeApi(
+        httpClient: MockClient((request) async {
+          if (request.method != 'POST') {
+            final url = request.url.toString();
+            if (url.contains('sw.js_data')) {
+              final row = List<dynamic>.filled(14, null)..[13] = 'VD';
+              return http.Response(
+                ")]}'${jsonEncode([
+                  [
+                    null,
+                    null,
+                    [
+                      [row],
+                    ],
+                  ],
+                ])}",
+                200,
+              );
+            }
+            return http.Response.bytes(
+              const [],
+              url.contains('gated') ? 403 : 206,
+            );
+          }
+          final body = jsonDecode(request.body) as Map<String, dynamic>;
+          final client = body['context']['client'] as Map<String, dynamic>;
+          clients.add(client['clientName'] as String);
+          if (client['clientName'] == 'VISIONOS') visionosClient = client;
+          return http.Response.bytes(
+            utf8.encode(
+              jsonEncode({
+                'videoDetails': {'title': 'Vid'},
+                'streamingData': {
+                  'formats': [
+                    {
+                      'url': 'https://v/mux',
+                      'mimeType': 'video/mp4',
+                      'audioQuality': 'x',
+                      'qualityLabel': '360p',
+                    },
+                  ],
+                  'adaptiveFormats': [
+                    if (client['clientName'] == 'ANDROID') ...[
+                      {
+                        'url': 'https://v/gated',
+                        'mimeType': 'video/mp4',
+                        'qualityLabel': '1080p',
+                      },
+                      {
+                        'url': 'https://v/gated-a',
+                        'mimeType': 'audio/mp4',
+                        'bitrate': 128000,
+                      },
+                    ] else ...[
+                      {
+                        'url': 'https://v/hd',
+                        'mimeType': 'video/mp4',
+                        'qualityLabel': '1080p',
+                      },
+                      {
+                        'url': 'https://v/hd-webm',
+                        'mimeType': 'video/webm',
+                        'qualityLabel': '1080p',
+                      },
+                      {
+                        'url': 'https://v/hd-a',
+                        'mimeType': 'audio/webm',
+                        'bitrate': 128000,
+                      },
+                      {
+                        'url': 'https://v/dub',
+                        'mimeType': 'audio/webm',
+                        'bitrate': 99000,
+                        'audioTrack': {'audioIsDefault': false},
+                      },
+                    ],
+                  ],
+                },
+              }),
+            ),
+            200,
+          );
+        }),
+      );
+      final d = await api.videoDetails('v');
+      expect(clients, ['ANDROID', 'VISIONOS']);
+      expect(visionosClient!['visitorData'], 'VD');
+      expect(d.streams.map((s) => s.quality), [
+        '360p',
+        '1080p',
+        'audio 128kbps',
+      ]);
+    });
+
+    test(
+      'videoDetails keeps android streams when visitor data fails',
+      () async {
+        var posts = 0;
+        final api = InnertubeApi(
+          httpClient: MockClient((request) async {
+            if (request.method != 'POST') {
+              if (request.url.toString().contains('sw.js_data')) {
+                return http.Response('nope', 500);
+              }
+              return http.Response.bytes(
+                const [],
+                request.url.toString().contains('gated') ? 403 : 206,
+              );
+            }
+            posts++;
+            return http.Response.bytes(
+              utf8.encode(
+                jsonEncode({
+                  'videoDetails': {'title': 'Vid'},
+                  'streamingData': {
+                    'adaptiveFormats': [
+                      {
+                        'url': 'https://v/gated',
+                        'mimeType': 'video/mp4',
+                        'qualityLabel': '1080p',
+                      },
+                    ],
+                    'formats': [
+                      {
+                        'url': 'https://v/mux',
+                        'mimeType': 'video/mp4',
+                        'audioQuality': 'x',
+                        'qualityLabel': '360p',
+                      },
+                    ],
+                  },
+                }),
+              ),
+              200,
+            );
+          }),
+        );
+        final d = await api.videoDetails('v');
+        expect(posts, 1);
+        expect(d.streams.map((s) => s.quality), ['360p']);
+      },
+    );
+
+    test(
+      'videoDetails keeps android streams when visitor data is malformed',
+      () async {
+        final api = InnertubeApi(
+          httpClient: MockClient((request) async {
+            if (request.method != 'POST') {
+              if (request.url.toString().contains('sw.js_data')) {
+                return http.Response('not json', 200);
+              }
+              return http.Response.bytes(
+                const [],
+                request.url.toString().contains('gated') ? 403 : 206,
+              );
+            }
+            return http.Response.bytes(
+              utf8.encode(
+                jsonEncode({
+                  'videoDetails': {'title': 'Vid'},
+                  'streamingData': {
+                    'adaptiveFormats': [
+                      {
+                        'url': 'https://v/gated',
+                        'mimeType': 'video/mp4',
+                        'qualityLabel': '1080p',
+                      },
+                    ],
+                    'formats': [
+                      {
+                        'url': 'https://v/mux',
+                        'mimeType': 'video/mp4',
+                        'audioQuality': 'x',
+                        'qualityLabel': '360p',
+                      },
+                    ],
+                  },
+                }),
+              ),
+              200,
+            );
+          }),
+        );
+        final d = await api.videoDetails('v');
+        expect(d.streams.map((s) => s.quality), ['360p']);
+      },
+    );
+
+    test('videoDetails keeps android streams when VISIONOS fails', () async {
+      final api = InnertubeApi(
+        httpClient: MockClient((request) async {
+          if (request.method != 'POST') {
+            final url = request.url.toString();
+            if (url.contains('sw.js_data')) {
+              final row = List<dynamic>.filled(14, null)..[13] = 'VD';
+              return http.Response(
+                ")]}'${jsonEncode([
+                  [
+                    null,
+                    null,
+                    [
+                      [row],
+                    ],
+                  ],
+                ])}",
+                200,
+              );
+            }
+            return http.Response.bytes(
+              const [],
+              url.contains('gated') ? 403 : 206,
+            );
+          }
+          final body = jsonDecode(request.body) as Map<String, dynamic>;
+          final client = body['context']['client'] as Map<String, dynamic>;
+          if (client['clientName'] == 'VISIONOS') {
+            return http.Response('no', 400);
+          }
+          return http.Response.bytes(
+            utf8.encode(
+              jsonEncode({
+                'videoDetails': {'title': 'Vid'},
+                'streamingData': {
+                  'adaptiveFormats': [
+                    {
+                      'url': 'https://v/gated',
+                      'mimeType': 'video/mp4',
+                      'qualityLabel': '1080p',
+                    },
+                  ],
+                  'formats': [
+                    {
+                      'url': 'https://v/mux',
+                      'mimeType': 'video/mp4',
+                      'audioQuality': 'x',
+                      'qualityLabel': '360p',
+                    },
+                  ],
+                },
+              }),
+            ),
+            200,
+          );
+        }),
+      );
+      final d = await api.videoDetails('v');
+      expect(d.streams.map((s) => s.quality), ['360p']);
     });
 
     test('videoDetails throws without details', () async {
@@ -512,6 +765,16 @@ void main() {
       expect(
         innertubeContext(client: 'ANDROID')['client']['clientName'],
         'ANDROID',
+      );
+      final visionos = innertubeContext(
+        client: 'VISIONOS',
+        visitorData: 'VD',
+      )['client'];
+      expect(visionos['clientName'], 'VISIONOS');
+      expect(visionos['visitorData'], 'VD');
+      expect(
+        innertubeContext(client: 'WEB')['client'].containsKey('visitorData'),
+        isFalse,
       );
     });
 

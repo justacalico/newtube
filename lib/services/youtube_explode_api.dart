@@ -5,8 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:youtube_explode_dart/youtube_explode_dart.dart' as yt;
 
 import '../models/video_info.dart';
-import '../utils/debug_log.dart';
-import '../utils/stream_probe.dart';
 import 'innertube_api.dart';
 import 'proxy_client.dart';
 import 'youtube_api.dart';
@@ -218,32 +216,7 @@ class YouTubeExplodeApi implements YouTubeApi {
   @override
   Future<VideoDetails> videoDetails(String videoId) async {
     final video = await _yt.videos.get(yt.VideoId(videoId));
-    final manifest = await _yt.videos.streams.getManifest(videoId);
-    final streams = await playableStreams(<PlayableStream>[
-      for (final s in manifest.videoOnly)
-        PlayableStream(
-          url: s.url.toString(),
-          quality: s.qualityLabel,
-          hasAudio: false,
-        ),
-      for (final s in manifest.muxed)
-        PlayableStream(
-          url: _proxied(s.url.toString()),
-          quality: s.qualityLabel,
-        ),
-      for (final s in manifest.audioOnly)
-        PlayableStream(
-          url: _proxied(s.url.toString()),
-          quality: 'audio ${s.bitrate.bitsPerSecond ~/ 1000}kbps',
-          hasVideo: false,
-        ),
-      for (final s in manifest.hls)
-        PlayableStream(
-          url: _proxied(s.url.toString()),
-          quality: s.qualityLabel,
-        ),
-    ], _http);
-    debugLog('[api] $videoId: ${streams.length} playable streams');
+    final details = await _innertube.videoDetails(videoId);
     return VideoDetails(
       info: VideoInfo(
         id: video.id.value,
@@ -256,7 +229,7 @@ class YouTubeExplodeApi implements YouTubeApi {
         uploaded: video.uploadDateRaw,
       ),
       description: video.description,
-      streams: streams,
+      streams: details.streams,
     );
   }
 
