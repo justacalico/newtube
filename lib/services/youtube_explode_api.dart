@@ -100,7 +100,7 @@ class YouTubeExplodeApi implements YouTubeApi {
       author: _runs(r['ownerText']) ?? _runs(r['shortBylineText']) ?? '',
       channelId:
           _browseId(r['ownerText']) ?? _browseId(r['shortBylineText']) ?? '',
-      thumbnailUrl: _thumbnail(r['thumbnail']),
+      thumbnailUrl: yt.ThumbnailSet(id).highResUrl,
       duration: _duration(r['lengthText']),
       viewCount: _viewCount(r['viewCountText']),
       uploaded: _runs(r['publishedTimeText']),
@@ -134,16 +134,6 @@ class YouTubeExplodeApi implements YouTubeApi {
     if (browse is! Map<String, dynamic>) return null;
     final id = browse['browseId'];
     return id is String ? id : null;
-  }
-
-  static String? _thumbnail(dynamic node) {
-    if (node is! Map<String, dynamic>) return null;
-    final thumbs = node['thumbnails'];
-    if (thumbs is! List || thumbs.isEmpty) return null;
-    final last = thumbs.last;
-    if (last is! Map<String, dynamic>) return null;
-    final url = last['url'];
-    return url is String ? url : null;
   }
 
   static Duration? _duration(dynamic node) {
@@ -204,9 +194,7 @@ class YouTubeExplodeApi implements YouTubeApi {
             title: r.title,
             author: r.author,
             channelId: r.channelId,
-            thumbnailUrl: r.thumbnails.isEmpty
-                ? null
-                : r.thumbnails.last.url.toString(),
+            thumbnailUrl: yt.ThumbnailSet(r.id.value).highResUrl,
             duration: _parseDurationText(r.duration),
             viewCount: r.viewCount,
             uploaded: r.uploadDate,
