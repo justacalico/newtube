@@ -73,7 +73,7 @@
   "mcpServerHint": "Разрешить ИИ-инструментам искать и воспроизводить видео",
   "mcpServerFailed": "Не удалось запустить MCP-сервер",
   "mcpExport": "Экспорт файла сервера",
-  "mcpExportHint": "Сохранить .mcsp-файл для импорта клиентами",
+  "mcpExportHint": "Сохранить .mcpb-файл для импорта клиентами",
   "mcpExportedTo": "Сохранено в {path}",
   "@mcpExportedTo": {
     "placeholders": {

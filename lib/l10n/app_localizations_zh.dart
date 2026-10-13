@@ -230,7 +230,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get mcpExport => '导出服务器文件';
 
   @override
-  String get mcpExportHint => '保存客户端可导入的 .mcsp 文件';
+  String get mcpExportHint => '保存客户端可导入的 .mcpb 文件';
 
   @override
   String mcpExportedTo(String path) {
@@ -466,7 +466,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get mcpExport => '导出服务器文件';
 
   @override
-  String get mcpExportHint => '保存客户端可导入的 .mcsp 文件';
+  String get mcpExportHint => '保存客户端可导入的 .mcpb 文件';
 
   @override
   String mcpExportedTo(String path) {

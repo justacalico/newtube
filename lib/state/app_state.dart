@@ -28,7 +28,7 @@ class AppState extends ChangeNotifier {
   final Future<PackageInfo> Function() packageInfo;
   final PlayerController Function() createPlayer;
   final McpServerFactory? createMcpServer;
-  final SaveTextFile? saveTextFile;
+  final SaveFile? saveFile;
   final bool isWeb;
 
   int _tabIndex = 0;
@@ -51,7 +51,7 @@ class AppState extends ChangeNotifier {
     required this.createPlayer,
     this.windowActions,
     this.createMcpServer,
-    this.saveTextFile,
+    this.saveFile,
     this._versionChecker,
     this.isWeb = false,
   }) {

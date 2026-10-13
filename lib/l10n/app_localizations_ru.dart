@@ -236,7 +236,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get mcpExport => 'Экспорт файла сервера';
 
   @override
-  String get mcpExportHint => 'Сохранить .mcsp-файл для импорта клиентами';
+  String get mcpExportHint => 'Сохранить .mcpb-файл для импорта клиентами';
 
   @override
   String mcpExportedTo(String path) {

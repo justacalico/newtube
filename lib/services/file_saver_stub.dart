@@ -1,2 +1,4 @@
 // coverage:ignore-file
-Future<String?> saveFileDialog(String name, String contents) async => null;
+import 'dart:typed_data';
+
+Future<String?> saveFileDialog(String name, Uint8List bytes) async => null;

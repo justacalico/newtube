@@ -545,7 +545,7 @@ abstract class AppLocalizations {
   /// No description provided for @mcpExportHint.
   ///
   /// In en_GB, this message translates to:
-  /// **'Save a .mcsp file clients can import'**
+  /// **'Save a .mcpb file clients can import'**
   String get mcpExportHint;
 
   /// No description provided for @mcpExportedTo.

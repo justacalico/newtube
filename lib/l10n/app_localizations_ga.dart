@@ -238,7 +238,7 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get mcpExportHint =>
-      'Sábháil comhad .mcsp ar féidir le cliaint é a iompórtáil';
+      'Sábháil comhad .mcpb ar féidir le cliaint é a iompórtáil';
 
   @override
   String mcpExportedTo(String path) {

@@ -56,7 +56,7 @@ Future<AppState> createAppState(SharedPreferences prefs) async {
     createPlayer: createPlayerController,
     windowActions: isDesktopPlatform ? WindowManagerActions() : null,
     createMcpServer: isDesktopPlatform ? createMcpServer : null,
-    saveTextFile: isDesktopPlatform ? saveFileDialog : null,
+    saveFile: isDesktopPlatform ? saveFileDialog : null,
   );
 }
 

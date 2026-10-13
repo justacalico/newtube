@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:archive/archive.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -270,13 +271,13 @@ void main() {
 
   testWidgets('exports the server file', (tester) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.linux;
-    final saved = <String>[];
+    final saved = <Object>[];
     final state = await testState(
       settings: SettingsStore(mcpEnabled: true),
       createMcpServer: ({required api, required version, onPlayVideo}) =>
           FakeMcpServer()..running = true,
-      saveTextFile: (name, contents) async {
-        saved.addAll([name, contents]);
+      saveFile: (name, bytes) async {
+        saved.addAll([name, bytes]);
         return '/home/u/Downloads/$name';
       },
     );
@@ -286,18 +287,26 @@ void main() {
     await tester.tap(find.text('Export server file'));
     await tester.pumpAndSettle();
 
-    expect(saved.first, 'newtube.mcsp');
-    final doc = jsonDecode(saved[1]) as Map<String, Object?>;
-    expect(doc['format'], 'mcsp');
-    expect(doc['server'], {
-      'name': 'newtube',
-      'version': '1.2.3',
-      'transport': 'streamable-http',
-      'url': 'http://127.0.0.1:8642/mcp',
+    expect(saved.first, 'newtube.mcpb');
+    final bundle = ZipDecoder().decodeBytes(saved[1] as Uint8List);
+    final manifest = jsonDecode(
+      utf8.decode(bundle.findFile('manifest.json')!.readBytes()!),
+    ) as Map<String, Object?>;
+    expect(manifest['name'], 'newtube');
+    expect(manifest['version'], '1.2.3');
+    expect(manifest['server'], {
+      'type': 'node',
+      'entry_point': 'server/bridge.js',
+      'mcp_config': {
+        'command': 'node',
+        'args': [
+          r'${__dirname}/server/bridge.js',
+          'http://127.0.0.1:8642/mcp',
+        ],
+      },
     });
-    expect((doc['tools'] as List).length, 7);
     expect(
-      find.text('Saved to /home/u/Downloads/newtube.mcsp'),
+      find.text('Saved to /home/u/Downloads/newtube.mcpb'),
       findsOneWidget,
     );
     debugDefaultTargetPlatformOverride = null;
@@ -307,7 +316,7 @@ void main() {
     debugDefaultTargetPlatformOverride = TargetPlatform.linux;
     final state = await testState(
       settings: SettingsStore(mcpEnabled: true),
-      saveTextFile: (name, contents) async => null,
+      saveFile: (name, bytes) async => null,
     );
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
