@@ -12,6 +12,7 @@ import 'services/mcp_server.dart';
 import 'services/dearrow.dart';
 import 'services/dearrow_api.dart';
 import 'services/file_opener.dart';
+import 'services/media_controls.dart';
 import 'services/pip_actions.dart';
 import 'services/player_controller.dart';
 import 'services/notifier.dart';
@@ -75,6 +76,8 @@ Future<AppState> createAppState(SharedPreferences prefs) async {
     sponsorBlock: SponsorBlockClient(),
     // coverage:ignore-line
     pipActions: kIsWeb ? null : createPipActions(),
+    // coverage:ignore-line
+    mediaControls: kIsWeb ? null : createMediaControls(),
     uploads: switch (createNotifier()) {
       // coverage:ignore-line
       null => null,

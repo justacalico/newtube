@@ -28,6 +28,7 @@ dependencies:
   xml: ^6.6.1
   local_notifier: ^0.1.6
   flutter_local_notifications: ^22.3.2
+  audio_service: ^0.18.19
 
 dev_dependencies:
   flutter_test:

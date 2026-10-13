@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
+import '../../services/media_controls.dart';
 import '../../services/pip_actions.dart';
 import '../../services/player_controller.dart';
 import '../../services/sleep_timer.dart';
@@ -64,6 +65,7 @@ class _WatchPageState extends State<WatchPage> {
   int _switches = 0;
   StreamSubscription<bool>? _completedSub;
   PipActions? _pipActions;
+  MediaControls? _mediaControls;
 
   @override
   void initState() {
@@ -74,7 +76,9 @@ class _WatchPageState extends State<WatchPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _pipActions = AppScope.read(context).pipActions;
+    final state = AppScope.read(context);
+    _pipActions = state.pipActions;
+    _mediaControls = state.mediaControls;
   }
 
   Future<void> _load() async {
@@ -132,9 +136,14 @@ class _WatchPageState extends State<WatchPage> {
           '[watch] ${widget.video.id}: opening ${choice.stream.quality}'
           '${choice.audioUrl == null ? '' : ' + separate audio'}',
         );
-        await player.open(choice.stream.url, audioUrl: choice.audioUrl);
-        if (!state.settings.autoplay) {
-          await player.pause();
+        try {
+          await player.open(choice.stream.url, audioUrl: choice.audioUrl);
+          if (!state.settings.autoplay) {
+            await player.pause();
+          }
+        } catch (e) {
+          await player.dispose();
+          rethrow;
         }
       } else {
         debugLog('[watch] ${widget.video.id}: no playable streams');
@@ -151,6 +160,16 @@ class _WatchPageState extends State<WatchPage> {
         _currentStream = current;
         _currentAudio = currentAudio;
       });
+      _mediaControls
+          ?.attach(
+            player,
+            title: details.info.title,
+            artist: details.info.author,
+            artworkUri: details.info.thumbnailUrl,
+          )
+          .catchError((Object e) {
+            debugLog('[watch] ${widget.video.id}: media controls failed: $e');
+          });
       _loadSegments(player);
       _completedSub = player.completedStream.listen((done) {
         if (done) _advancePlaylist();
@@ -324,7 +343,11 @@ class _WatchPageState extends State<WatchPage> {
     _completedSub?.cancel();
     _skipper?.dispose();
     _sleepTimer?.dispose();
-    _player?.dispose();
+    final player = _player;
+    if (player != null) {
+      player.dispose();
+      _mediaControls?.detach(player);
+    }
     _pipActions?.exitPip();
     super.dispose();
   }
