@@ -488,6 +488,18 @@ abstract class AppLocalizations {
   /// **'Quality'**
   String get quality;
 
+  /// No description provided for @playbackSpeed.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Playback speed'**
+  String get playbackSpeed;
+
+  /// No description provided for @speedNormal.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Normal'**
+  String get speedNormal;
+
   /// No description provided for @searchResultsFor.
   ///
   /// In en_GB, this message translates to:

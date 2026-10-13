@@ -13,10 +13,13 @@ void main() {
     expect(await player.durationStream.isEmpty, isTrue);
     expect(await player.playingStream.isEmpty, isTrue);
     expect(await player.bufferingStream.isEmpty, isTrue);
+    expect(player.rate, 1.0);
+    expect(await player.rateStream.isEmpty, isTrue);
     await player.open('https://x', audioUrl: 'a');
     await player.play();
     await player.pause();
     await player.seek(const Duration(seconds: 1));
+    await player.setRate(1.5);
     await player.dispose();
   });
 

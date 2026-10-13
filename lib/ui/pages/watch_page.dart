@@ -162,9 +162,11 @@ class _WatchPageState extends State<WatchPage> {
     final generation = ++_switches;
     final position = player.position;
     final wasPlaying = player.playing;
+    final rate = player.rate;
     try {
       await player.open(url, audioUrl: audioUrl);
       if (!mounted || generation != _switches) return;
+      if (player.rate != rate) await player.setRate(rate);
       if (!wasPlaying) await player.pause();
       await player.seek(position);
     } catch (e) {

@@ -206,6 +206,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get quality => 'Качество';
 
   @override
+  String get playbackSpeed => 'Скорость воспроизведения';
+
+  @override
+  String get speedNormal => 'Обычная';
+
+  @override
   String get searchResultsFor => 'Результаты';
 
   @override

@@ -71,6 +71,8 @@ void touchAll(AppLocalizations l) {
   l.audio;
   l.fullscreen;
   l.quality;
+  l.playbackSpeed;
+  l.speedNormal;
   l.corsNoticeTitle;
   l.corsNoticeBody;
   l.corsFirefox;

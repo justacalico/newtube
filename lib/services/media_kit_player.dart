@@ -24,6 +24,8 @@ class MediaKitPlayerController implements PlayerController {
   bool get playing => _player.state.playing;
   @override
   bool get buffering => _player.state.buffering;
+  @override
+  double get rate => _player.state.rate;
 
   @override
   Stream<Duration> get positionStream => _player.stream.position;
@@ -33,6 +35,8 @@ class MediaKitPlayerController implements PlayerController {
   Stream<bool> get playingStream => _player.stream.playing;
   @override
   Stream<bool> get bufferingStream => _player.stream.buffering;
+  @override
+  Stream<double> get rateStream => _player.stream.rate;
 
   @override
   Future<void> open(String url, {String? audioUrl}) async {
@@ -65,6 +69,9 @@ class MediaKitPlayerController implements PlayerController {
     debugLog('[player] seek ${position.inSeconds}s');
     return _player.seek(position);
   }
+
+  @override
+  Future<void> setRate(double rate) => _player.setRate(rate);
 
   @override
   Widget buildView(BuildContext context) =>

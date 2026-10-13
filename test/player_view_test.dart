@@ -299,4 +299,35 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.space);
     expect(player.paused, isTrue);
   });
+
+  testWidgets('speed menu sets the playback rate', (tester) async {
+    final player = FakePlayerController();
+    final state = await testState();
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
+          onToggleFullscreen: () {},
+        ),
+      ),
+    );
+
+    await tester.tap(find.byTooltip('Playback speed'));
+    await tester.pumpAndSettle();
+    expect(find.text('Normal'), findsOneWidget);
+    expect(find.text('1.5x'), findsOneWidget);
+
+    await tester.tap(find.text('1.5x'));
+    await tester.pumpAndSettle();
+    expect(player.rate, 1.5);
+
+    await tester.tap(find.byTooltip('Playback speed'));
+    await tester.pumpAndSettle();
+    expect(find.text('Normal'), findsOneWidget);
+  });
 }

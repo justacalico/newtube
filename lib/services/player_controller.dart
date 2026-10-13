@@ -10,16 +10,19 @@ abstract class PlayerController {
   Duration get duration;
   bool get playing;
   bool get buffering;
+  double get rate;
 
   Stream<Duration> get positionStream;
   Stream<Duration> get durationStream;
   Stream<bool> get playingStream;
   Stream<bool> get bufferingStream;
+  Stream<double> get rateStream;
 
   Future<void> open(String url, {String? audioUrl});
   Future<void> play();
   Future<void> pause();
   Future<void> seek(Duration position);
+  Future<void> setRate(double rate);
   Widget buildView(BuildContext context);
   Future<void> dispose();
 }
