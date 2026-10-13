@@ -11,6 +11,7 @@ import '../../utils/debug_log.dart';
 import '../../utils/format.dart';
 import '../../utils/stream_picker.dart';
 import '../shell/title_bar.dart';
+import '../widgets/comment_tile.dart';
 import '../widgets/player_view.dart';
 import '../widgets/subscribe_button.dart';
 import '../widgets/thumbnail.dart';
@@ -41,6 +42,9 @@ class _WatchPageState extends State<WatchPage> {
   PlayableStream? _currentStream;
   PlayableStream? _currentAudio;
   List<VideoChapter> _chapters = const [];
+  List<CommentInfo> _comments = const [];
+  String? _commentsToken;
+  bool _loadingMoreComments = false;
   Object? _error;
   bool _fullscreen = false;
   bool _recorded = false;
@@ -78,6 +82,18 @@ class _WatchPageState extends State<WatchPage> {
           })
           .catchError((e) {
             debugLog('[watch] ${widget.video.id}: related videos failed: $e');
+          });
+      state.api
+          .comments(widget.video.id)
+          .then((result) {
+            if (!mounted) return;
+            setState(() {
+              _comments = result.comments;
+              _commentsToken = result.continuation;
+            });
+          })
+          .catchError((e) {
+            debugLog('[watch] ${widget.video.id}: comments failed: $e');
           });
       if (!mounted) return;
 
@@ -141,6 +157,25 @@ class _WatchPageState extends State<WatchPage> {
       );
     } catch (e) {
       debugLog('[watch] ${widget.video.id}: sponsorblock failed: $e');
+    }
+  }
+
+  Future<void> _loadMoreComments() async {
+    final token = _commentsToken;
+    if (token == null || _loadingMoreComments) return;
+    setState(() => _loadingMoreComments = true);
+    try {
+      final result = await AppScope.read(context).api
+          .comments(widget.video.id, continuation: token);
+      if (!mounted) return;
+      setState(() {
+        _comments = [..._comments, ...result.comments];
+        _commentsToken = result.continuation;
+        _loadingMoreComments = false;
+      });
+    } catch (e) {
+      debugLog('[watch] ${widget.video.id}: comments paging failed: $e');
+      if (mounted) setState(() => _loadingMoreComments = false);
     }
   }
 
@@ -346,6 +381,30 @@ class _WatchPageState extends State<WatchPage> {
                           ),
                           const SizedBox(height: 4),
                           Text(_details!.description),
+                        ],
+                        if (_comments.isNotEmpty) ...[
+                          const SizedBox(height: 16),
+                          Text(
+                            l10n.comments,
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                          const SizedBox(height: 4),
+                          for (final comment in _comments)
+                            CommentTile(comment: comment),
+                          if (_commentsToken != null)
+                            Center(
+                              child: _loadingMoreComments
+                                  ? const Padding(
+                                      padding: EdgeInsets.all(8),
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                  : TextButton(
+                                      onPressed: _loadMoreComments,
+                                      child: Text(l10n.loadMoreComments),
+                                    ),
+                            ),
                         ],
                         if (_related.isNotEmpty) ...[
                           const SizedBox(height: 16),

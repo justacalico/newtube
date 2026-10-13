@@ -337,4 +337,23 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get deArrowBoth => 'Заголовки и обложки';
+
+  @override
+  String get comments => 'Комментарии';
+
+  @override
+  String get loadMoreComments => 'Загрузить ещё';
+
+  @override
+  String replyCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ответа',
+      many: '$count ответов',
+      few: '$count ответа',
+      one: '$count ответ',
+    );
+    return '$_temp0';
+  }
 }

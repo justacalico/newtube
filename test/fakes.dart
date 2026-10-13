@@ -74,6 +74,8 @@ class FakeYouTubeApi implements YouTubeApi {
   List<VideoInfo> related;
   ChannelInfo channelInfo;
   List<VideoInfo> uploads;
+  CommentsResult commentsResult;
+  Map<String, CommentsResult> commentPages;
 
   FakeYouTubeApi({
     this.feed = const [],
@@ -82,6 +84,8 @@ class FakeYouTubeApi implements YouTubeApi {
     this.related = const [],
     this.channelInfo = testChannel,
     this.uploads = const [],
+    this.commentsResult = const CommentsResult(),
+    this.commentPages = const {},
   }) {
     details ??= VideoDetails(
       info: testVideos.first,
@@ -114,6 +118,16 @@ class FakeYouTubeApi implements YouTubeApi {
   @override
   Future<List<VideoInfo>> relatedVideos(String videoId) async =>
       error != null ? _fail() : related;
+
+  @override
+  Future<CommentsResult> comments(
+    String videoId, {
+    String? continuation,
+  }) async => error != null
+      ? _fail()
+      : continuation == null
+      ? commentsResult
+      : commentPages[continuation] ?? const CommentsResult();
 
   @override
   Future<ChannelInfo> channel(String channelId) async =>

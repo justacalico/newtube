@@ -116,5 +116,15 @@
   "deArrowOff": "关闭",
   "deArrowTitles": "仅标题",
   "deArrowThumbnails": "仅缩略图",
-  "deArrowBoth": "标题和缩略图"
+  "deArrowBoth": "标题和缩略图",
+  "comments": "评论",
+  "loadMoreComments": "加载更多评论",
+  "replyCount": "{count, plural, other{{count} 条回复}}",
+  "@replyCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

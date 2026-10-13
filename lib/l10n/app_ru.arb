@@ -116,5 +116,15 @@
   "deArrowOff": "Выкл",
   "deArrowTitles": "Только заголовки",
   "deArrowThumbnails": "Только обложки",
-  "deArrowBoth": "Заголовки и обложки"
+  "deArrowBoth": "Заголовки и обложки",
+  "comments": "Комментарии",
+  "loadMoreComments": "Загрузить ещё",
+  "replyCount": "{count, plural, one{{count} ответ} few{{count} ответа} many{{count} ответов} other{{count} ответа}}",
+  "@replyCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

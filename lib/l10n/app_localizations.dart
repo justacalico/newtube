@@ -721,6 +721,24 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Titles and thumbnails'**
   String get deArrowBoth;
+
+  /// No description provided for @comments.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Comments'**
+  String get comments;
+
+  /// No description provided for @loadMoreComments.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Load more comments'**
+  String get loadMoreComments;
+
+  /// No description provided for @replyCount.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'{count, plural, one{{count} reply} other{{count} replies}}'**
+  String replyCount(int count);
 }
 
 class _AppLocalizationsDelegate

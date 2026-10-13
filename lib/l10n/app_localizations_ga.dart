@@ -336,4 +336,20 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get deArrowBoth => 'Teidil agus mionsamhlacha';
+
+  @override
+  String get comments => 'Tráchtanna';
+
+  @override
+  String get loadMoreComments => 'Luchtaigh tuilleadh tráchtanna';
+
+  @override
+  String replyCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count freagra',
+    );
+    return '$_temp0';
+  }
 }

@@ -234,6 +234,10 @@ class YouTubeExplodeApi implements YouTubeApi {
   }
 
   @override
+  Future<CommentsResult> comments(String videoId, {String? continuation}) =>
+      _innertube.comments(videoId, continuation: continuation);
+
+  @override
   Future<List<VideoInfo>> relatedVideos(String videoId) async {
     final video = await _yt.videos.get(yt.VideoId(videoId));
     final related = await _yt.videos.getRelatedVideos(video);

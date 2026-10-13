@@ -96,6 +96,9 @@ void touchAll(AppLocalizations l) {
   l.deArrowTitles;
   l.deArrowThumbnails;
   l.deArrowBoth;
+  l.comments;
+  l.loadMoreComments;
+  l.replyCount(3);
   l.corsNoticeTitle;
   l.corsNoticeBody;
   l.corsFirefox;

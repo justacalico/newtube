@@ -278,6 +278,152 @@ class InnertubeApi implements YouTubeApi {
   }
 
   @override
+  Future<CommentsResult> comments(
+    String videoId, {
+    String? continuation,
+  }) async {
+    var token = continuation;
+    if (token == null) {
+      final r = await _post('next', {'videoId': videoId});
+      token = _commentsContinuation(r);
+      if (token == null) {
+        debugLog('[api] $videoId: no comments section');
+        return const CommentsResult();
+      }
+    }
+    final r = await _post('next', {'continuation': token});
+    return _parseComments(r);
+  }
+
+  String? _commentsContinuation(dynamic node) {
+    if (node is Map<String, dynamic>) {
+      final section = node['itemSectionRenderer'];
+      if (section is Map<String, dynamic> &&
+          _hasKey(section, 'commentsEntryPointHeaderRenderer')) {
+        return continuationToken(section);
+      }
+      for (final value in node.values) {
+        final found = _commentsContinuation(value);
+        if (found != null) return found;
+      }
+    } else if (node is List) {
+      for (final item in node) {
+        final found = _commentsContinuation(item);
+        if (found != null) return found;
+      }
+    }
+    return null;
+  }
+
+  bool _hasKey(dynamic node, String key) {
+    if (node is Map<String, dynamic>) {
+      if (node.containsKey(key)) return true;
+      for (final value in node.values) {
+        if (_hasKey(value, key)) return true;
+      }
+    } else if (node is List) {
+      for (final item in node) {
+        if (_hasKey(item, key)) return true;
+      }
+    }
+    return false;
+  }
+
+  CommentsResult _parseComments(Map<String, dynamic> r) {
+    final comments = <CommentInfo>[];
+    String? next;
+    final endpoints = r['onResponseReceivedEndpoints'];
+    if (endpoints is! List) return const CommentsResult();
+    for (final endpoint in endpoints) {
+      if (endpoint is! Map<String, dynamic>) continue;
+      final action =
+          endpoint['appendContinuationItemsAction'] ??
+          endpoint['reloadContinuationItemsCommand'];
+      if (action is! Map<String, dynamic>) continue;
+      final items = action['continuationItems'];
+      if (items is! List) continue;
+      for (final item in items) {
+        if (item is! Map<String, dynamic>) continue;
+        final thread = item['commentThreadRenderer'];
+        if (thread is Map<String, dynamic>) {
+          final comment = thread['comment'];
+          final renderer = comment is Map<String, dynamic>
+              ? comment['commentRenderer']
+              : null;
+          if (renderer is Map<String, dynamic>) {
+            comments.add(_parseComment(renderer, thread));
+          }
+        }
+        final more = item['continuationItemRenderer'];
+        if (more is Map<String, dynamic>) {
+          next ??= continuationToken(more);
+        }
+      }
+    }
+    return CommentsResult(comments: comments, continuation: next);
+  }
+
+  CommentInfo _parseComment(
+    Map<String, dynamic> r,
+    Map<String, dynamic> thread,
+  ) {
+    final endpoint = r['authorEndpoint'];
+    final browse = endpoint is Map<String, dynamic>
+        ? endpoint['browseEndpoint']
+        : null;
+    final badge = r['authorCommentBadge'];
+    return CommentInfo(
+      author: runs(r['authorText']) ?? '',
+      channelId: browse is Map<String, dynamic>
+          ? browse['browseId'] as String?
+          : null,
+      text: runs(r['contentText']) ?? '',
+      likeCount: compactCount(runs(r['voteCount']) ?? ''),
+      published: runs(r['publishedTimeText']),
+      avatarUrl: _thumbField(thumbnail(r['authorThumbnail'])),
+      replyCount: _replyCount(thread),
+      pinned: r['pinnedCommentBadge'] is Map<String, dynamic>,
+      hearted: _iconType(badge) == 'HEART',
+    );
+  }
+
+  String? _iconType(dynamic node) {
+    if (node is Map<String, dynamic>) {
+      final type = node['iconType'];
+      if (type is String) return type;
+      for (final value in node.values) {
+        final found = _iconType(value);
+        if (found != null) return found;
+      }
+    } else if (node is List) {
+      for (final item in node) {
+        final found = _iconType(item);
+        if (found != null) return found;
+      }
+    }
+    return null;
+  }
+
+  int _replyCount(dynamic node) {
+    if (node is Map<String, dynamic>) {
+      final replies = node['viewReplies'];
+      if (replies is Map<String, dynamic>) {
+        return compactCount(runs(replies['buttonText']) ?? '');
+      }
+      for (final value in node.values) {
+        final found = _replyCount(value);
+        if (found > 0) return found;
+      }
+    } else if (node is List) {
+      for (final item in node) {
+        final found = _replyCount(item);
+        if (found > 0) return found;
+      }
+    }
+    return 0;
+  }
+
+  @override
   Future<ChannelInfo> channel(String channelId) async {
     final r = await _post('browse', {'browseId': channelId});
     final metadata = r['metadata'];
