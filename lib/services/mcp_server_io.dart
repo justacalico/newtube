@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import '../models/video_info.dart';
+import 'mcp_export.dart';
 import 'mcp_server.dart';
 import 'youtube_api.dart';
 
@@ -75,17 +76,23 @@ class HttpMcpServer implements McpServer {
   }
 
   Future<void> _handle(HttpRequest request) async {
-    if (request.uri.path != endpointPath) {
-      return _respond(request, HttpStatus.notFound);
-    }
     if (!_originAllowed(request)) {
       return _respond(request, HttpStatus.forbidden);
+    }
+    if (request.method == 'GET' && request.uri.path == '/') {
+      return _respondJson(request, HttpStatus.ok, _export());
+    }
+    if (request.uri.path != endpointPath) {
+      return _respond(request, HttpStatus.notFound);
     }
     if (request.method != 'POST') {
       return _respond(request, HttpStatus.methodNotAllowed);
     }
     await _handlePost(request);
   }
+
+  Map<String, Object?> _export() =>
+      mcspExport(name: 'newtube', version: version, url: url ?? '');
 
   bool _originAllowed(HttpRequest request) {
     final origin = request.headers.value('origin');
@@ -134,7 +141,7 @@ class HttpMcpServer implements McpServer {
       case 'ping':
         return _result(id, const {});
       case 'tools/list':
-        return _result(id, {'tools': _tools});
+        return _result(id, {'tools': mcpToolDefinitions});
       case 'tools/call':
         return _callTool(id, message['params']);
       default:
@@ -301,56 +308,4 @@ class HttpMcpServer implements McpServer {
       ..add(bytes);
     request.response.close();
   }
-
-  static Map<String, Object?> _idSchema(String key) => {
-    'type': 'object',
-    'properties': {
-      key: {'type': 'string'},
-    },
-    'required': [key],
-  };
-
-  static final _tools = [
-    {
-      'name': 'search',
-      'description': 'Search YouTube videos and channels',
-      'inputSchema': {
-        'type': 'object',
-        'properties': {
-          'query': {'type': 'string'},
-        },
-        'required': ['query'],
-      },
-    },
-    {
-      'name': 'home_feed',
-      'description': 'List the videos on the home feed',
-      'inputSchema': {'type': 'object', 'properties': <String, Object?>{}},
-    },
-    {
-      'name': 'video_details',
-      'description': 'Get details and playable streams for a video',
-      'inputSchema': _idSchema('video_id'),
-    },
-    {
-      'name': 'related_videos',
-      'description': 'List videos related to a video',
-      'inputSchema': _idSchema('video_id'),
-    },
-    {
-      'name': 'channel_info',
-      'description': 'Get information about a channel',
-      'inputSchema': _idSchema('channel_id'),
-    },
-    {
-      'name': 'channel_videos',
-      'description': 'List videos uploaded by a channel',
-      'inputSchema': _idSchema('channel_id'),
-    },
-    {
-      'name': 'play_video',
-      'description': 'Open a video in NewTube and start playback',
-      'inputSchema': _idSchema('video_id'),
-    },
-  ];
 }

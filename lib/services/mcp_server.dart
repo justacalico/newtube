@@ -41,3 +41,55 @@ class UnsupportedMcpServer implements McpServer {
   @override
   Future<void> stop() async {}
 }
+
+Map<String, Object?> _idSchema(String key) => {
+  'type': 'object',
+  'properties': {
+    key: {'type': 'string'},
+  },
+  'required': [key],
+};
+
+final mcpToolDefinitions = <Map<String, Object?>>[
+  {
+    'name': 'search',
+    'description': 'Search YouTube videos and channels',
+    'inputSchema': {
+      'type': 'object',
+      'properties': {
+        'query': {'type': 'string'},
+      },
+      'required': ['query'],
+    },
+  },
+  {
+    'name': 'home_feed',
+    'description': 'List the videos on the home feed',
+    'inputSchema': {'type': 'object', 'properties': <String, Object?>{}},
+  },
+  {
+    'name': 'video_details',
+    'description': 'Get details and playable streams for a video',
+    'inputSchema': _idSchema('video_id'),
+  },
+  {
+    'name': 'related_videos',
+    'description': 'List videos related to a video',
+    'inputSchema': _idSchema('video_id'),
+  },
+  {
+    'name': 'channel_info',
+    'description': 'Get information about a channel',
+    'inputSchema': _idSchema('channel_id'),
+  },
+  {
+    'name': 'channel_videos',
+    'description': 'List videos uploaded by a channel',
+    'inputSchema': _idSchema('channel_id'),
+  },
+  {
+    'name': 'play_video',
+    'description': 'Open a video in NewTube and start playback',
+    'inputSchema': _idSchema('video_id'),
+  },
+];

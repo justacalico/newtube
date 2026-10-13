@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/models/video_info.dart';
+import 'package:newtube/services/mcp_export.dart';
 import 'package:newtube/services/mcp_server.dart';
 import 'package:newtube/services/mcp_server_io.dart';
 
@@ -315,6 +316,19 @@ void main() {
     });
   });
 
+  test('GET / serves the mcsp export document', () async {
+    final reply = await _request(_port(server), method: 'GET', path: '/');
+    expect(reply.status, HttpStatus.ok);
+    final doc = jsonDecode(reply.body) as Map<String, Object?>;
+    expect(doc['format'], 'mcsp');
+    expect(doc['version'], 1);
+    final srv = doc['server'] as Map;
+    expect(srv['name'], 'newtube');
+    expect(srv['version'], '1.2.3');
+    expect(srv['url'], server.url);
+    expect((doc['tools'] as List).length, 7);
+  });
+
   test('rejects wrong paths, non-POST methods and foreign origins', () async {
     expect(
       (await _request(_port(server), path: '/nope')).status,
@@ -343,6 +357,29 @@ void main() {
       )).status,
       HttpStatus.ok,
     );
+  });
+
+  test('mcspExport produces a portable document', () {
+    final doc = mcspExport(
+      name: 'newtube',
+      version: '0.5.0',
+      url: 'http://127.0.0.1:8642/mcp',
+      exportedAt: DateTime.utc(2026, 1, 2, 3, 4, 5),
+    );
+    expect(doc['format'], mcspFormat);
+    expect(doc['version'], mcspFormatVersion);
+    expect(doc['exported'], '2026-01-02T03:04:05.000Z');
+    expect(doc['server'], {
+      'name': 'newtube',
+      'version': '0.5.0',
+      'transport': 'streamable-http',
+      'url': 'http://127.0.0.1:8642/mcp',
+    });
+    expect(doc['tools'], mcpToolDefinitions);
+
+    final encoded = encodeMcsp(doc);
+    expect(encoded, contains('"format": "mcsp"'));
+    expect(jsonDecode(encoded), doc);
   });
 
   test('default port constant', () {
