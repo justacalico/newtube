@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.17.1 - 2026-10-13
+#### Bug Fixes
+- 分离音轨按视频容器配对 - (f01cbf4) - HttpAnimations
+
+- - -
+
 ## v0.17.0 - 2026-10-13
 #### Features
 - (**ui**) 视频卡片与列表的更多操作菜单 - (9103b16) - HttpAnimations
