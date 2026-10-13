@@ -158,7 +158,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get autoplayHint =>
-      'Начинать воспроизведение сразу после открытия видео';
+      'Автоматически воспроизводить видео и следующее за ним';
 
   @override
   String get about => 'О программе';
@@ -198,6 +198,12 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get openVideo => 'Смотреть';
+
+  @override
+  String get replay => 'Повторить';
+
+  @override
+  String get nextVideo => 'Следующее видео';
 
   @override
   String get audio => 'Аудио';

@@ -86,6 +86,205 @@ void main() {
     expect(player.paused, isTrue);
   });
 
+  testWidgets('autoplay off shows an end screen on completion', (
+    tester,
+  ) async {
+    final player = FakePlayerController();
+    final state = await testState(
+      api: FakeYouTubeApi(related: [testVideos[1]]),
+      player: player,
+      settings: SettingsStore(autoplay: false),
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+
+    player.emitCompleted();
+    await tester.pumpAndSettle();
+
+    expect(find.text('Replay'), findsOneWidget);
+    expect(find.text('Next video'), findsOneWidget);
+    expect(
+      find.byWidgetPredicate(
+        (w) =>
+            w is Image &&
+            w.image is NetworkImage &&
+            (w.image as NetworkImage).url == testVideos.first.thumbnailUrl,
+      ),
+      findsOneWidget,
+    );
+    expect(player.opened, hasLength(1));
+  });
+
+  testWidgets('end screen replay restarts the video', (tester) async {
+    final player = FakePlayerController();
+    final state = await testState(
+      api: FakeYouTubeApi(),
+      player: player,
+      settings: SettingsStore(autoplay: false),
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+
+    player.position = const Duration(minutes: 3);
+    player.emitCompleted();
+    await tester.pumpAndSettle();
+    expect(find.text('Replay'), findsOneWidget);
+
+    await tester.tap(find.text('Replay'));
+    await tester.pump();
+    expect(player.lastSeek, Duration.zero);
+    expect(player.playing, isTrue);
+
+    player.emitPlaying(true);
+    await tester.pump();
+    expect(find.text('Replay'), findsNothing);
+  });
+
+  testWidgets('end screen next opens the related video', (tester) async {
+    final player = FakePlayerController();
+    final state = await testState(
+      api: FakeYouTubeApi(related: [testVideos[1]]),
+      player: player,
+      settings: SettingsStore(autoplay: false),
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+
+    player.emitCompleted();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Next video'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.descendant(
+        of: find.byType(AppBar),
+        matching: find.text('Second video'),
+      ),
+      findsOneWidget,
+    );
+    expect(player.opened, hasLength(2));
+    expect(find.text('Replay'), findsNothing);
+  });
+
+  testWidgets('end screen next is disabled without a next video', (
+    tester,
+  ) async {
+    final player = FakePlayerController();
+    final state = await testState(
+      api: FakeYouTubeApi(),
+      player: player,
+      settings: SettingsStore(autoplay: false),
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+
+    player.emitCompleted();
+    await tester.pumpAndSettle();
+
+    expect(find.text('Replay'), findsOneWidget);
+    expect(
+      tester
+          .widget<IconButton>(
+            find.widgetWithIcon(IconButton, Icons.skip_next),
+          )
+          .onPressed,
+      isNull,
+    );
+  });
+
+  testWidgets('autoplay on advances to the related video', (tester) async {
+    final player = FakePlayerController();
+    final state = await testState(
+      api: FakeYouTubeApi(related: [testVideos[1]]),
+      player: player,
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+
+    player.emitCompleted();
+    await tester.pumpAndSettle();
+
+    expect(
+      find.descendant(
+        of: find.byType(AppBar),
+        matching: find.text('Second video'),
+      ),
+      findsOneWidget,
+    );
+    expect(player.opened, hasLength(2));
+  });
+
+  testWidgets('autoplay stays put without a next video', (tester) async {
+    final player = FakePlayerController();
+    final state = await testState(
+      api: FakeYouTubeApi(),
+      player: player,
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+
+    player.emitCompleted();
+    await tester.pumpAndSettle();
+
+    expect(player.opened, hasLength(1));
+    expect(find.text('Replay'), findsOneWidget);
+  });
+
+  testWidgets('autoplay advances to the next playlist video', (tester) async {
+    const playlist = PlaylistInfo(
+      id: 'pl1',
+      title: 'Test playlist',
+      author: 'Channel One',
+      videoCount: 2,
+      videos: testVideos,
+    );
+    final player = FakePlayerController();
+    final state = await testState(api: FakeYouTubeApi(), player: player);
+    await pumpPage(
+      tester,
+      state,
+      WatchPage(video: testVideos[0], playlist: playlist, index: 0),
+    );
+    await tester.pumpAndSettle();
+
+    player.emitCompleted();
+    await tester.pumpAndSettle();
+
+    expect(find.text('Test playlist · 2/2'), findsOneWidget);
+    expect(player.opened, hasLength(2));
+  });
+
+  testWidgets('end screen next from fullscreen returns to the page', (
+    tester,
+  ) async {
+    final player = FakePlayerController();
+    final state = await testState(
+      api: FakeYouTubeApi(related: [testVideos[1]]),
+      player: player,
+      settings: SettingsStore(autoplay: false),
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Fullscreen'));
+    await tester.pumpAndSettle();
+
+    player.emitCompleted();
+    await tester.pumpAndSettle();
+    expect(find.text('Replay'), findsOneWidget);
+
+    await tester.tap(find.text('Next video'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.descendant(
+        of: find.byType(AppBar),
+        matching: find.text('Second video'),
+      ),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('error state shows retry', (tester) async {
     final api = FakeYouTubeApi()..error = 'offline';
     final state = await testState(api: api);

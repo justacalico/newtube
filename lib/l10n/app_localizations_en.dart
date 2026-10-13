@@ -157,7 +157,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get autoplay => 'Autoplay videos';
 
   @override
-  String get autoplayHint => 'Start playback as soon as a video opens';
+  String get autoplayHint => 'Play videos and the next video automatically';
 
   @override
   String get about => 'About';
@@ -197,6 +197,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get openVideo => 'Play';
+
+  @override
+  String get replay => 'Replay';
+
+  @override
+  String get nextVideo => 'Next video';
 
   @override
   String get audio => 'Audio';
@@ -634,7 +640,7 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   String get autoplay => 'Autoplay videos';
 
   @override
-  String get autoplayHint => 'Start playback as soon as a video opens';
+  String get autoplayHint => 'Play videos and the next video automatically';
 
   @override
   String get about => 'About';
@@ -674,6 +680,12 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get openVideo => 'Play';
+
+  @override
+  String get replay => 'Replay';
+
+  @override
+  String get nextVideo => 'Next video';
 
   @override
   String get audio => 'Audio';

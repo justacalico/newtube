@@ -191,7 +191,7 @@ class _WatchPageState extends State<WatchPage> with WidgetsBindingObserver {
           });
       _loadSegments(player);
       _completedSub = player.completedStream.listen((done) {
-        if (done) _advancePlaylist();
+        if (done && state.settings.autoplay) _openNext();
       });
     } catch (e) {
       debugLog('[watch] ${widget.video.id}: load failed: $e');
@@ -200,36 +200,59 @@ class _WatchPageState extends State<WatchPage> with WidgetsBindingObserver {
     }
   }
 
-  void _advancePlaylist() {
+  int? get _nextPlaylistIndex {
     final playlist = widget.playlist;
     final index = widget.index;
-    if (!mounted || playlist == null || index == null) return;
-    final next = index + 1;
-    if (next >= playlist.videos.length) return;
+    if (playlist == null || index == null) return null;
+    return index + 1 < playlist.videos.length ? index + 1 : null;
+  }
+
+  VideoInfo? get _nextVideo {
+    final i = _nextPlaylistIndex;
+    if (i != null) return widget.playlist!.videos[i];
+    return _related.firstOrNull;
+  }
+
+  void _replaceWith(Widget page) {
     if (_fullscreen) {
       Navigator.of(context, rootNavigator: true).pop();
     }
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(
-        builder: (_) => WatchPage(
-          video: playlist.videos[next],
-          playlist: playlist,
-          index: next,
-        ),
-      ),
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute<void>(builder: (_) => page));
+  }
+
+  void _openNext() {
+    final next = _nextVideo;
+    if (!mounted || next == null) return;
+    final i = _nextPlaylistIndex;
+    _replaceWith(
+      i != null
+          ? WatchPage(video: next, playlist: widget.playlist, index: i)
+          : WatchPage(video: next),
+    );
+  }
+
+  void _replay(PlayerController player) {
+    unawaited(player.seek(Duration.zero).then((_) => player.play()));
+  }
+
+  Widget _endScreen(BuildContext context, PlayerController player) {
+    return _EndScreen(
+      thumbnailUrl: widget.video.thumbnailUrl,
+      onReplay: () => _replay(player),
+      onNext: _nextVideo == null ? null : _openNext,
     );
   }
 
   void _openPlaylistVideo(int index) {
     final playlist = widget.playlist;
     if (playlist == null || index == widget.index) return;
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(
-        builder: (_) => WatchPage(
-          video: playlist.videos[index],
-          playlist: playlist,
-          index: index,
-        ),
+    _replaceWith(
+      WatchPage(
+        video: playlist.videos[index],
+        playlist: playlist,
+        index: index,
       ),
     );
   }
@@ -358,6 +381,7 @@ class _WatchPageState extends State<WatchPage> with WidgetsBindingObserver {
               chapters: _chapters,
               segmentSkipper: _skipper,
               pipActions: _pipActions,
+              endScreenBuilder: (context) => _endScreen(context, player),
             ),
           ),
         )
@@ -432,6 +456,8 @@ class _WatchPageState extends State<WatchPage> with WidgetsBindingObserver {
                             chapters: _chapters,
                             segmentSkipper: _skipper,
                             pipActions: _pipActions,
+                            endScreenBuilder: (context) =>
+                                _endScreen(context, player),
                           ),
                   ),
                   Padding(
@@ -591,12 +617,8 @@ class _WatchPageState extends State<WatchPage> with WidgetsBindingObserver {
                             VideoListTile(
                               video: v,
                               contentPadding: EdgeInsets.zero,
-                              onTap: () => Navigator.of(context)
-                                  .pushReplacement(
-                                    MaterialPageRoute<void>(
-                                      builder: (_) => WatchPage(video: v),
-                                    ),
-                                  ),
+                              onTap: () =>
+                                  _replaceWith(WatchPage(video: v)),
                             ),
                         ],
                       ],
@@ -620,6 +642,7 @@ class _FullscreenPlayer extends StatefulWidget {
   final List<VideoChapter> chapters;
   final SegmentSkipper? segmentSkipper;
   final PipActions? pipActions;
+  final WidgetBuilder? endScreenBuilder;
 
   const _FullscreenPlayer({
     required this.player,
@@ -632,6 +655,7 @@ class _FullscreenPlayer extends StatefulWidget {
     this.chapters = const [],
     this.segmentSkipper,
     this.pipActions,
+    this.endScreenBuilder,
   });
 
   @override
@@ -684,7 +708,87 @@ class _FullscreenPlayerState extends State<_FullscreenPlayer> {
           chapters: widget.chapters,
           segmentSkipper: widget.segmentSkipper,
           pipActions: widget.pipActions,
+          endScreenBuilder: widget.endScreenBuilder,
         ),
+      ),
+    );
+  }
+}
+
+class _EndScreen extends StatelessWidget {
+  final String? thumbnailUrl;
+  final VoidCallback onReplay;
+  final VoidCallback? onNext;
+
+  const _EndScreen({
+    this.thumbnailUrl,
+    required this.onReplay,
+    this.onNext,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        VideoThumbnail(url: thumbnailUrl, borderRadius: BorderRadius.zero),
+        const ColoredBox(color: Colors.black54),
+        Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _EndButton(
+                icon: Icons.replay,
+                label: l10n.replay,
+                onPressed: onReplay,
+              ),
+              const SizedBox(width: 32),
+              _EndButton(
+                icon: Icons.skip_next,
+                label: l10n.nextVideo,
+                onPressed: onNext,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _EndButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback? onPressed;
+
+  const _EndButton({
+    required this.icon,
+    required this.label,
+    this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: onPressed,
+      iconSize: 40,
+      color: Colors.white,
+      disabledColor: Colors.white38,
+      padding: const EdgeInsets.all(12),
+      icon: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 13,
+              color: onPressed == null ? Colors.white38 : Colors.white,
+            ),
+          ),
+        ],
       ),
     );
   }

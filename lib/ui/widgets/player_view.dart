@@ -26,6 +26,7 @@ class PlayerView extends StatefulWidget {
   final List<VideoChapter> chapters;
   final SegmentSkipper? segmentSkipper;
   final PipActions? pipActions;
+  final WidgetBuilder? endScreenBuilder;
 
   const PlayerView({
     super.key,
@@ -41,6 +42,7 @@ class PlayerView extends StatefulWidget {
     this.chapters = const [],
     this.segmentSkipper,
     this.pipActions,
+    this.endScreenBuilder,
   });
 
   @override
@@ -54,13 +56,16 @@ class _PlayerViewState extends State<PlayerView> {
   PlayerController get _player => widget.player;
 
   StreamSubscription<bool>? _playingSub;
+  StreamSubscription<bool>? _completedSub;
   Timer? _hideTimer;
   bool _controlsVisible = true;
+  bool _ended = false;
 
   @override
   void initState() {
     super.initState();
     _playingSub = _player.playingStream.listen(_onPlayingChanged);
+    _completedSub = _player.completedStream.listen(_onCompleted);
     if (_player.playing) _scheduleHide();
   }
 
@@ -70,6 +75,8 @@ class _PlayerViewState extends State<PlayerView> {
     if (oldWidget.player != widget.player) {
       _playingSub?.cancel();
       _playingSub = _player.playingStream.listen(_onPlayingChanged);
+      _completedSub?.cancel();
+      _completedSub = _player.completedStream.listen(_onCompleted);
     }
   }
 
@@ -77,12 +84,18 @@ class _PlayerViewState extends State<PlayerView> {
   void dispose() {
     _hideTimer?.cancel();
     _playingSub?.cancel();
+    _completedSub?.cancel();
     super.dispose();
+  }
+
+  void _onCompleted(bool done) {
+    if (done && !_ended) setState(() => _ended = true);
   }
 
   void _onPlayingChanged(bool playing) {
     if (playing) {
       _scheduleHide();
+      if (_ended) setState(() => _ended = false);
     } else {
       _hideTimer?.cancel();
       if (!_controlsVisible) setState(() => _controlsVisible = true);
@@ -548,6 +561,8 @@ class _PlayerViewState extends State<PlayerView> {
                     ),
                   ),
                 ),
+                if (_ended && widget.endScreenBuilder != null)
+                  Positioned.fill(child: widget.endScreenBuilder!(context)),
               ],
             ),
           ),
