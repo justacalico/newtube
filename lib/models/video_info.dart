@@ -59,12 +59,18 @@ class PlayableStream {
   final String quality;
   final bool hasVideo;
   final bool hasAudio;
+  final String? audioLanguage;
+  final String? audioTrackName;
+  final bool isDefaultAudio;
 
   const PlayableStream({
     required this.url,
     required this.quality,
     this.hasVideo = true,
     this.hasAudio = true,
+    this.audioLanguage,
+    this.audioTrackName,
+    this.isDefaultAudio = true,
   });
 }
 

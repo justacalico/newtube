@@ -198,7 +198,7 @@ class AppLocalizationsGa extends AppLocalizations {
   String get openVideo => 'Seinn';
 
   @override
-  String get audioOnly => 'Fuaim amháin';
+  String get audio => 'Fuaim';
 
   @override
   String get fullscreen => 'Lánscáileán';

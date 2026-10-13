@@ -36,6 +36,7 @@ void main() {
           streams: testStreams,
           current: testStreams[1],
           onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
           onToggleFullscreen: () => toggled = true,
         ),
       ),
@@ -67,6 +68,7 @@ void main() {
           streams: testStreams,
           current: testStreams[1],
           onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
           onToggleFullscreen: () {},
         ),
       ),
@@ -105,6 +107,7 @@ void main() {
           streams: const [],
           current: null,
           onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
           onToggleFullscreen: () {},
         ),
       ),
@@ -124,6 +127,7 @@ void main() {
           streams: testStreams,
           current: testStreams[1],
           onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
           onToggleFullscreen: () {},
         ),
       ),
@@ -137,7 +141,7 @@ void main() {
     expect(player.played, isTrue);
   });
 
-  testWidgets('quality menu lists streams and selects', (tester) async {
+  testWidgets('quality menu lists video streams and selects', (tester) async {
     final player = FakePlayerController();
     final state = await testState();
     PlayableStream? selected;
@@ -149,6 +153,7 @@ void main() {
           streams: testStreams,
           current: testStreams[1],
           onQualitySelected: (s) => selected = s,
+          onAudioSelected: (_) {},
           onToggleFullscreen: () {},
         ),
       ),
@@ -157,11 +162,60 @@ void main() {
     await tester.tap(find.byTooltip('Quality'));
     await tester.pumpAndSettle();
     expect(find.text('720p'), findsOneWidget);
-    expect(find.text('Audio only'), findsOneWidget);
+    expect(find.text('360p'), findsOneWidget);
+    expect(find.text('audio 128kbps'), findsNothing);
 
-    await tester.tap(find.text('Audio only'));
+    await tester.tap(find.text('720p'));
     await tester.pumpAndSettle();
-    expect(selected, testStreams[2]);
+    expect(selected, testStreams[0]);
+  });
+
+  testWidgets('audio menu lists track names and selects', (tester) async {
+    final player = FakePlayerController();
+    final state = await testState();
+    const streams = [
+      ...testStreams,
+      PlayableStream(
+        url: 'https://audio.example.com/en',
+        quality: 'audio 128kbps',
+        hasVideo: false,
+        audioLanguage: 'en',
+        audioTrackName: 'English original',
+      ),
+      PlayableStream(
+        url: 'https://audio.example.com/es',
+        quality: 'audio 128kbps',
+        hasVideo: false,
+        audioLanguage: 'es',
+        isDefaultAudio: false,
+      ),
+    ];
+    PlayableStream? audio;
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: streams,
+          current: testStreams[1],
+          currentAudio: streams[4],
+          onQualitySelected: (_) {},
+          onAudioSelected: (s) => audio = s,
+          onToggleFullscreen: () {},
+        ),
+      ),
+    );
+
+    await tester.tap(find.byTooltip('Audio'));
+    await tester.pumpAndSettle();
+    expect(find.text('audio 128kbps'), findsOneWidget);
+    expect(find.text('English original'), findsOneWidget);
+    expect(find.text('es'), findsOneWidget);
+    expect(find.byIcon(Icons.check), findsOneWidget);
+
+    await tester.tap(find.text('English original'));
+    await tester.pumpAndSettle();
+    expect(audio, streams[3]);
   });
 
   testWidgets('arrow keys skip five seconds', (tester) async {
@@ -177,6 +231,7 @@ void main() {
           streams: testStreams,
           current: testStreams[1],
           onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
           onToggleFullscreen: () {},
         ),
       ),
@@ -202,6 +257,7 @@ void main() {
           streams: testStreams,
           current: testStreams[1],
           onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
           onToggleFullscreen: () {},
         ),
       ),

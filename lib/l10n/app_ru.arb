@@ -61,7 +61,7 @@
   "licence": "Лицензия",
   "licenceText": "GNU Affero General Public License v3.0",
   "openVideo": "Смотреть",
-  "audioOnly": "Только аудио",
+  "audio": "Аудио",
   "fullscreen": "На весь экран",
   "quality": "Качество",
   "searchResultsFor": "Результаты",

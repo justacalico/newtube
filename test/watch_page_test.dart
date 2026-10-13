@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/models/video_info.dart';
@@ -19,6 +20,8 @@ class _ChannelFailApi extends FakeYouTubeApi {
 }
 
 void main() {
+  tearDown(() => debugDefaultTargetPlatformOverride = null);
+
   testWidgets('plays video, shows details and related', (tester) async {
     final player = FakePlayerController();
     final api = FakeYouTubeApi(
@@ -100,6 +103,192 @@ void main() {
     expect(player.opened.last, contains('360'));
   });
 
+  testWidgets('audio menu switches the audio track', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    const streams = [
+      PlayableStream(
+        url: 'https://video.example.com/720',
+        quality: '720p',
+        hasAudio: false,
+      ),
+      PlayableStream(url: 'https://video.example.com/360', quality: '360p'),
+      PlayableStream(
+        url: 'https://audio.example.com/en',
+        quality: 'audio 128kbps',
+        hasVideo: false,
+        audioLanguage: 'en',
+        audioTrackName: 'English original',
+      ),
+      PlayableStream(
+        url: 'https://audio.example.com/es',
+        quality: 'audio 128kbps',
+        hasVideo: false,
+        audioLanguage: 'es',
+        audioTrackName: 'Español',
+        isDefaultAudio: false,
+      ),
+    ];
+    final player = FakePlayerController();
+    final state = await testState(
+      api: FakeYouTubeApi(
+        details: const VideoDetails(
+          info: VideoInfo(
+            id: 'v1',
+            title: 'First video',
+            author: 'A',
+            channelId: 'c',
+          ),
+          description: '',
+          streams: streams,
+        ),
+      ),
+      player: player,
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+    expect(player.opened.single, endsWith('+https://audio.example.com/en'));
+
+    await tester.tap(find.byTooltip('Audio'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Español'));
+    await tester.pumpAndSettle();
+    expect(player.opened.last, endsWith('+https://audio.example.com/es'));
+    debugDefaultTargetPlatformOverride = null;
+  });
+
+  testWidgets('audio select on muxed stream pairs a video-only stream', (
+    tester,
+  ) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
+    const streams = [
+      PlayableStream(url: 'https://video.example.com/360', quality: '360p'),
+      PlayableStream(
+        url: 'https://video.example.com/360v',
+        quality: '360p',
+        hasAudio: false,
+      ),
+      PlayableStream(
+        url: 'https://audio.example.com/es',
+        quality: 'audio 128kbps',
+        hasVideo: false,
+        audioLanguage: 'es',
+        audioTrackName: 'Español',
+        isDefaultAudio: false,
+      ),
+    ];
+    final player = FakePlayerController();
+    final state = await testState(
+      api: FakeYouTubeApi(
+        details: const VideoDetails(
+          info: VideoInfo(
+            id: 'v1',
+            title: 'First video',
+            author: 'A',
+            channelId: 'c',
+          ),
+          description: '',
+          streams: streams,
+        ),
+      ),
+      player: player,
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+    expect(player.opened.single, 'https://video.example.com/360');
+
+    await tester.tap(find.byTooltip('Audio'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Español'));
+    await tester.pumpAndSettle();
+    expect(
+      player.opened.last,
+      'https://video.example.com/360v+https://audio.example.com/es',
+    );
+    debugDefaultTargetPlatformOverride = null;
+  });
+
+  testWidgets('audio select does nothing without a video-only stream', (
+    tester,
+  ) async {
+    const streams = [
+      PlayableStream(url: 'https://video.example.com/360', quality: '360p'),
+      PlayableStream(
+        url: 'https://audio.example.com/en',
+        quality: 'audio 128kbps',
+        hasVideo: false,
+        audioTrackName: 'English original',
+      ),
+    ];
+    final player = FakePlayerController();
+    final state = await testState(
+      api: FakeYouTubeApi(
+        details: const VideoDetails(
+          info: VideoInfo(
+            id: 'v1',
+            title: 'First video',
+            author: 'A',
+            channelId: 'c',
+          ),
+          description: '',
+          streams: streams,
+        ),
+      ),
+      player: player,
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+    expect(player.opened.single, 'https://video.example.com/360');
+
+    await tester.tap(find.byTooltip('Audio'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('English original'));
+    await tester.pumpAndSettle();
+    expect(player.opened, hasLength(1));
+  });
+
+  testWidgets('audio-only playback switches tracks', (tester) async {
+    const streams = [
+      PlayableStream(
+        url: 'https://audio.example.com/en',
+        quality: 'audio 128kbps',
+        hasVideo: false,
+        audioTrackName: 'English original',
+      ),
+      PlayableStream(
+        url: 'https://audio.example.com/es',
+        quality: 'audio 128kbps',
+        hasVideo: false,
+        audioTrackName: 'Español',
+        isDefaultAudio: false,
+      ),
+    ];
+    final player = FakePlayerController();
+    final state = await testState(
+      api: FakeYouTubeApi(
+        details: const VideoDetails(
+          info: VideoInfo(
+            id: 'v1',
+            title: 'First video',
+            author: 'A',
+            channelId: 'c',
+          ),
+          description: '',
+          streams: streams,
+        ),
+      ),
+      player: player,
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+    expect(player.opened.single, 'https://audio.example.com/en');
+
+    await tester.tap(find.byTooltip('Audio'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Español'));
+    await tester.pumpAndSettle();
+    expect(player.opened.last, 'https://audio.example.com/es');
+  });
+
   testWidgets('fullscreen hides everything else and back exits', (
     tester,
   ) async {
@@ -135,6 +324,28 @@ void main() {
     await tester.tap(find.byIcon(Icons.fullscreen_exit));
     await tester.pumpAndSettle();
     expect(find.text('A video description'), findsOneWidget);
+  });
+
+  testWidgets('audio change works in fullscreen', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    final player = FakePlayerController();
+    final state = await testState(api: FakeYouTubeApi(), player: player);
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Fullscreen'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Audio'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('audio 128kbps'));
+    await tester.pumpAndSettle();
+
+    expect(player.opened.last, endsWith('+https://audio.example.com/128'));
+
+    await tester.tap(find.byIcon(Icons.fullscreen_exit));
+    await tester.pumpAndSettle();
+    expect(find.text('A video description'), findsOneWidget);
+    debugDefaultTargetPlatformOverride = null;
   });
 
   testWidgets('channel name opens channel page', (tester) async {

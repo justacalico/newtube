@@ -10,7 +10,9 @@ class PlayerView extends StatelessWidget {
   final PlayerController player;
   final List<PlayableStream> streams;
   final PlayableStream? current;
+  final PlayableStream? currentAudio;
   final ValueChanged<PlayableStream> onQualitySelected;
+  final ValueChanged<PlayableStream> onAudioSelected;
   final VoidCallback onToggleFullscreen;
   final bool isFullscreen;
 
@@ -19,10 +21,33 @@ class PlayerView extends StatelessWidget {
     required this.player,
     required this.streams,
     required this.current,
+    this.currentAudio,
     required this.onQualitySelected,
+    required this.onAudioSelected,
     required this.onToggleFullscreen,
     this.isFullscreen = false,
   });
+
+  List<PopupMenuEntry<PlayableStream>> _streamItems(
+    Iterable<PlayableStream> list,
+    PlayableStream? selected,
+    String Function(PlayableStream) label,
+  ) => [
+    for (final s in list)
+      PopupMenuItem(
+        value: s,
+        child: Row(
+          children: [
+            if (s == selected)
+              const Icon(Icons.check, size: 18)
+            else
+              const SizedBox(width: 18),
+            const SizedBox(width: 8),
+            Text(label(s)),
+          ],
+        ),
+      ),
+  ];
 
   void _skipBy(Duration delta) {
     var target = player.position + delta;
@@ -151,23 +176,30 @@ class PlayerView extends StatelessWidget {
                         icon: const Icon(Icons.settings, color: Colors.white),
                         tooltip: l10n.quality,
                         onSelected: onQualitySelected,
-                        itemBuilder: (context) => [
-                          for (final s in streams)
-                            PopupMenuItem(
-                              value: s,
-                              child: Row(
-                                children: [
-                                  if (s == current)
-                                    const Icon(Icons.check, size: 18)
-                                  else
-                                    const SizedBox(width: 18),
-                                  const SizedBox(width: 8),
-                                  Text(s.hasVideo ? s.quality : l10n.audioOnly),
-                                ],
-                              ),
-                            ),
-                        ],
+                        itemBuilder: (context) => _streamItems(
+                          streams.where((s) => s.hasVideo),
+                          current,
+                          (s) => s.quality,
+                        ),
                       ),
+                      if (streams.any((s) => !s.hasVideo))
+                        PopupMenuButton<PlayableStream>(
+                          icon: const Icon(
+                            Icons.audiotrack,
+                            color: Colors.white,
+                          ),
+                          tooltip: l10n.audio,
+                          onSelected: onAudioSelected,
+                          itemBuilder: (context) => _streamItems(
+                            streams.where((s) => !s.hasVideo),
+                            currentAudio ??
+                                (current?.hasVideo == false ? current : null),
+                            (s) =>
+                                s.audioTrackName ??
+                                s.audioLanguage ??
+                                s.quality,
+                          ),
+                        ),
                       IconButton(
                         icon: Icon(
                           isFullscreen

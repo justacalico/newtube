@@ -197,7 +197,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get openVideo => 'Смотреть';
 
   @override
-  String get audioOnly => 'Только аудио';
+  String get audio => 'Аудио';
 
   @override
   String get fullscreen => 'На весь экран';

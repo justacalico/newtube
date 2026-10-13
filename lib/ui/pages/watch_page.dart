@@ -34,6 +34,7 @@ class _WatchPageState extends State<WatchPage> {
   ChannelInfo? _channel;
   List<VideoInfo> _related = const [];
   PlayableStream? _currentStream;
+  PlayableStream? _currentAudio;
   Object? _error;
   bool _fullscreen = false;
   bool _recorded = false;
@@ -79,8 +80,10 @@ class _WatchPageState extends State<WatchPage> {
         desktop: isDesktopPlatform,
       );
       PlayableStream? current;
+      PlayableStream? currentAudio;
       if (choice != null) {
         current = choice.stream;
+        currentAudio = choice.audio;
         debugLog(
           '[watch] ${widget.video.id}: opening ${choice.stream.quality}'
           '${choice.audioUrl == null ? '' : ' + separate audio'}',
@@ -100,6 +103,7 @@ class _WatchPageState extends State<WatchPage> {
         _details = details;
         _player = player;
         _currentStream = current;
+        _currentAudio = currentAudio;
       });
     } catch (e) {
       debugLog('[watch] ${widget.video.id}: load failed: $e');
@@ -109,13 +113,46 @@ class _WatchPageState extends State<WatchPage> {
   }
 
   void _selectStream(PlayableStream stream) {
-    final choice = pairWithAudio(stream, _details?.streams ?? const []);
+    final choice = pairWithAudio(
+      stream,
+      _details?.streams ?? const [],
+      audio: _currentAudio,
+    );
     debugLog(
       '[watch] ${widget.video.id}: switching to ${stream.quality}'
       '${choice.audioUrl == null ? '' : ' + separate audio'}',
     );
-    setState(() => _currentStream = stream);
+    setState(() {
+      _currentStream = stream;
+      _currentAudio = choice.audio;
+    });
     _player?.open(choice.stream.url, audioUrl: choice.audioUrl);
+  }
+
+  void _selectAudio(PlayableStream audio) {
+    final current = _currentStream;
+    if (current == null) return;
+    if (!current.hasVideo) {
+      debugLog('[watch] ${widget.video.id}: switching to ${audio.quality}');
+      setState(() => _currentStream = audio);
+      _player?.open(audio.url);
+      return;
+    }
+    var video = current;
+    if (video.hasAudio) {
+      video = (_details?.streams ?? const []).firstWhere(
+        (s) =>
+            s.hasVideo && !s.hasAudio && streamPixels(s) == streamPixels(video),
+        orElse: () => video,
+      );
+      if (video.hasAudio) return;
+    }
+    debugLog('[watch] ${widget.video.id}: switching audio to ${audio.quality}');
+    setState(() {
+      _currentStream = video;
+      _currentAudio = audio;
+    });
+    _player?.open(video.url, audioUrl: audio.url);
   }
 
   void _openFullscreen(PlayerController player) {
@@ -127,7 +164,9 @@ class _WatchPageState extends State<WatchPage> {
               player: player,
               streams: _details?.streams ?? const [],
               current: _currentStream,
+              currentAudio: _currentAudio,
               onQualitySelected: _selectStream,
+              onAudioSelected: _selectAudio,
             ),
           ),
         )
@@ -173,7 +212,9 @@ class _WatchPageState extends State<WatchPage> {
                           player: player,
                           streams: _details!.streams,
                           current: _currentStream,
+                          currentAudio: _currentAudio,
                           onQualitySelected: _selectStream,
+                          onAudioSelected: _selectAudio,
                           onToggleFullscreen: () => _openFullscreen(player),
                         ),
                 ),
@@ -281,13 +322,17 @@ class _FullscreenPlayer extends StatefulWidget {
   final PlayerController player;
   final List<PlayableStream> streams;
   final PlayableStream? current;
+  final PlayableStream? currentAudio;
   final ValueChanged<PlayableStream> onQualitySelected;
+  final ValueChanged<PlayableStream> onAudioSelected;
 
   const _FullscreenPlayer({
     required this.player,
     required this.streams,
     required this.current,
+    required this.currentAudio,
     required this.onQualitySelected,
+    required this.onAudioSelected,
   });
 
   @override
@@ -296,10 +341,19 @@ class _FullscreenPlayer extends StatefulWidget {
 
 class _FullscreenPlayerState extends State<_FullscreenPlayer> {
   late PlayableStream? _current = widget.current;
+  late PlayableStream? _currentAudio = widget.currentAudio;
 
   void _selectStream(PlayableStream stream) {
     widget.onQualitySelected(stream);
     setState(() => _current = stream);
+  }
+
+  void _selectAudio(PlayableStream audio) {
+    widget.onAudioSelected(audio);
+    setState(() {
+      _currentAudio = audio;
+      if (_current?.hasVideo == false) _current = audio;
+    });
   }
 
   @override
@@ -311,7 +365,9 @@ class _FullscreenPlayerState extends State<_FullscreenPlayer> {
           player: widget.player,
           streams: widget.streams,
           current: _current,
+          currentAudio: _currentAudio,
           onQualitySelected: _selectStream,
+          onAudioSelected: _selectAudio,
           onToggleFullscreen: () => Navigator.of(context).pop(),
           isFullscreen: true,
         ),

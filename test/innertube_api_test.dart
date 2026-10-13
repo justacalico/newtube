@@ -318,13 +318,21 @@ void main() {
                         'url': 'https://v/hd-a',
                         'mimeType': 'audio/webm',
                         'bitrate': 128000,
-                        'audioTrack': {'audioIsDefault': true},
+                        'audioTrack': {
+                          'displayName': 'English original',
+                          'id': 'en.4',
+                          'audioIsDefault': true,
+                        },
                       },
                       {
                         'url': 'https://v/dub',
                         'mimeType': 'audio/webm',
                         'bitrate': 99000,
-                        'audioTrack': {'audioIsDefault': false},
+                        'audioTrack': {
+                          'displayName': 'Español',
+                          'id': 'es.4',
+                          'audioIsDefault': false,
+                        },
                       },
                     ],
                   ],
@@ -332,6 +340,7 @@ void main() {
               }),
             ),
             200,
+            headers: {'content-type': 'application/json; charset=utf-8'},
           );
         }),
       );
@@ -342,7 +351,15 @@ void main() {
         '360p',
         '1080p',
         'audio 128kbps',
+        'audio 99kbps',
       ]);
+      final audio = d.streams.where((s) => !s.hasVideo).toList();
+      expect(audio[0].audioLanguage, 'en');
+      expect(audio[0].audioTrackName, 'English original');
+      expect(audio[0].isDefaultAudio, isTrue);
+      expect(audio[1].audioLanguage, 'es');
+      expect(audio[1].audioTrackName, 'Español');
+      expect(audio[1].isDefaultAudio, isFalse);
     });
 
     test(

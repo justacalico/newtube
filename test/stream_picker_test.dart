@@ -17,6 +17,14 @@ const a64 = PlayableStream(
   hasVideo: false,
 );
 const odd = PlayableStream(url: 'odd', quality: 'premium');
+const aDub = PlayableStream(
+  url: 'aDub',
+  quality: 'audio 192kbps',
+  hasVideo: false,
+  audioLanguage: 'es',
+  audioTrackName: 'Español',
+  isDefaultAudio: false,
+);
 
 void main() {
   test('streamPixels parses leading numbers', () {
@@ -25,9 +33,14 @@ void main() {
     expect(streamPixels(odd), 0);
   });
 
-  test('bestAudioUrl picks highest bitrate audio', () {
-    expect(bestAudioUrl(const [m360, a64, a128]), 'a128');
-    expect(bestAudioUrl(const [m360]), isNull);
+  test('bestAudio picks highest bitrate audio', () {
+    expect(bestAudio(const [m360, a64, a128]), a128);
+    expect(bestAudio(const [m360]), isNull);
+  });
+
+  test('bestAudio prefers the default track over louder dubs', () {
+    expect(bestAudio(const [aDub, a128]), a128);
+    expect(bestAudio(const [aDub]), aDub);
   });
 
   test('desktop prefers separate video with paired audio', () {
@@ -38,6 +51,7 @@ void main() {
       v720,
     ], desktop: true)!;
     expect(choice.stream, v720);
+    expect(choice.audio, a128);
     expect(choice.audioUrl, 'a128');
   });
 
@@ -67,13 +81,13 @@ void main() {
   test('mobile falls back to video-only with audio pair', () {
     final choice = pickDefaultStream(const [v720, a128], desktop: false)!;
     expect(choice.stream, v720);
-    expect(choice.audioUrl, 'a128');
+    expect(choice.audio, a128);
   });
 
   test('audio-only list still plays', () {
     final choice = pickDefaultStream(const [a128], desktop: true)!;
     expect(choice.stream, a128);
-    expect(choice.audioUrl, isNull);
+    expect(choice.audio, isNull);
   });
 
   test('empty stream list returns null', () {
@@ -81,7 +95,12 @@ void main() {
   });
 
   test('pairWithAudio attaches audio only when needed', () {
-    expect(pairWithAudio(v720, const [a128]).audioUrl, 'a128');
-    expect(pairWithAudio(m360, const [a128]).audioUrl, isNull);
+    expect(pairWithAudio(v720, const [a128]).audio, a128);
+    expect(pairWithAudio(m360, const [a128]).audio, isNull);
+  });
+
+  test('pairWithAudio keeps the selected track', () {
+    expect(pairWithAudio(v720, const [a64, a128], audio: a64).audio, a64);
+    expect(pairWithAudio(v720, const [a128], audio: aDub).audio, aDub);
   });
 }

@@ -193,7 +193,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get openVideo => '播放';
 
   @override
-  String get audioOnly => '仅音频';
+  String get audio => '音频';
 
   @override
   String get fullscreen => '全屏';
@@ -435,7 +435,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get openVideo => '播放';
 
   @override
-  String get audioOnly => '仅音频';
+  String get audio => '音频';
 
   @override
   String get fullscreen => '全屏';
