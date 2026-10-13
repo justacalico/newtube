@@ -49,6 +49,8 @@ class PlayerView extends StatelessWidget {
       ),
   ];
 
+  void _togglePlayback() => player.playing ? player.pause() : player.play();
+
   void _skipBy(Duration delta) {
     var target = player.position + delta;
     final total = player.duration;
@@ -66,6 +68,7 @@ class PlayerView extends StatelessWidget {
             _skipBy(const Duration(seconds: -5)),
         const SingleActivator(LogicalKeyboardKey.arrowRight): () =>
             _skipBy(const Duration(seconds: 5)),
+        const SingleActivator(LogicalKeyboardKey.space): _togglePlayback,
       },
       child: Focus(
         autofocus: true,
@@ -78,7 +81,7 @@ class PlayerView extends StatelessWidget {
               Positioned.fill(
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onTap: () => player.playing ? player.pause() : player.play(),
+                  onTap: _togglePlayback,
                 ),
               ),
               Positioned(

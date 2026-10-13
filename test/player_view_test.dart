@@ -275,4 +275,28 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
     expect(player.lastSeek, const Duration(seconds: 5));
   });
+
+  testWidgets('space toggles playback', (tester) async {
+    final player = FakePlayerController();
+    final state = await testState();
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
+          onToggleFullscreen: () {},
+        ),
+      ),
+    );
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.space);
+    expect(player.played, isTrue);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.space);
+    expect(player.paused, isTrue);
+  });
 }
