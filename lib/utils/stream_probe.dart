@@ -15,6 +15,14 @@ Future<bool> streamPlayable(http.Client client, String url) async {
   }
 }
 
+List<PlayableStream> dedupeStreams(List<PlayableStream> streams) {
+  final seen = <String>{};
+  return [
+    for (final s in streams)
+      if (seen.add(s.quality)) s,
+  ];
+}
+
 Future<List<PlayableStream>> playableStreams(
   List<PlayableStream> streams,
   http.Client client,
@@ -29,9 +37,7 @@ Future<List<PlayableStream>> playableStreams(
   ];
   if (playable.isEmpty) {
     debugLog('[streams] every stream probe failed');
-    return streams;
-  }
-  if (playable.length != streams.length) {
+  } else if (playable.length != streams.length) {
     debugLog(
       '[streams] dropped ${streams.length - playable.length} '
       'unplayable streams',

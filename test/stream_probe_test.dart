@@ -43,6 +43,26 @@ void main() {
     });
   });
 
+  group('dedupeStreams', () {
+    test('keeps the first stream per quality label', () {
+      const dup720 = PlayableStream(
+        url: 'https://v/d',
+        quality: '720p',
+        hasAudio: false,
+      );
+      final streams = dedupeStreams(const [_a, dup720, _b, _c]);
+      expect(streams.map((s) => s.url), [
+        'https://v/a',
+        'https://v/b',
+        'https://v/c',
+      ]);
+    });
+
+    test('returns the input unchanged when empty', () {
+      expect(dedupeStreams(const []), isEmpty);
+    });
+  });
+
   group('playableStreams', () {
     test('returns the input unchanged when empty', () async {
       final streams = await playableStreams(
@@ -67,13 +87,13 @@ void main() {
       expect(streams.map((s) => s.url), ['https://v/a', 'https://v/c']);
     });
 
-    test('falls back to the full list when every probe fails', () async {
+    test('returns nothing when every probe fails', () async {
       final client = MockClient.streaming(
         (_, _) async =>
             http.StreamedResponse(const Stream<List<int>>.empty(), 403),
       );
       final streams = await playableStreams(const [_a, _b], client);
-      expect(streams.length, 2);
+      expect(streams, isEmpty);
     });
   });
 }

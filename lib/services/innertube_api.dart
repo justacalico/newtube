@@ -11,14 +11,16 @@ import 'youtube_api.dart';
 
 class InnertubeApi implements YouTubeApi {
   final http.Client _http;
+  final http.Client _probe;
   final String? Function()? _proxyPrefix;
 
   InnertubeApi({http.Client? httpClient, String? Function()? proxyPrefix})
+    : this._(httpClient ?? http.Client(), proxyPrefix);
+
+  InnertubeApi._(http.Client inner, String? Function()? proxyPrefix)
     : _proxyPrefix = proxyPrefix,
-      _http = ProxiedClient(
-        httpClient ?? http.Client(),
-        () => proxyPrefix?.call(),
-      );
+      _probe = inner,
+      _http = ProxiedClient(inner, () => proxyPrefix?.call());
 
   String _proxied(String url) => proxiedUrl(url, _proxyPrefix?.call());
 
@@ -26,13 +28,17 @@ class InnertubeApi implements YouTubeApi {
     String endpoint,
     Map<String, dynamic> body, {
     String client = 'WEB',
+    String? visitorData,
   }) async {
     final response = await _http.post(
       Uri.parse(
         'https://www.youtube.com/youtubei/v1/$endpoint?key=$innertubeKey',
       ),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'context': innertubeContext(client: client), ...body}),
+      body: jsonEncode({
+        'context': innertubeContext(client: client, visitorData: visitorData),
+        ...body,
+      }),
     );
     if (response.statusCode != 200) {
       throw InnertubeException('$endpoint failed with ${response.statusCode}');
@@ -90,9 +96,34 @@ class InnertubeApi implements YouTubeApi {
     if (streaming is! Map<String, dynamic>) {
       debugLog('[api] $videoId: no streamingData in player response');
     }
-    final streams = await playableStreams(<PlayableStream>[
+    final raw = <PlayableStream>[
       if (streaming is Map<String, dynamic>) ..._streams(streaming),
-    ], _http);
+    ];
+    // Stream urls are already prefixed, so probe them with the plain client
+    // instead of wrapping them in the proxy prefix a second time.
+    final kept = await playableStreams(raw, _probe);
+    var streams = dedupeStreams(kept.isEmpty ? raw : kept);
+    final adaptive = streaming is Map<String, dynamic>
+        ? streaming['adaptiveFormats']
+        : null;
+    final hasAdaptiveVideo =
+        adaptive is List &&
+        adaptive.any(
+          (f) =>
+              f is Map<String, dynamic> &&
+              !(f['mimeType'] as String? ?? '').startsWith('audio/'),
+        );
+    if (hasAdaptiveVideo && kept.every((s) => !s.hasVideo || s.hasAudio)) {
+      // Adaptive formats exist but no video-only url passed the probe: YouTube
+      // gates them behind a poToken on this video. VISIONOS is exempt as long
+      // as the request carries a visitorData session.
+      debugLog('[api] $videoId: adaptive streams gated, retrying via VISIONOS');
+      final fallback = await _visionosStreaming(videoId);
+      if (fallback != null) {
+        final extra = await playableStreams(_streams(fallback), _probe);
+        streams = dedupeStreams([...streams, ...extra]);
+      }
+    }
     debugLog('[api] $videoId: ${streams.length} playable streams');
     return VideoDetails(
       info: VideoInfo(
@@ -122,10 +153,13 @@ class InnertubeApi implements YouTubeApi {
         if (url is! String) continue;
         final mime = format['mimeType'] as String? ?? '';
         final audio = mime.startsWith('audio/');
-        final hasAudio =
-            audio ||
-            format['audioTrack'] != null ||
-            format['audioQuality'] != null;
+        final track = format['audioTrack'];
+        if (audio &&
+            track is Map<String, dynamic> &&
+            track['audioIsDefault'] == false) {
+          continue;
+        }
+        final hasAudio = audio || format['audioQuality'] != null;
         final quality = audio
             ? 'audio ${(format['bitrate'] as num? ?? 0).toInt() ~/ 1000}kbps'
             : format['qualityLabel'] as String? ?? 'unknown';
@@ -140,6 +174,51 @@ class InnertubeApi implements YouTubeApi {
       }
     }
     return out;
+  }
+
+  Future<String?>? _visitor;
+
+  Future<String?> _visitorData() => _visitor ??= _fetchVisitorData().then((v) {
+    if (v == null) _visitor = null;
+    return v;
+  });
+
+  Future<String?> _fetchVisitorData() async {
+    try {
+      final response = await _http.get(
+        Uri.parse('https://www.youtube.com/sw.js_data'),
+      );
+      if (response.statusCode != 200) return null;
+      var text = response.body;
+      if (text.startsWith(")]}'")) text = text.substring(4);
+      final data = jsonDecode(text);
+      if (data is List) {
+        final visitor = data[0][2][0][0][13];
+        if (visitor is String && visitor.length > 10) return visitor;
+      }
+    } catch (e) {
+      debugLog('[api] visitorData fetch failed: $e');
+    }
+    return null;
+  }
+
+  Future<Map<String, dynamic>?> _visionosStreaming(String videoId) async {
+    final visitor = await _visitorData();
+    if (visitor == null) return null;
+    try {
+      final r = await _post(
+        'player',
+        {'videoId': videoId, 'contentCheckOk': true, 'racyCheckOk': true},
+        client: 'VISIONOS',
+        visitorData: visitor,
+      );
+      final streaming = r['streamingData'];
+      if (streaming is Map<String, dynamic>) return streaming;
+    } catch (e) {
+      debugLog('[api] $videoId: VISIONOS retry failed: $e');
+      _visitor = null;
+    }
+    return null;
   }
 
   String? _thumbField(String? url) => url == null ? null : _proxied(url);
