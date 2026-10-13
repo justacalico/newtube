@@ -47,7 +47,7 @@ class WatchPage extends StatefulWidget {
   State<WatchPage> createState() => _WatchPageState();
 }
 
-class _WatchPageState extends State<WatchPage> {
+class _WatchPageState extends State<WatchPage> with WidgetsBindingObserver {
   PlayerController? _player;
   SleepTimer? _sleepTimer;
   SegmentSkipper? _skipper;
@@ -71,7 +71,20 @@ class _WatchPageState extends State<WatchPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _load();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final player = _player;
+    if (player == null) return;
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden) {
+      unawaited(player.setVideoEnabled(false));
+    } else if (state == AppLifecycleState.resumed) {
+      unawaited(player.setVideoEnabled(true));
+    }
   }
 
   @override
@@ -161,6 +174,11 @@ class _WatchPageState extends State<WatchPage> {
         _currentStream = current;
         _currentAudio = currentAudio;
       });
+      final lifecycle = WidgetsBinding.instance.lifecycleState;
+      if (lifecycle == AppLifecycleState.paused ||
+          lifecycle == AppLifecycleState.hidden) {
+        unawaited(player.setVideoEnabled(false));
+      }
       _mediaControls
           ?.attach(
             player,
@@ -350,6 +368,7 @@ class _WatchPageState extends State<WatchPage> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _completedSub?.cancel();
     _skipper?.dispose();
     _sleepTimer?.dispose();

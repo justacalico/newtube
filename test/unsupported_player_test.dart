@@ -27,6 +27,7 @@ void main() {
     await player.setRate(1.5);
     await player.setVolume(0.5);
     await player.setMuted(true);
+    await player.setVideoEnabled(false);
     await player.dispose();
   });
 

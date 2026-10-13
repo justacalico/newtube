@@ -100,8 +100,19 @@ class MediaKitPlayerController implements PlayerController {
   }
 
   @override
-  Widget buildView(BuildContext context) =>
-      Video(controller: _videoController, controls: NoVideoControls);
+  Future<void> setVideoEnabled(bool enabled) async {
+    final platform = _player.platform;
+    if (platform is NativePlayer) {
+      await platform.setProperty('vid', enabled ? 'auto' : 'no');
+    }
+  }
+
+  @override
+  Widget buildView(BuildContext context) => Video(
+    controller: _videoController,
+    controls: NoVideoControls,
+    pauseUponEnteringBackgroundMode: false,
+  );
 
   @override
   Future<void> dispose() {

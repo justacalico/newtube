@@ -30,6 +30,7 @@ abstract class PlayerController {
   Future<void> setRate(double rate);
   Future<void> setVolume(double volume);
   Future<void> setMuted(bool muted);
+  Future<void> setVideoEnabled(bool enabled);
   Widget buildView(BuildContext context);
   Future<void> dispose();
 }

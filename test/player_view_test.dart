@@ -134,9 +134,7 @@ void main() {
     expect(slider.onChanged, isNull);
   });
 
-  testWidgets('touch tap toggles the controls without pausing', (
-    tester,
-  ) async {
+  testWidgets('touch tap toggles the controls without pausing', (tester) async {
     final player = FakePlayerController()..playing = true;
     final state = await testState();
     await tester.pumpWidget(

@@ -194,6 +194,9 @@ class WebPlayerController implements PlayerController {
   }
 
   @override
+  Future<void> setVideoEnabled(bool enabled) async {}
+
+  @override
   Widget buildView(BuildContext context) =>
       HtmlElementView(viewType: _viewType);
 

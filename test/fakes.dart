@@ -196,6 +196,7 @@ class FakePlayerController implements PlayerController {
   final seeks = <Duration>[];
   bool paused = false;
   bool played = false;
+  bool videoEnabled = true;
 
   void emitPosition(Duration d) => _position.add(d);
   void emitDuration(Duration d) => _duration.add(d);
@@ -265,6 +266,11 @@ class FakePlayerController implements PlayerController {
   Future<void> setMuted(bool muted) async {
     this.muted = muted;
     _mutedChanges.add(muted);
+  }
+
+  @override
+  Future<void> setVideoEnabled(bool enabled) async {
+    videoEnabled = enabled;
   }
 
   @override

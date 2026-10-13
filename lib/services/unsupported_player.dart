@@ -54,6 +54,8 @@ class UnsupportedPlayerController implements PlayerController {
   @override
   Future<void> setMuted(bool muted) async {}
   @override
+  Future<void> setVideoEnabled(bool enabled) async {}
+  @override
   Widget buildView(BuildContext context) => const SizedBox.shrink();
   @override
   Future<void> dispose() async {}

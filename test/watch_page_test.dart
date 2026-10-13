@@ -642,6 +642,85 @@ void main() {
     expect(find.text('A video description'), findsOneWidget);
   });
 
+  testWidgets('backgrounding keeps audio playing without the video track', (
+    tester,
+  ) async {
+    final player = FakePlayerController();
+    final state = await testState(api: FakeYouTubeApi(), player: player);
+    addTearDown(
+      () => tester.binding.handleAppLifecycleStateChanged(
+        AppLifecycleState.resumed,
+      ),
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+    expect(player.playing, isTrue);
+
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    await tester.pump();
+
+    expect(player.videoEnabled, isFalse);
+    expect(player.paused, isFalse);
+    expect(player.playing, isTrue);
+
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pump();
+    expect(player.videoEnabled, isTrue);
+    expect(player.playing, isTrue);
+  });
+
+  testWidgets('lifecycle change before load is ignored', (tester) async {
+    final api = FakeYouTubeApi()..detailsGate = Completer<VideoDetails>();
+    final state = await testState(api: api);
+    addTearDown(
+      () => tester.binding.handleAppLifecycleStateChanged(
+        AppLifecycleState.resumed,
+      ),
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pump();
+
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    await tester.pump();
+
+    api.detailsGate!.complete(
+      VideoDetails(info: testVideos.first, description: '', streams: const []),
+    );
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pumpAndSettle();
+    expect(find.text('First video'), findsWidgets);
+  });
+
+  testWidgets('opening a video while backgrounded stays audio-only', (
+    tester,
+  ) async {
+    final player = FakePlayerController();
+    final api = FakeYouTubeApi()..detailsGate = Completer<VideoDetails>();
+    final state = await testState(api: api, player: player);
+    addTearDown(
+      () => tester.binding.handleAppLifecycleStateChanged(
+        AppLifecycleState.resumed,
+      ),
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pump();
+
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    api.detailsGate!.complete(
+      VideoDetails(
+        info: testVideos.first,
+        description: '',
+        streams: testStreams,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(player.videoEnabled, isFalse);
+    expect(player.playing, isTrue);
+  });
+
   testWidgets('video without streams still shows info', (tester) async {
     final player = FakePlayerController();
     final api = FakeYouTubeApi(
