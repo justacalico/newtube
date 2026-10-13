@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -105,6 +106,14 @@ class _PlayerViewState extends State<PlayerView> {
   void _hideControls() {
     if (_player.playing && _controlsVisible) {
       setState(() => _controlsVisible = false);
+    }
+  }
+
+  void _toggleControls() {
+    if (_controlsVisible) {
+      _hideControls();
+    } else {
+      _showControls();
     }
   }
 
@@ -274,7 +283,10 @@ class _PlayerViewState extends State<PlayerView> {
                 Positioned.fill(
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
-                    onTap: _togglePlayback,
+                    onTapUp: (details) =>
+                        details.kind == PointerDeviceKind.mouse
+                        ? _togglePlayback()
+                        : _toggleControls(),
                   ),
                 ),
                 if (widget.segmentSkipper != null)
