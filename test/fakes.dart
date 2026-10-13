@@ -566,6 +566,9 @@ class FakePipActions implements PipActions {
   bool supported = true;
 
   @override
+  final ValueNotifier<bool> pipMode = ValueNotifier<bool>(false);
+
+  @override
   Future<bool> enterPip() async {
     enters++;
     return supported;
