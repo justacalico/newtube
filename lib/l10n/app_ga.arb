@@ -116,5 +116,15 @@
   "deArrowOff": "Múchta",
   "deArrowTitles": "Teidil amháin",
   "deArrowThumbnails": "Mionsamhlacha amháin",
-  "deArrowBoth": "Teidil agus mionsamhlacha"
+  "deArrowBoth": "Teidil agus mionsamhlacha",
+  "comments": "Tráchtanna",
+  "loadMoreComments": "Luchtaigh tuilleadh tráchtanna",
+  "replyCount": "{count, plural, other{{count} freagra}}",
+  "@replyCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

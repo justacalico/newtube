@@ -5,6 +5,7 @@ abstract class YouTubeApi {
   Future<SearchResults> search(String query);
   Future<VideoDetails> videoDetails(String videoId);
   Future<List<VideoInfo>> relatedVideos(String videoId);
+  Future<CommentsResult> comments(String videoId, {String? continuation});
   Future<ChannelInfo> channel(String channelId);
   Future<List<VideoInfo>> channelVideos(String channelId);
 }

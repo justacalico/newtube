@@ -99,3 +99,34 @@ class SearchResults {
 
   const SearchResults({this.videos = const [], this.channels = const []});
 }
+
+class CommentInfo {
+  final String author;
+  final String? channelId;
+  final String text;
+  final int likeCount;
+  final String? published;
+  final String? avatarUrl;
+  final int replyCount;
+  final bool pinned;
+  final bool hearted;
+
+  const CommentInfo({
+    required this.author,
+    this.channelId,
+    required this.text,
+    this.likeCount = 0,
+    this.published,
+    this.avatarUrl,
+    this.replyCount = 0,
+    this.pinned = false,
+    this.hearted = false,
+  });
+}
+
+class CommentsResult {
+  final List<CommentInfo> comments;
+  final String? continuation;
+
+  const CommentsResult({this.comments = const [], this.continuation});
+}

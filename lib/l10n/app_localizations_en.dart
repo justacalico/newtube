@@ -333,6 +333,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deArrowBoth => 'Titles and thumbnails';
+
+  @override
+  String get comments => 'Comments';
+
+  @override
+  String get loadMoreComments => 'Load more comments';
+
+  @override
+  String replyCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count replies',
+      one: '$count reply',
+    );
+    return '$_temp0';
+  }
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -663,4 +680,21 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get deArrowBoth => 'Titles and thumbnails';
+
+  @override
+  String get comments => 'Comments';
+
+  @override
+  String get loadMoreComments => 'Load more comments';
+
+  @override
+  String replyCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count replies',
+      one: '$count reply',
+    );
+    return '$_temp0';
+  }
 }

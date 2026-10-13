@@ -116,5 +116,15 @@
   "deArrowOff": "Off",
   "deArrowTitles": "Titles only",
   "deArrowThumbnails": "Thumbnails only",
-  "deArrowBoth": "Titles and thumbnails"
+  "deArrowBoth": "Titles and thumbnails",
+  "comments": "Comments",
+  "loadMoreComments": "Load more comments",
+  "replyCount": "{count, plural, one{{count} reply} other{{count} replies}}",
+  "@replyCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

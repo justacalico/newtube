@@ -327,6 +327,22 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get deArrowBoth => '标题和缩略图';
+
+  @override
+  String get comments => '评论';
+
+  @override
+  String get loadMoreComments => '加载更多评论';
+
+  @override
+  String replyCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 条回复',
+    );
+    return '$_temp0';
+  }
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -651,4 +667,20 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get deArrowBoth => '标题和缩略图';
+
+  @override
+  String get comments => '评论';
+
+  @override
+  String get loadMoreComments => '加载更多评论';
+
+  @override
+  String replyCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 条回复',
+    );
+    return '$_temp0';
+  }
 }

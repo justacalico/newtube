@@ -173,6 +173,7 @@ void main() {
       final results = await a.search('x');
       expect(results.videos.first.title, 'Honest title');
       expect(results.channels.first, testChannel);
+      expect((await a.comments('v1')).comments, isEmpty);
       expect(await a.channel('c1'), testChannel);
     });
 
