@@ -66,6 +66,7 @@ class PlayableStream {
   final String quality;
   final bool hasVideo;
   final bool hasAudio;
+  final String? container;
   final String? audioLanguage;
   final String? audioTrackName;
   final bool isDefaultAudio;
@@ -75,6 +76,7 @@ class PlayableStream {
     required this.quality,
     this.hasVideo = true,
     this.hasAudio = true,
+    this.container,
     this.audioLanguage,
     this.audioTrackName,
     this.isDefaultAudio = true,

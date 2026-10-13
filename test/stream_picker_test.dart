@@ -25,6 +25,24 @@ const aDub = PlayableStream(
   audioTrackName: 'Español',
   isDefaultAudio: false,
 );
+const v1080mp4 = PlayableStream(
+  url: 'v1080mp4',
+  quality: '1080p',
+  hasAudio: false,
+  container: 'mp4',
+);
+const aMp4 = PlayableStream(
+  url: 'aMp4',
+  quality: 'audio 130kbps',
+  hasVideo: false,
+  container: 'mp4',
+);
+const aWebm = PlayableStream(
+  url: 'aWebm',
+  quality: 'audio 136kbps',
+  hasVideo: false,
+  container: 'webm',
+);
 
 void main() {
   test('streamPixels parses leading numbers', () {
@@ -102,5 +120,47 @@ void main() {
   test('pairWithAudio keeps the selected track', () {
     expect(pairWithAudio(v720, const [a64, a128], audio: a64).audio, a64);
     expect(pairWithAudio(v720, const [a128], audio: aDub).audio, aDub);
+  });
+
+  test('bestAudio prefers the video container', () {
+    expect(bestAudio(const [aWebm, aMp4], container: 'mp4'), aMp4);
+    expect(bestAudio(const [aWebm, aMp4], container: 'webm'), aWebm);
+  });
+
+  test('bestAudio falls back to any container', () {
+    expect(bestAudio(const [aWebm], container: 'mp4'), aWebm);
+    expect(bestAudio(const [a128], container: 'mp4'), a128);
+  });
+
+  test('pairWithAudio pairs audio from the same container', () {
+    final choice = pairWithAudio(v1080mp4, const [aWebm, aMp4]);
+    expect(choice.audio, aMp4);
+  });
+
+  test('pairWithAudio swaps an incompatible track', () {
+    final choice = pairWithAudio(v1080mp4, const [aWebm, aMp4], audio: aWebm);
+    expect(choice.audio, aMp4);
+  });
+
+  test('pairWithAudio keeps a compatible track', () {
+    final choice = pairWithAudio(v1080mp4, const [aWebm, aMp4], audio: aMp4);
+    expect(choice.audio, aMp4);
+  });
+
+  test('desktop pairs the matching audio container', () {
+    const vWebm = PlayableStream(
+      url: 'vWebm',
+      quality: '2160p',
+      hasAudio: false,
+      container: 'webm',
+    );
+    final choice = pickDefaultStream(const [
+      vWebm,
+      v1080mp4,
+      aMp4,
+      aWebm,
+    ], desktop: true)!;
+    expect(choice.stream, vWebm);
+    expect(choice.audio, aWebm);
   });
 }

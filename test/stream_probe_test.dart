@@ -58,6 +58,22 @@ void main() {
       ]);
     });
 
+    test('keeps same quality audio in different containers', () {
+      const aMp4 = PlayableStream(
+        url: 'https://v/am',
+        quality: 'audio 128kbps',
+        hasVideo: false,
+        container: 'mp4',
+      );
+      const aWebm = PlayableStream(
+        url: 'https://v/aw',
+        quality: 'audio 128kbps',
+        hasVideo: false,
+        container: 'webm',
+      );
+      expect(dedupeStreams(const [aMp4, aWebm]), hasLength(2));
+    });
+
     test('returns the input unchanged when empty', () {
       expect(dedupeStreams(const []), isEmpty);
     });

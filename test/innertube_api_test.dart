@@ -245,6 +245,9 @@ void main() {
       expect(d.streams[0].hasAudio, isTrue);
       expect(d.streams[1].hasVideo, isFalse);
       expect(d.streams[2].hasAudio, isTrue);
+      expect(d.streams[0].container, 'mp4');
+      expect(d.streams[1].container, 'webm');
+      expect(d.streams[2].container, 'mp4');
     });
 
     test('videoDetails retries gated adaptive streams via VISIONOS', () async {

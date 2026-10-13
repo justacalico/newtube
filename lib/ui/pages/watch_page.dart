@@ -288,10 +288,13 @@ class _WatchPageState extends State<WatchPage> {
     }
     var video = current;
     if (video.hasAudio) {
-      video = (_details?.streams ?? const []).firstWhere(
+      final sameRes = (_details?.streams ?? const <PlayableStream>[]).where(
         (s) =>
             s.hasVideo && !s.hasAudio && streamPixels(s) == streamPixels(video),
-        orElse: () => video,
+      );
+      video = sameRes.firstWhere(
+        (s) => sameContainer(s, audio),
+        orElse: () => sameRes.firstOrNull ?? video,
       );
       if (video.hasAudio) return;
     }

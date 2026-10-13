@@ -201,12 +201,14 @@ class InnertubeApi implements YouTubeApi {
         final quality = audio
             ? 'audio ${(format['bitrate'] as num? ?? 0).toInt() ~/ 1000}kbps'
             : format['qualityLabel'] as String? ?? 'unknown';
+        final container = mime.split(';').first.split('/').last.trim();
         out.add(
           PlayableStream(
             url: _proxied(url),
             quality: quality,
             hasAudio: hasAudio,
             hasVideo: !audio,
+            container: container.isEmpty ? null : container,
             audioLanguage: (trackMap?['id'] as String?)?.split('.').first,
             audioTrackName: trackMap?['displayName'] as String?,
             isDefaultAudio: trackMap?['audioIsDefault'] != false,
