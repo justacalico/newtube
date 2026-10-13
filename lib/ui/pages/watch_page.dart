@@ -379,29 +379,29 @@ class _WatchPageState extends State<WatchPage> {
             )
           : player == null || _details == null
           ? const Center(child: CircularProgressIndicator())
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: _fullscreen
-                      ? const ColoredBox(color: Colors.black)
-                      : PlayerView(
-                          player: player,
-                          streams: _details!.streams,
-                          current: _currentStream,
-                          currentAudio: _currentAudio,
-                          onQualitySelected: _selectStream,
-                          onAudioSelected: _selectAudio,
-                          onToggleFullscreen: () => _openFullscreen(player),
-                          sleepTimer: _sleepTimer,
-                          chapters: _chapters,
-                          segmentSkipper: _skipper,
-                          pipActions: _pipActions,
-                        ),
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
+          : SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: _fullscreen
+                        ? const ColoredBox(color: Colors.black)
+                        : PlayerView(
+                            player: player,
+                            streams: _details!.streams,
+                            current: _currentStream,
+                            currentAudio: _currentAudio,
+                            onQualitySelected: _selectStream,
+                            onAudioSelected: _selectAudio,
+                            onToggleFullscreen: () => _openFullscreen(player),
+                            sleepTimer: _sleepTimer,
+                            chapters: _chapters,
+                            segmentSkipper: _skipper,
+                            pipActions: _pipActions,
+                          ),
+                  ),
+                  Padding(
                     padding: const EdgeInsets.all(12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -563,8 +563,8 @@ class _WatchPageState extends State<WatchPage> {
                       ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
     );
   }
