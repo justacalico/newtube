@@ -10,6 +10,7 @@ import '../../utils/stream_picker.dart';
 import '../shell/title_bar.dart';
 import '../widgets/player_view.dart';
 import '../widgets/subscribe_button.dart';
+import '../widgets/video_list_tile.dart';
 import 'channel_page.dart';
 
 void openWatchPage(BuildContext context, VideoInfo video) {
@@ -229,17 +230,9 @@ class _WatchPageState extends State<WatchPage> {
                           ),
                           const SizedBox(height: 8),
                           for (final v in _related)
-                            ListTile(
+                            VideoListTile(
+                              video: v,
                               contentPadding: EdgeInsets.zero,
-                              title: Text(
-                                v.title,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              subtitle: Text(v.author),
-                              trailing: v.duration == null
-                                  ? null
-                                  : Text(formatDuration(v.duration)),
                               onTap: () => Navigator.of(context)
                                   .pushReplacement(
                                     MaterialPageRoute<void>(

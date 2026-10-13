@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../state/app_state.dart';
-import '../../utils/format.dart';
-import '../widgets/thumbnail.dart';
+import '../widgets/video_list_tile.dart';
 import 'watch_page.dart';
 
 class HistoryPage extends StatelessWidget {
@@ -38,21 +37,8 @@ class HistoryPage extends StatelessWidget {
           itemCount: entries.length,
           itemBuilder: (context, i) {
             final video = entries[i];
-            return ListTile(
-              leading: VideoThumbnail(
-                url: video.thumbnailUrl,
-                width: 96,
-                height: 54,
-              ),
-              title: Text(
-                video.title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              subtitle: Text(video.author),
-              trailing: video.duration == null
-                  ? null
-                  : Text(formatDuration(video.duration)),
+            return VideoListTile(
+              video: video,
               onTap: () => openWatchPage(context, video),
             );
           },
