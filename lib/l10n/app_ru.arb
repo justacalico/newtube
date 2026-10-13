@@ -68,5 +68,8 @@
   "corsFirefox": "Дополнение Firefox",
   "corsChrome": "Расширение Chrome",
   "corsProxyLabel": "Префикс CORS-прокси",
-  "corsProxyHint": "URL видео добавляется в кодированном виде, например https://proxy.example/?url="
+  "corsProxyHint": "URL видео добавляется в кодированном виде, например https://proxy.example/?url=",
+  "mcpServer": "MCP-сервер",
+  "mcpServerHint": "Разрешить ИИ-инструментам искать и воспроизводить видео",
+  "mcpServerFailed": "Не удалось запустить MCP-сервер"
 }

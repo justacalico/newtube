@@ -7,6 +7,7 @@ import 'package:window_manager/window_manager.dart';
 import 'app.dart';
 import 'services/innertube_api.dart';
 import 'services/launcher.dart';
+import 'services/mcp_server.dart';
 import 'services/player_controller.dart';
 import 'services/window_actions_impl.dart';
 import 'services/youtube_explode_api.dart';
@@ -53,6 +54,7 @@ Future<AppState> createAppState(SharedPreferences prefs) async {
     packageInfo: PackageInfo.fromPlatform,
     createPlayer: createPlayerController,
     windowActions: isDesktopPlatform ? WindowManagerActions() : null,
+    createMcpServer: isDesktopPlatform ? createMcpServer : null,
   );
 }
 

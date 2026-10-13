@@ -68,5 +68,8 @@
   "corsFirefox": "Breiseán Firefox",
   "corsChrome": "Síneadh Chrome",
   "corsProxyLabel": "Réimír sheachfhreastalaí CORS",
-  "corsProxyHint": "Cuirtear URL an fhíse leis i bhfoirm ionchódaithe, mar shampla https://proxy.example/?url="
+  "corsProxyHint": "Cuirtear URL an fhíse leis i bhfoirm ionchódaithe, mar shampla https://proxy.example/?url=",
+  "mcpServer": "Freastalaí MCP",
+  "mcpServerHint": "Lig d'uirlisí AI físeáin a chuardach agus a sheinm",
+  "mcpServerFailed": "Níorbh fhéidir an freastalaí MCP a thosú"
 }

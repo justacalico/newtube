@@ -221,4 +221,14 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get corsProxyHint =>
       'URL видео добавляется в кодированном виде, например https://proxy.example/?url=';
+
+  @override
+  String get mcpServer => 'MCP-сервер';
+
+  @override
+  String get mcpServerHint =>
+      'Разрешить ИИ-инструментам искать и воспроизводить видео';
+
+  @override
+  String get mcpServerFailed => 'Не удалось запустить MCP-сервер';
 }

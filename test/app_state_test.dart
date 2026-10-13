@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/models/app_update.dart';
+import 'package:newtube/models/video_info.dart';
 import 'package:newtube/services/version_checker.dart';
+import 'package:newtube/state/settings_store.dart';
 
 import 'fakes.dart';
 
@@ -65,5 +67,76 @@ void main() {
     );
     await state.checkForUpdate();
     expect(notified, 1);
+  });
+
+  test('watch request notifies and clears', () async {
+    final state = await testState();
+    var notified = 0;
+    state.addListener(() => notified++);
+    state.requestWatch(testVideos.first);
+    expect(state.watchRequest, testVideos.first);
+    expect(notified, 1);
+    state.clearWatchRequest();
+    expect(state.watchRequest, isNull);
+  });
+
+  test('creates and starts the MCP server when enabled', () async {
+    final fake = FakeMcpServer();
+    void Function(VideoInfo)? onPlay;
+    final state = await testState(
+      settings: SettingsStore(mcpEnabled: true),
+      createMcpServer: ({required api, required version, onPlayVideo}) {
+        onPlay = onPlayVideo;
+        return fake;
+      },
+    );
+    await pumpEventQueue();
+    expect(state.mcpServer, fake);
+    expect(fake.running, isTrue);
+    expect(state.mcpError, isNull);
+
+    onPlay!(testVideos.first);
+    expect(state.watchRequest, testVideos.first);
+    state.clearWatchRequest();
+
+    await state.settings.setMcpEnabled(false, state.prefs);
+    await pumpEventQueue();
+    expect(fake.running, isFalse);
+
+    await state.settings.setMcpEnabled(true, state.prefs);
+    await pumpEventQueue();
+    expect(fake.running, isTrue);
+  });
+
+  test('reports an error when the MCP server fails to start', () async {
+    final fake = FakeMcpServer()..startError = 'port busy';
+    final state = await testState(
+      settings: SettingsStore(mcpEnabled: true),
+      createMcpServer: ({required api, required version, onPlayVideo}) => fake,
+    );
+    await pumpEventQueue();
+    expect(fake.running, isFalse);
+    expect(state.mcpError, 'port busy');
+
+    fake.startError = null;
+    await state.settings.setMcpEnabled(false, state.prefs);
+    await state.settings.setMcpEnabled(true, state.prefs);
+    await pumpEventQueue();
+    expect(state.mcpError, isNull);
+    expect(fake.running, isTrue);
+  });
+
+  test('creates the MCP server even when package info fails', () async {
+    var captured = '';
+    final state = await testState(
+      packageInfo: () async => throw StateError('no plugin'),
+      createMcpServer: ({required api, required version, onPlayVideo}) {
+        captured = version;
+        return FakeMcpServer();
+      },
+    );
+    await pumpEventQueue();
+    expect(state.mcpServer, isNotNull);
+    expect(captured, 'dev');
   });
 }

@@ -5,6 +5,7 @@ import '../../models/app_update.dart';
 import '../../services/version_checker.dart';
 import '../../state/app_state.dart';
 import '../../state/settings_store.dart';
+import '../shell/title_bar.dart' show isDesktopPlatform;
 
 const languageNames = {
   'en_GB': 'Traditional English',
@@ -87,12 +88,14 @@ class _SettingsPageState extends State<SettingsPage> {
 
     return ListenableBuilder(
       listenable: Listenable.merge([
+        state,
         state.settings,
         state.history,
         state.searchHistory,
       ]),
       builder: (context, _) {
         final settings = state.settings;
+        final mcp = state.mcpServer;
         return ListView(
           children: [
             ListTile(
@@ -182,6 +185,21 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
             ],
+            if (isDesktopPlatform)
+              SwitchListTile(
+                secondary: const Icon(Icons.hub_outlined),
+                title: Text(l10n.mcpServer),
+                subtitle: Text(
+                  mcp != null && mcp.running
+                      ? mcp.url!
+                      : state.mcpError != null
+                      ? l10n.mcpServerFailed
+                      : l10n.mcpServerHint,
+                ),
+                value: settings.mcpEnabled,
+                onChanged: (value) =>
+                    settings.setMcpEnabled(value, state.prefs),
+              ),
             const Divider(),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),

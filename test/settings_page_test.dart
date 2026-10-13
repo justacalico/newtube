@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/models/app_update.dart';
@@ -213,5 +214,50 @@ void main() {
       'https://gitlab.com/HttpAnimations/newtube',
       'https://www.gnu.org/licenses/agpl-3.0.html',
     ]);
+  });
+
+  testWidgets('toggles the MCP server', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    final fake = FakeMcpServer();
+    final state = await testState(
+      createMcpServer: ({required api, required version, onPlayVideo}) => fake,
+    );
+    await pumpPage(tester, state, const SettingsPage());
+    await tester.pumpAndSettle();
+
+    final tile = find.widgetWithText(SwitchListTile, 'MCP server');
+    expect(tile, findsOneWidget);
+    expect(
+      find.text('Allow AI tools to search and play videos'),
+      findsOneWidget,
+    );
+
+    await tester.tap(tile);
+    await tester.pumpAndSettle();
+    expect(state.settings.mcpEnabled, isTrue);
+    expect(fake.running, isTrue);
+    expect(find.text('http://127.0.0.1:8642/mcp'), findsOneWidget);
+
+    await tester.tap(tile);
+    await tester.pumpAndSettle();
+    expect(state.settings.mcpEnabled, isFalse);
+    expect(fake.running, isFalse);
+    debugDefaultTargetPlatformOverride = null;
+  });
+
+  testWidgets('shows an error when the MCP server fails to start', (
+    tester,
+  ) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    final state = await testState(
+      settings: SettingsStore(mcpEnabled: true),
+      createMcpServer: ({required api, required version, onPlayVideo}) =>
+          FakeMcpServer()..startError = 'port busy',
+    );
+    await pumpPage(tester, state, const SettingsPage());
+    await tester.pumpAndSettle();
+
+    expect(find.text('Could not start the MCP server'), findsOneWidget);
+    debugDefaultTargetPlatformOverride = null;
   });
 }

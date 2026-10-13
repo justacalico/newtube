@@ -76,6 +76,9 @@ void touchAll(AppLocalizations l) {
   l.corsProxyLabel;
   l.corsProxyHint;
   l.searchResultsFor;
+  l.mcpServer;
+  l.mcpServerHint;
+  l.mcpServerFailed;
 }
 
 void main() {

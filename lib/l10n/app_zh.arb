@@ -68,5 +68,8 @@
   "corsFirefox": "Firefox 扩展",
   "corsChrome": "Chrome 扩展",
   "corsProxyLabel": "CORS 代理前缀",
-  "corsProxyHint": "视频地址会以 URL 编码形式附加，例如 https://proxy.example/?url="
+  "corsProxyHint": "视频地址会以 URL 编码形式附加，例如 https://proxy.example/?url=",
+  "mcpServer": "MCP 服务器",
+  "mcpServerHint": "允许 AI 工具搜索和播放视频",
+  "mcpServerFailed": "无法启动 MCP 服务器"
 }
