@@ -521,9 +521,7 @@ void main() {
     expect(state.subscriptions.isSubscribed('c1'), isTrue);
   });
 
-  testWidgets('background audio session attaches and detaches', (
-    tester,
-  ) async {
+  testWidgets('background audio session attaches and detaches', (tester) async {
     final controls = FakeMediaControls();
     final state = await testState(
       api: FakeYouTubeApi(),
@@ -545,19 +543,14 @@ void main() {
 
   testWidgets('stream open failure disposes the player', (tester) async {
     final player = FakePlayerController()..openError = 'dead';
-    final state = await testState(
-      api: FakeYouTubeApi(),
-      player: player,
-    );
+    final state = await testState(api: FakeYouTubeApi(), player: player);
     await pumpPage(tester, state, WatchPage(video: testVideos.first));
     await tester.pumpAndSettle();
     expect(player.disposed, isTrue);
     expect(find.text('Retry'), findsOneWidget);
   });
 
-  testWidgets('media controls failure does not break playback', (
-    tester,
-  ) async {
+  testWidgets('media controls failure does not break playback', (tester) async {
     final controls = FakeMediaControls()..attachThrows = true;
     final state = await testState(
       api: FakeYouTubeApi(),

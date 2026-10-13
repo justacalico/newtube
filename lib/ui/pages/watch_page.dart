@@ -160,14 +160,16 @@ class _WatchPageState extends State<WatchPage> {
         _currentStream = current;
         _currentAudio = currentAudio;
       });
-      _mediaControls?.attach(
-        player,
-        title: details.info.title,
-        artist: details.info.author,
-        artworkUri: details.info.thumbnailUrl,
-      ).catchError((Object e) {
-        debugLog('[watch] ${widget.video.id}: media controls failed: $e');
-      });
+      _mediaControls
+          ?.attach(
+            player,
+            title: details.info.title,
+            artist: details.info.author,
+            artworkUri: details.info.thumbnailUrl,
+          )
+          .catchError((Object e) {
+            debugLog('[watch] ${widget.video.id}: media controls failed: $e');
+          });
       _loadSegments(player);
       _completedSub = player.completedStream.listen((done) {
         if (done) _advancePlaylist();

@@ -97,16 +97,15 @@ class _AudioServiceControls implements MediaControls {
     String? artworkUri,
   }) async {
     _attached = player;
-    final handler =
-        _handler ??= await AudioService.init(
-          builder: _PlaybackHandler.new,
-          config: AudioServiceConfig(
-            androidNotificationChannelId: 'gitlab.httpanimations.newtube.audio',
-            androidNotificationChannelName: 'Playback',
-            androidNotificationOngoing: true,
-            androidStopForegroundOnPause: false,
-          ),
-        );
+    final handler = _handler ??= await AudioService.init(
+      builder: _PlaybackHandler.new,
+      config: AudioServiceConfig(
+        androidNotificationChannelId: 'gitlab.httpanimations.newtube.audio',
+        androidNotificationChannelName: 'Playback',
+        androidNotificationOngoing: true,
+        androidStopForegroundOnPause: false,
+      ),
+    );
     if (_attached != player) return;
     handler.setPlayer(
       player,

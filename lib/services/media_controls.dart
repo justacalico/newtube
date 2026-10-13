@@ -1,5 +1,6 @@
 import 'media_controls_stub.dart'
-    if (dart.library.io) 'media_controls_io.dart' as impl;
+    if (dart.library.io) 'media_controls_io.dart'
+    as impl;
 import 'player_controller.dart';
 
 abstract class MediaControls {
