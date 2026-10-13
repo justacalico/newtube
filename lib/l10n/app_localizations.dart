@@ -470,11 +470,11 @@ abstract class AppLocalizations {
   /// **'Play'**
   String get openVideo;
 
-  /// No description provided for @audioOnly.
+  /// No description provided for @audio.
   ///
   /// In en_GB, this message translates to:
-  /// **'Audio only'**
-  String get audioOnly;
+  /// **'Audio'**
+  String get audio;
 
   /// No description provided for @fullscreen.
   ///

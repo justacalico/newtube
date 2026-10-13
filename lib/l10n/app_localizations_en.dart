@@ -196,7 +196,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get openVideo => 'Play';
 
   @override
-  String get audioOnly => 'Audio only';
+  String get audio => 'Audio';
 
   @override
   String get fullscreen => 'Fullscreen';
@@ -442,7 +442,7 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   String get openVideo => 'Play';
 
   @override
-  String get audioOnly => 'Audio only';
+  String get audio => 'Audio';
 
   @override
   String get fullscreen => 'Fullscreen';

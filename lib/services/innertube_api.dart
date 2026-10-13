@@ -154,11 +154,7 @@ class InnertubeApi implements YouTubeApi {
         final mime = format['mimeType'] as String? ?? '';
         final audio = mime.startsWith('audio/');
         final track = format['audioTrack'];
-        if (audio &&
-            track is Map<String, dynamic> &&
-            track['audioIsDefault'] == false) {
-          continue;
-        }
+        final trackMap = track is Map<String, dynamic> ? track : null;
         final hasAudio = audio || format['audioQuality'] != null;
         final quality = audio
             ? 'audio ${(format['bitrate'] as num? ?? 0).toInt() ~/ 1000}kbps'
@@ -169,6 +165,9 @@ class InnertubeApi implements YouTubeApi {
             quality: quality,
             hasAudio: hasAudio,
             hasVideo: !audio,
+            audioLanguage: (trackMap?['id'] as String?)?.split('.').first,
+            audioTrackName: trackMap?['displayName'] as String?,
+            isDefaultAudio: trackMap?['audioIsDefault'] != false,
           ),
         );
       }

@@ -61,7 +61,7 @@
   "licence": "Licence",
   "licenceText": "GNU Affero General Public Licence v3.0",
   "openVideo": "Play",
-  "audioOnly": "Audio only",
+  "audio": "Audio",
   "fullscreen": "Fullscreen",
   "quality": "Quality",
   "searchResultsFor": "Results",

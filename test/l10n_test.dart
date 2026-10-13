@@ -66,7 +66,7 @@ void touchAll(AppLocalizations l) {
   l.licence;
   l.licenceText;
   l.openVideo;
-  l.audioOnly;
+  l.audio;
   l.fullscreen;
   l.quality;
   l.corsNoticeTitle;

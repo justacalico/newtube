@@ -3,9 +3,11 @@ import 'debug_log.dart';
 
 class StreamChoice {
   final PlayableStream stream;
-  final String? audioUrl;
+  final PlayableStream? audio;
 
-  const StreamChoice(this.stream, this.audioUrl);
+  const StreamChoice(this.stream, this.audio);
+
+  String? get audioUrl => audio?.url;
 }
 
 int streamPixels(PlayableStream stream) {
@@ -13,16 +15,14 @@ int streamPixels(PlayableStream stream) {
   return match == null ? 0 : int.tryParse(match.group(0)!) ?? 0;
 }
 
-String? bestAudioUrl(List<PlayableStream> streams) {
-  String? url;
-  var best = -1;
-  for (final s in streams) {
-    if (!s.hasVideo && s.hasAudio && streamPixels(s) > best) {
-      best = streamPixels(s);
-      url = s.url;
-    }
+PlayableStream? bestAudio(List<PlayableStream> streams) {
+  final audio = streams.where((s) => !s.hasVideo && s.hasAudio).toList();
+  final defaults = audio.where((s) => s.isDefaultAudio).toList();
+  PlayableStream? best;
+  for (final s in defaults.isNotEmpty ? defaults : audio) {
+    if (best == null || streamPixels(s) > streamPixels(best)) best = s;
   }
-  return url;
+  return best;
 }
 
 StreamChoice? pickDefaultStream(
@@ -36,16 +36,16 @@ StreamChoice? pickDefaultStream(
       return (b.hasAudio ? 1 : 0).compareTo(a.hasAudio ? 1 : 0);
     });
   if (videoStreams.isEmpty) {
-    final audio = bestAudioUrl(streams);
+    final audio = bestAudio(streams);
     if (audio == null) {
       debugLog('[streams] no playable stream');
       return null;
     }
-    return StreamChoice(streams.firstWhere((s) => s.url == audio), null);
+    return StreamChoice(audio, null);
   }
 
   if (desktop) {
-    final audio = bestAudioUrl(streams);
+    final audio = bestAudio(streams);
     if (audio != null) {
       final separate = videoStreams.firstWhere(
         (s) => !s.hasAudio,
@@ -59,8 +59,11 @@ StreamChoice? pickDefaultStream(
     (s) => s.hasAudio,
     orElse: () => videoStreams.first,
   );
-  return StreamChoice(muxed, muxed.hasAudio ? null : bestAudioUrl(streams));
+  return StreamChoice(muxed, muxed.hasAudio ? null : bestAudio(streams));
 }
 
-StreamChoice pairWithAudio(PlayableStream stream, List<PlayableStream> all) =>
-    StreamChoice(stream, stream.hasAudio ? null : bestAudioUrl(all));
+StreamChoice pairWithAudio(
+  PlayableStream stream,
+  List<PlayableStream> all, {
+  PlayableStream? audio,
+}) => StreamChoice(stream, stream.hasAudio ? null : (audio ?? bestAudio(all)));
