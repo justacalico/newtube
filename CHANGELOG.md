@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.17.2 - 2026-10-13
+#### Bug Fixes
+- (**player**) 画中画只渲染视频画面 - (2b2a269) - HttpAnimations
+- (**player**) 应用退到后台时继续播放音频 - (d702651) - HttpAnimations
+- (**player**) 触摸点击切换控制层而非暂停播放 - (fb76573) - HttpAnimations
+
+- - -
+
 ## v0.17.1 - 2026-10-13
 #### Bug Fixes
 - 分离音轨按视频容器配对 - (f01cbf4) - HttpAnimations
