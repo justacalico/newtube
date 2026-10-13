@@ -24,7 +24,7 @@ class _DesktopPipActions implements PipActions {
 
   @override
   Future<bool> enterPip() async {
-    _size = await windowManager.getSize();
+    if (!_active) _size = await windowManager.getSize();
     await windowManager.setAlwaysOnTop(true);
     await windowManager.setMinimumSize(const Size(320, 180));
     await windowManager.setSize(const Size(480, 270));
@@ -39,6 +39,7 @@ class _DesktopPipActions implements PipActions {
     _active = false;
     await windowManager.setAlwaysOnTop(false);
     await windowManager.setAspectRatio(0);
+    await windowManager.setMinimumSize(const Size(400, 300));
     final size = _size;
     if (size != null) await windowManager.setSize(size);
   }
