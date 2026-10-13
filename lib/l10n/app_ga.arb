@@ -177,5 +177,16 @@
         "type": "int"
       }
     }
+  },
+  "uploadNotifications": "Fógraí uaslódála",
+  "uploadNotificationsHint": "Cuir in iúl nuair a uaslódálann cainéil físeáin nua",
+  "uploadCheckInterval": "Seiceáil uaslódáil",
+  "everyMinutes": "Gach {minutes} nóiméad",
+  "@everyMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
   }
 }

@@ -177,5 +177,16 @@
         "type": "int"
       }
     }
+  },
+  "uploadNotifications": "Уведомления о видео",
+  "uploadNotificationsHint": "Уведомлять о новых видео у подписанных каналов",
+  "uploadCheckInterval": "Проверять загрузки",
+  "everyMinutes": "Каждые {minutes} мин",
+  "@everyMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
   }
 }

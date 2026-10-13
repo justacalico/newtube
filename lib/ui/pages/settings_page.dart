@@ -354,6 +354,39 @@ class _SettingsPageState extends State<SettingsPage> {
                 ],
               ),
             ),
+            if (state.uploads != null) ...[
+              SwitchListTile(
+                secondary: const Icon(Icons.notifications_outlined),
+                title: Text(l10n.uploadNotifications),
+                subtitle: Text(l10n.uploadNotificationsHint),
+                value: settings.uploadNotificationsEnabled,
+                onChanged: (value) =>
+                    settings.setUploadNotificationsEnabled(value, state.prefs),
+              ),
+              if (settings.uploadNotificationsEnabled)
+                ListTile(
+                  leading: const Icon(Icons.schedule_outlined),
+                  title: Text(l10n.uploadCheckInterval),
+                  trailing: _SettingsDropdown<int>(
+                    value: settings.uploadCheckIntervalMinutes,
+                    onChanged: (minutes) {
+                      if (minutes != null) {
+                        settings.setUploadCheckIntervalMinutes(
+                          minutes,
+                          state.prefs,
+                        );
+                      }
+                    },
+                    items: [
+                      for (final minutes in const [15, 30, 60, 120])
+                        DropdownMenuItem(
+                          value: minutes,
+                          child: Text(l10n.everyMinutes(minutes)),
+                        ),
+                    ],
+                  ),
+                ),
+            ],
             if (settings.sponsorBlockEnabled) ...[
               SwitchListTile(
                 secondary: const Icon(Icons.fast_forward_outlined),

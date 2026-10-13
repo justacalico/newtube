@@ -177,5 +177,16 @@
         "type": "int"
       }
     }
+  },
+  "uploadNotifications": "上传通知",
+  "uploadNotificationsHint": "订阅的频道发布新视频时通知",
+  "uploadCheckInterval": "检查更新",
+  "everyMinutes": "每 {minutes} 分钟",
+  "@everyMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
   }
 }

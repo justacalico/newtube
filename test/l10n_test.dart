@@ -113,6 +113,10 @@ void touchAll(AppLocalizations l) {
   l.watchLaterRemove;
   l.videoCount(3);
   l.playlistProgress('P', 1, 2);
+  l.uploadNotifications;
+  l.uploadNotificationsHint;
+  l.uploadCheckInterval;
+  l.everyMinutes(30);
   l.corsNoticeTitle;
   l.corsNoticeBody;
   l.corsFirefox;

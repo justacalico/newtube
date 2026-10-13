@@ -24,6 +24,8 @@ class SettingsStore extends ChangeNotifier {
   static const _sponsorBlockAutoSkipKey = 'sponsorblock_autoskip';
   static const _sponsorBlockCategoriesKey = 'sponsorblock_categories';
   static const _deArrowModeKey = 'dearrow_mode';
+  static const _uploadNotifyKey = 'upload_notify';
+  static const _uploadIntervalKey = 'upload_interval';
   static const defaultSponsorBlockCategories = {'sponsor', 'selfpromo'};
 
   AppTheme _theme;
@@ -37,6 +39,8 @@ class SettingsStore extends ChangeNotifier {
   bool _sponsorBlockAutoSkip;
   Set<String> _sponsorBlockCategories;
   DeArrowMode _deArrowMode;
+  bool _uploadNotificationsEnabled;
+  int _uploadCheckIntervalMinutes;
 
   SettingsStore({
     this._theme = AppTheme.system,
@@ -50,6 +54,8 @@ class SettingsStore extends ChangeNotifier {
     this._sponsorBlockAutoSkip = true,
     Set<String>? sponsorBlockCategories,
     this._deArrowMode = DeArrowMode.off,
+    this._uploadNotificationsEnabled = false,
+    this._uploadCheckIntervalMinutes = 30,
   }) : _sponsorBlockCategories =
            sponsorBlockCategories ?? Set.of(defaultSponsorBlockCategories);
 
@@ -72,6 +78,8 @@ class SettingsStore extends ChangeNotifier {
       deArrowMode:
           DeArrowMode.values.asNameMap()[prefs.getString(_deArrowModeKey)] ??
           DeArrowMode.off,
+      uploadNotificationsEnabled: prefs.getBool(_uploadNotifyKey) ?? false,
+      uploadCheckIntervalMinutes: prefs.getInt(_uploadIntervalKey) ?? 30,
     );
   }
 
@@ -105,6 +113,8 @@ class SettingsStore extends ChangeNotifier {
   bool get deArrowThumbnails =>
       _deArrowMode == DeArrowMode.thumbnails ||
       _deArrowMode == DeArrowMode.both;
+  bool get uploadNotificationsEnabled => _uploadNotificationsEnabled;
+  int get uploadCheckIntervalMinutes => _uploadCheckIntervalMinutes;
 
   Future<void> setTheme(AppTheme theme, SharedPreferences prefs) async {
     _theme = theme;
@@ -187,6 +197,24 @@ class SettingsStore extends ChangeNotifier {
   ) async {
     _deArrowMode = value;
     await prefs.setString(_deArrowModeKey, value.name);
+    notifyListeners();
+  }
+
+  Future<void> setUploadNotificationsEnabled(
+    bool value,
+    SharedPreferences prefs,
+  ) async {
+    _uploadNotificationsEnabled = value;
+    await prefs.setBool(_uploadNotifyKey, value);
+    notifyListeners();
+  }
+
+  Future<void> setUploadCheckIntervalMinutes(
+    int value,
+    SharedPreferences prefs,
+  ) async {
+    _uploadCheckIntervalMinutes = value;
+    await prefs.setInt(_uploadIntervalKey, value);
     notifyListeners();
   }
 }

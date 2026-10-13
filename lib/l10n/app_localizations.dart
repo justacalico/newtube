@@ -823,6 +823,30 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'{playlist} · {index}/{total}'**
   String playlistProgress(String playlist, int index, int total);
+
+  /// No description provided for @uploadNotifications.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Upload notifications'**
+  String get uploadNotifications;
+
+  /// No description provided for @uploadNotificationsHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Notify when subscribed channels post new videos'**
+  String get uploadNotificationsHint;
+
+  /// No description provided for @uploadCheckInterval.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Check for uploads'**
+  String get uploadCheckInterval;
+
+  /// No description provided for @everyMinutes.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Every {minutes} min'**
+  String everyMinutes(int minutes);
 }
 
 class _AppLocalizationsDelegate

@@ -407,6 +407,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String playlistProgress(String playlist, int index, int total) {
     return '$playlist · $index/$total';
   }
+
+  @override
+  String get uploadNotifications => 'Upload notifications';
+
+  @override
+  String get uploadNotificationsHint =>
+      'Notify when subscribed channels post new videos';
+
+  @override
+  String get uploadCheckInterval => 'Check for uploads';
+
+  @override
+  String everyMinutes(int minutes) {
+    return 'Every $minutes min';
+  }
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -810,5 +825,20 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   @override
   String playlistProgress(String playlist, int index, int total) {
     return '$playlist · $index/$total';
+  }
+
+  @override
+  String get uploadNotifications => 'Upload notifications';
+
+  @override
+  String get uploadNotificationsHint =>
+      'Notify when subscribed channels post new videos';
+
+  @override
+  String get uploadCheckInterval => 'Check for uploads';
+
+  @override
+  String everyMinutes(int minutes) {
+    return 'Every $minutes min';
   }
 }

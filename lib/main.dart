@@ -13,7 +13,9 @@ import 'services/dearrow.dart';
 import 'services/dearrow_api.dart';
 import 'services/file_opener.dart';
 import 'services/player_controller.dart';
+import 'services/notifier.dart';
 import 'services/sponsor_block.dart';
+import 'services/uploads_watcher.dart';
 import 'services/window_actions_impl.dart';
 import 'services/youtube_explode_api.dart';
 import 'state/app_state.dart';
@@ -43,6 +45,7 @@ Future<void> _initWindow() async {
 
 Future<AppState> createAppState(SharedPreferences prefs) async {
   final settings = await SettingsStore.load(prefs);
+  final subscriptions = await SubscriptionsStore.load(prefs);
   return AppState(
     prefs: prefs,
     api: DeArrowApi(
@@ -57,7 +60,7 @@ Future<AppState> createAppState(SharedPreferences prefs) async {
     ),
     isWeb: kIsWeb,
     settings: settings,
-    subscriptions: await SubscriptionsStore.load(prefs),
+    subscriptions: subscriptions,
     watchLater: await WatchLaterStore.load(prefs),
     history: await HistoryStore.load(prefs),
     searchHistory: await SearchHistoryStore.load(prefs),
@@ -69,6 +72,15 @@ Future<AppState> createAppState(SharedPreferences prefs) async {
     saveFile: isDesktopPlatform ? saveFileDialog : null,
     openFile: kIsWeb ? null : openTextFileDialog,
     sponsorBlock: SponsorBlockClient(),
+    uploads: switch (createNotifier()) {
+      // coverage:ignore-line
+      null => null,
+      final notify => UploadsWatcher(
+        prefs: prefs,
+        subscriptions: subscriptions,
+        notify: notify,
+      )..attach(settings),
+    },
   );
 }
 

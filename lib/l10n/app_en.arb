@@ -177,5 +177,16 @@
         "type": "int"
       }
     }
+  },
+  "uploadNotifications": "Upload notifications",
+  "uploadNotificationsHint": "Notify when subscribed channels post new videos",
+  "uploadCheckInterval": "Check for uploads",
+  "everyMinutes": "Every {minutes} min",
+  "@everyMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
   }
 }

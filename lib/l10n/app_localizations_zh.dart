@@ -398,6 +398,20 @@ class AppLocalizationsZh extends AppLocalizations {
   String playlistProgress(String playlist, int index, int total) {
     return '$playlist · $index/$total';
   }
+
+  @override
+  String get uploadNotifications => '上传通知';
+
+  @override
+  String get uploadNotificationsHint => '订阅的频道发布新视频时通知';
+
+  @override
+  String get uploadCheckInterval => '检查更新';
+
+  @override
+  String everyMinutes(int minutes) {
+    return '每 $minutes 分钟';
+  }
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -792,5 +806,19 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   @override
   String playlistProgress(String playlist, int index, int total) {
     return '$playlist · $index/$total';
+  }
+
+  @override
+  String get uploadNotifications => '上传通知';
+
+  @override
+  String get uploadNotificationsHint => '订阅的频道发布新视频时通知';
+
+  @override
+  String get uploadCheckInterval => '检查更新';
+
+  @override
+  String everyMinutes(int minutes) {
+    return '每 $minutes 分钟';
   }
 }
