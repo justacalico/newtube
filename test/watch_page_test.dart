@@ -103,6 +103,45 @@ void main() {
     expect(player.opened.last, contains('360'));
   });
 
+  testWidgets('stream switch keeps playback position', (tester) async {
+    final player = FakePlayerController();
+    final state = await testState(api: FakeYouTubeApi(), player: player);
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+
+    player.position = const Duration(seconds: 30);
+    await tester.tap(find.byTooltip('Quality'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('360p').last);
+    await tester.pumpAndSettle();
+
+    expect(player.opened.last, contains('360'));
+    expect(player.lastSeek, const Duration(seconds: 30));
+    expect(player.playing, isTrue);
+  });
+
+  testWidgets('stream switch keeps paused state', (tester) async {
+    final player = FakePlayerController();
+    final state = await testState(
+      api: FakeYouTubeApi(),
+      player: player,
+      settings: SettingsStore(autoplay: false),
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+    expect(player.playing, isFalse);
+
+    player.position = const Duration(seconds: 10);
+    await tester.tap(find.byTooltip('Quality'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('360p').last);
+    await tester.pumpAndSettle();
+
+    expect(player.opened.last, contains('360'));
+    expect(player.lastSeek, const Duration(seconds: 10));
+    expect(player.playing, isFalse);
+  });
+
   testWidgets('audio menu switches the audio track', (tester) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.linux;
     const streams = [
@@ -282,11 +321,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(player.opened.single, 'https://audio.example.com/en');
 
+    player.position = const Duration(seconds: 7);
     await tester.tap(find.byTooltip('Audio'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Español'));
     await tester.pumpAndSettle();
     expect(player.opened.last, 'https://audio.example.com/es');
+    expect(player.lastSeek, const Duration(seconds: 7));
   });
 
   testWidgets('fullscreen hides everything else and back exits', (
