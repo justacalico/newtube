@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
+import '../../services/pip_actions.dart';
 import '../../services/player_controller.dart';
 import '../../services/sleep_timer.dart';
 import '../../services/sponsor_block.dart';
@@ -62,11 +63,18 @@ class _WatchPageState extends State<WatchPage> {
   bool _recorded = false;
   int _switches = 0;
   StreamSubscription<bool>? _completedSub;
+  PipActions? _pipActions;
 
   @override
   void initState() {
     super.initState();
     _load();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _pipActions = AppScope.read(context).pipActions;
   }
 
   Future<void> _load() async {
@@ -302,6 +310,7 @@ class _WatchPageState extends State<WatchPage> {
               sleepTimer: _sleepTimer,
               chapters: _chapters,
               segmentSkipper: _skipper,
+              pipActions: _pipActions,
             ),
           ),
         )
@@ -316,6 +325,7 @@ class _WatchPageState extends State<WatchPage> {
     _skipper?.dispose();
     _sleepTimer?.dispose();
     _player?.dispose();
+    _pipActions?.exitPip();
     super.dispose();
   }
 
@@ -358,6 +368,7 @@ class _WatchPageState extends State<WatchPage> {
                           sleepTimer: _sleepTimer,
                           chapters: _chapters,
                           segmentSkipper: _skipper,
+                          pipActions: _pipActions,
                         ),
                 ),
                 Expanded(
@@ -539,6 +550,7 @@ class _FullscreenPlayer extends StatefulWidget {
   final SleepTimer? sleepTimer;
   final List<VideoChapter> chapters;
   final SegmentSkipper? segmentSkipper;
+  final PipActions? pipActions;
 
   const _FullscreenPlayer({
     required this.player,
@@ -550,6 +562,7 @@ class _FullscreenPlayer extends StatefulWidget {
     this.sleepTimer,
     this.chapters = const [],
     this.segmentSkipper,
+    this.pipActions,
   });
 
   @override
@@ -590,6 +603,7 @@ class _FullscreenPlayerState extends State<_FullscreenPlayer> {
           sleepTimer: widget.sleepTimer,
           chapters: widget.chapters,
           segmentSkipper: widget.segmentSkipper,
+          pipActions: widget.pipActions,
         ),
       ),
     );

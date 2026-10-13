@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
+import '../../services/pip_actions.dart';
 import '../../services/player_controller.dart';
 import '../../services/sleep_timer.dart';
 import '../../services/sponsor_block.dart';
@@ -21,6 +22,7 @@ class PlayerView extends StatelessWidget {
   final SleepTimer? sleepTimer;
   final List<VideoChapter> chapters;
   final SegmentSkipper? segmentSkipper;
+  final PipActions? pipActions;
 
   const PlayerView({
     super.key,
@@ -35,6 +37,7 @@ class PlayerView extends StatelessWidget {
     this.sleepTimer,
     this.chapters = const [],
     this.segmentSkipper,
+    this.pipActions,
   });
 
   static const _rates = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
@@ -299,6 +302,15 @@ class PlayerView extends StatelessWidget {
                           );
                         },
                       ),
+                      if (pipActions != null)
+                        IconButton(
+                          icon: const Icon(
+                            Icons.picture_in_picture_alt_outlined,
+                            color: Colors.white,
+                          ),
+                          tooltip: l10n.pictureInPicture,
+                          onPressed: () => pipActions!.enterPip(),
+                        ),
                       StreamBuilder<double>(
                         stream: player.rateStream,
                         initialData: player.rate,

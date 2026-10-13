@@ -412,6 +412,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String everyMinutes(int minutes) {
     return '每 $minutes 分钟';
   }
+
+  @override
+  String get pictureInPicture => '画中画';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -821,4 +824,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String everyMinutes(int minutes) {
     return '每 $minutes 分钟';
   }
+
+  @override
+  String get pictureInPicture => '画中画';
 }

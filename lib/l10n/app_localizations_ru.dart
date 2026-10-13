@@ -430,4 +430,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String everyMinutes(int minutes) {
     return 'Каждые $minutes мин';
   }
+
+  @override
+  String get pictureInPicture => 'Картинка в картинке';
 }

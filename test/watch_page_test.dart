@@ -521,6 +521,26 @@ void main() {
     expect(state.subscriptions.isSubscribed('c1'), isTrue);
   });
 
+  testWidgets('picture-in-picture button enters and exits pip', (tester) async {
+    final pip = FakePipActions();
+    final state = await testState(
+      api: FakeYouTubeApi(),
+      player: FakePlayerController(),
+      pipActions: pip,
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+
+    final icon = find.byIcon(Icons.picture_in_picture_alt_outlined);
+    expect(icon, findsOneWidget);
+    await tester.tap(icon);
+    expect(pip.enters, 1);
+
+    await pumpPage(tester, state, const SizedBox());
+    await tester.pumpAndSettle();
+    expect(pip.exits, 1);
+  });
+
   testWidgets('related videos failure still plays', (tester) async {
     final player = FakePlayerController();
     final state = await testState(api: _RelatedFailApi(), player: player);

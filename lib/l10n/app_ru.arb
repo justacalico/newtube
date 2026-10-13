@@ -188,5 +188,6 @@
         "type": "int"
       }
     }
-  }
+  },
+  "pictureInPicture": "Картинка в картинке"
 }

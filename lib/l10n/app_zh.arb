@@ -188,5 +188,6 @@
         "type": "int"
       }
     }
-  }
+  },
+  "pictureInPicture": "画中画"
 }

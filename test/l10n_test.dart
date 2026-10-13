@@ -117,6 +117,7 @@ void touchAll(AppLocalizations l) {
   l.uploadNotificationsHint;
   l.uploadCheckInterval;
   l.everyMinutes(30);
+  l.pictureInPicture;
   l.corsNoticeTitle;
   l.corsNoticeBody;
   l.corsFirefox;

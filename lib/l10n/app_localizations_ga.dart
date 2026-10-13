@@ -428,4 +428,7 @@ class AppLocalizationsGa extends AppLocalizations {
   String everyMinutes(int minutes) {
     return 'Gach $minutes nóiméad';
   }
+
+  @override
+  String get pictureInPicture => 'Pictiúr i bpictiúr';
 }
