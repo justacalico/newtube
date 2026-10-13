@@ -371,10 +371,7 @@ void main() {
       'entry_point': 'server/bridge.js',
       'mcp_config': {
         'command': 'node',
-        'args': [
-          r'${__dirname}/server/bridge.js',
-          'http://127.0.0.1:8642/mcp',
-        ],
+        'args': [r'${__dirname}/server/bridge.js', 'http://127.0.0.1:8642/mcp'],
       },
     });
     expect((manifest['tools'] as List).length, mcpToolDefinitions.length);

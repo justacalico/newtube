@@ -125,8 +125,10 @@ void main() {
       VideoListTile(video: testVideos[1], onTap: () {}),
     );
     expect(find.text('Second video'), findsOneWidget);
-    expect(find.byType(ListTile).evaluate().single.widget, isA<ListTile>()
-        .having((t) => t.trailing, 'trailing', isNull));
+    expect(
+      find.byType(ListTile).evaluate().single.widget,
+      isA<ListTile>().having((t) => t.trailing, 'trailing', isNull),
+    );
   });
 
   testWidgets('FeedStateView shows each state', (tester) async {

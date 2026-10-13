@@ -15,8 +15,7 @@ Uint8List mcpbExport({
     'manifest_version': '0.3',
     'name': name,
     'version': version,
-    'description':
-        'Search YouTube, read channel and video details and play videos in newtube.',
+    'description': 'Search YouTube, read channel and video details and play videos in newtube.',
     'author': {'name': 'newtube'},
     'server': {
       'type': 'node',

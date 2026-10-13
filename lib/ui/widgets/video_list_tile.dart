@@ -20,16 +20,8 @@ class VideoListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: contentPadding,
-      leading: VideoThumbnail(
-        url: video.thumbnailUrl,
-        width: 96,
-        height: 54,
-      ),
-      title: Text(
-        video.title,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-      ),
+      leading: VideoThumbnail(url: video.thumbnailUrl, width: 96, height: 54),
+      title: Text(video.title, maxLines: 2, overflow: TextOverflow.ellipsis),
       subtitle: Text(video.author),
       trailing: video.duration == null
           ? null
