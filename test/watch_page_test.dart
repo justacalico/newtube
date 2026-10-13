@@ -9,6 +9,13 @@ import 'package:newtube/ui/pages/watch_page.dart';
 
 import 'fakes.dart';
 
+Future<void> _openSettings(WidgetTester tester, String entry) async {
+  await tester.tap(find.byTooltip('Settings'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text(entry));
+  await tester.pumpAndSettle();
+}
+
 class _RelatedFailApi extends FakeYouTubeApi {
   @override
   Future<List<VideoInfo>> relatedVideos(String videoId) async =>
@@ -98,8 +105,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(player.opened.single, isNotEmpty);
 
-    await tester.tap(find.byTooltip('Quality'));
-    await tester.pumpAndSettle();
+    await _openSettings(tester, 'Quality');
     await tester.tap(find.text('360p').last);
     await tester.pumpAndSettle();
     expect(player.opened.last, contains('360'));
@@ -112,8 +118,7 @@ void main() {
     await tester.pumpAndSettle();
 
     player.position = const Duration(seconds: 30);
-    await tester.tap(find.byTooltip('Quality'));
-    await tester.pumpAndSettle();
+    await _openSettings(tester, 'Quality');
     await tester.tap(find.text('360p').last);
     await tester.pumpAndSettle();
 
@@ -134,8 +139,7 @@ void main() {
     expect(player.playing, isFalse);
 
     player.position = const Duration(seconds: 10);
-    await tester.tap(find.byTooltip('Quality'));
-    await tester.pumpAndSettle();
+    await _openSettings(tester, 'Quality');
     await tester.tap(find.text('360p').last);
     await tester.pumpAndSettle();
 
@@ -155,13 +159,11 @@ void main() {
     player.position = const Duration(seconds: 30);
     player.openGate = Completer<void>();
 
-    await tester.tap(find.byTooltip('Quality'));
-    await tester.pumpAndSettle();
+    await _openSettings(tester, 'Quality');
     await tester.tap(find.text('360p').last);
     await tester.pump();
 
-    await tester.tap(find.byTooltip('Quality'));
-    await tester.pumpAndSettle();
+    await _openSettings(tester, 'Quality');
     await tester.tap(find.text('720p'));
     await tester.pump();
 
@@ -178,14 +180,12 @@ void main() {
     await pumpPage(tester, state, WatchPage(video: testVideos.first));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byTooltip('Playback speed'));
-    await tester.pumpAndSettle();
+    await _openSettings(tester, 'Playback speed');
     await tester.tap(find.text('1.5x'));
     await tester.pumpAndSettle();
     expect(player.rate, 1.5);
 
-    await tester.tap(find.byTooltip('Quality'));
-    await tester.pumpAndSettle();
+    await _openSettings(tester, 'Quality');
     await tester.tap(find.text('360p').last);
     await tester.pumpAndSettle();
 
@@ -232,8 +232,7 @@ void main() {
     await tester.pumpAndSettle();
 
     player.openError = StateError('nope');
-    await tester.tap(find.byTooltip('Quality'));
-    await tester.pumpAndSettle();
+    await _openSettings(tester, 'Quality');
     await tester.tap(find.text('360p').last);
     await tester.pumpAndSettle();
 
@@ -286,8 +285,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(player.opened.single, endsWith('+https://audio.example.com/en'));
 
-    await tester.tap(find.byTooltip('Audio'));
-    await tester.pumpAndSettle();
+    await _openSettings(tester, 'Audio');
     await tester.tap(find.text('Español'));
     await tester.pumpAndSettle();
     expect(player.opened.last, endsWith('+https://audio.example.com/es'));
@@ -334,8 +332,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(player.opened.single, 'https://video.example.com/360');
 
-    await tester.tap(find.byTooltip('Audio'));
-    await tester.pumpAndSettle();
+    await _openSettings(tester, 'Audio');
     await tester.tap(find.text('Español'));
     await tester.pumpAndSettle();
     expect(
@@ -377,8 +374,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(player.opened.single, 'https://video.example.com/360');
 
-    await tester.tap(find.byTooltip('Audio'));
-    await tester.pumpAndSettle();
+    await _openSettings(tester, 'Audio');
     await tester.tap(find.text('English original'));
     await tester.pumpAndSettle();
     expect(player.opened, hasLength(1));
@@ -421,8 +417,7 @@ void main() {
     expect(player.opened.single, 'https://audio.example.com/en');
 
     player.position = const Duration(seconds: 7);
-    await tester.tap(find.byTooltip('Audio'));
-    await tester.pumpAndSettle();
+    await _openSettings(tester, 'Audio');
     await tester.tap(find.text('Español'));
     await tester.pumpAndSettle();
     expect(player.opened.last, 'https://audio.example.com/es');
@@ -454,8 +449,7 @@ void main() {
 
     await tester.tap(find.byTooltip('Fullscreen'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Quality'));
-    await tester.pumpAndSettle();
+    await _openSettings(tester, 'Quality');
     await tester.tap(find.text('360p').last);
     await tester.pumpAndSettle();
 
@@ -475,8 +469,7 @@ void main() {
 
     await tester.tap(find.byTooltip('Fullscreen'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Audio'));
-    await tester.pumpAndSettle();
+    await _openSettings(tester, 'Audio');
     await tester.tap(find.text('audio 128kbps'));
     await tester.pumpAndSettle();
 
