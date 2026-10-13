@@ -521,6 +521,28 @@ void main() {
     expect(state.subscriptions.isSubscribed('c1'), isTrue);
   });
 
+  testWidgets('background audio session attaches and detaches', (
+    tester,
+  ) async {
+    final controls = FakeMediaControls();
+    final state = await testState(
+      api: FakeYouTubeApi(),
+      player: FakePlayerController(),
+      mediaControls: controls,
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+
+    expect(controls.attaches, 1);
+    expect(controls.lastTitle, 'First video');
+    expect(controls.lastArtist, 'Channel One');
+    expect(controls.lastArtwork, 'https://img.example.com/v1.jpg');
+
+    await pumpPage(tester, state, const SizedBox());
+    await tester.pumpAndSettle();
+    expect(controls.detaches, 1);
+  });
+
   testWidgets('picture-in-picture button enters and exits pip', (tester) async {
     final pip = FakePipActions();
     final state = await testState(

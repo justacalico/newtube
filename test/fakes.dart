@@ -13,6 +13,7 @@ import 'package:newtube/models/video_info.dart';
 import 'package:newtube/services/mcp_server.dart';
 import 'package:newtube/services/player_controller.dart';
 import 'package:newtube/services/sponsor_block.dart';
+import 'package:newtube/services/media_controls.dart';
 import 'package:newtube/services/pip_actions.dart';
 import 'package:newtube/services/uploads_watcher.dart';
 import 'package:newtube/services/version_checker.dart';
@@ -349,6 +350,7 @@ Future<AppState> testState({
   SponsorBlockClient? sponsorBlock,
   UploadsWatcher? uploads,
   PipActions? pipActions,
+  MediaControls? mediaControls,
   Map<String, Object> initialPrefs = const {},
 }) async {
   SharedPreferences.setMockInitialValues(initialPrefs);
@@ -381,6 +383,7 @@ Future<AppState> testState({
     sponsorBlock: sponsorBlock,
     uploads: uploads,
     pipActions: pipActions,
+    mediaControls: mediaControls,
     versionChecker: versionChecker ?? FakeVersionChecker(),
     isWeb: isWeb,
   );
@@ -561,5 +564,31 @@ class FakePipActions implements PipActions {
   @override
   Future<void> exitPip() async {
     exits++;
+  }
+}
+
+class FakeMediaControls implements MediaControls {
+  int attaches = 0;
+  int detaches = 0;
+  String? lastTitle;
+  String? lastArtist;
+  String? lastArtwork;
+
+  @override
+  Future<void> attach(
+    PlayerController player, {
+    required String title,
+    String? artist,
+    String? artworkUri,
+  }) async {
+    attaches++;
+    lastTitle = title;
+    lastArtist = artist;
+    lastArtwork = artworkUri;
+  }
+
+  @override
+  Future<void> detach() async {
+    detaches++;
   }
 }
