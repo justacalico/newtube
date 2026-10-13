@@ -40,6 +40,13 @@ class VideoInfo {
   );
 }
 
+class VideoChapter {
+  final Duration start;
+  final String title;
+
+  const VideoChapter({required this.start, required this.title});
+}
+
 class ChannelInfo {
   final String id;
   final String name;

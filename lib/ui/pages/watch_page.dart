@@ -5,6 +5,7 @@ import '../../models/video_info.dart';
 import '../../services/player_controller.dart';
 import '../../services/sleep_timer.dart';
 import '../../state/app_state.dart';
+import '../../utils/chapters.dart';
 import '../../utils/debug_log.dart';
 import '../../utils/format.dart';
 import '../../utils/stream_picker.dart';
@@ -37,6 +38,7 @@ class _WatchPageState extends State<WatchPage> {
   List<VideoInfo> _related = const [];
   PlayableStream? _currentStream;
   PlayableStream? _currentAudio;
+  List<VideoChapter> _chapters = const [];
   Object? _error;
   bool _fullscreen = false;
   bool _recorded = false;
@@ -106,6 +108,7 @@ class _WatchPageState extends State<WatchPage> {
         _details = details;
         _player = player;
         _sleepTimer = SleepTimer(player);
+        _chapters = parseChapters(details.description);
         _currentStream = current;
         _currentAudio = currentAudio;
       });
@@ -190,6 +193,7 @@ class _WatchPageState extends State<WatchPage> {
               onQualitySelected: _selectStream,
               onAudioSelected: _selectAudio,
               sleepTimer: _sleepTimer,
+              chapters: _chapters,
             ),
           ),
         )
@@ -241,6 +245,7 @@ class _WatchPageState extends State<WatchPage> {
                           onAudioSelected: _selectAudio,
                           onToggleFullscreen: () => _openFullscreen(player),
                           sleepTimer: _sleepTimer,
+                          chapters: _chapters,
                         ),
                 ),
                 Expanded(
@@ -351,6 +356,7 @@ class _FullscreenPlayer extends StatefulWidget {
   final ValueChanged<PlayableStream> onQualitySelected;
   final ValueChanged<PlayableStream> onAudioSelected;
   final SleepTimer? sleepTimer;
+  final List<VideoChapter> chapters;
 
   const _FullscreenPlayer({
     required this.player,
@@ -360,6 +366,7 @@ class _FullscreenPlayer extends StatefulWidget {
     required this.onQualitySelected,
     required this.onAudioSelected,
     this.sleepTimer,
+    this.chapters = const [],
   });
 
   @override
@@ -398,6 +405,7 @@ class _FullscreenPlayerState extends State<_FullscreenPlayer> {
           onToggleFullscreen: () => Navigator.of(context).pop(),
           isFullscreen: true,
           sleepTimer: widget.sleepTimer,
+          chapters: widget.chapters,
         ),
       ),
     );

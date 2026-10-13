@@ -5,6 +5,7 @@ import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../services/player_controller.dart';
 import '../../services/sleep_timer.dart';
+import '../../utils/chapters.dart';
 import '../../utils/format.dart';
 
 class PlayerView extends StatelessWidget {
@@ -17,6 +18,7 @@ class PlayerView extends StatelessWidget {
   final VoidCallback onToggleFullscreen;
   final bool isFullscreen;
   final SleepTimer? sleepTimer;
+  final List<VideoChapter> chapters;
 
   const PlayerView({
     super.key,
@@ -29,6 +31,7 @@ class PlayerView extends StatelessWidget {
     required this.onToggleFullscreen,
     this.isFullscreen = false,
     this.sleepTimer,
+    this.chapters = const [],
   });
 
   static const _rates = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
@@ -160,34 +163,101 @@ class PlayerView extends StatelessWidget {
                             builder: (context, posSnap) {
                               final pos = posSnap.data ?? Duration.zero;
                               final clamped = pos > total ? total : pos;
+                              final chapter = chapterAt(chapters, clamped);
                               return Expanded(
                                 child: Row(
                                   children: [
-                                    Text(
-                                      formatDuration(clamped),
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                      ),
+                                    Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          formatDuration(clamped),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                        if (chapter != null)
+                                          ConstrainedBox(
+                                            constraints: const BoxConstraints(
+                                              maxWidth: 120,
+                                            ),
+                                            child: Text(
+                                              chapter.title,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                color: Colors.white70,
+                                                fontSize: 10,
+                                              ),
+                                            ),
+                                          ),
+                                      ],
                                     ),
                                     Expanded(
-                                      child: Slider(
-                                        value: clamped.inMilliseconds
-                                            .toDouble()
-                                            .clamp(
-                                              0,
-                                              (total.inMilliseconds).toDouble(),
-                                            ),
-                                        max: total.inMilliseconds
-                                            .toDouble()
-                                            .clamp(1, double.infinity),
-                                        onChanged: total == Duration.zero
-                                            ? null
-                                            : (v) => player.seek(
-                                                Duration(
-                                                  milliseconds: v.round(),
+                                      child: Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          Slider(
+                                            value: clamped.inMilliseconds
+                                                .toDouble()
+                                                .clamp(
+                                                  0,
+                                                  (total.inMilliseconds)
+                                                      .toDouble(),
+                                                ),
+                                            max: total.inMilliseconds
+                                                .toDouble()
+                                                .clamp(1, double.infinity),
+                                            onChanged: total == Duration.zero
+                                                ? null
+                                                : (v) => player.seek(
+                                                    Duration(
+                                                      milliseconds: v.round(),
+                                                    ),
+                                                  ),
+                                          ),
+                                          if (total > Duration.zero)
+                                            Positioned.fill(
+                                              child: IgnorePointer(
+                                                child: LayoutBuilder(
+                                                  builder: (context, cons) => Stack(
+                                                    children: [
+                                                      for (final marker
+                                                          in chapters)
+                                                        if (marker.start >
+                                                                Duration.zero &&
+                                                            marker.start <
+                                                                total)
+                                                          Positioned(
+                                                            left:
+                                                                12 +
+                                                                (cons.maxWidth -
+                                                                        24) *
+                                                                    (marker
+                                                                            .start
+                                                                            .inMilliseconds /
+                                                                        total
+                                                                            .inMilliseconds),
+                                                            top:
+                                                                (cons.maxHeight -
+                                                                    10) /
+                                                                2,
+                                                            child: Container(
+                                                              width: 2,
+                                                              height: 10,
+                                                              color: Colors
+                                                                  .white38,
+                                                            ),
+                                                          ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
+                                            ),
+                                        ],
                                       ),
                                     ),
                                     Text(
