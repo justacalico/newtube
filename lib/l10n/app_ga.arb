@@ -73,7 +73,7 @@
   "mcpServerHint": "Lig d'uirlisí AI físeáin a chuardach agus a sheinm",
   "mcpServerFailed": "Níorbh fhéidir an freastalaí MCP a thosú",
   "mcpExport": "Easpórtáil comhad an fhreastalaí",
-  "mcpExportHint": "Sábháil comhad .mspb ar féidir le cliaint é a iompórtáil",
+  "mcpExportHint": "Sábháil comhad .mcpb ar féidir le cliaint é a iompórtáil",
   "mcpExportedTo": "Sábháilte go {path}",
   "@mcpExportedTo": {
     "placeholders": {

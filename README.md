@@ -64,12 +64,14 @@ clients search YouTube, read channel and video details and play videos in
 the app. Clients that only support stdio servers can reach it through a
 bridge such as `npx mcp-remote http://127.0.0.1:8642/mcp`.
 
-With the server on, Settings can export a `.mspb` descriptor (name,
-version, endpoint and tool manifest) through the native save dialog. The
-same document can be written to disk without the app running:
+With the server on, Settings can export a `.mcpb` file containing a
+standard `mcpServers` config through the native save dialog. Merge the
+entry into your client's MCP configuration (`mcp.json`,
+`claude_desktop_config.json` and so on). The same document can be
+written to disk without the app running:
 
 ```
-dart run tool/export_mspb.dart newtube.mspb
+dart run tool/export_mcpb.dart newtube.mcpb
 ```
 
 ## Screenshots

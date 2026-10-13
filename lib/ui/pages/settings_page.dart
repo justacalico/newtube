@@ -67,17 +67,15 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
-  Future<void> _exportMspb() async {
+  Future<void> _exportMcpb() async {
     final state = AppScope.read(context);
     final save = state.saveTextFile;
     if (save == null) return;
-    final info = await state.packageInfo();
-    final document = mspbExport(
+    final document = mcpConfigExport(
       name: 'newtube',
-      version: info.version,
       url: state.mcpServer?.url ?? mcpDefaultUrl,
     );
-    final path = await save('newtube.mspb', '${encodeMspb(document)}\n');
+    final path = await save('newtube.mcpb', '${encodeMcpConfig(document)}\n');
     if (!mounted) return;
     final l10n = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
@@ -229,7 +227,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   leading: const Icon(Icons.download_outlined),
                   title: Text(l10n.mcpExport),
                   subtitle: Text(l10n.mcpExportHint),
-                  onTap: _exportMspb,
+                  onTap: _exportMcpb,
                 ),
             ],
             const Divider(),

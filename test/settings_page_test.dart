@@ -286,18 +286,15 @@ void main() {
     await tester.tap(find.text('Export server file'));
     await tester.pumpAndSettle();
 
-    expect(saved.first, 'newtube.mspb');
+    expect(saved.first, 'newtube.mcpb');
     final doc = jsonDecode(saved[1]) as Map<String, Object?>;
-    expect(doc['format'], 'mspb');
-    expect(doc['server'], {
-      'name': 'newtube',
-      'version': '1.2.3',
-      'transport': 'streamable-http',
-      'url': 'http://127.0.0.1:8642/mcp',
+    expect(doc, {
+      'mcpServers': {
+        'newtube': {'type': 'http', 'url': 'http://127.0.0.1:8642/mcp'},
+      },
     });
-    expect((doc['tools'] as List).length, 7);
     expect(
-      find.text('Saved to /home/u/Downloads/newtube.mspb'),
+      find.text('Saved to /home/u/Downloads/newtube.mcpb'),
       findsOneWidget,
     );
     debugDefaultTargetPlatformOverride = null;

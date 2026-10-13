@@ -73,7 +73,7 @@
   "mcpServerHint": "Allow AI tools to search and play videos",
   "mcpServerFailed": "Could not start the MCP server",
   "mcpExport": "Export server file",
-  "mcpExportHint": "Save a .mspb file clients can import",
+  "mcpExportHint": "Save a .mcpb file clients can import",
   "mcpExportedTo": "Saved to {path}",
   "@mcpExportedTo": {
     "placeholders": {

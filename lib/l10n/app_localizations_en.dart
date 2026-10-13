@@ -234,7 +234,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mcpExport => 'Export server file';
 
   @override
-  String get mcpExportHint => 'Save a .mspb file clients can import';
+  String get mcpExportHint => 'Save a .mcpb file clients can import';
 
   @override
   String mcpExportedTo(String path) {
@@ -474,7 +474,7 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   String get mcpExport => 'Export server file';
 
   @override
-  String get mcpExportHint => 'Save a .mspb file clients can import';
+  String get mcpExportHint => 'Save a .mcpb file clients can import';
 
   @override
   String mcpExportedTo(String path) {
