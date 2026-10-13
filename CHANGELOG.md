@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.13.0 - 2026-10-13
+#### Features
+- 画中画播放 - (48c2bea) - HttpAnimations
+- 频道上传通知 - (108ebc9) - HttpAnimations
+#### Bug Fixes
+- 加固画中画实现 - (0bce7d9) - HttpAnimations
+- 加固上传通知与权限配置 - (d1a2842) - HttpAnimations
+- 加固上传通知与权限配置 - (d43f5c7) - HttpAnimations
+- 修复 Linux 与 Android 构建依赖 - (1acffc5) - HttpAnimations
+- 修复 Linux 与 Android 构建依赖 - (4c4326f) - HttpAnimations
+
+- - -
+
 ## v0.12.0 - 2026-10-13
 #### Features
 - 播放列表与稍后观看 - (4bc6231) - HttpAnimations
