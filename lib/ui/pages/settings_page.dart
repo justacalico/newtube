@@ -69,13 +69,15 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _exportMcpb() async {
     final state = AppScope.read(context);
-    final save = state.saveTextFile;
+    final save = state.saveFile;
     if (save == null) return;
-    final document = mcpConfigExport(
+    final info = await state.packageInfo();
+    final bundle = mcpbExport(
       name: 'newtube',
+      version: info.version,
       url: state.mcpServer?.url ?? mcpDefaultUrl,
     );
-    final path = await save('newtube.mcpb', '${encodeMcpConfig(document)}\n');
+    final path = await save('newtube.mcpb', bundle);
     if (!mounted) return;
     final l10n = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(

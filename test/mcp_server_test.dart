@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:archive/archive.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/models/video_info.dart';
 import 'package:newtube/services/file_saver_io.dart';
@@ -351,29 +352,45 @@ void main() {
     );
   });
 
-  test('mcpConfigExport produces a standard server config', () {
-    final doc = mcpConfigExport(
-      name: 'newtube',
-      url: 'http://127.0.0.1:8642/mcp',
+  test('mcpbExport produces an installable bundle', () {
+    final bundle = ZipDecoder().decodeBytes(
+      mcpbExport(
+        name: 'newtube',
+        version: '0.5.0',
+        url: 'http://127.0.0.1:8642/mcp',
+      ),
     );
-    expect(doc, {
-      'mcpServers': {
-        'newtube': {'type': 'http', 'url': 'http://127.0.0.1:8642/mcp'},
+    final manifest = jsonDecode(
+      utf8.decode(bundle.findFile('manifest.json')!.readBytes()!),
+    ) as Map<String, Object?>;
+    expect(manifest['manifest_version'], '0.3');
+    expect(manifest['name'], 'newtube');
+    expect(manifest['version'], '0.5.0');
+    expect(manifest['server'], {
+      'type': 'node',
+      'entry_point': 'server/bridge.js',
+      'mcp_config': {
+        'command': 'node',
+        'args': [
+          r'${__dirname}/server/bridge.js',
+          'http://127.0.0.1:8642/mcp',
+        ],
       },
     });
-
-    final encoded = encodeMcpConfig(doc);
-    expect(encoded, contains('"mcpServers"'));
-    expect(jsonDecode(encoded), doc);
+    expect((manifest['tools'] as List).length, mcpToolDefinitions.length);
+    expect(
+      utf8.decode(bundle.findFile('server/bridge.js')!.readBytes()!),
+      contains('await fetch(endpoint,'),
+    );
   });
 
-  test('writeTextFile writes the export to a path', () async {
+  test('writeFile writes the export to a path', () async {
     final dir = await Directory.systemTemp.createTemp('mcpb');
     addTearDown(() => dir.delete(recursive: true));
     final target = '${dir.path}${Platform.pathSeparator}newtube.mcpb';
-    final path = await writeTextFile(target, '{"mcpServers":{}}');
+    final path = await writeFile(target, utf8.encode('bundle'));
     expect(path, target);
-    expect(File(path).readAsStringSync(), '{"mcpServers":{}}');
+    expect(File(path).readAsStringSync(), 'bundle');
   });
 
   test('default port constant', () {
