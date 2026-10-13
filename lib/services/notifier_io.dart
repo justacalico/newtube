@@ -7,10 +7,11 @@ import 'package:local_notifier/local_notifier.dart';
 import 'notifier.dart';
 
 FlutterLocalNotificationsPlugin? _mobile;
+Future<void>? _initMobile;
 var _desktopReady = false;
+var _notificationId = 0;
 
-Future<void> _notifyMobile(String title, String body) async {
-  final plugins = _mobile ??= FlutterLocalNotificationsPlugin();
+Future<void> _setupMobile(FlutterLocalNotificationsPlugin plugins) async {
   await plugins.initialize(
     settings: const InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/ic_launcher'),
@@ -22,8 +23,13 @@ Future<void> _notifyMobile(String title, String body) async {
         AndroidFlutterLocalNotificationsPlugin
       >()
       ?.requestNotificationsPermission();
+}
+
+Future<void> _notifyMobile(String title, String body) async {
+  final plugins = _mobile ??= FlutterLocalNotificationsPlugin();
+  await (_initMobile ??= _setupMobile(plugins));
   await plugins.show(
-    id: DateTime.now().millisecondsSinceEpoch & 0x7FFFFFFF,
+    id: (_notificationId++) & 0x7FFFFFFF,
     title: title,
     body: body,
     notificationDetails: const NotificationDetails(
