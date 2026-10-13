@@ -154,7 +154,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get autoplay => '自动播放视频';
 
   @override
-  String get autoplayHint => '打开视频后立即开始播放';
+  String get autoplayHint => '自动播放视频，结束后自动播放下一个';
 
   @override
   String get about => '关于';
@@ -194,6 +194,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get openVideo => '播放';
+
+  @override
+  String get replay => '重播';
+
+  @override
+  String get nextVideo => '下一个视频';
 
   @override
   String get audio => '音频';
@@ -620,7 +626,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get autoplay => '自动播放视频';
 
   @override
-  String get autoplayHint => '打开视频后立即开始播放';
+  String get autoplayHint => '自动播放视频，结束后自动播放下一个';
 
   @override
   String get about => '关于';
@@ -660,6 +666,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get openVideo => '播放';
+
+  @override
+  String get replay => '重播';
+
+  @override
+  String get nextVideo => '下一个视频';
 
   @override
   String get audio => '音频';

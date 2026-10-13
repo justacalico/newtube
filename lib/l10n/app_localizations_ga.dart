@@ -159,7 +159,7 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get autoplayHint =>
-      'Tosaigh an t-athsheinm chomh luath agus a osclaítear físeán';
+      'Seinn físeáin agus an chéad físeán eile go huathoibríoch';
 
   @override
   String get about => 'Faoi';
@@ -199,6 +199,12 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get openVideo => 'Seinn';
+
+  @override
+  String get replay => 'Athsheinn';
+
+  @override
+  String get nextVideo => 'An chéad físeán eile';
 
   @override
   String get audio => 'Fuaim';

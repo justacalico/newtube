@@ -395,7 +395,7 @@ abstract class AppLocalizations {
   /// No description provided for @autoplayHint.
   ///
   /// In en_GB, this message translates to:
-  /// **'Start playback as soon as a video opens'**
+  /// **'Play videos and the next video automatically'**
   String get autoplayHint;
 
   /// No description provided for @about.
@@ -475,6 +475,18 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Play'**
   String get openVideo;
+
+  /// No description provided for @replay.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Replay'**
+  String get replay;
+
+  /// No description provided for @nextVideo.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Next video'**
+  String get nextVideo;
 
   /// No description provided for @audio.
   ///

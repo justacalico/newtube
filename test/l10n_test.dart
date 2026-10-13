@@ -69,6 +69,8 @@ void touchAll(AppLocalizations l) {
   l.licence;
   l.licenceText;
   l.openVideo;
+  l.replay;
+  l.nextVideo;
   l.audio;
   l.fullscreen;
   l.quality;
