@@ -101,12 +101,22 @@ class InnertubeApi implements YouTubeApi {
     ];
     // Stream urls are already prefixed, so probe them with the plain client
     // instead of wrapping them in the proxy prefix a second time.
-    var streams = dedupeStreams(await playableStreams(raw, _probe));
-    if (raw.any((s) => s.hasVideo && !s.hasAudio) &&
-        streams.every((s) => !s.hasVideo || s.hasAudio)) {
-      // Adaptive formats exist but every URL failed the probe: YouTube gates
-      // them behind a poToken on this video. VISIONOS is exempt as long as the
-      // request carries a visitorData session.
+    final kept = await playableStreams(raw, _probe);
+    var streams = dedupeStreams(kept.isEmpty ? raw : kept);
+    final adaptive = streaming is Map<String, dynamic>
+        ? streaming['adaptiveFormats']
+        : null;
+    final hasAdaptiveVideo =
+        adaptive is List &&
+        adaptive.any(
+          (f) =>
+              f is Map<String, dynamic> &&
+              !(f['mimeType'] as String? ?? '').startsWith('audio/'),
+        );
+    if (hasAdaptiveVideo && kept.every((s) => !s.hasVideo || s.hasAudio)) {
+      // Adaptive formats exist but no video-only url passed the probe: YouTube
+      // gates them behind a poToken on this video. VISIONOS is exempt as long
+      // as the request carries a visitorData session.
       debugLog('[api] $videoId: adaptive streams gated, retrying via VISIONOS');
       final fallback = await _visionosStreaming(videoId);
       if (fallback != null) {
@@ -184,7 +194,7 @@ class InnertubeApi implements YouTubeApi {
       final data = jsonDecode(text);
       if (data is List) {
         final visitor = data[0][2][0][0][13];
-        if (visitor is String) return visitor;
+        if (visitor is String && visitor.length > 10) return visitor;
       }
     } catch (e) {
       debugLog('[api] visitorData fetch failed: $e');
@@ -206,6 +216,7 @@ class InnertubeApi implements YouTubeApi {
       if (streaming is Map<String, dynamic>) return streaming;
     } catch (e) {
       debugLog('[api] $videoId: VISIONOS retry failed: $e');
+      _visitor = null;
     }
     return null;
   }

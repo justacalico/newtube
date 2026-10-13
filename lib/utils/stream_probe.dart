@@ -37,9 +37,7 @@ Future<List<PlayableStream>> playableStreams(
   ];
   if (playable.isEmpty) {
     debugLog('[streams] every stream probe failed');
-    return streams;
-  }
-  if (playable.length != streams.length) {
+  } else if (playable.length != streams.length) {
     debugLog(
       '[streams] dropped ${streams.length - playable.length} '
       'unplayable streams',

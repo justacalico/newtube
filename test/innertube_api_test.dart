@@ -255,7 +255,7 @@ void main() {
           if (request.method != 'POST') {
             final url = request.url.toString();
             if (url.contains('sw.js_data')) {
-              final row = List<dynamic>.filled(14, null)..[13] = 'VD';
+              final row = List<dynamic>.filled(14, null)..[13] = 'CgtlOnRfNDUz';
               return http.Response(
                 ")]}'${jsonEncode([
                   [
@@ -318,6 +318,7 @@ void main() {
                         'url': 'https://v/hd-a',
                         'mimeType': 'audio/webm',
                         'bitrate': 128000,
+                        'audioTrack': {'audioIsDefault': true},
                       },
                       {
                         'url': 'https://v/dub',
@@ -336,13 +337,81 @@ void main() {
       );
       final d = await api.videoDetails('v');
       expect(clients, ['ANDROID', 'VISIONOS']);
-      expect(visionosClient!['visitorData'], 'VD');
+      expect(visionosClient!['visitorData'], 'CgtlOnRfNDUz');
       expect(d.streams.map((s) => s.quality), [
         '360p',
         '1080p',
         'audio 128kbps',
       ]);
     });
+
+    test(
+      'videoDetails retries via VISIONOS when every android probe fails',
+      () async {
+        final clients = <String>[];
+        final api = InnertubeApi(
+          httpClient: MockClient((request) async {
+            if (request.method != 'POST') {
+              final url = request.url.toString();
+              if (url.contains('sw.js_data')) {
+                final row = List<dynamic>.filled(14, null)
+                  ..[13] = 'CgtlOnRfNDUz';
+                return http.Response(
+                  ")]}'${jsonEncode([
+                    [
+                      null,
+                      null,
+                      [
+                        [row],
+                      ],
+                    ],
+                  ])}",
+                  200,
+                );
+              }
+              return http.Response.bytes(
+                const [],
+                url.contains('gated') ? 403 : 206,
+              );
+            }
+            final body = jsonDecode(request.body) as Map<String, dynamic>;
+            final client = body['context']['client'] as Map<String, dynamic>;
+            clients.add(client['clientName'] as String);
+            return http.Response.bytes(
+              utf8.encode(
+                jsonEncode({
+                  'videoDetails': {'title': 'Vid'},
+                  'streamingData': {
+                    'formats': [
+                      {
+                        'url': 'https://v/gated-mux',
+                        'mimeType': 'video/mp4',
+                        'audioQuality': 'x',
+                        'qualityLabel': '360p',
+                      },
+                    ],
+                    'adaptiveFormats': [
+                      if (client['clientName'] == 'ANDROID')
+                        {'signatureCipher': 'x', 'qualityLabel': '1080p'}
+                      else
+                        {
+                          'url': 'https://v/hd',
+                          'mimeType': 'video/mp4',
+                          'qualityLabel': '1080p',
+                        },
+                    ],
+                  },
+                }),
+              ),
+              200,
+            );
+          }),
+        );
+        final d = await api.videoDetails('v');
+        expect(clients, ['ANDROID', 'VISIONOS']);
+        expect(d.streams.map((s) => s.quality), ['360p', '1080p']);
+      },
+    );
 
     test(
       'videoDetails keeps android streams when visitor data fails',
@@ -445,7 +514,7 @@ void main() {
           if (request.method != 'POST') {
             final url = request.url.toString();
             if (url.contains('sw.js_data')) {
-              final row = List<dynamic>.filled(14, null)..[13] = 'VD';
+              final row = List<dynamic>.filled(14, null)..[13] = 'CgtlOnRfNDUz';
               return http.Response(
                 ")]}'${jsonEncode([
                   [
@@ -768,10 +837,10 @@ void main() {
       );
       final visionos = innertubeContext(
         client: 'VISIONOS',
-        visitorData: 'VD',
+        visitorData: 'CgtlOnRfNDUz',
       )['client'];
       expect(visionos['clientName'], 'VISIONOS');
-      expect(visionos['visitorData'], 'VD');
+      expect(visionos['visitorData'], 'CgtlOnRfNDUz');
       expect(
         innertubeContext(client: 'WEB')['client'].containsKey('visitorData'),
         isFalse,

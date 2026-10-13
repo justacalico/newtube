@@ -87,13 +87,13 @@ void main() {
       expect(streams.map((s) => s.url), ['https://v/a', 'https://v/c']);
     });
 
-    test('falls back to the full list when every probe fails', () async {
+    test('returns nothing when every probe fails', () async {
       final client = MockClient.streaming(
         (_, _) async =>
             http.StreamedResponse(const Stream<List<int>>.empty(), 403),
       );
       final streams = await playableStreams(const [_a, _b], client);
-      expect(streams.length, 2);
+      expect(streams, isEmpty);
     });
   });
 }
