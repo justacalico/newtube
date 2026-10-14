@@ -16,6 +16,7 @@ import 'services/file_opener.dart';
 import 'services/media_controls.dart';
 import 'services/pip_actions.dart';
 import 'services/player_controller.dart';
+import 'services/ryd.dart';
 import 'services/notifier.dart';
 import 'services/orientation.dart';
 import 'services/sponsor_block.dart';
@@ -78,6 +79,8 @@ Future<AppState> createAppState(SharedPreferences prefs) async {
     saveFile: isDesktopPlatform ? saveFileDialog : null,
     openFile: kIsWeb ? null : openTextFileDialog,
     sponsorBlock: SponsorBlockClient(),
+    // coverage:ignore-line
+    ryd: kIsWeb ? null : RydClient(),
     // coverage:ignore-line
     pipActions: kIsWeb ? null : createPipActions(),
     // coverage:ignore-line

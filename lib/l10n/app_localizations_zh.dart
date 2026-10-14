@@ -205,6 +205,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get statsVolume => '音量';
 
   @override
+  String get showDislikes => '显示点踩数';
+
+  @override
+  String get showDislikesHint => '通过 Return YouTube Dislike 估算点踩数';
+
+  @override
+  String get dislikes => '点踩';
+
+  @override
   String get videoFit => '画面缩放';
 
   @override
@@ -774,6 +783,15 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get statsVolume => '音量';
+
+  @override
+  String get showDislikes => '显示点踩数';
+
+  @override
+  String get showDislikesHint => '通过 Return YouTube Dislike 估算点踩数';
+
+  @override
+  String get dislikes => '点踩';
 
   @override
   String get videoFit => '画面缩放';

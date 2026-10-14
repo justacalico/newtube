@@ -21,6 +21,7 @@ class SettingsStore extends ChangeNotifier {
   static const _mcpEnabledKey = 'mcp_enabled';
   static const _sidebarCollapsedKey = 'sidebar_collapsed';
   static const _sponsorBlockKey = 'sponsorblock_enabled';
+  static const _rydKey = 'ryd_enabled';
   static const _sponsorBlockAutoSkipKey = 'sponsorblock_autoskip';
   static const _sponsorBlockCategoriesKey = 'sponsorblock_categories';
   static const _deArrowModeKey = 'dearrow_mode';
@@ -41,6 +42,7 @@ class SettingsStore extends ChangeNotifier {
   bool _mcpEnabled;
   bool _sidebarCollapsed;
   bool _sponsorBlockEnabled;
+  bool _rydEnabled;
   bool _sponsorBlockAutoSkip;
   Set<String> _sponsorBlockCategories;
   DeArrowMode _deArrowMode;
@@ -61,6 +63,7 @@ class SettingsStore extends ChangeNotifier {
     this._mcpEnabled = false,
     this._sidebarCollapsed = false,
     this._sponsorBlockEnabled = false,
+    this._rydEnabled = false,
     this._sponsorBlockAutoSkip = true,
     Set<String>? sponsorBlockCategories,
     this._deArrowMode = DeArrowMode.off,
@@ -86,6 +89,7 @@ class SettingsStore extends ChangeNotifier {
       mcpEnabled: prefs.getBool(_mcpEnabledKey) ?? false,
       sidebarCollapsed: prefs.getBool(_sidebarCollapsedKey) ?? false,
       sponsorBlockEnabled: prefs.getBool(_sponsorBlockKey) ?? false,
+      rydEnabled: prefs.getBool(_rydKey) ?? false,
       sponsorBlockAutoSkip: prefs.getBool(_sponsorBlockAutoSkipKey) ?? true,
       sponsorBlockCategories: prefs
           .getStringList(_sponsorBlockCategoriesKey)
@@ -128,6 +132,7 @@ class SettingsStore extends ChangeNotifier {
   bool get mcpEnabled => _mcpEnabled;
   bool get sidebarCollapsed => _sidebarCollapsed;
   bool get sponsorBlockEnabled => _sponsorBlockEnabled;
+  bool get rydEnabled => _rydEnabled;
   bool get sponsorBlockAutoSkip => _sponsorBlockAutoSkip;
   Set<String> get sponsorBlockCategories => _sponsorBlockCategories;
   DeArrowMode get deArrowMode => _deArrowMode;
@@ -186,6 +191,12 @@ class SettingsStore extends ChangeNotifier {
   Future<void> setSidebarCollapsed(bool value, SharedPreferences prefs) async {
     _sidebarCollapsed = value;
     await prefs.setBool(_sidebarCollapsedKey, value);
+    notifyListeners();
+  }
+
+  Future<void> setRydEnabled(bool value, SharedPreferences prefs) async {
+    _rydEnabled = value;
+    await prefs.setBool(_rydKey, value);
     notifyListeners();
   }
 

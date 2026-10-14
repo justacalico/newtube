@@ -209,6 +209,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get statsVolume => 'Громкость';
 
   @override
+  String get showDislikes => 'Показывать дизлайки';
+
+  @override
+  String get showDislikesHint =>
+      'Оценка дизлайков через Return YouTube Dislike';
+
+  @override
+  String get dislikes => 'дизлайков';
+
+  @override
   String get videoFit => 'Масштаб видео';
 
   @override

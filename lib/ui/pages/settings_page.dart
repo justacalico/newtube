@@ -358,6 +358,13 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             SwitchListTile(
+              secondary: const Icon(Icons.thumb_down_outlined),
+              title: Text(l10n.showDislikes),
+              subtitle: Text(l10n.showDislikesHint),
+              value: settings.rydEnabled,
+              onChanged: (value) => settings.setRydEnabled(value, state.prefs),
+            ),
+            SwitchListTile(
               secondary: const Icon(Icons.content_cut_outlined),
               title: Text(l10n.sponsorBlock),
               subtitle: Text(l10n.sponsorBlockHint),
