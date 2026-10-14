@@ -1933,6 +1933,18 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Previous'**
   String get previousVideo;
+
+  /// No description provided for @showComments.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Show comments'**
+  String get showComments;
+
+  /// No description provided for @showRelated.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Show related videos'**
+  String get showRelated;
 }
 
 class _AppLocalizationsDelegate

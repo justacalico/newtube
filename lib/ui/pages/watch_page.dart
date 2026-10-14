@@ -1062,7 +1062,8 @@ class _WatchPageState extends State<WatchPage>
                               onTap: () => _openPlaylistVideo(i),
                             ),
                         ],
-                        if (_comments.isNotEmpty) ...[
+                        if (state.settings.showComments &&
+                            _comments.isNotEmpty) ...[
                           const SizedBox(height: 16),
                           Row(
                             children: [
@@ -1162,7 +1163,8 @@ class _WatchPageState extends State<WatchPage>
                             ],
                           ),
                         ],
-                        if (_related.isNotEmpty) ...[
+                        if (state.settings.showRelated &&
+                            _related.isNotEmpty) ...[
                           const SizedBox(height: 16),
                           Text(
                             l10n.relatedVideos,

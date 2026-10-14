@@ -984,4 +984,10 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get previousVideo => 'Roimhe seo';
+
+  @override
+  String get showComments => 'Taispeáin tuairimí';
+
+  @override
+  String get showRelated => 'Taispeáin físeáin ghaolmhara';
 }

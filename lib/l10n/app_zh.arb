@@ -404,5 +404,7 @@
   "shortcutCaptions": "切换字幕",
   "shortcutPip": "迷你播放器",
   "shortcutSpeed": "播放速度",
-  "previousVideo": "上一个"
+  "previousVideo": "上一个",
+  "showComments": "显示评论",
+  "showRelated": "显示相关视频"
 }

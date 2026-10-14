@@ -986,4 +986,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get previousVideo => 'Назад';
+
+  @override
+  String get showComments => 'Показывать комментарии';
+
+  @override
+  String get showRelated => 'Показывать похожие видео';
 }

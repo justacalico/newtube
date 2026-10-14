@@ -404,5 +404,7 @@
   "shortcutCaptions": "Субтитры",
   "shortcutPip": "Мини-плеер",
   "shortcutSpeed": "Скорость",
-  "previousVideo": "Назад"
+  "previousVideo": "Назад",
+  "showComments": "Показывать комментарии",
+  "showRelated": "Показывать похожие видео"
 }

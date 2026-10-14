@@ -452,6 +452,19 @@ class _SettingsPageState extends State<SettingsPage> {
               value: settings.hideWatched,
               onChanged: (value) => settings.setHideWatched(value, state.prefs),
             ),
+            SwitchListTile(
+              secondary: const Icon(Icons.comment_outlined),
+              title: Text(l10n.showComments),
+              value: settings.showComments,
+              onChanged: (value) =>
+                  settings.setShowComments(value, state.prefs),
+            ),
+            SwitchListTile(
+              secondary: const Icon(Icons.video_library_outlined),
+              title: Text(l10n.showRelated),
+              value: settings.showRelated,
+              onChanged: (value) => settings.setShowRelated(value, state.prefs),
+            ),
             ListTile(
               leading: const Icon(Icons.high_quality_outlined),
               title: Text(l10n.defaultQuality),
