@@ -188,6 +188,7 @@ void main() {
         name: 'English',
       );
       expect(await a.captions(track), isEmpty);
+      expect(await a.trending(), isEmpty);
     });
 
     test('keeps the original when branding fails or is missing', () async {

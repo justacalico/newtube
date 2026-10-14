@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:newtube/services/innertube_api.dart';
 import 'package:newtube/ui/pages/trending_page.dart';
+import 'package:newtube/ui/pages/watch_page.dart';
 import 'package:newtube/ui/shell/app_shell.dart';
 
 import 'fakes.dart';
@@ -93,5 +94,32 @@ void main() {
     await tester.pumpAndSettle();
     expect(state.tabIndex, 1);
     debugDefaultTargetPlatformOverride = null;
+  });
+
+  testWidgets('trending card opens the video and channel', (tester) async {
+    final api = FakeYouTubeApi(
+      feed: testVideos,
+      trendingFeed: testVideos,
+      uploads: testVideos,
+    );
+    final state = await testState(api: api);
+    await pumpPage(tester, state, const TrendingPage());
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Channel One').first);
+    await tester.pumpAndSettle();
+    expect(find.text('54.3K subscribers'), findsOneWidget);
+  });
+
+  testWidgets('trending card opens the watch page', (tester) async {
+    final api = FakeYouTubeApi(
+      feed: testVideos,
+      trendingFeed: testVideos,
+    );
+    final state = await testState(api: api);
+    await pumpPage(tester, state, const TrendingPage());
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(testVideos.first.title).first);
+    await tester.pumpAndSettle();
+    expect(find.byType(WatchPage), findsOneWidget);
   });
 }
