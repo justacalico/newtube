@@ -232,6 +232,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get volume => '音量';
 
   @override
+  String get repeat => '循环播放';
+
+  @override
+  String get repeatOff => '关闭';
+
+  @override
+  String get repeatAll => '全部';
+
+  @override
+  String get repeatOne => '单个';
+
+  @override
+  String get shuffle => '随机播放';
+
+  @override
   String get speedNormal => '正常';
 
   @override
@@ -726,6 +741,21 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get volume => '音量';
+
+  @override
+  String get repeat => '循环播放';
+
+  @override
+  String get repeatOff => '关闭';
+
+  @override
+  String get repeatAll => '全部';
+
+  @override
+  String get repeatOne => '单个';
+
+  @override
+  String get shuffle => '随机播放';
 
   @override
   String get speedNormal => '正常';

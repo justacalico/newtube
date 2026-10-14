@@ -81,6 +81,11 @@ void touchAll(AppLocalizations l) {
   l.mute;
   l.unmute;
   l.volume;
+  l.repeat;
+  l.repeatOff;
+  l.repeatAll;
+  l.repeatOne;
+  l.shuffle;
   l.speedNormal;
   l.captions;
   l.captionsOff;

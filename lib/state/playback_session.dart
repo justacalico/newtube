@@ -7,6 +7,8 @@ import '../services/media_controls.dart';
 import '../services/player_controller.dart';
 import '../services/sleep_timer.dart';
 
+enum RepeatMode { off, all, one }
+
 class PlaybackSession extends ChangeNotifier {
   PlaybackSession({this.mediaControls});
 
@@ -20,6 +22,8 @@ class PlaybackSession extends ChangeNotifier {
   PlayableStream? _audio;
   SleepTimer? _sleepTimer;
   bool _attached = false;
+  RepeatMode _repeatMode = RepeatMode.off;
+  bool _shuffle = false;
 
   PlayerController? get player => _player;
   VideoInfo? get video => _video;
@@ -31,6 +35,20 @@ class PlaybackSession extends ChangeNotifier {
 
   bool get attached => _attached;
   bool get minimized => _player != null && !_attached;
+  RepeatMode get repeatMode => _repeatMode;
+  bool get shuffle => _shuffle;
+
+  set repeatMode(RepeatMode value) {
+    if (_repeatMode == value) return;
+    _repeatMode = value;
+    notifyListeners();
+  }
+
+  set shuffle(bool value) {
+    if (_shuffle == value) return;
+    _shuffle = value;
+    notifyListeners();
+  }
 
   void attach(
     PlayerController player,

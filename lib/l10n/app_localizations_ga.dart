@@ -237,6 +237,21 @@ class AppLocalizationsGa extends AppLocalizations {
   String get volume => 'Glor';
 
   @override
+  String get repeat => 'Athsheinn';
+
+  @override
+  String get repeatOff => 'As';
+
+  @override
+  String get repeatAll => 'Uile';
+
+  @override
+  String get repeatOne => 'Aon cheann';
+
+  @override
+  String get shuffle => 'Suaitheadh';
+
+  @override
   String get speedNormal => 'Gnáth';
 
   @override
