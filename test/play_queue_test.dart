@@ -5,7 +5,6 @@ import 'package:newtube/ui/pages/watch_page.dart';
 import 'package:newtube/ui/widgets/mini_player.dart';
 import 'package:newtube/ui/widgets/video_actions_menu.dart';
 
-import 'package:newtube/state/app_state.dart';
 import 'package:newtube/state/playback_session.dart';
 
 import 'fakes.dart';

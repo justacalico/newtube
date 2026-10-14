@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/state/hidden_store.dart';
-import 'package:newtube/ui/pages/settings_page.dart';
 import 'package:newtube/ui/widgets/video_actions_menu.dart';
 import 'package:newtube/utils/feed_filter.dart';
 import 'package:shared_preferences/shared_preferences.dart';

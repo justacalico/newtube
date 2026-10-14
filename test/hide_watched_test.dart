@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:newtube/models/video_info.dart';
 import 'package:newtube/state/history_store.dart';
-import 'package:newtube/models/video_info.dart' hide VideoInfo;
 import 'package:newtube/models/video_info.dart';
 import 'package:newtube/ui/pages/search_page.dart';
 

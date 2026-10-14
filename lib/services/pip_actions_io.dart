@@ -72,10 +72,7 @@ class _IosPipActions implements PipActions {
     if (url != null && url != _preparedUrl) {
       _preparedUrl = url;
       unawaited(
-        _channel.invokeMethod('preparePip', {
-          'url': url,
-          'audioUrl': audioUrl,
-        }),
+        _channel.invokeMethod('preparePip', {'url': url, 'audioUrl': audioUrl}),
       );
     }
   }

@@ -88,7 +88,25 @@ class _FeedApi implements YouTubeApi {
   Future<ChannelInfo> channel(String channelId) => throw UnimplementedError();
 
   @override
-  Future<PlaylistInfo> playlist(String playlistId) =>
+  Future<PlaylistInfo> playlist(
+    String playlistId, {
+    String? continuation,
+  }) => throw UnimplementedError();
+
+  @override
+  Future<List<VideoInfo>> channelShorts(String channelId) =>
+      throw UnimplementedError();
+
+  @override
+  Future<List<PlaylistInfo>> channelPlaylists(String channelId) =>
+      throw UnimplementedError();
+
+  @override
+  Future<ChannelAbout> channelAbout(String channelId) =>
+      throw UnimplementedError();
+
+  @override
+  Future<List<VideoInfo>> channelSearch(String channelId, String query) =>
       throw UnimplementedError();
 
   @override
