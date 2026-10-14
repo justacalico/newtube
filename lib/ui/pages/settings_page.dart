@@ -140,6 +140,56 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
+  Future<void> _manageHidden() async {
+    final state = AppScope.read(context);
+    final l10n = AppLocalizations.of(context);
+    await showDialog<void>(
+      context: context,
+      builder: (context) => ListenableBuilder(
+        listenable: state.hidden,
+        builder: (context, _) => AlertDialog(
+          title: Text(l10n.hiddenItems),
+          content: SizedBox(
+            width: 400,
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                for (final id in state.hidden.channels)
+                  ListTile(
+                    dense: true,
+                    leading: const Icon(Icons.person_off_outlined),
+                    title: Text(id, maxLines: 1),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.remove_circle_outline),
+                      onPressed: () =>
+                          state.hidden.unhideChannel(id, state.prefs),
+                    ),
+                  ),
+                for (final id in state.hidden.videos)
+                  ListTile(
+                    dense: true,
+                    leading: const Icon(Icons.visibility_off_outlined),
+                    title: Text(id, maxLines: 1),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.remove_circle_outline),
+                      onPressed: () =>
+                          state.hidden.unhideVideo(id, state.prefs),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(l10n.close),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Future<void> _manageGroups() async {
     final state = AppScope.read(context);
     final l10n = AppLocalizations.of(context);
@@ -565,6 +615,20 @@ class _SettingsPageState extends State<SettingsPage> {
                 subtitle: Text(l10n.exportBackupHint),
                 onTap: _exportBackup,
               ),
+            ListenableBuilder(
+              listenable: state.hidden,
+              builder: (context, _) {
+                final count =
+                    state.hidden.videos.length + state.hidden.channels.length;
+                if (count == 0) return const SizedBox.shrink();
+                return ListTile(
+                  leading: const Icon(Icons.visibility_off),
+                  title: Text(l10n.hiddenItems),
+                  subtitle: Text('$count'),
+                  onTap: () => _manageHidden(),
+                );
+              },
+            ),
             ListTile(
               leading: const Icon(Icons.group_work_outlined),
               title: Text(l10n.manageGroups),

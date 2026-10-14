@@ -985,6 +985,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get showRelated => 'Show related videos';
+
+  @override
+  String get hiddenItems => 'Hidden videos and channels';
+
+  @override
+  String get notInterested => 'Not interested';
+
+  @override
+  String get dontRecommendChannel => 'Don\'t recommend channel';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1967,4 +1976,13 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get showRelated => 'Show related videos';
+
+  @override
+  String get hiddenItems => 'Hidden videos and channels';
+
+  @override
+  String get notInterested => 'Not interested';
+
+  @override
+  String get dontRecommendChannel => 'Don\'t recommend channel';
 }

@@ -35,6 +35,7 @@ import 'package:newtube/state/playlists_store.dart';
 import 'package:newtube/state/search_history_store.dart';
 import 'package:newtube/state/settings_store.dart';
 import 'package:newtube/state/subscriptions_store.dart';
+import 'package:newtube/state/hidden_store.dart';
 import 'package:newtube/state/watch_later_store.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -496,6 +497,7 @@ Future<AppState> testState({
   SettingsStore? settings,
   SubscriptionsStore? subscriptions,
   WatchLaterStore? watchLater,
+  HiddenStore? hidden,
   PlaylistsStore? playlists,
   HistoryStore? history,
   SearchHistoryStore? searchHistory,
@@ -525,6 +527,7 @@ Future<AppState> testState({
     settings: settings ?? await SettingsStore.load(p),
     subscriptions: subscriptions ?? await SubscriptionsStore.load(p),
     watchLater: watchLater ?? await WatchLaterStore.load(p),
+    hidden: hidden ?? await HiddenStore.load(p),
     playlists: playlists ?? await PlaylistsStore.load(p),
     history: history ?? await HistoryStore.load(p),
     searchHistory: searchHistory ?? await SearchHistoryStore.load(p),

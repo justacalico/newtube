@@ -406,5 +406,8 @@
   "shortcutSpeed": "Luas athsheinm",
   "previousVideo": "Roimhe seo",
   "showComments": "Taispeáin tuairimí",
-  "showRelated": "Taispeáin físeáin ghaolmhara"
+  "showRelated": "Taispeáin físeáin ghaolmhara",
+  "hiddenItems": "Físeáin agus cainéil i bhfolach",
+  "notInterested": "Gan suim",
+  "dontRecommendChannel": "Ná mol an cainéal seo"
 }

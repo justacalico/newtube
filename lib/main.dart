@@ -35,6 +35,7 @@ import 'state/playlists_store.dart';
 import 'state/search_history_store.dart';
 import 'state/settings_store.dart';
 import 'state/subscriptions_store.dart';
+import 'state/hidden_store.dart';
 import 'state/watch_later_store.dart';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -78,6 +79,7 @@ Future<AppState> createAppState(SharedPreferences prefs) async {
     settings: settings,
     subscriptions: subscriptions,
     watchLater: await WatchLaterStore.load(prefs),
+    hidden: await HiddenStore.load(prefs),
     playlists: await PlaylistsStore.load(prefs),
     history: await HistoryStore.load(prefs),
     searchHistory: await SearchHistoryStore.load(prefs),

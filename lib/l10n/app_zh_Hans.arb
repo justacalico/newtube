@@ -406,5 +406,8 @@
   "shortcutSpeed": "播放速度",
   "previousVideo": "上一个",
   "showComments": "显示评论",
-  "showRelated": "显示相关视频"
+  "showRelated": "显示相关视频",
+  "hiddenItems": "已隐藏的视频与频道",
+  "notInterested": "不感兴趣",
+  "dontRecommendChannel": "不再推荐此频道"
 }

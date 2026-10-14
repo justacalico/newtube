@@ -1945,6 +1945,24 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Show related videos'**
   String get showRelated;
+
+  /// No description provided for @hiddenItems.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Hidden videos and channels'**
+  String get hiddenItems;
+
+  /// No description provided for @notInterested.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Not interested'**
+  String get notInterested;
+
+  /// No description provided for @dontRecommendChannel.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Don\'t recommend channel'**
+  String get dontRecommendChannel;
 }
 
 class _AppLocalizationsDelegate

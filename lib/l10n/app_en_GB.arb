@@ -406,5 +406,8 @@
   "shortcutSpeed": "Playback speed",
   "previousVideo": "Previous",
   "showComments": "Show comments",
-  "showRelated": "Show related videos"
+  "showRelated": "Show related videos",
+  "hiddenItems": "Hidden videos and channels",
+  "notInterested": "Not interested",
+  "dontRecommendChannel": "Don't recommend channel"
 }

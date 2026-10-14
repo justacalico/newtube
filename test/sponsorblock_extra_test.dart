@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/services/sponsor_block.dart';
 import 'package:newtube/ui/pages/settings_page.dart';
-import 'package:newtube/ui/widgets/player_view.dart';
 
 import 'fakes.dart';
 
