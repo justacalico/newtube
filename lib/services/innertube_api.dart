@@ -223,8 +223,21 @@ class InnertubeApi implements YouTubeApi {
     return null;
   }
 
+  final _detailsCache = <String, (VideoDetails, DateTime)>{};
+  static const _detailsTtl = Duration(minutes: 5);
+
   @override
   Future<VideoDetails> videoDetails(String videoId) async {
+    final cached = _detailsCache[videoId];
+    if (cached != null && DateTime.now().difference(cached.$2) < _detailsTtl) {
+      return cached.$1;
+    }
+    final details = await _videoDetails(videoId);
+    _detailsCache[videoId] = (details, DateTime.now());
+    return details;
+  }
+
+  Future<VideoDetails> _videoDetails(String videoId) async {
     var r = await _post('player', {
       'videoId': videoId,
       'contentCheckOk': true,
