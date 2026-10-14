@@ -24,6 +24,7 @@ class PlaybackSession extends ChangeNotifier {
   bool _attached = false;
   RepeatMode _repeatMode = RepeatMode.off;
   bool _shuffle = false;
+  bool _audioOnly = false;
 
   PlayerController? get player => _player;
   VideoInfo? get video => _video;
@@ -37,6 +38,7 @@ class PlaybackSession extends ChangeNotifier {
   bool get minimized => _player != null && !_attached;
   RepeatMode get repeatMode => _repeatMode;
   bool get shuffle => _shuffle;
+  bool get audioOnly => _audioOnly;
 
   set repeatMode(RepeatMode value) {
     if (_repeatMode == value) return;
@@ -47,6 +49,12 @@ class PlaybackSession extends ChangeNotifier {
   set shuffle(bool value) {
     if (_shuffle == value) return;
     _shuffle = value;
+    notifyListeners();
+  }
+
+  set audioOnly(bool value) {
+    if (_audioOnly == value) return;
+    _audioOnly = value;
     notifyListeners();
   }
 

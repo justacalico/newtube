@@ -49,6 +49,8 @@
   "languageSystem": "Córas",
   "autoplay": "Seinnt fhíseáin go huathoibríoch",
   "autoplayHint": "Seinn físeáin agus an chéad físeán eile go huathoibríoch",
+  "audioOnly": "Fuaim amháin",
+  "audioOnlyHint": "Seinn an rian fuaime amháin",
   "about": "Faoi",
   "version": "Leagan",
   "checkForUpdates": "Seiceáil le haghaidh nuashonruithe",

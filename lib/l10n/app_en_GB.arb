@@ -49,6 +49,8 @@
   "languageSystem": "System",
   "autoplay": "Autoplay videos",
   "autoplayHint": "Play videos and the next video automatically",
+  "audioOnly": "Audio only",
+  "audioOnlyHint": "Play just the audio track and keep the artwork on screen",
   "about": "About",
   "version": "Version",
   "checkForUpdates": "Check for updates",

@@ -161,6 +161,12 @@ class AppLocalizationsRu extends AppLocalizations {
       'Автоматически воспроизводить видео и следующее за ним';
 
   @override
+  String get audioOnly => 'Только аудио';
+
+  @override
+  String get audioOnlyHint => 'Воспроизводить только звуковую дорожку';
+
+  @override
   String get about => 'О программе';
 
   @override

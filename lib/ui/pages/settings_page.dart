@@ -305,6 +305,13 @@ class _SettingsPageState extends State<SettingsPage> {
               onChanged: (value) => settings.setAutoplay(value, state.prefs),
             ),
             SwitchListTile(
+              secondary: const Icon(Icons.headphones_outlined),
+              title: Text(l10n.audioOnly),
+              subtitle: Text(l10n.audioOnlyHint),
+              value: settings.audioOnly,
+              onChanged: (value) => settings.setAudioOnly(value, state.prefs),
+            ),
+            SwitchListTile(
               secondary: const Icon(Icons.content_cut_outlined),
               title: Text(l10n.sponsorBlock),
               subtitle: Text(l10n.sponsorBlockHint),

@@ -49,6 +49,8 @@
   "languageSystem": "跟随系统",
   "autoplay": "自动播放视频",
   "autoplayHint": "自动播放视频，结束后自动播放下一个",
+  "audioOnly": "仅音频",
+  "audioOnlyHint": "仅播放音频流并显示封面",
   "about": "关于",
   "version": "版本",
   "checkForUpdates": "检查更新",

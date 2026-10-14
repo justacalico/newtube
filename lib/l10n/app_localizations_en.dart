@@ -160,6 +160,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get autoplayHint => 'Play videos and the next video automatically';
 
   @override
+  String get audioOnly => 'Audio only';
+
+  @override
+  String get audioOnlyHint =>
+      'Play just the audio track and keep the artwork on screen';
+
+  @override
   String get about => 'About';
 
   @override
@@ -680,6 +687,13 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get autoplayHint => 'Play videos and the next video automatically';
+
+  @override
+  String get audioOnly => 'Audio only';
+
+  @override
+  String get audioOnlyHint =>
+      'Play just the audio track and keep the artwork on screen';
 
   @override
   String get about => 'About';
