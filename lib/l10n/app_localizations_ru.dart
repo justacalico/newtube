@@ -1031,4 +1031,11 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get sortLongest => 'Сначала длинные';
+
+  @override
+  String get fallbackBackend => 'Резервный бэкенд';
+
+  @override
+  String get fallbackBackendHint =>
+      'Экземпляр Invidious при недоступности YouTube';
 }

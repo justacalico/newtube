@@ -419,5 +419,7 @@
   "navMore": "Ещё",
   "sortAdded": "В порядке добавления",
   "sortNewest": "Сначала новые",
-  "sortLongest": "Сначала длинные"
+  "sortLongest": "Сначала длинные",
+  "fallbackBackend": "Резервный бэкенд",
+  "fallbackBackendHint": "Экземпляр Invidious при недоступности YouTube"
 }

@@ -2023,6 +2023,18 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Longest'**
   String get sortLongest;
+
+  /// No description provided for @fallbackBackend.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Fallback backend'**
+  String get fallbackBackend;
+
+  /// No description provided for @fallbackBackendHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Invidious instance used when YouTube is unreachable'**
+  String get fallbackBackendHint;
 }
 
 class _AppLocalizationsDelegate

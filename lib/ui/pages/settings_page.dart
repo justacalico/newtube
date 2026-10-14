@@ -756,6 +756,21 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
             ],
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.swap_calls_outlined),
+              title: Text(l10n.fallbackBackend),
+              subtitle: Text(l10n.fallbackBackendHint),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: TextFormField(
+                initialValue: settings.fallbackBackend,
+                decoration: const InputDecoration(hintText: 'https://yewtu.be'),
+                onChanged: (value) =>
+                    settings.setFallbackBackend(value, state.prefs),
+              ),
+            ),
             if (!state.isWeb) ...[
               const Divider(),
               ListTile(

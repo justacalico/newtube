@@ -419,5 +419,7 @@
   "navMore": "More",
   "sortAdded": "Added order",
   "sortNewest": "Newest",
-  "sortLongest": "Longest"
+  "sortLongest": "Longest",
+  "fallbackBackend": "Fallback backend",
+  "fallbackBackendHint": "Invidious instance used when YouTube is unreachable"
 }
