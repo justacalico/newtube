@@ -578,6 +578,18 @@ abstract class AppLocalizations {
   /// **'Newest'**
   String get commentsNewest;
 
+  /// No description provided for @upNext.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Up next'**
+  String get upNext;
+
+  /// No description provided for @playNow.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Play now'**
+  String get playNow;
+
   /// No description provided for @videoFit.
   ///
   /// In en_GB, this message translates to:

@@ -252,6 +252,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commentsNewest => 'Newest';
 
   @override
+  String get upNext => 'Up next';
+
+  @override
+  String get playNow => 'Play now';
+
+  @override
   String get videoFit => 'Video fit';
 
   @override
@@ -876,6 +882,12 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get commentsNewest => 'Newest';
+
+  @override
+  String get upNext => 'Up next';
+
+  @override
+  String get playNow => 'Play now';
 
   @override
   String get videoFit => 'Video fit';

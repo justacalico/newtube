@@ -252,6 +252,12 @@ class AppLocalizationsGa extends AppLocalizations {
   String get commentsNewest => 'Is nuaí';
 
   @override
+  String get upNext => 'Seo chugainn';
+
+  @override
+  String get playNow => 'Seinn anois';
+
+  @override
   String get videoFit => 'Oiriúnú físe';
 
   @override
