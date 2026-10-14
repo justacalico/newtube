@@ -228,6 +228,15 @@ class AppLocalizationsGa extends AppLocalizations {
   String get playbackSpeed => 'Luas athsheinnte';
 
   @override
+  String get mute => 'Balbhaigh';
+
+  @override
+  String get unmute => 'Díbhalbhaigh';
+
+  @override
+  String get volume => 'Glor';
+
+  @override
   String get speedNormal => 'Gnáth';
 
   @override

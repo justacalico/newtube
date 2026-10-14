@@ -530,6 +530,24 @@ abstract class AppLocalizations {
   /// **'Playback speed'**
   String get playbackSpeed;
 
+  /// No description provided for @mute.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Mute'**
+  String get mute;
+
+  /// No description provided for @unmute.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Unmute'**
+  String get unmute;
+
+  /// No description provided for @volume.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Volume'**
+  String get volume;
+
   /// No description provided for @speedNormal.
   ///
   /// In en_GB, this message translates to:

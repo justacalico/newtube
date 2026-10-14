@@ -227,6 +227,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get playbackSpeed => 'Скорость воспроизведения';
 
   @override
+  String get mute => 'Выключить звук';
+
+  @override
+  String get unmute => 'Включить звук';
+
+  @override
+  String get volume => 'Громкость';
+
+  @override
   String get speedNormal => 'Обычная';
 
   @override

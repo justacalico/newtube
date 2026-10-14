@@ -78,6 +78,9 @@ void touchAll(AppLocalizations l) {
   l.fullscreen;
   l.quality;
   l.playbackSpeed;
+  l.mute;
+  l.unmute;
+  l.volume;
   l.speedNormal;
   l.captions;
   l.captionsOff;
