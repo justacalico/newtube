@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.24.0 - 2026-10-14
+#### Features
+- (**player**) 默认播放速度 - (bc7ec8e) - HttpAnimations
+- (**player**) 默认画质偏好 - (94132b8) - HttpAnimations
+
+- - -
+
 ## v0.23.0 - 2026-10-14
 #### Features
 - (**player**) 仅音频播放模式 - (5fe1054) - HttpAnimations
