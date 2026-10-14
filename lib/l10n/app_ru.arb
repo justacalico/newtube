@@ -337,5 +337,26 @@
   "playNext": "Следующим",
   "addToQueue": "В очередь",
   "queued": "Добавлено в очередь",
-  "queuedNext": "Будет следующим"
+  "queuedNext": "Будет следующим",
+  "exportBackup": "Экспорт резервной копии",
+  "exportBackupHint": "Сохранить все данные приложения в файл",
+  "importBackup": "Импорт резервной копии",
+  "importBackupHint": "Восстановить данные приложения из файла",
+  "backupRestored": "Восстановлено настроек: {count}",
+  "backupImportFailed": "Не удалось импортировать резервную копию",
+  "backupExportedTo": "Резервная копия сохранена в {path}",
+  "@backupRestored": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@backupExportedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  }
 }

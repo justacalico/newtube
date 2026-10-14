@@ -56,6 +56,14 @@ class PlaylistsStore extends ChangeNotifier {
     uploaded: json['uploaded'] as String?,
   );
 
+  Future<void> reload(SharedPreferences prefs) async {
+    final fresh = await PlaylistsStore.load(prefs);
+    _playlists
+      ..clear()
+      ..addAll(fresh._playlists);
+    notifyListeners();
+  }
+
   List<PlaylistInfo> get playlists => List.unmodifiable(_playlists);
 
   PlaylistInfo? byId(String id) {

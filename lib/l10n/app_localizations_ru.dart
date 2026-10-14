@@ -822,4 +822,29 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get queuedNext => 'Будет следующим';
+
+  @override
+  String get exportBackup => 'Экспорт резервной копии';
+
+  @override
+  String get exportBackupHint => 'Сохранить все данные приложения в файл';
+
+  @override
+  String get importBackup => 'Импорт резервной копии';
+
+  @override
+  String get importBackupHint => 'Восстановить данные приложения из файла';
+
+  @override
+  String backupRestored(int count) {
+    return 'Восстановлено настроек: $count';
+  }
+
+  @override
+  String get backupImportFailed => 'Не удалось импортировать резервную копию';
+
+  @override
+  String backupExportedTo(String path) {
+    return 'Резервная копия сохранена в $path';
+  }
 }

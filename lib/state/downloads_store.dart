@@ -54,6 +54,14 @@ class DownloadsStore extends ChangeNotifier {
     }
   }
 
+  Future<void> reload(SharedPreferences prefs) async {
+    final fresh = await DownloadsStore.load(prefs);
+    _entries
+      ..clear()
+      ..addAll(fresh._entries);
+    notifyListeners();
+  }
+
   List<DownloadEntry> get entries => List.unmodifiable(_entries);
 
   Future<void> add(DownloadEntry entry, SharedPreferences prefs) async {
