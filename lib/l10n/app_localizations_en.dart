@@ -931,6 +931,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noAboutInfo => 'No channel info';
+
+  @override
+  String get accentColor => 'Accent color';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1859,4 +1862,7 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get noAboutInfo => 'No channel info';
+
+  @override
+  String get accentColor => 'Accent colour';
 }

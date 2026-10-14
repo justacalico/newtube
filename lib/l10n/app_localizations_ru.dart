@@ -938,4 +938,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get noAboutInfo => 'Нет информации о канале';
+
+  @override
+  String get accentColor => 'Акцентный цвет';
 }

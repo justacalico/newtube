@@ -917,6 +917,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get noAboutInfo => '没有频道信息';
+
+  @override
+  String get accentColor => '强调色';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1831,4 +1834,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get noAboutInfo => '没有频道信息';
+
+  @override
+  String get accentColor => '强调色';
 }

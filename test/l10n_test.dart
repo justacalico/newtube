@@ -190,6 +190,7 @@ void touchAll(AppLocalizations l) {
   l.searchThisChannel;
   l.noPlaylists;
   l.noAboutInfo;
+  l.accentColor;
   l.playNow;
   l.showReplies;
   l.hideReplies;

@@ -1837,6 +1837,12 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'No channel info'**
   String get noAboutInfo;
+
+  /// No description provided for @accentColor.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Accent colour'**
+  String get accentColor;
 }
 
 class _AppLocalizationsDelegate
