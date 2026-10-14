@@ -17,6 +17,7 @@ import 'services/media_controls.dart';
 import 'services/pip_actions.dart';
 import 'services/player_controller.dart';
 import 'services/notifier.dart';
+import 'services/orientation.dart';
 import 'services/sponsor_block.dart';
 import 'services/uploads_watcher.dart';
 import 'services/window_actions_impl.dart';
@@ -79,6 +80,10 @@ Future<AppState> createAppState(SharedPreferences prefs) async {
     sponsorBlock: SponsorBlockClient(),
     // coverage:ignore-line
     pipActions: kIsWeb ? null : createPipActions(),
+    // coverage:ignore-line
+    orientation: isDesktopPlatform || kIsWeb
+        ? null
+        : const OrientationActions(),
     // coverage:ignore-line
     mediaControls: kIsWeb ? null : createMediaControls(),
     // coverage:ignore-line
