@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
@@ -28,6 +30,7 @@ class PlaylistPage extends StatefulWidget {
 class _PlaylistPageState extends State<PlaylistPage> {
   PlaylistInfo? _playlist;
   bool _loading = true;
+  bool _loadingMore = false;
   Object? _error;
 
   @override
@@ -55,6 +58,24 @@ class _PlaylistPageState extends State<PlaylistPage> {
         _error = e;
         _loading = false;
       });
+    }
+  }
+
+  Future<void> _loadMore() async {
+    final playlist = _playlist;
+    final token = playlist?.continuation;
+    if (playlist == null || token == null || _loadingMore) return;
+    setState(() => _loadingMore = true);
+    try {
+      final more = await AppScope.read(context).api
+          .playlist(widget.playlistId, continuation: token);
+      if (!mounted) return;
+      setState(() {
+        _playlist = playlist.withContinuation(more.videos, more.continuation);
+        _loadingMore = false;
+      });
+    } catch (_) {
+      if (mounted) setState(() => _loadingMore = false);
     }
   }
 
@@ -127,9 +148,23 @@ class _PlaylistPageState extends State<PlaylistPage> {
                 ),
               ),
             SliverList.builder(
-              itemCount: playlist?.videos.length ?? 0,
+              itemCount: playlist == null
+                  ? 0
+                  : playlist.videos.length +
+                        (playlist.continuation != null ? 1 : 0),
               itemBuilder: (context, index) {
-                final video = playlist!.videos[index];
+                if (index >= playlist!.videos.length) {
+                  if (!_loadingMore) {
+                    scheduleMicrotask(_loadMore);
+                  }
+                  return _loadingMore
+                      ? const Padding(
+                          padding: EdgeInsets.all(12),
+                          child: Center(child: CircularProgressIndicator()),
+                        )
+                      : const SizedBox.shrink();
+                }
+                final video = playlist.videos[index];
                 return VideoListTile(
                   video: video,
                   onTap: () => _openVideo(video),

@@ -152,11 +152,21 @@ class InnertubeApi implements YouTubeApi {
   }
 
   @override
-  Future<PlaylistInfo> playlist(String playlistId) async {
+  @override
+  Future<PlaylistInfo> playlist(
+    String playlistId, {
+    String? continuation,
+  }) async {
     final browseId = playlistId.startsWith('VL') ? playlistId : 'VL$playlistId';
-    final r = await _post('browse', {'browseId': browseId});
+    final r = continuation != null
+        ? await _post('browse', {
+            'browseId': browseId,
+            'continuation': continuation,
+          })
+        : await _post('browse', {'browseId': browseId});
     final videos = <VideoInfo>[];
     collectPlaylistVideos(r, videos);
+    final next = _playlistContinuation(r);
     final header = r['header'];
     final renderer = header is Map<String, dynamic>
         ? header['playlistHeaderRenderer']
@@ -183,7 +193,34 @@ class InnertubeApi implements YouTubeApi {
       thumbnailUrl: _thumbField(thumb) ?? videos.firstOrNull?.thumbnailUrl,
       videoCount: count == 0 ? videos.length : count,
       videos: _proxiedThumbs(videos),
+      continuation: next,
     );
+  }
+
+  String? _playlistContinuation(dynamic node) {
+    if (node is Map<String, dynamic>) {
+      final renderer = node['continuationItemRenderer'];
+      if (renderer is Map<String, dynamic>) {
+        final endpoint = renderer['continuationEndpoint'];
+        if (endpoint is Map<String, dynamic>) {
+          final command = endpoint['continuationCommand'];
+          if (command is Map<String, dynamic>) {
+            final token = command['token'];
+            if (token is String) return token;
+          }
+        }
+      }
+      for (final v in node.values) {
+        final found = _playlistContinuation(v);
+        if (found != null) return found;
+      }
+    } else if (node is List) {
+      for (final item in node) {
+        final found = _playlistContinuation(item);
+        if (found != null) return found;
+      }
+    }
+    return null;
   }
 
   @override
