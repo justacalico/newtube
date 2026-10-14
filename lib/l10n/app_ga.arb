@@ -389,5 +389,7 @@
   "searchThisChannel": "Cuardaigh an cainéal seo",
   "noPlaylists": "Gan seinmliostaí",
   "noAboutInfo": "Gan eolas cainéal",
-  "accentColor": "Dath béime"
+  "accentColor": "Dath béime",
+  "errorAgeRestricted": "Físeán faoi theorainn aoise",
+  "errorUnavailable": "Níl an físeán ar fáil"
 }

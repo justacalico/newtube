@@ -191,6 +191,8 @@ void touchAll(AppLocalizations l) {
   l.noPlaylists;
   l.noAboutInfo;
   l.accentColor;
+  l.errorAgeRestricted;
+  l.errorUnavailable;
   l.playNow;
   l.showReplies;
   l.hideReplies;

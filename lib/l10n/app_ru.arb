@@ -389,5 +389,7 @@
   "searchThisChannel": "Поиск по каналу",
   "noPlaylists": "Нет плейлистов",
   "noAboutInfo": "Нет информации о канале",
-  "accentColor": "Акцентный цвет"
+  "accentColor": "Акцентный цвет",
+  "errorAgeRestricted": "Видео с возрастным ограничением",
+  "errorUnavailable": "Видео недоступно"
 }

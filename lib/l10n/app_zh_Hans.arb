@@ -389,5 +389,7 @@
   "searchThisChannel": "搜索此频道",
   "noPlaylists": "没有播放列表",
   "noAboutInfo": "没有频道信息",
-  "accentColor": "强调色"
+  "accentColor": "强调色",
+  "errorAgeRestricted": "该视频有年龄限制",
+  "errorUnavailable": "该视频不可用"
 }

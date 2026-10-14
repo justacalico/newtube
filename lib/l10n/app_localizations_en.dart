@@ -934,6 +934,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accentColor => 'Accent color';
+
+  @override
+  String get errorAgeRestricted => 'This video is age-restricted';
+
+  @override
+  String get errorUnavailable => 'This video is unavailable';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1865,4 +1871,10 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get accentColor => 'Accent colour';
+
+  @override
+  String get errorAgeRestricted => 'This video is age-restricted';
+
+  @override
+  String get errorUnavailable => 'This video is unavailable';
 }

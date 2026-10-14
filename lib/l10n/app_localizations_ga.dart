@@ -939,4 +939,10 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get accentColor => 'Dath béime';
+
+  @override
+  String get errorAgeRestricted => 'Físeán faoi theorainn aoise';
+
+  @override
+  String get errorUnavailable => 'Níl an físeán ar fáil';
 }

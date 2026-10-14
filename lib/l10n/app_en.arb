@@ -389,5 +389,7 @@
   "searchThisChannel": "Search this channel",
   "noPlaylists": "No playlists",
   "noAboutInfo": "No channel info",
-  "accentColor": "Accent color"
+  "accentColor": "Accent color",
+  "errorAgeRestricted": "This video is age-restricted",
+  "errorUnavailable": "This video is unavailable"
 }

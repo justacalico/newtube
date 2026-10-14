@@ -920,6 +920,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get accentColor => '强调色';
+
+  @override
+  String get errorAgeRestricted => '该视频有年龄限制';
+
+  @override
+  String get errorUnavailable => '该视频不可用';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1837,4 +1843,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get accentColor => '强调色';
+
+  @override
+  String get errorAgeRestricted => '该视频有年龄限制';
+
+  @override
+  String get errorUnavailable => '该视频不可用';
 }
