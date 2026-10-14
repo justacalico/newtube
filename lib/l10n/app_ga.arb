@@ -2,6 +2,7 @@
   "@@locale": "ga",
   "appTitle": "NewTube",
   "navHome": "Baile",
+  "navTrending": "Treochtáil",
   "navSearch": "Cuardaigh",
   "navSubscriptions": "Síntiúis",
   "navHistory": "Stair",

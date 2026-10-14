@@ -2,6 +2,7 @@
   "@@locale": "zh_Hans",
   "appTitle": "NewTube",
   "navHome": "首页",
+  "navTrending": "热门",
   "navSearch": "搜索",
   "navSubscriptions": "订阅",
   "navHistory": "历史记录",

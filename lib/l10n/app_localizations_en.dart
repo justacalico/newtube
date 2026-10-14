@@ -16,6 +16,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navHome => 'Home';
 
   @override
+  String get navTrending => 'Trending';
+
+  @override
   String get navSearch => 'Search';
 
   @override
@@ -646,6 +649,9 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get navHome => 'Home';
+
+  @override
+  String get navTrending => 'Trending';
 
   @override
   String get navSearch => 'Search';

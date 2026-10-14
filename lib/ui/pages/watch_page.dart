@@ -1300,10 +1300,7 @@ class _AutoplayCountdown extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  OutlinedButton(
-                    onPressed: onCancel,
-                    child: Text(l10n.cancel),
-                  ),
+                  OutlinedButton(onPressed: onCancel, child: Text(l10n.cancel)),
                   const SizedBox(width: 12),
                   FilledButton.icon(
                     onPressed: onPlayNow,

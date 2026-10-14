@@ -8,6 +8,7 @@ import '../pages/playlists_page.dart';
 import '../pages/search_page.dart';
 import '../pages/settings_page.dart';
 import '../pages/subscriptions_page.dart';
+import '../pages/trending_page.dart';
 import '../pages/watch_later_page.dart';
 import '../pages/watch_page.dart';
 import '../widgets/mini_player.dart';
@@ -69,6 +70,7 @@ class _AppShellState extends State<AppShell> {
 
     const pages = [
       HomePage(),
+      TrendingPage(),
       SearchPage(),
       SubscriptionsPage(),
       HistoryPage(),
@@ -91,11 +93,19 @@ class _AppShellState extends State<AppShell> {
           ),
           (
             destination: (
+              icon: Icons.trending_up,
+              selectedIcon: Icons.trending_up,
+              label: l10n.navTrending,
+            ),
+            page: 1,
+          ),
+          (
+            destination: (
               icon: Icons.search_outlined,
               selectedIcon: Icons.search,
               label: l10n.navSearch,
             ),
-            page: 1,
+            page: 2,
           ),
           (
             destination: (
@@ -103,7 +113,7 @@ class _AppShellState extends State<AppShell> {
               selectedIcon: Icons.subscriptions,
               label: l10n.navSubscriptions,
             ),
-            page: 2,
+            page: 3,
           ),
           if (state.settings.searchHistoryEnabled)
             (
@@ -112,7 +122,7 @@ class _AppShellState extends State<AppShell> {
                 selectedIcon: Icons.history,
                 label: l10n.navHistory,
               ),
-              page: 3,
+              page: 4,
             ),
           (
             destination: (
@@ -120,7 +130,7 @@ class _AppShellState extends State<AppShell> {
               selectedIcon: Icons.watch_later,
               label: l10n.navWatchLater,
             ),
-            page: 4,
+            page: 5,
           ),
           (
             destination: (
@@ -128,7 +138,7 @@ class _AppShellState extends State<AppShell> {
               selectedIcon: Icons.video_library,
               label: l10n.navPlaylists,
             ),
-            page: 5,
+            page: 6,
           ),
           (
             destination: (
@@ -136,7 +146,7 @@ class _AppShellState extends State<AppShell> {
               selectedIcon: Icons.settings,
               label: l10n.navSettings,
             ),
-            page: 6,
+            page: 7,
           ),
         ];
 

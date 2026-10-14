@@ -16,6 +16,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get navHome => '首页';
 
   @override
+  String get navTrending => '热门';
+
+  @override
   String get navSearch => '搜索';
 
   @override
@@ -633,6 +636,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get navHome => '首页';
+
+  @override
+  String get navTrending => '热门';
 
   @override
   String get navSearch => '搜索';

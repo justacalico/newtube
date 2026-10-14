@@ -5,9 +5,7 @@ import 'package:newtube/ui/pages/watch_page.dart';
 import 'fakes.dart';
 
 void main() {
-  testWidgets('autoplay waits on a countdown before switching', (
-    tester,
-  ) async {
+  testWidgets('autoplay waits on a countdown before switching', (tester) async {
     final player = FakePlayerController();
     final api = FakeYouTubeApi(
       feed: testVideos,

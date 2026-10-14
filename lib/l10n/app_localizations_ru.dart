@@ -16,6 +16,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get navHome => 'Главная';
 
   @override
+  String get navTrending => 'В тренде';
+
+  @override
   String get navSearch => 'Поиск';
 
   @override
