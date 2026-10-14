@@ -92,9 +92,23 @@ class SegmentSkipper extends ChangeNotifier {
 
   SponsorSegment? get active => _active;
 
+  SponsorSegment? get highlight {
+    for (final segment in segments) {
+      if (segment.category == 'poi_highlight') return segment;
+    }
+    return null;
+  }
+
+  void jumpToHighlight() {
+    final segment = highlight;
+    if (segment == null) return;
+    player.seek(segment.start);
+  }
+
   void _onPosition(Duration position) {
     SponsorSegment? hit;
     for (final segment in segments) {
+      if (segment.category == 'poi_highlight') continue;
       if (position >= segment.start && position < segment.end) {
         hit = segment;
         break;

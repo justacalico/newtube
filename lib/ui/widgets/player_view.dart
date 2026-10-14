@@ -786,17 +786,35 @@ class _PlayerViewState extends State<PlayerView> {
                     child: ListenableBuilder(
                       listenable: widget.segmentSkipper!,
                       builder: (context, _) {
-                        if (widget.segmentSkipper!.active == null) {
-                          return const SizedBox.shrink();
-                        }
-                        return FilledButton.icon(
-                          style: FilledButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.black,
-                          ),
-                          onPressed: widget.segmentSkipper!.skip,
-                          icon: const Icon(Icons.skip_next, size: 18),
-                          label: Text(l10n.skipSegment),
+                        final skipper = widget.segmentSkipper!;
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            if (skipper.highlight != null)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: FilledButton.icon(
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    foregroundColor: Colors.black,
+                                  ),
+                                  onPressed: skipper.jumpToHighlight,
+                                  icon: const Icon(Icons.star, size: 18),
+                                  label: Text(l10n.jumpToHighlight),
+                                ),
+                              ),
+                            if (skipper.active != null)
+                              FilledButton.icon(
+                                style: FilledButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  foregroundColor: Colors.black,
+                                ),
+                                onPressed: skipper.skip,
+                                icon: const Icon(Icons.skip_next, size: 18),
+                                label: Text(l10n.skipSegment),
+                              ),
+                          ],
                         );
                       },
                     ),

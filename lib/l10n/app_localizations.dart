@@ -1717,6 +1717,42 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Upload notifications'**
   String get channelNotify;
+
+  /// No description provided for @sponsorCategoryPreview.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Preview / recap'**
+  String get sponsorCategoryPreview;
+
+  /// No description provided for @sponsorCategoryFiller.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Filler'**
+  String get sponsorCategoryFiller;
+
+  /// No description provided for @sponsorCategoryPoiHighlight.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Point of interest (jump)'**
+  String get sponsorCategoryPoiHighlight;
+
+  /// No description provided for @sponsorCategoryExclusiveAccess.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Exclusive access / self-promo banner'**
+  String get sponsorCategoryExclusiveAccess;
+
+  /// No description provided for @sponsorCategoryChapter.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Chapter (community-labelled)'**
+  String get sponsorCategoryChapter;
+
+  /// No description provided for @jumpToHighlight.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Jump to highlight'**
+  String get jumpToHighlight;
 }
 
 class _AppLocalizationsDelegate

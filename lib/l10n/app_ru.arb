@@ -368,5 +368,11 @@
   "noGroup": "Без группы",
   "deleteGroup": "Удалить группу",
   "renameGroup": "Переименовать группу",
-  "channelNotify": "Уведомления о видео"
+  "channelNotify": "Уведомления о видео",
+  "sponsorCategoryPreview": "Превью / повтор",
+  "sponsorCategoryFiller": "Заполнитель",
+  "sponsorCategoryPoiHighlight": "Интересный момент (переход)",
+  "sponsorCategoryExclusiveAccess": "Эксклюзив / баннер самопиара",
+  "sponsorCategoryChapter": "Глава (отмечена сообществом)",
+  "jumpToHighlight": "Перейти к яркому моменту"
 }

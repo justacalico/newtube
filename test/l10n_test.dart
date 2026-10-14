@@ -170,6 +170,12 @@ void touchAll(AppLocalizations l) {
   l.deleteGroup;
   l.renameGroup;
   l.channelNotify;
+  l.sponsorCategoryPreview;
+  l.sponsorCategoryFiller;
+  l.sponsorCategoryPoiHighlight;
+  l.sponsorCategoryExclusiveAccess;
+  l.sponsorCategoryChapter;
+  l.jumpToHighlight;
   l.playNow;
   l.showReplies;
   l.hideReplies;

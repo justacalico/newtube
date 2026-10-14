@@ -28,7 +28,13 @@ const sponsorBlockCategoryIds = [
   'outro',
   'interaction',
   'music_offtopic',
+  'preview',
+  'filler',
+  'exclusive_access',
+  'chapter',
 ];
+
+const sponsorBlockJumpCategory = 'poi_highlight';
 
 String _localeKey(Locale locale) => locale.countryCode == null
     ? locale.languageCode
@@ -240,6 +246,11 @@ class _SettingsPageState extends State<SettingsPage> {
     'outro' => l10n.sponsorCategoryOutro,
     'interaction' => l10n.sponsorCategoryInteraction,
     'music_offtopic' => l10n.sponsorCategoryMusicOfftopic,
+    'preview' => l10n.sponsorCategoryPreview,
+    'filler' => l10n.sponsorCategoryFiller,
+    'poi_highlight' => l10n.sponsorCategoryPoiHighlight,
+    'exclusive_access' => l10n.sponsorCategoryExclusiveAccess,
+    'chapter' => l10n.sponsorCategoryChapter,
     _ => l10n.sponsorCategorySponsor,
   };
 
@@ -255,7 +266,10 @@ class _SettingsPageState extends State<SettingsPage> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              for (final id in sponsorBlockCategoryIds)
+              for (final id in [
+                ...sponsorBlockCategoryIds,
+                sponsorBlockJumpCategory,
+              ])
                 CheckboxListTile(
                   dense: true,
                   controlAffinity: ListTileControlAffinity.leading,

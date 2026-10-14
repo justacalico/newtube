@@ -874,4 +874,23 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get channelNotify => 'Fógraí uaslódála';
+
+  @override
+  String get sponsorCategoryPreview => 'Réamhamharc / achomair';
+
+  @override
+  String get sponsorCategoryFiller => 'Líonadh';
+
+  @override
+  String get sponsorCategoryPoiHighlight => 'Pointe spéise (léim)';
+
+  @override
+  String get sponsorCategoryExclusiveAccess =>
+      'Rochtain eisiach / brat féinbhromhartha';
+
+  @override
+  String get sponsorCategoryChapter => 'Caibidil (lipéadaithe ag an bpobal)';
+
+  @override
+  String get jumpToHighlight => 'Léim go dtí an bhuaicpointe';
 }

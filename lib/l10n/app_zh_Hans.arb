@@ -368,5 +368,11 @@
   "noGroup": "无分组",
   "deleteGroup": "删除分组",
   "renameGroup": "重命名分组",
-  "channelNotify": "上传提醒"
+  "channelNotify": "上传提醒",
+  "sponsorCategoryPreview": "预览/回顾",
+  "sponsorCategoryFiller": "填充片段",
+  "sponsorCategoryPoiHighlight": "精彩点（跳转）",
+  "sponsorCategoryExclusiveAccess": "独家内容/自推横幅",
+  "sponsorCategoryChapter": "章节（社区标记）",
+  "jumpToHighlight": "跳到精彩点"
 }
