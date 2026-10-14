@@ -168,6 +168,15 @@ class AppLocalizationsGa extends AppLocalizations {
   String get audioOnlyHint => 'Seinn an rian fuaime amháin';
 
   @override
+  String get defaultQuality => 'Caighdeán réamhshocraithe';
+
+  @override
+  String get qualityAuto => 'Uathoibríoch';
+
+  @override
+  String get qualityLowest => 'Is ísle';
+
+  @override
   String get about => 'Faoi';
 
   @override

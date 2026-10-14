@@ -167,6 +167,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get audioOnlyHint => 'Воспроизводить только звуковую дорожку';
 
   @override
+  String get defaultQuality => 'Качество по умолчанию';
+
+  @override
+  String get qualityAuto => 'Авто';
+
+  @override
+  String get qualityLowest => 'Минимальное';
+
+  @override
   String get about => 'О программе';
 
   @override

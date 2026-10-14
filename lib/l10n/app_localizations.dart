@@ -410,6 +410,24 @@ abstract class AppLocalizations {
   /// **'Play just the audio track and keep the artwork on screen'**
   String get audioOnlyHint;
 
+  /// No description provided for @defaultQuality.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Default video quality'**
+  String get defaultQuality;
+
+  /// No description provided for @qualityAuto.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Auto'**
+  String get qualityAuto;
+
+  /// No description provided for @qualityLowest.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Lowest'**
+  String get qualityLowest;
+
   /// No description provided for @about.
   ///
   /// In en_GB, this message translates to:

@@ -167,6 +167,15 @@ class AppLocalizationsEn extends AppLocalizations {
       'Play just the audio track and keep the artwork on screen';
 
   @override
+  String get defaultQuality => 'Default video quality';
+
+  @override
+  String get qualityAuto => 'Auto';
+
+  @override
+  String get qualityLowest => 'Lowest';
+
+  @override
   String get about => 'About';
 
   @override
@@ -694,6 +703,15 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   @override
   String get audioOnlyHint =>
       'Play just the audio track and keep the artwork on screen';
+
+  @override
+  String get defaultQuality => 'Default video quality';
+
+  @override
+  String get qualityAuto => 'Auto';
+
+  @override
+  String get qualityLowest => 'Lowest';
 
   @override
   String get about => 'About';

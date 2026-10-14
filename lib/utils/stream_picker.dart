@@ -35,6 +35,7 @@ PlayableStream? bestAudio(List<PlayableStream> streams, {String? container}) {
 StreamChoice? pickDefaultStream(
   List<PlayableStream> streams, {
   required bool desktop,
+  int preferredQuality = 0,
 }) {
   final videoStreams = streams.where((s) => s.hasVideo).toList()
     ..sort((a, b) {
@@ -49,6 +50,31 @@ StreamChoice? pickDefaultStream(
       return null;
     }
     return StreamChoice(audio, null);
+  }
+
+  if (preferredQuality < 0) {
+    final lowest = videoStreams.last;
+    final audio = lowest.hasAudio
+        ? null
+        : bestAudio(streams, container: lowest.container);
+    return StreamChoice(lowest, audio);
+  }
+  if (preferredQuality > 0) {
+    final within = videoStreams
+        .where((s) => streamPixels(s) <= preferredQuality)
+        .toList();
+    if (within.isNotEmpty) {
+      final target = within.firstWhere(
+        (s) => desktop ? !s.hasAudio : s.hasAudio,
+        orElse: () => within.first,
+      );
+      return StreamChoice(
+        target,
+        target.hasAudio
+            ? null
+            : bestAudio(streams, container: target.container),
+      );
+    }
   }
 
   if (desktop) {
