@@ -871,4 +871,7 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get renameGroup => 'Athainmnigh grúpa';
+
+  @override
+  String get channelNotify => 'Fógraí uaslódála';
 }

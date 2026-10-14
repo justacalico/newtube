@@ -874,4 +874,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get renameGroup => 'Переименовать группу';
+
+  @override
+  String get channelNotify => 'Уведомления о видео';
 }

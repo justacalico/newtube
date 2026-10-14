@@ -108,6 +108,7 @@ class UploadsWatcher {
     _checking = true;
     try {
       for (final channel in subscriptions.channels) {
+        if (subscriptions.isMuted(channel.id)) continue;
         try {
           final latest = await _latestUpload(channel.id);
           if (latest == null) continue;

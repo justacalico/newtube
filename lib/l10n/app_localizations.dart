@@ -1711,6 +1711,12 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Rename group'**
   String get renameGroup;
+
+  /// No description provided for @channelNotify.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Upload notifications'**
+  String get channelNotify;
 }
 
 class _AppLocalizationsDelegate

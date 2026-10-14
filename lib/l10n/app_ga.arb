@@ -367,5 +367,6 @@
   "channelGroup": "Grúpa",
   "noGroup": "Gan ghrúpa",
   "deleteGroup": "Scrios grúpa",
-  "renameGroup": "Athainmnigh grúpa"
+  "renameGroup": "Athainmnigh grúpa",
+  "channelNotify": "Fógraí uaslódála"
 }

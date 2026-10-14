@@ -169,6 +169,7 @@ void touchAll(AppLocalizations l) {
   l.noGroup;
   l.deleteGroup;
   l.renameGroup;
+  l.channelNotify;
   l.playNow;
   l.showReplies;
   l.hideReplies;

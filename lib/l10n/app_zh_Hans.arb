@@ -367,5 +367,6 @@
   "channelGroup": "分组",
   "noGroup": "无分组",
   "deleteGroup": "删除分组",
-  "renameGroup": "重命名分组"
+  "renameGroup": "重命名分组",
+  "channelNotify": "上传提醒"
 }
