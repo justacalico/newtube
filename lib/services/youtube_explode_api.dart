@@ -295,6 +295,22 @@ class YouTubeExplodeApi implements YouTubeApi {
   }
 
   @override
+  Future<List<VideoInfo>> channelShorts(String channelId) =>
+      _innertube.channelShorts(channelId);
+
+  @override
+  Future<List<PlaylistInfo>> channelPlaylists(String channelId) =>
+      _innertube.channelPlaylists(channelId);
+
+  @override
+  Future<ChannelAbout> channelAbout(String channelId) =>
+      _innertube.channelAbout(channelId);
+
+  @override
+  Future<List<VideoInfo>> channelSearch(String channelId, String query) =>
+      _innertube.channelSearch(channelId, query);
+
+  @override
   Future<ChannelInfo> channel(String channelId) async {
     final c = await _yt.channels.get(yt.ChannelId(channelId));
     return ChannelInfo(

@@ -7,6 +7,7 @@ import '../../utils/format.dart';
 import '../widgets/subscribe_button.dart';
 import '../widgets/thumbnail.dart';
 import '../widgets/video_grid.dart';
+import 'playlist_page.dart';
 import 'watch_page.dart';
 
 void openChannelPage(BuildContext context, String channelId) {
@@ -27,6 +28,11 @@ class ChannelPage extends StatefulWidget {
 class _ChannelPageState extends State<ChannelPage> {
   ChannelInfo? _channel;
   List<VideoInfo> _videos = const [];
+  List<VideoInfo> _shorts = const [];
+  List<PlaylistInfo> _playlists = const [];
+  ChannelAbout? _about;
+  List<VideoInfo>? _searchResults;
+  bool _searching = false;
   bool _loading = true;
   Object? _error;
 
@@ -49,9 +55,23 @@ class _ChannelPageState extends State<ChannelPage> {
           if (v.author.isEmpty) v.copyWith(author: channel.name) else v,
       ];
       if (!mounted) return;
+      final shorts = await api
+          .channelShorts(widget.channelId)
+          .catchError((_) => const <VideoInfo>[]);
+      final playlists = await api
+          .channelPlaylists(widget.channelId)
+          .catchError((_) => const <PlaylistInfo>[]);
+      final about = await api
+          .channelAbout(widget.channelId)
+          .then<ChannelAbout?>((a) => a)
+          .catchError((_) => null);
+      if (!mounted) return;
       setState(() {
         _channel = channel;
         _videos = videos;
+        _shorts = shorts;
+        _playlists = playlists;
+        _about = about;
         _loading = false;
       });
     } catch (e) {
@@ -65,12 +85,37 @@ class _ChannelPageState extends State<ChannelPage> {
 
   void _openVideo(VideoInfo video) => openWatchPage(context, video);
 
+  Future<void> _runSearch(String query) async {
+    final api = AppScope.read(context).api;
+    final results = await api.channelSearch(widget.channelId, query);
+    if (!mounted) return;
+    setState(() => _searchResults = results);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final channel = _channel;
     return Scaffold(
-      appBar: AppBar(title: Text(channel?.name ?? '')),
+      appBar: AppBar(
+        title: _searching
+            ? TextField(
+                autofocus: true,
+                decoration: InputDecoration(hintText: l10n.searchThisChannel),
+                onSubmitted: _runSearch,
+              )
+            : Text(channel?.name ?? ''),
+        actions: [
+          IconButton(
+            tooltip: _searching ? l10n.close : l10n.searchThisChannel,
+            icon: Icon(_searching ? Icons.close : Icons.search),
+            onPressed: () => setState(() {
+              _searching = !_searching;
+              if (!_searching) _searchResults = null;
+            }),
+          ),
+        ],
+      ),
       body: FeedStateView(
         loading: _loading,
         error: _error,
@@ -111,11 +156,99 @@ class _ChannelPageState extends State<ChannelPage> {
                 ),
               ),
             Expanded(
-              child: VideoGrid(videos: _videos, onVideoTap: _openVideo),
+              child: _searchResults != null
+                  ? VideoGrid(videos: _searchResults!, onVideoTap: _openVideo)
+                  : DefaultTabController(
+                      length: 4,
+                      child: Column(
+                        children: [
+                          TabBar(
+                            tabs: [
+                              Tab(text: l10n.channelTabVideos),
+                              Tab(text: l10n.channelTabShorts),
+                              Tab(text: l10n.channelTabPlaylists),
+                              Tab(text: l10n.channelTabAbout),
+                            ],
+                          ),
+                          Expanded(
+                            child: TabBarView(
+                              children: [
+                                VideoGrid(
+                                  videos: _videos,
+                                  onVideoTap: _openVideo,
+                                ),
+                                VideoGrid(
+                                  videos: _shorts,
+                                  onVideoTap: _openVideo,
+                                ),
+                                _PlaylistTab(playlists: _playlists),
+                                _AboutTab(about: _about),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _PlaylistTab extends StatelessWidget {
+  final List<PlaylistInfo> playlists;
+
+  const _PlaylistTab({required this.playlists});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    if (playlists.isEmpty) return Center(child: Text(l10n.noPlaylists));
+    return ListView(
+      children: [
+        for (final playlist in playlists)
+          ListTile(
+            leading: const Icon(Icons.playlist_play),
+            title: Text(
+              playlist.title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            subtitle: Text('${playlist.videos.length}'),
+            onTap: () => openPlaylistPage(context, playlist),
+          ),
+      ],
+    );
+  }
+}
+
+class _AboutTab extends StatelessWidget {
+  final ChannelAbout? about;
+
+  const _AboutTab({required this.about});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final a = about;
+    if (a == null ||
+        (a.description.isEmpty &&
+            a.joinedText.isEmpty &&
+            a.videoCountText == null)) {
+      return Center(child: Text(l10n.noAboutInfo));
+    }
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        if (a.description.isNotEmpty) SelectableText(a.description),
+        const SizedBox(height: 12),
+        if (a.subscriberCountText != null) Text(a.subscriberCountText!),
+        if (a.videoCountText != null) Text(a.videoCountText!),
+        if (a.viewCountText != null) Text(a.viewCountText!),
+        if (a.joinedText.isNotEmpty) Text(a.joinedText),
+      ],
     );
   }
 }

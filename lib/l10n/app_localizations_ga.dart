@@ -915,4 +915,25 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get codecAv1 => 'AV1';
+
+  @override
+  String get channelTabVideos => 'Físeáin';
+
+  @override
+  String get channelTabShorts => 'Gairid';
+
+  @override
+  String get channelTabPlaylists => 'Seinmliostaí';
+
+  @override
+  String get channelTabAbout => 'Faoi';
+
+  @override
+  String get searchThisChannel => 'Cuardaigh an cainéal seo';
+
+  @override
+  String get noPlaylists => 'Gan seinmliostaí';
+
+  @override
+  String get noAboutInfo => 'Gan eolas cainéal';
 }

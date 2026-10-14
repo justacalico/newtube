@@ -381,5 +381,12 @@
   "codecAuto": "Uathoibríoch",
   "codecAvc": "AVC (H.264)",
   "codecVp9": "VP9",
-  "codecAv1": "AV1"
+  "codecAv1": "AV1",
+  "channelTabVideos": "Físeáin",
+  "channelTabShorts": "Gairid",
+  "channelTabPlaylists": "Seinmliostaí",
+  "channelTabAbout": "Faoi",
+  "searchThisChannel": "Cuardaigh an cainéal seo",
+  "noPlaylists": "Gan seinmliostaí",
+  "noAboutInfo": "Gan eolas cainéal"
 }

@@ -381,5 +381,12 @@
   "codecAuto": "自动",
   "codecAvc": "AVC (H.264)",
   "codecVp9": "VP9",
-  "codecAv1": "AV1"
+  "codecAv1": "AV1",
+  "channelTabVideos": "视频",
+  "channelTabShorts": "短视频",
+  "channelTabPlaylists": "播放列表",
+  "channelTabAbout": "简介",
+  "searchThisChannel": "搜索此频道",
+  "noPlaylists": "没有播放列表",
+  "noAboutInfo": "没有频道信息"
 }

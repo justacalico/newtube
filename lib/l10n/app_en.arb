@@ -381,5 +381,12 @@
   "codecAuto": "Auto",
   "codecAvc": "AVC (H.264)",
   "codecVp9": "VP9",
-  "codecAv1": "AV1"
+  "codecAv1": "AV1",
+  "channelTabVideos": "Videos",
+  "channelTabShorts": "Shorts",
+  "channelTabPlaylists": "Playlists",
+  "channelTabAbout": "About",
+  "searchThisChannel": "Search this channel",
+  "noPlaylists": "No playlists",
+  "noAboutInfo": "No channel info"
 }

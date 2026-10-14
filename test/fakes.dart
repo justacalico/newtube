@@ -201,6 +201,30 @@ class FakeYouTubeApi implements YouTubeApi {
   Future<List<VideoInfo>> channelVideos(String channelId) async =>
       error != null ? _fail() : uploads;
 
+  List<VideoInfo> channelShortsList = const [];
+  List<PlaylistInfo> channelPlaylistList = const [];
+  ChannelAbout channelAboutInfo = const ChannelAbout();
+
+  @override
+  Future<List<VideoInfo>> channelShorts(String channelId) async =>
+      channelShortsList;
+
+  @override
+  Future<List<PlaylistInfo>> channelPlaylists(String channelId) async =>
+      channelPlaylistList;
+
+  @override
+  Future<ChannelAbout> channelAbout(String channelId) async => channelAboutInfo;
+
+  @override
+  Future<List<VideoInfo>> channelSearch(String channelId, String query) async {
+    final q = query.toLowerCase();
+    return [
+      for (final v in uploads)
+        if (v.title.toLowerCase().contains(q)) v,
+    ];
+  }
+
   Map<String, String> channelResolutions = const {};
 
   @override

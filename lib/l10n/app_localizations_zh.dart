@@ -896,6 +896,27 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get codecAv1 => 'AV1';
+
+  @override
+  String get channelTabVideos => '视频';
+
+  @override
+  String get channelTabShorts => '短视频';
+
+  @override
+  String get channelTabPlaylists => '播放列表';
+
+  @override
+  String get channelTabAbout => '简介';
+
+  @override
+  String get searchThisChannel => '搜索此频道';
+
+  @override
+  String get noPlaylists => '没有播放列表';
+
+  @override
+  String get noAboutInfo => '没有频道信息';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1789,4 +1810,25 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get codecAv1 => 'AV1';
+
+  @override
+  String get channelTabVideos => '视频';
+
+  @override
+  String get channelTabShorts => '短视频';
+
+  @override
+  String get channelTabPlaylists => '播放列表';
+
+  @override
+  String get channelTabAbout => '简介';
+
+  @override
+  String get searchThisChannel => '搜索此频道';
+
+  @override
+  String get noPlaylists => '没有播放列表';
+
+  @override
+  String get noAboutInfo => '没有频道信息';
 }

@@ -910,6 +910,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get codecAv1 => 'AV1';
+
+  @override
+  String get channelTabVideos => 'Videos';
+
+  @override
+  String get channelTabShorts => 'Shorts';
+
+  @override
+  String get channelTabPlaylists => 'Playlists';
+
+  @override
+  String get channelTabAbout => 'About';
+
+  @override
+  String get searchThisChannel => 'Search this channel';
+
+  @override
+  String get noPlaylists => 'No playlists';
+
+  @override
+  String get noAboutInfo => 'No channel info';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1817,4 +1838,25 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get codecAv1 => 'AV1';
+
+  @override
+  String get channelTabVideos => 'Videos';
+
+  @override
+  String get channelTabShorts => 'Shorts';
+
+  @override
+  String get channelTabPlaylists => 'Playlists';
+
+  @override
+  String get channelTabAbout => 'About';
+
+  @override
+  String get searchThisChannel => 'Search this channel';
+
+  @override
+  String get noPlaylists => 'No playlists';
+
+  @override
+  String get noAboutInfo => 'No channel info';
 }

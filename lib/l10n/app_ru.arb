@@ -381,5 +381,12 @@
   "codecAuto": "Авто",
   "codecAvc": "AVC (H.264)",
   "codecVp9": "VP9",
-  "codecAv1": "AV1"
+  "codecAv1": "AV1",
+  "channelTabVideos": "Видео",
+  "channelTabShorts": "Shorts",
+  "channelTabPlaylists": "Плейлисты",
+  "channelTabAbout": "О канале",
+  "searchThisChannel": "Поиск по каналу",
+  "noPlaylists": "Нет плейлистов",
+  "noAboutInfo": "Нет информации о канале"
 }

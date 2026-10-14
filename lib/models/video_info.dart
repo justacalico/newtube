@@ -246,3 +246,21 @@ class PlaylistInfo {
     this.videos = const [],
   });
 }
+
+class ChannelAbout {
+  final String description;
+  final String joinedText;
+  final String? videoCountText;
+  final String? viewCountText;
+  final String? subscriberCountText;
+  final List<({String label, String url})> links;
+
+  const ChannelAbout({
+    this.description = '',
+    this.joinedText = '',
+    this.videoCountText,
+    this.viewCountText,
+    this.subscriberCountText,
+    this.links = const [],
+  });
+}
