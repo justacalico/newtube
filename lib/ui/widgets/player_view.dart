@@ -33,6 +33,7 @@ class PlayerView extends StatefulWidget {
   final List<CaptionTrack> captions;
   final CaptionTrack? selectedCaption;
   final ValueChanged<CaptionTrack?>? onCaptionSelected;
+  final VoidCallback? onDismiss;
 
   const PlayerView({
     super.key,
@@ -52,6 +53,7 @@ class PlayerView extends StatefulWidget {
     this.captions = const [],
     this.selectedCaption,
     this.onCaptionSelected,
+    this.onDismiss,
   });
 
   @override
@@ -71,6 +73,17 @@ class _PlayerViewState extends State<PlayerView> {
   bool _ended = false;
   List<CaptionCue> _cues = const [];
   CaptionTrack? _cuesTrack;
+  Timer? _tapTimer;
+  int _lastTapSide = 0;
+  int _seekFlashSide = 0;
+  Timer? _seekFlashTimer;
+  bool _holding = false;
+  double _heldRate = 1.0;
+  int _dragSide = 0;
+  double _dragDy = 0;
+  double? _dragBase;
+  double? _hudValue;
+  bool _hudVolume = true;
 
   @override
   void initState() {
@@ -116,6 +129,8 @@ class _PlayerViewState extends State<PlayerView> {
   @override
   void dispose() {
     _hideTimer?.cancel();
+    _seekFlashTimer?.cancel();
+    _tapTimer?.cancel();
     _playingSub?.cancel();
     _completedSub?.cancel();
     super.dispose();
@@ -281,6 +296,108 @@ class _PlayerViewState extends State<PlayerView> {
     _player.playing ? _player.pause() : _player.play();
   }
 
+  void _onTapUp(TapUpDetails details) {
+    if (details.kind == PointerDeviceKind.mouse) {
+      _togglePlayback();
+      return;
+    }
+    final width = context.size?.width ?? 0;
+    final side = details.localPosition.dx < width / 2 ? -1 : 1;
+    if (_tapTimer?.isActive == true && side == _lastTapSide) {
+      _tapTimer!.cancel();
+      _tapTimer = Timer(
+        const Duration(milliseconds: 300),
+        () => _tapTimer = null,
+      );
+      _skipBy(Duration(seconds: 10 * side));
+      _flashSeek(side);
+      return;
+    }
+    _lastTapSide = side;
+    _tapTimer?.cancel();
+    _tapTimer = Timer(
+      const Duration(milliseconds: 300),
+      () => _tapTimer = null,
+    );
+    _toggleControls();
+  }
+
+  void _flashSeek(int side) {
+    _seekFlashTimer?.cancel();
+    setState(() => _seekFlashSide = side);
+    _seekFlashTimer = Timer(const Duration(milliseconds: 600), () {
+      if (mounted) setState(() => _seekFlashSide = 0);
+    });
+  }
+
+  void _onHoldStart(LongPressStartDetails details) {
+    _heldRate = _player.rate;
+    setState(() => _holding = true);
+    _player.setRate(2.0);
+  }
+
+  void _onHoldEnd() {
+    if (!_holding) return;
+    setState(() => _holding = false);
+    _player.setRate(_heldRate);
+  }
+
+  void _onVerticalDragStart(DragStartDetails details) {
+    final width = context.size?.width ?? 0;
+    final x = details.localPosition.dx;
+    _dragDy = 0;
+    _dragSide = x < width / 3 ? -1 : (x > width * 2 / 3 ? 1 : 0);
+    if (_dragSide == 1) {
+      _dragBase = _player.volume;
+    } else if (_dragSide == -1) {
+      _dragBase = null;
+      final brightness = AppScope.read(context).brightness;
+      if (brightness != null) {
+        brightness.getBrightness().then((v) => _dragBase = v);
+      }
+    }
+  }
+
+  void _onVerticalDragUpdate(DragUpdateDetails details) {
+    if (_dragSide == 0) {
+      _dragDy += details.delta.dy;
+      return;
+    }
+    final base = _dragBase;
+    if (base == null) return;
+    _dragDy += details.delta.dy;
+    final height = context.size?.height ?? 300;
+    final value = (base - _dragDy / (height * 0.7)).clamp(0.0, 1.0);
+    if (_dragSide == 1) {
+      _player.setVolume(value);
+      setState(() {
+        _hudValue = value;
+        _hudVolume = true;
+      });
+    } else {
+      AppScope.read(context).brightness?.setBrightness(value);
+      setState(() {
+        _hudValue = value;
+        _hudVolume = false;
+      });
+    }
+  }
+
+  void _onVerticalDragEnd() {
+    if (_dragSide == 0 && _dragDy > 60) _dismiss();
+    _dragDy = 0;
+    _dragBase = null;
+    if (_hudValue != null) setState(() => _hudValue = null);
+  }
+
+  void _dismiss() {
+    if (widget.isFullscreen) {
+      widget.onToggleFullscreen();
+    } else {
+      widget.onDismiss?.call();
+    }
+  }
+
   void _toggleMute() {
     _showControls();
     _player.setMuted(!_player.muted);
@@ -351,12 +468,102 @@ class _PlayerViewState extends State<PlayerView> {
                 Positioned.fill(
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
-                    onTapUp: (details) =>
-                        details.kind == PointerDeviceKind.mouse
-                        ? _togglePlayback()
-                        : _toggleControls(),
+                    onTapUp: _onTapUp,
+                    onLongPressStart: _onHoldStart,
+                    onLongPressEnd: (_) => _onHoldEnd(),
+                    onLongPressCancel: _onHoldEnd,
+                    onVerticalDragStart: _onVerticalDragStart,
+                    onVerticalDragUpdate: _onVerticalDragUpdate,
+                    onVerticalDragEnd: (_) => _onVerticalDragEnd(),
+                    onVerticalDragCancel: _onVerticalDragEnd,
                   ),
                 ),
+                if (_seekFlashSide != 0)
+                  Positioned(
+                    left: _seekFlashSide < 0 ? 32 : null,
+                    right: _seekFlashSide > 0 ? 32 : null,
+                    top: 0,
+                    bottom: 0,
+                    child: IgnorePointer(
+                      child: Center(
+                        child: Container(
+                          color: Colors.black54,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 6,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                _seekFlashSide < 0
+                                    ? Icons.fast_rewind
+                                    : Icons.fast_forward,
+                                color: Colors.white,
+                                size: 18,
+                              ),
+                              const SizedBox(width: 4),
+                              const Text(
+                                '10s',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                if (_hudValue != null)
+                  Positioned.fill(
+                    child: IgnorePointer(
+                      child: Center(
+                        child: Container(
+                          color: Colors.black54,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                _hudVolume
+                                    ? Icons.volume_up
+                                    : Icons.brightness_6,
+                                color: Colors.white,
+                                size: 18,
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                '${(_hudValue! * 100).round()}%',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                if (_holding)
+                  const Positioned(
+                    top: 8,
+                    right: 8,
+                    child: IgnorePointer(
+                      child: ColoredBox(
+                        color: Colors.black54,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          child: Text(
+                            '2x',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 if (widget.segmentSkipper != null)
                   Positioned(
                     right: 8,

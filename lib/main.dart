@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'app.dart';
+import 'services/brightness.dart';
 import 'services/file_saver.dart';
 import 'services/innertube_api.dart';
 import 'services/launcher.dart';
@@ -80,6 +81,8 @@ Future<AppState> createAppState(SharedPreferences prefs) async {
     pipActions: kIsWeb ? null : createPipActions(),
     // coverage:ignore-line
     mediaControls: kIsWeb ? null : createMediaControls(),
+    // coverage:ignore-line
+    brightness: kIsWeb ? null : createBrightness(),
     uploads: switch (createNotifier()) {
       // coverage:ignore-line
       null => null,

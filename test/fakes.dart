@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:newtube/models/app_update.dart';
 import 'package:newtube/models/video_info.dart';
+import 'package:newtube/services/brightness.dart';
 import 'package:newtube/services/mcp_server.dart';
 import 'package:newtube/services/player_controller.dart';
 import 'package:newtube/services/sponsor_block.dart';
@@ -352,6 +353,20 @@ class FakeVersionChecker extends VersionChecker {
   }
 }
 
+class FakeBrightnessControl implements BrightnessControl {
+  double value = 0.8;
+  final sets = <double>[];
+
+  @override
+  Future<double> getBrightness() async => value;
+
+  @override
+  Future<void> setBrightness(double v) async {
+    value = v;
+    sets.add(v);
+  }
+}
+
 Future<AppState> testState({
   SharedPreferences? prefs,
   FakeYouTubeApi? api,
@@ -375,6 +390,7 @@ Future<AppState> testState({
   UploadsWatcher? uploads,
   PipActions? pipActions,
   MediaControls? mediaControls,
+  BrightnessControl? brightness,
   Map<String, Object> initialPrefs = const {},
 }) async {
   SharedPreferences.setMockInitialValues(initialPrefs);
@@ -409,6 +425,7 @@ Future<AppState> testState({
     uploads: uploads,
     pipActions: pipActions,
     mediaControls: mediaControls,
+    brightness: brightness,
     versionChecker: versionChecker ?? FakeVersionChecker(),
     isWeb: isWeb,
   );
