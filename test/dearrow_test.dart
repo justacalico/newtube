@@ -189,6 +189,7 @@ void main() {
       );
       expect(await a.captions(track), isEmpty);
       expect(await a.trending(), isEmpty);
+      expect(await a.resolveUrl('https://youtu.be/x'), isNull);
       expect(await a.searchSuggestions('x'), isEmpty);
     });
 

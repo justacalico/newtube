@@ -1,4 +1,5 @@
 import 'package:newtube/models/search_filter.dart';
+import 'package:newtube/models/youtube_route.dart';
 
 import 'dart:async';
 import 'dart:io';
@@ -140,6 +141,10 @@ class FakeYouTubeApi implements YouTubeApi {
   }
 
   final searchFilters = <SearchFilter?>[];
+
+  Map<String, YouTubeRoute> resolvedUrls = const {};
+  @override
+  Future<YouTubeRoute?> resolveUrl(String url) async => resolvedUrls[url];
 
   @override
   Future<List<String>> searchSuggestions(String query) async {

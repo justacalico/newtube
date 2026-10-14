@@ -1,16 +1,18 @@
 import 'dart:async';
 
 import '../../models/search_filter.dart';
+import '../../models/youtube_route.dart';
 
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
+import '../../services/youtube_api.dart';
 import '../../state/app_state.dart';
 import '../widgets/thumbnail.dart';
 import '../widgets/video_grid.dart';
 import 'channel_page.dart';
-import 'playlist_page.dart';
+import 'playlist_page.dart' show PlaylistPage, openPlaylistPage;
 import 'watch_page.dart';
 
 class SearchPage extends StatefulWidget {
@@ -102,7 +104,45 @@ class _SearchPageState extends State<SearchPage> {
     if (state.settings.searchHistoryEnabled) {
       state.searchHistory.record(q, state.prefs);
     }
+    if (looksLikeYouTubeLink(q)) {
+      _openLink(q, state.api);
+      return;
+    }
     _load();
+  }
+
+  Future<void> _openLink(String url, YouTubeApi api) async {
+    var route = parseYouTubeLink(url);
+    route ??= await api.resolveUrl(url);
+    if (!mounted) return;
+    if (route == null) {
+      _load();
+      return;
+    }
+    final videoId = route.videoId;
+    final playlistId = route.playlistId;
+    final channelId = route.channelId;
+    if (videoId != null) {
+      openWatchPage(
+        context,
+        VideoInfo(
+          id: videoId,
+          title: '',
+          author: '',
+          channelId: '',
+          thumbnailUrl: null,
+        ),
+        startSeconds: route.startSeconds,
+      );
+    } else if (playlistId != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => PlaylistPage(playlistId: playlistId),
+        ),
+      );
+    } else if (channelId != null) {
+      openChannelPage(context, channelId);
+    }
   }
 
   void _searchFromHistory(String query) {
