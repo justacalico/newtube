@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.19.0 - 2026-10-14
+#### Features
+- (**player**) 字幕与隐藏式字幕支持 - (0a50c96) - HttpAnimations
+- (**player**) iOS 画中画支持 - (081da2c) - HttpAnimations
+#### Bug Fixes
+- 修正 PiP 轨道 ID 常量 - (d5ab772) - HttpAnimations
+- 修复 iOS 构建与代码格式 - (3d06847) - HttpAnimations
+
+- - -
+
 ## v0.18.0 - 2026-10-13
 #### Features
 - (**home**) 基于观看历史个性化首页推荐 - (2df8711) - HttpAnimations
