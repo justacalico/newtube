@@ -61,6 +61,7 @@ class DeArrowApi implements YouTubeApi {
       info: await _apply(details.info),
       description: details.description,
       streams: details.streams,
+      captions: details.captions,
     );
   }
 
@@ -94,4 +95,8 @@ class DeArrowApi implements YouTubeApi {
   @override
   Future<List<VideoInfo>> channelVideos(String channelId) =>
       inner.channelVideos(channelId).then(_applyAll);
+
+  @override
+  Future<List<CaptionCue>> captions(CaptionTrack track) =>
+      inner.captions(track);
 }

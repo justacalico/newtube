@@ -230,6 +230,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get speedNormal => 'Обычная';
 
   @override
+  String get captions => 'Субтитры';
+
+  @override
+  String get captionsOff => 'Выкл.';
+
+  @override
   String get searchResultsFor => 'Результаты';
 
   @override

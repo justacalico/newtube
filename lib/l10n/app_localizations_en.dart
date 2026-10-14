@@ -229,6 +229,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get speedNormal => 'Normal';
 
   @override
+  String get captions => 'Captions';
+
+  @override
+  String get captionsOff => 'Off';
+
+  @override
   String get searchResultsFor => 'Results';
 
   @override
@@ -719,6 +725,12 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get speedNormal => 'Normal';
+
+  @override
+  String get captions => 'Captions';
+
+  @override
+  String get captionsOff => 'Off';
 
   @override
   String get searchResultsFor => 'Results';

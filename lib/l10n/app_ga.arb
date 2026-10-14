@@ -72,6 +72,8 @@
   "quality": "Cáilíocht",
   "playbackSpeed": "Luas athsheinnte",
   "speedNormal": "Gnáth",
+  "captions": "Fotheidil",
+  "captionsOff": "As",
   "searchResultsFor": "Torthaí",
   "corsNoticeTitle": "Tá físeáin bacaithe sa bhrabhsálaí",
   "corsNoticeBody": "Ní cheadaíonn YouTube iarratais dhíreacha ó aipeanna gréasáin. Suiteáil síneadh CORS nó socraigh seachfhreastalaí i Socruithe.",

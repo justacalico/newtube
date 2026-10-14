@@ -72,6 +72,8 @@
   "quality": "Качество",
   "playbackSpeed": "Скорость воспроизведения",
   "speedNormal": "Обычная",
+  "captions": "Субтитры",
+  "captionsOff": "Выкл.",
   "searchResultsFor": "Результаты",
   "corsNoticeTitle": "Видео заблокировано в браузере",
   "corsNoticeBody": "YouTube не разрешает прямые запросы из веб-приложений. Установите CORS-расширение или укажите прокси в настройках.",

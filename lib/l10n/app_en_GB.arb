@@ -72,6 +72,8 @@
   "quality": "Quality",
   "playbackSpeed": "Playback speed",
   "speedNormal": "Normal",
+  "captions": "Captions",
+  "captionsOff": "Off",
   "searchResultsFor": "Results",
   "corsNoticeTitle": "Videos are blocked in the browser",
   "corsNoticeBody": "YouTube does not allow direct requests from web apps. Install a CORS extension or set a proxy in Settings.",

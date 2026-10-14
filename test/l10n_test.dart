@@ -79,6 +79,8 @@ void touchAll(AppLocalizations l) {
   l.quality;
   l.playbackSpeed;
   l.speedNormal;
+  l.captions;
+  l.captionsOff;
   l.sleepTimer;
   l.sleepTimerMinutes(5);
   l.sleepTimerEndOfVideo;

@@ -536,6 +536,18 @@ abstract class AppLocalizations {
   /// **'Normal'**
   String get speedNormal;
 
+  /// No description provided for @captions.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Captions'**
+  String get captions;
+
+  /// No description provided for @captionsOff.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Off'**
+  String get captionsOff;
+
   /// No description provided for @searchResultsFor.
   ///
   /// In en_GB, this message translates to:
