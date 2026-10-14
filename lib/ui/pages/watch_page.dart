@@ -68,6 +68,7 @@ class _WatchPageState extends State<WatchPage>
   PlayableStream? _videoStream;
   bool _audioOnly = false;
   List<VideoChapter> _chapters = const [];
+  int? _dislikes;
   CaptionTrack? _caption;
   List<CommentInfo> _comments = const [];
   String? _commentsToken;
@@ -165,6 +166,17 @@ class _WatchPageState extends State<WatchPage>
           .catchError((e) {
             debugLog('[watch] ${widget.video.id}: related videos failed: $e');
           });
+      final ryd = state.ryd;
+      if (ryd != null && state.settings.rydEnabled) {
+        ryd
+            .dislikes(widget.video.id)
+            .then((count) {
+              if (mounted) setState(() => _dislikes = count);
+            })
+            .catchError((e) {
+              debugLog('[watch] ${widget.video.id}: ryd failed: $e');
+            });
+      }
       state.api
           .comments(widget.video.id)
           .then((result) {
@@ -674,7 +686,7 @@ class _WatchPageState extends State<WatchPage>
                                                 .titleMedium,
                                           ),
                                           Text(
-                                            '${formatViewCount(_details!.info.viewCount)} ${l10n.views}',
+                                            '${formatViewCount(_details!.info.viewCount)} ${l10n.views}${_dislikes != null ? ' · ${formatViewCount(_dislikes!)} ${l10n.dislikes}' : ''}',
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodySmall,

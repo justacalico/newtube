@@ -209,6 +209,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statsVolume => 'Volume';
 
   @override
+  String get showDislikes => 'Show dislike counts';
+
+  @override
+  String get showDislikesHint =>
+      'Estimated dislikes via Return YouTube Dislike';
+
+  @override
+  String get dislikes => 'dislikes';
+
+  @override
   String get videoFit => 'Video fit';
 
   @override
@@ -790,6 +800,16 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get statsVolume => 'Volume';
+
+  @override
+  String get showDislikes => 'Show dislike counts';
+
+  @override
+  String get showDislikesHint =>
+      'Estimated dislikes via Return YouTube Dislike';
+
+  @override
+  String get dislikes => 'dislikes';
 
   @override
   String get videoFit => 'Video fit';

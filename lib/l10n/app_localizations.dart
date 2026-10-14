@@ -494,6 +494,24 @@ abstract class AppLocalizations {
   /// **'Volume'**
   String get statsVolume;
 
+  /// No description provided for @showDislikes.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Show dislike counts'**
+  String get showDislikes;
+
+  /// No description provided for @showDislikesHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Estimated dislikes via Return YouTube Dislike'**
+  String get showDislikesHint;
+
+  /// No description provided for @dislikes.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'dislikes'**
+  String get dislikes;
+
   /// No description provided for @videoFit.
   ///
   /// In en_GB, this message translates to:

@@ -18,6 +18,7 @@ import 'package:newtube/services/sponsor_block.dart';
 import 'package:newtube/services/media_controls.dart';
 import 'package:newtube/services/orientation.dart';
 import 'package:newtube/services/pip_actions.dart';
+import 'package:newtube/services/ryd.dart';
 import 'package:newtube/services/uploads_watcher.dart';
 import 'package:newtube/services/version_checker.dart';
 import 'package:newtube/services/window_actions.dart';
@@ -307,6 +308,22 @@ class FakePlayerController implements PlayerController {
   }
 }
 
+class FakeRydClient extends RydClient {
+  FakeRydClient({this.count});
+
+  final int? count;
+  int calls = 0;
+  Object? failure;
+
+  @override
+  Future<int?> dislikes(String videoId) async {
+    calls++;
+    final e = failure;
+    if (e != null) throw e;
+    return count;
+  }
+}
+
 class FakeOrientationActions extends OrientationActions {
   int landscapeCalls = 0;
   int restoreCalls = 0;
@@ -411,6 +428,7 @@ Future<AppState> testState({
   PipActions? pipActions,
   OrientationActions? orientation,
   MediaControls? mediaControls,
+  RydClient? ryd,
   BrightnessControl? brightness,
   Map<String, Object> initialPrefs = const {},
 }) async {
@@ -446,6 +464,7 @@ Future<AppState> testState({
     uploads: uploads,
     pipActions: pipActions,
     orientation: orientation,
+    ryd: ryd,
     mediaControls: mediaControls,
     brightness: brightness,
     versionChecker: versionChecker ?? FakeVersionChecker(),

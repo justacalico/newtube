@@ -210,6 +210,15 @@ class AppLocalizationsGa extends AppLocalizations {
   String get statsVolume => 'Airde';
 
   @override
+  String get showDislikes => 'Taispeáin míthaitneamh';
+
+  @override
+  String get showDislikesHint => 'Míthaitneamh measta ó Return YouTube Dislike';
+
+  @override
+  String get dislikes => 'míthaitneamh';
+
+  @override
   String get videoFit => 'Oiriúnú físe';
 
   @override

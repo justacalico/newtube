@@ -76,6 +76,9 @@ void touchAll(AppLocalizations l) {
   l.statsBuffered;
   l.statsRate;
   l.statsVolume;
+  l.showDislikes;
+  l.showDislikesHint;
+  l.dislikes;
   l.about;
   l.version;
   l.checkForUpdates;
