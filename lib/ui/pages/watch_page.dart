@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart' hide RepeatMode;
+import 'package:flutter/services.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
@@ -734,6 +735,7 @@ class _WatchPageState extends State<WatchPage>
                               onPressed: () =>
                                   showPlaylistPicker(context, widget.video),
                             ),
+                            _ShareMenu(video: widget.video, player: _player),
                           ],
                         ),
                         if (_details!.description.isNotEmpty) ...[
@@ -1113,6 +1115,58 @@ class _PipSurface extends StatelessWidget {
       body: player == null
           ? const SizedBox.shrink()
           : Center(child: player.buildView(context)),
+    );
+  }
+}
+
+class _ShareMenu extends StatelessWidget {
+  final VideoInfo video;
+  final PlayerController? player;
+
+  const _ShareMenu({required this.video, this.player});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final state = AppScope.read(context);
+    final url = 'https://www.youtube.com/watch?v=${video.id}';
+
+    void copy(String text) {
+      Clipboard.setData(ClipboardData(text: text));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l10n.copiedToClipboard)));
+    }
+
+    return MenuAnchor(
+      builder: (context, controller, child) => IconButton(
+        tooltip: l10n.share,
+        icon: const Icon(Icons.share),
+        onPressed: () =>
+            controller.isOpen ? controller.close() : controller.open(),
+      ),
+      menuChildren: [
+        MenuItemButton(
+          leadingIcon: const Icon(Icons.share),
+          onPressed: () => state.share?.share(url),
+          child: Text(l10n.share),
+        ),
+        MenuItemButton(
+          leadingIcon: const Icon(Icons.link),
+          onPressed: () => copy(url),
+          child: Text(l10n.copyLink),
+        ),
+        MenuItemButton(
+          leadingIcon: const Icon(Icons.schedule),
+          onPressed: () =>
+              copy('$url&t=${(player?.position ?? Duration.zero).inSeconds}s'),
+          child: Text(l10n.copyLinkAtTime),
+        ),
+        MenuItemButton(
+          leadingIcon: const Icon(Icons.open_in_new),
+          onPressed: () => state.launch(Uri.parse(url)),
+          child: Text(l10n.watchOnYouTube),
+        ),
+      ],
     );
   }
 }

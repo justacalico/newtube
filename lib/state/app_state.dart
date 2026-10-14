@@ -13,6 +13,7 @@ import '../services/media_controls.dart';
 import '../services/orientation.dart';
 import '../services/pip_actions.dart';
 import '../services/ryd.dart';
+import '../services/share.dart';
 import '../services/player_controller.dart';
 import '../services/sponsor_block.dart';
 import '../services/uploads_watcher.dart';
@@ -45,6 +46,7 @@ class AppState extends ChangeNotifier {
   final OpenFile? openFile;
   final SponsorBlockClient? sponsorBlock;
   final RydClient? ryd;
+  final ShareActions? share;
   final UploadsWatcher? uploads;
   final PipActions? pipActions;
   final OrientationActions? orientation;
@@ -79,6 +81,7 @@ class AppState extends ChangeNotifier {
     this.openFile,
     this.sponsorBlock,
     this.ryd,
+    this.share,
     this.uploads,
     this.pipActions,
     this.orientation,

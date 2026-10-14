@@ -219,6 +219,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dislikes => 'dislikes';
 
   @override
+  String get share => 'Share';
+
+  @override
+  String get copyLink => 'Copy link';
+
+  @override
+  String get copyLinkAtTime => 'Copy link at current time';
+
+  @override
+  String get watchOnYouTube => 'Watch on YouTube';
+
+  @override
+  String get copiedToClipboard => 'Link copied';
+
+  @override
   String get videoFit => 'Video fit';
 
   @override
@@ -810,6 +825,21 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get dislikes => 'dislikes';
+
+  @override
+  String get share => 'Share';
+
+  @override
+  String get copyLink => 'Copy link';
+
+  @override
+  String get copyLinkAtTime => 'Copy link at current time';
+
+  @override
+  String get watchOnYouTube => 'Watch on YouTube';
+
+  @override
+  String get copiedToClipboard => 'Link copied';
 
   @override
   String get videoFit => 'Video fit';

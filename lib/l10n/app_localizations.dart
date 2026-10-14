@@ -512,6 +512,36 @@ abstract class AppLocalizations {
   /// **'dislikes'**
   String get dislikes;
 
+  /// No description provided for @share.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Share'**
+  String get share;
+
+  /// No description provided for @copyLink.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Copy link'**
+  String get copyLink;
+
+  /// No description provided for @copyLinkAtTime.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Copy link at current time'**
+  String get copyLinkAtTime;
+
+  /// No description provided for @watchOnYouTube.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Watch on YouTube'**
+  String get watchOnYouTube;
+
+  /// No description provided for @copiedToClipboard.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Link copied'**
+  String get copiedToClipboard;
+
   /// No description provided for @videoFit.
   ///
   /// In en_GB, this message translates to:

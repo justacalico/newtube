@@ -17,6 +17,7 @@ import 'services/media_controls.dart';
 import 'services/pip_actions.dart';
 import 'services/player_controller.dart';
 import 'services/ryd.dart';
+import 'services/share.dart';
 import 'services/notifier.dart';
 import 'services/orientation.dart';
 import 'services/sponsor_block.dart';
@@ -81,6 +82,10 @@ Future<AppState> createAppState(SharedPreferences prefs) async {
     sponsorBlock: SponsorBlockClient(),
     // coverage:ignore-line
     ryd: kIsWeb ? null : RydClient(),
+    // coverage:ignore-line
+    share: isDesktopPlatform || kIsWeb
+        ? ClipboardShareActions() // coverage:ignore-line
+        : SheetShareActions(), // coverage:ignore-line
     // coverage:ignore-line
     pipActions: kIsWeb ? null : createPipActions(),
     // coverage:ignore-line
