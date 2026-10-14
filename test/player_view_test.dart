@@ -160,6 +160,7 @@ void main() {
     expect(player.paused, isFalse);
     expect(controlsOpacity(tester), 1.0);
 
+    await tester.pump(const Duration(milliseconds: 400));
     await tester.tapAt(tester.getCenter(find.byType(PlayerView)));
     await tester.pump();
     expect(player.paused, isFalse);

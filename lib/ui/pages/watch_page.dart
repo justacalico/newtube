@@ -555,6 +555,7 @@ class _WatchPageState extends State<WatchPage>
                             captions: _details!.captions,
                             selectedCaption: _caption,
                             onCaptionSelected: _selectCaption,
+                            onDismiss: () => Navigator.of(context).pop(),
                           ),
                   ),
                   Padding(

@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/app_update.dart';
 import '../models/video_info.dart';
+import '../services/brightness.dart';
 import '../services/file_opener.dart';
 import '../services/file_saver.dart';
 import '../services/launcher.dart';
@@ -44,6 +45,7 @@ class AppState extends ChangeNotifier {
   final UploadsWatcher? uploads;
   final PipActions? pipActions;
   final MediaControls? mediaControls;
+  final BrightnessControl? brightness;
   final PlaybackSession playback;
   final bool isWeb;
 
@@ -75,6 +77,7 @@ class AppState extends ChangeNotifier {
     this.uploads,
     this.pipActions,
     this.mediaControls,
+    this.brightness,
     this._versionChecker,
     this.isWeb = false,
   }) : playback = PlaybackSession(mediaControls: mediaControls) {
