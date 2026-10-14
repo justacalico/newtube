@@ -299,18 +299,24 @@ class _AppShellState extends State<AppShell> {
 
         return Scaffold(
           body: SafeArea(child: body),
-          bottomNavigationBar: NavigationBar(
-            labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-            selectedIndex: index,
-            onDestinationSelected: onSelected,
-            destinations: [
-              for (final d in destinations)
-                NavigationDestination(
-                  icon: Icon(d.destination.icon),
-                  selectedIcon: Icon(d.destination.selectedIcon),
-                  label: d.destination.label,
-                ),
-            ],
+          bottomNavigationBar: ValueListenableBuilder<bool>(
+            valueListenable: state.pipActions?.pipMode ?? ValueNotifier(false),
+            builder: (context, pip, _) => pip
+                ? const SizedBox.shrink()
+                : NavigationBar(
+                    labelBehavior:
+                        NavigationDestinationLabelBehavior.onlyShowSelected,
+                    selectedIndex: index,
+                    onDestinationSelected: onSelected,
+                    destinations: [
+                      for (final d in destinations)
+                        NavigationDestination(
+                          icon: Icon(d.destination.icon),
+                          selectedIcon: Icon(d.destination.selectedIcon),
+                          label: d.destination.label,
+                        ),
+                    ],
+                  ),
           ),
         );
       },
