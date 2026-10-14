@@ -720,4 +720,7 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get shortsBadge => 'SHORTS';
+
+  @override
+  String get refreshFeed => 'Athnuaigh';
 }

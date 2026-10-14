@@ -285,5 +285,6 @@
   "videoActions": "Tuilleadh roghanna",
   "hideShorts": "Folaigh Shorts",
   "hideShortsHint": "Scag Shorts as fothaí agus cuardaigh",
-  "shortsBadge": "SHORTS"
+  "shortsBadge": "SHORTS",
+  "refreshFeed": "Athnuaigh"
 }

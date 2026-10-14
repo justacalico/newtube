@@ -1429,6 +1429,12 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'SHORTS'**
   String get shortsBadge;
+
+  /// No description provided for @refreshFeed.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Refresh'**
+  String get refreshFeed;
 }
 
 class _AppLocalizationsDelegate

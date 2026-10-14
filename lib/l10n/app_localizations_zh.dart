@@ -703,6 +703,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get shortsBadge => '短视频';
+
+  @override
+  String get refreshFeed => '刷新';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1403,4 +1406,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get shortsBadge => '短视频';
+
+  @override
+  String get refreshFeed => '刷新';
 }

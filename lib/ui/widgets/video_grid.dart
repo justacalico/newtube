@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../shell/title_bar.dart' show isDesktopPlatform;
+
 import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../state/app_state.dart';
@@ -54,6 +56,7 @@ class FeedStateView extends StatelessWidget {
   final List<VideoInfo> videos;
   final VoidCallback onRetry;
   final Widget child;
+  final Future<void> Function()? onRefresh;
 
   const FeedStateView({
     super.key,
@@ -62,6 +65,7 @@ class FeedStateView extends StatelessWidget {
     required this.videos,
     required this.onRetry,
     required this.child,
+    this.onRefresh,
   });
 
   @override
@@ -70,11 +74,40 @@ class FeedStateView extends StatelessWidget {
     if (loading) {
       return const Center(child: CircularProgressIndicator());
     }
+    final refresh = onRefresh;
+    Widget scrollable(Widget inner) => RefreshIndicator(
+      onRefresh: refresh ?? () async {},
+      child: inner is ScrollView
+          ? inner
+          : ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [inner],
+            ),
+    );
     if (error != null) {
       if (AppScope.read(context).isWeb) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (context.mounted) CorsNotice.show(context);
         });
+      }
+      if (refresh != null) {
+        return scrollable(
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(l10n.errorLoading),
+                const SizedBox(height: 8),
+                FilledButton(onPressed: onRetry, child: Text(l10n.retry)),
+                if (AppScope.read(context).isWeb)
+                  TextButton(
+                    onPressed: () => CorsNotice.show(context),
+                    child: Text(l10n.corsNoticeTitle),
+                  ),
+              ],
+            ),
+          ),
+        );
       }
       return Center(
         child: Column(
@@ -93,8 +126,25 @@ class FeedStateView extends StatelessWidget {
       );
     }
     if (videos.isEmpty) {
-      return Center(child: Text(l10n.noVideos));
+      final empty = Center(child: Text(l10n.noVideos));
+      return refresh != null ? scrollable(empty) : empty;
     }
-    return child;
+    if (refresh == null) return child;
+    return Column(
+      children: [
+        if (isDesktopPlatform)
+          Align(
+            alignment: Alignment.centerRight,
+            child: IconButton(
+              icon: const Icon(Icons.refresh),
+              tooltip: l10n.refreshFeed,
+              onPressed: () => refresh(),
+            ),
+          ),
+        Expanded(
+          child: RefreshIndicator(onRefresh: refresh, child: child),
+        ),
+      ],
+    );
   }
 }

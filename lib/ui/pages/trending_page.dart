@@ -61,6 +61,7 @@ class _TrendingPageState extends State<TrendingPage> {
       error: _error,
       videos: visibleVideos(_videos, AppScope.read(context).settings),
       onRetry: _load,
+      onRefresh: _load,
       child: VideoGrid(
         videos: visibleVideos(_videos, AppScope.read(context).settings),
         onVideoTap: _openVideo,

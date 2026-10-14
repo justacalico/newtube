@@ -716,6 +716,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shortsBadge => 'SHORTS';
+
+  @override
+  String get refreshFeed => 'Refresh';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1429,4 +1432,7 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get shortsBadge => 'SHORTS';
+
+  @override
+  String get refreshFeed => 'Refresh';
 }

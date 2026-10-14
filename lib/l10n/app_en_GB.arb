@@ -285,5 +285,6 @@
   "videoActions": "More options",
   "hideShorts": "Hide Shorts",
   "hideShortsHint": "Filter Shorts out of feeds and search",
-  "shortsBadge": "SHORTS"
+  "shortsBadge": "SHORTS",
+  "refreshFeed": "Refresh"
 }

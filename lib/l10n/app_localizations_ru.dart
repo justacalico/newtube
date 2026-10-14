@@ -723,4 +723,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get shortsBadge => 'SHORTS';
+
+  @override
+  String get refreshFeed => 'Обновить';
 }
