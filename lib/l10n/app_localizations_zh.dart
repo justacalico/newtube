@@ -705,7 +705,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get shortsBadge => '短视频';
 
   @override
-  String get refreshFeed => '刷新';
+  String resumedFrom(String position) {
+    return '从 $position 继续播放';
+  }
+
+  @override
+  String get startOver => '从头开始';
+
+  @override
+  String get continueWatching => '继续观看';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1408,5 +1416,13 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get shortsBadge => '短视频';
 
   @override
-  String get refreshFeed => '刷新';
+  String resumedFrom(String position) {
+    return '从 $position 继续播放';
+  }
+
+  @override
+  String get startOver => '从头开始';
+
+  @override
+  String get continueWatching => '继续观看';
 }

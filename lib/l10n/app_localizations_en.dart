@@ -718,7 +718,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shortsBadge => 'SHORTS';
 
   @override
-  String get refreshFeed => 'Refresh';
+  String resumedFrom(String position) {
+    return 'Resumed from $position';
+  }
+
+  @override
+  String get startOver => 'Start over';
+
+  @override
+  String get continueWatching => 'Continue watching';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1434,5 +1442,13 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   String get shortsBadge => 'SHORTS';
 
   @override
-  String get refreshFeed => 'Refresh';
+  String resumedFrom(String position) {
+    return 'Resumed from $position';
+  }
+
+  @override
+  String get startOver => 'Start over';
+
+  @override
+  String get continueWatching => 'Continue watching';
 }

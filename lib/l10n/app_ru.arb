@@ -286,5 +286,14 @@
   "hideShorts": "Скрыть Shorts",
   "hideShortsHint": "Убрать Shorts из лент и поиска",
   "shortsBadge": "SHORTS",
-  "refreshFeed": "Обновить"
+  "resumedFrom": "Продолжено с {position}",
+  "startOver": "Сначала",
+  "continueWatching": "Продолжить просмотр",
+  "@resumedFrom": {
+    "placeholders": {
+      "position": {
+        "type": "String"
+      }
+    }
+  }
 }

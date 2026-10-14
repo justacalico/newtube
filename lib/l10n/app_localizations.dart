@@ -1430,11 +1430,23 @@ abstract class AppLocalizations {
   /// **'SHORTS'**
   String get shortsBadge;
 
-  /// No description provided for @refreshFeed.
+  /// No description provided for @resumedFrom.
   ///
   /// In en_GB, this message translates to:
-  /// **'Refresh'**
-  String get refreshFeed;
+  /// **'Resumed from {position}'**
+  String resumedFrom(String position);
+
+  /// No description provided for @startOver.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Start over'**
+  String get startOver;
+
+  /// No description provided for @continueWatching.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Continue watching'**
+  String get continueWatching;
 }
 
 class _AppLocalizationsDelegate

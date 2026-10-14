@@ -286,5 +286,14 @@
   "hideShorts": "Hide Shorts",
   "hideShortsHint": "Filter Shorts out of feeds and search",
   "shortsBadge": "SHORTS",
-  "refreshFeed": "Refresh"
+  "resumedFrom": "Resumed from {position}",
+  "startOver": "Start over",
+  "continueWatching": "Continue watching",
+  "@resumedFrom": {
+    "placeholders": {
+      "position": {
+        "type": "String"
+      }
+    }
+  }
 }
