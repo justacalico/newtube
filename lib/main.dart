@@ -9,6 +9,7 @@ import 'services/brightness.dart';
 import 'services/file_saver.dart';
 import 'services/innertube_api.dart';
 import 'services/launcher.dart';
+import 'services/links.dart';
 import 'services/mcp_server.dart';
 import 'services/dearrow.dart';
 import 'services/dearrow_api.dart';
@@ -86,6 +87,7 @@ Future<AppState> createAppState(SharedPreferences prefs) async {
     share: isDesktopPlatform || kIsWeb
         ? ClipboardShareActions() // coverage:ignore-line
         : SheetShareActions(), // coverage:ignore-line
+    links: AppLinksActions(), // coverage:ignore-line
     // coverage:ignore-line
     pipActions: kIsWeb ? null : createPipActions(),
     // coverage:ignore-line

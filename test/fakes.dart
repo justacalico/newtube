@@ -1,6 +1,3 @@
-import 'package:newtube/models/search_filter.dart';
-import 'package:newtube/models/youtube_route.dart';
-
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
@@ -13,6 +10,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:newtube/models/app_update.dart';
+import 'package:newtube/models/search_filter.dart';
+import 'package:newtube/models/youtube_route.dart';
+import 'package:newtube/services/links.dart';
 import 'package:newtube/models/video_info.dart';
 import 'package:newtube/services/brightness.dart';
 import 'package:newtube/services/mcp_server.dart';
@@ -460,6 +460,7 @@ class FakeBrightnessControl implements BrightnessControl {
 }
 
 Future<AppState> testState({
+  LinkActions? links,
   SharedPreferences? prefs,
   FakeYouTubeApi? api,
   FakePlayerController? player,
@@ -521,6 +522,7 @@ Future<AppState> testState({
     pipActions: pipActions,
     orientation: orientation,
     ryd: ryd,
+    links: links,
     share: share,
     mediaControls: mediaControls,
     brightness: brightness,
@@ -750,4 +752,15 @@ class FakeMediaControls implements MediaControls {
   Future<void> detach(PlayerController player) async {
     detaches++;
   }
+}
+
+class FakeLinkActions implements LinkActions {
+  final linksController = StreamController<Uri>.broadcast();
+  Uri? initialLink;
+
+  @override
+  Stream<Uri> get links => linksController.stream;
+
+  @override
+  Future<Uri?> get initial async => initialLink;
 }

@@ -1,9 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../state/app_state.dart';
+import '../../models/video_info.dart';
+import '../../models/youtube_route.dart';
+import '../pages/channel_page.dart';
 import '../pages/history_page.dart';
 import '../pages/home_page.dart';
+import '../pages/playlist_page.dart';
 import '../pages/playlists_page.dart';
 import '../pages/search_page.dart';
 import '../pages/settings_page.dart';
@@ -25,17 +31,67 @@ class AppShell extends StatefulWidget {
 class _AppShellState extends State<AppShell> {
   final _contentNavigator = GlobalKey<NavigatorState>();
   late final AppState _state;
+  StreamSubscription<Uri>? _links;
 
   @override
   void initState() {
     super.initState();
     _state = AppScope.read(context)..addListener(_openRequestedVideo);
+    _links = _state.links?.links.listen(_openUri);
+    unawaited(
+      _state.links?.initial.then((uri) {
+        if (uri != null) _openUri(uri);
+      }),
+    );
   }
 
   @override
   void dispose() {
+    unawaited(_links?.cancel());
     _state.removeListener(_openRequestedVideo);
     super.dispose();
+  }
+
+  void _openUri(Uri uri) {
+    if (!looksLikeYouTubeLink(uri.toString())) return;
+    _openLink(uri.toString());
+  }
+
+  Future<void> _openLink(String url) async {
+    var route = parseYouTubeLink(url);
+    route ??= await _state.api.resolveUrl(url);
+    if (!mounted || route == null) return;
+    final videoId = route.videoId;
+    final playlistId = route.playlistId;
+    final channelId = route.channelId;
+    if (videoId != null) {
+      _contentNavigator.currentState?.push(
+        MaterialPageRoute<void>(
+          builder: (_) => WatchPage(
+            video: VideoInfo(
+              id: videoId,
+              title: '',
+              author: '',
+              channelId: '',
+              thumbnailUrl: null,
+            ),
+            startSeconds: route?.startSeconds ?? 0,
+          ),
+        ),
+      );
+    } else if (playlistId != null) {
+      _contentNavigator.currentState?.push(
+        MaterialPageRoute<void>(
+          builder: (_) => PlaylistPage(playlistId: playlistId),
+        ),
+      );
+    } else if (channelId != null) {
+      _contentNavigator.currentState?.push(
+        MaterialPageRoute<void>(
+          builder: (_) => ChannelPage(channelId: channelId),
+        ),
+      );
+    }
   }
 
   void _openRequestedVideo() {

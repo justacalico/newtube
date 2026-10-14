@@ -8,6 +8,7 @@ import '../services/brightness.dart';
 import '../services/file_opener.dart';
 import '../services/file_saver.dart';
 import '../services/launcher.dart';
+import '../services/links.dart';
 import '../services/mcp_server.dart';
 import '../services/media_controls.dart';
 import '../services/orientation.dart';
@@ -47,6 +48,7 @@ class AppState extends ChangeNotifier {
   final SponsorBlockClient? sponsorBlock;
   final RydClient? ryd;
   final ShareActions? share;
+  final LinkActions? links;
   final UploadsWatcher? uploads;
   final PipActions? pipActions;
   final OrientationActions? orientation;
@@ -82,6 +84,7 @@ class AppState extends ChangeNotifier {
     this.sponsorBlock,
     this.ryd,
     this.share,
+    this.links,
     this.uploads,
     this.pipActions,
     this.orientation,
