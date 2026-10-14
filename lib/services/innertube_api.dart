@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import '../models/video_info.dart';
 import '../utils/captions.dart';
 import '../utils/debug_log.dart';
+import '../utils/heatmap.dart';
 import '../utils/storyboard.dart';
 import '../utils/stream_probe.dart';
 import 'innertube.dart';
@@ -185,6 +186,7 @@ class InnertubeApi implements YouTubeApi {
       streams: streams,
       captions: _captionTracks(r['captions']),
       storyboards: _storyboards(r['storyboards']),
+      heatmap: parseHeatMarkers(r),
     );
   }
 

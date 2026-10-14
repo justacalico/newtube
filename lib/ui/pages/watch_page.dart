@@ -547,6 +547,7 @@ class _WatchPageState extends State<WatchPage>
               artworkUrl: widget.video.thumbnailUrl,
               onAudioOnlyChanged: _setAudioOnly,
               storyboard: bestStoryboard(_details?.storyboards ?? const []),
+              heatmap: _details?.heatmap ?? const [],
             ),
           ),
         )
@@ -865,6 +866,7 @@ class _FullscreenPlayer extends StatefulWidget {
   final String? artworkUrl;
   final ValueChanged<bool>? onAudioOnlyChanged;
   final Storyboard? storyboard;
+  final List<HeatMarker> heatmap;
 
   const _FullscreenPlayer({
     required this.player,
@@ -885,6 +887,7 @@ class _FullscreenPlayer extends StatefulWidget {
     this.artworkUrl,
     this.onAudioOnlyChanged,
     this.storyboard,
+    this.heatmap = const [],
   });
 
   @override
@@ -951,6 +954,7 @@ class _FullscreenPlayerState extends State<_FullscreenPlayer> {
           artworkUrl: widget.artworkUrl,
           onAudioOnlyChanged: widget.onAudioOnlyChanged,
           storyboard: widget.storyboard,
+          heatmap: widget.heatmap,
         ),
       ),
     );
