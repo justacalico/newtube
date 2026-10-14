@@ -188,6 +188,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get upcoming => 'Upcoming';
 
   @override
+  String get statsForNerds => 'Stats for nerds';
+
+  @override
+  String get statsVideo => 'Video';
+
+  @override
+  String get statsAudio => 'Audio';
+
+  @override
+  String get statsPosition => 'Position';
+
+  @override
+  String get statsBuffered => 'buffered';
+
+  @override
+  String get statsRate => 'Speed';
+
+  @override
+  String get statsVolume => 'Volume';
+
+  @override
   String get videoFit => 'Video fit';
 
   @override
@@ -748,6 +769,27 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get upcoming => 'Upcoming';
+
+  @override
+  String get statsForNerds => 'Stats for nerds';
+
+  @override
+  String get statsVideo => 'Video';
+
+  @override
+  String get statsAudio => 'Audio';
+
+  @override
+  String get statsPosition => 'Position';
+
+  @override
+  String get statsBuffered => 'buffered';
+
+  @override
+  String get statsRate => 'Speed';
+
+  @override
+  String get statsVolume => 'Volume';
 
   @override
   String get videoFit => 'Video fit';

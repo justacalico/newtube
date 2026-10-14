@@ -184,6 +184,27 @@ class AppLocalizationsZh extends AppLocalizations {
   String get upcoming => '即将上线';
 
   @override
+  String get statsForNerds => '技术统计';
+
+  @override
+  String get statsVideo => '视频';
+
+  @override
+  String get statsAudio => '音频';
+
+  @override
+  String get statsPosition => '位置';
+
+  @override
+  String get statsBuffered => '已缓冲';
+
+  @override
+  String get statsRate => '速度';
+
+  @override
+  String get statsVolume => '音量';
+
+  @override
   String get videoFit => '画面缩放';
 
   @override
@@ -732,6 +753,27 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get upcoming => '即将上线';
+
+  @override
+  String get statsForNerds => '技术统计';
+
+  @override
+  String get statsVideo => '视频';
+
+  @override
+  String get statsAudio => '音频';
+
+  @override
+  String get statsPosition => '位置';
+
+  @override
+  String get statsBuffered => '已缓冲';
+
+  @override
+  String get statsRate => '速度';
+
+  @override
+  String get statsVolume => '音量';
 
   @override
   String get videoFit => '画面缩放';

@@ -69,6 +69,13 @@ void touchAll(AppLocalizations l) {
   l.fitFill;
   l.live;
   l.upcoming;
+  l.statsForNerds;
+  l.statsVideo;
+  l.statsAudio;
+  l.statsPosition;
+  l.statsBuffered;
+  l.statsRate;
+  l.statsVolume;
   l.about;
   l.version;
   l.checkForUpdates;

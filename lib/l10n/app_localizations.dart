@@ -452,6 +452,48 @@ abstract class AppLocalizations {
   /// **'Upcoming'**
   String get upcoming;
 
+  /// No description provided for @statsForNerds.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Stats for nerds'**
+  String get statsForNerds;
+
+  /// No description provided for @statsVideo.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Video'**
+  String get statsVideo;
+
+  /// No description provided for @statsAudio.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Audio'**
+  String get statsAudio;
+
+  /// No description provided for @statsPosition.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Position'**
+  String get statsPosition;
+
+  /// No description provided for @statsBuffered.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'buffered'**
+  String get statsBuffered;
+
+  /// No description provided for @statsRate.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Speed'**
+  String get statsRate;
+
+  /// No description provided for @statsVolume.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Volume'**
+  String get statsVolume;
+
   /// No description provided for @videoFit.
   ///
   /// In en_GB, this message translates to:

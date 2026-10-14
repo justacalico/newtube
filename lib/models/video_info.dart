@@ -78,6 +78,10 @@ class PlayableStream {
   final String? audioLanguage;
   final String? audioTrackName;
   final bool isDefaultAudio;
+  final String? mimeType;
+  final int? bitrate;
+  final int? width;
+  final int? height;
 
   const PlayableStream({
     required this.url,
@@ -88,6 +92,10 @@ class PlayableStream {
     this.audioLanguage,
     this.audioTrackName,
     this.isDefaultAudio = true,
+    this.mimeType,
+    this.bitrate,
+    this.width,
+    this.height,
   });
 }
 

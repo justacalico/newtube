@@ -263,6 +263,10 @@ class InnertubeApi implements YouTubeApi {
             audioLanguage: (trackMap?['id'] as String?)?.split('.').first,
             audioTrackName: trackMap?['displayName'] as String?,
             isDefaultAudio: trackMap?['audioIsDefault'] != false,
+            mimeType: mime.isEmpty ? null : mime,
+            bitrate: (format['bitrate'] as num?)?.toInt(),
+            width: (format['width'] as num?)?.toInt(),
+            height: (format['height'] as num?)?.toInt(),
           ),
         );
       }
