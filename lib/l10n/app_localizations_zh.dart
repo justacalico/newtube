@@ -971,6 +971,15 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get showRelated => '显示相关视频';
+
+  @override
+  String get hiddenItems => '已隐藏的视频与频道';
+
+  @override
+  String get notInterested => '不感兴趣';
+
+  @override
+  String get dontRecommendChannel => '不再推荐此频道';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1939,4 +1948,13 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get showRelated => '显示相关视频';
+
+  @override
+  String get hiddenItems => '已隐藏的视频与频道';
+
+  @override
+  String get notInterested => '不感兴趣';
+
+  @override
+  String get dontRecommendChannel => '不再推荐此频道';
 }

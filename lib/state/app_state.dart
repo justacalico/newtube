@@ -29,6 +29,7 @@ import 'playlists_store.dart';
 import 'search_history_store.dart';
 import 'settings_store.dart';
 import 'subscriptions_store.dart';
+import 'hidden_store.dart';
 import 'watch_later_store.dart';
 
 class AppState extends ChangeNotifier {
@@ -38,6 +39,7 @@ class AppState extends ChangeNotifier {
   final SettingsStore settings;
   final SubscriptionsStore subscriptions;
   final WatchLaterStore watchLater;
+  final HiddenStore hidden;
   final PlaylistsStore playlists;
   final HistoryStore history;
   final SearchHistoryStore searchHistory;
@@ -75,6 +77,7 @@ class AppState extends ChangeNotifier {
     required this.settings,
     required this.subscriptions,
     required this.watchLater,
+    required this.hidden,
     required this.playlists,
     required this.history,
     required this.searchHistory,
@@ -150,6 +153,7 @@ class AppState extends ChangeNotifier {
     await history.reload(prefs);
     await searchHistory.reload(prefs);
     await downloadsStore.reload(prefs);
+    await hidden.reload(prefs);
   }
 
   int get tabIndex => _tabIndex;

@@ -16,7 +16,11 @@ class VideoActionsMenu extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final state = AppScope.read(context);
     return ListenableBuilder(
-      listenable: Listenable.merge([state.watchLater, state.history]),
+      listenable: Listenable.merge([
+        state.watchLater,
+        state.history,
+        state.hidden,
+      ]),
       builder: (context, _) {
         final saved = state.watchLater.contains(video.id);
         final watched = state.history.contains(video.id);
@@ -65,6 +69,17 @@ class VideoActionsMenu extends StatelessWidget {
                   ? state.history.remove(video.id, state.prefs)
                   : state.history.record(video, state.prefs),
               child: Text(watched ? l10n.markUnwatched : l10n.markWatched),
+            ),
+            MenuItemButton(
+              leadingIcon: const Icon(Icons.visibility_off_outlined),
+              onPressed: () => state.hidden.hideVideo(video.id, state.prefs),
+              child: Text(l10n.notInterested),
+            ),
+            MenuItemButton(
+              leadingIcon: const Icon(Icons.person_off_outlined),
+              onPressed: () =>
+                  state.hidden.hideChannel(video.channelId, state.prefs),
+              child: Text(l10n.dontRecommendChannel),
             ),
             MenuItemButton(
               leadingIcon: const Icon(Icons.share),

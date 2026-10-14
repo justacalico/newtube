@@ -208,6 +208,9 @@ void touchAll(AppLocalizations l) {
   l.previousVideo;
   l.showComments;
   l.showRelated;
+  l.hiddenItems;
+  l.notInterested;
+  l.dontRecommendChannel;
   l.playNow;
   l.showReplies;
   l.hideReplies;

@@ -990,4 +990,13 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get showRelated => 'Taispeáin físeáin ghaolmhara';
+
+  @override
+  String get hiddenItems => 'Físeáin agus cainéil i bhfolach';
+
+  @override
+  String get notInterested => 'Gan suim';
+
+  @override
+  String get dontRecommendChannel => 'Ná mol an cainéal seo';
 }

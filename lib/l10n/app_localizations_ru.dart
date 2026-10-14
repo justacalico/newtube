@@ -992,4 +992,13 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get showRelated => 'Показывать похожие видео';
+
+  @override
+  String get hiddenItems => 'Скрытые видео и каналы';
+
+  @override
+  String get notInterested => 'Не интересует';
+
+  @override
+  String get dontRecommendChannel => 'Не рекомендовать канал';
 }

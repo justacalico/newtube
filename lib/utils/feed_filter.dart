@@ -13,5 +13,14 @@ List<VideoInfo> visibleVideos(
   if (settings.hideWatched && state != null) {
     out = out.where((v) => !state.history.contains(v.id)).toList();
   }
+  if (state != null) {
+    out = out
+        .where(
+          (v) =>
+              !state.hidden.isVideoHidden(v.id) &&
+              !state.hidden.isChannelHidden(v.channelId),
+        )
+        .toList();
+  }
   return out;
 }
