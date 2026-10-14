@@ -840,6 +840,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String backupExportedTo(String path) {
     return 'Backup saved to $path';
   }
+
+  @override
+  String get allChannels => 'All channels';
+
+  @override
+  String get subscriptionGroups => 'Subscription groups';
+
+  @override
+  String get manageGroups => 'Manage groups';
+
+  @override
+  String get newGroup => 'New group';
+
+  @override
+  String get groupName => 'Group name';
+
+  @override
+  String get channelGroup => 'Group';
+
+  @override
+  String get noGroup => 'No group';
+
+  @override
+  String get deleteGroup => 'Delete group';
+
+  @override
+  String get renameGroup => 'Rename group';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1677,4 +1704,31 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   String backupExportedTo(String path) {
     return 'Backup saved to $path';
   }
+
+  @override
+  String get allChannels => 'All channels';
+
+  @override
+  String get subscriptionGroups => 'Subscription groups';
+
+  @override
+  String get manageGroups => 'Manage groups';
+
+  @override
+  String get newGroup => 'New group';
+
+  @override
+  String get groupName => 'Group name';
+
+  @override
+  String get channelGroup => 'Group';
+
+  @override
+  String get noGroup => 'No group';
+
+  @override
+  String get deleteGroup => 'Delete group';
+
+  @override
+  String get renameGroup => 'Rename group';
 }

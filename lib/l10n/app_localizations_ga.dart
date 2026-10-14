@@ -844,4 +844,31 @@ class AppLocalizationsGa extends AppLocalizations {
   String backupExportedTo(String path) {
     return 'Cúltaca sábháilte go $path';
   }
+
+  @override
+  String get allChannels => 'Gach cainéal';
+
+  @override
+  String get subscriptionGroups => 'Grúpaí síntiús';
+
+  @override
+  String get manageGroups => 'Bainistigh grúpaí';
+
+  @override
+  String get newGroup => 'Grúpa nua';
+
+  @override
+  String get groupName => 'Ainm ghrúpa';
+
+  @override
+  String get channelGroup => 'Grúpa';
+
+  @override
+  String get noGroup => 'Gan ghrúpa';
+
+  @override
+  String get deleteGroup => 'Scrios grúpa';
+
+  @override
+  String get renameGroup => 'Athainmnigh grúpa';
 }

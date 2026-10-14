@@ -358,5 +358,14 @@
         "type": "String"
       }
     }
-  }
+  },
+  "allChannels": "All channels",
+  "subscriptionGroups": "Subscription groups",
+  "manageGroups": "Manage groups",
+  "newGroup": "New group",
+  "groupName": "Group name",
+  "channelGroup": "Group",
+  "noGroup": "No group",
+  "deleteGroup": "Delete group",
+  "renameGroup": "Rename group"
 }

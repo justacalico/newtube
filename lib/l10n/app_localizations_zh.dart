@@ -827,6 +827,33 @@ class AppLocalizationsZh extends AppLocalizations {
   String backupExportedTo(String path) {
     return '备份已保存到 $path';
   }
+
+  @override
+  String get allChannels => '全部频道';
+
+  @override
+  String get subscriptionGroups => '订阅分组';
+
+  @override
+  String get manageGroups => '管理分组';
+
+  @override
+  String get newGroup => '新建分组';
+
+  @override
+  String get groupName => '分组名称';
+
+  @override
+  String get channelGroup => '分组';
+
+  @override
+  String get noGroup => '无分组';
+
+  @override
+  String get deleteGroup => '删除分组';
+
+  @override
+  String get renameGroup => '重命名分组';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1651,4 +1678,31 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String backupExportedTo(String path) {
     return '备份已保存到 $path';
   }
+
+  @override
+  String get allChannels => '全部频道';
+
+  @override
+  String get subscriptionGroups => '订阅分组';
+
+  @override
+  String get manageGroups => '管理分组';
+
+  @override
+  String get newGroup => '新建分组';
+
+  @override
+  String get groupName => '分组名称';
+
+  @override
+  String get channelGroup => '分组';
+
+  @override
+  String get noGroup => '无分组';
+
+  @override
+  String get deleteGroup => '删除分组';
+
+  @override
+  String get renameGroup => '重命名分组';
 }

@@ -134,6 +134,43 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
+  Future<void> _manageGroups() async {
+    final state = AppScope.read(context);
+    final l10n = AppLocalizations.of(context);
+    await showDialog<void>(
+      context: context,
+      builder: (context) => ListenableBuilder(
+        listenable: state.subscriptions,
+        builder: (context, _) {
+          final groups = state.subscriptions.groups;
+          return AlertDialog(
+            title: Text(l10n.manageGroups),
+            content: groups.isEmpty
+                ? Text(l10n.noGroup)
+                : Wrap(
+                    spacing: 8,
+                    children: [
+                      for (final g in groups)
+                        InputChip(
+                          label: Text(g),
+                          deleteIcon: const Icon(Icons.close, size: 18),
+                          onDeleted: () =>
+                              state.subscriptions.deleteGroup(g, state.prefs),
+                        ),
+                    ],
+                  ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(l10n.close),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
   Future<void> _exportBackup() async {
     final state = AppScope.read(context);
     final save = state.saveFile;
@@ -449,6 +486,12 @@ class _SettingsPageState extends State<SettingsPage> {
                 subtitle: Text(l10n.exportBackupHint),
                 onTap: _exportBackup,
               ),
+            ListTile(
+              leading: const Icon(Icons.group_work_outlined),
+              title: Text(l10n.manageGroups),
+              subtitle: Text(l10n.subscriptionGroups),
+              onTap: _manageGroups,
+            ),
             if (state.openFile != null)
               ListTile(
                 leading: const Icon(Icons.settings_backup_restore),
