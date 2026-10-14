@@ -19,7 +19,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  final _controller = SearchController();
+  final _controller = TextEditingController();
   String _query = '';
   SearchResults _results = const SearchResults();
   bool _loading = false;
@@ -43,6 +43,7 @@ class _SearchPageState extends State<SearchPage> {
   void _onQueryChanged() {
     _suggestionDebounce?.cancel();
     _suggestionDebounce = Timer(const Duration(milliseconds: 250), _suggest);
+    if (mounted) setState(() {});
   }
 
   Future<void> _suggest() async {
@@ -61,11 +62,7 @@ class _SearchPageState extends State<SearchPage> {
     } catch (_) {}
   }
 
-  Iterable<Widget> _suggestionTiles(
-    BuildContext context,
-    SearchController controller,
-  ) {
-    final q = controller.text.trim();
+  List<Widget> _suggestionTiles(String q) {
     final history = _searchHistoryMatches(q);
     return [
       for (final entry in history)
@@ -79,13 +76,7 @@ class _SearchPageState extends State<SearchPage> {
           ListTile(
             leading: const Icon(Icons.search, size: 18),
             title: Text(suggestion),
-            onTap: () {
-              controller.text = suggestion;
-              controller.selection = TextSelection.collapsed(
-                offset: suggestion.length,
-              );
-              _search(suggestion);
-            },
+            onTap: () => _searchFromHistory(suggestion),
           ),
     ];
   }
@@ -149,17 +140,20 @@ class _SearchPageState extends State<SearchPage> {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: SearchAnchor.bar(
-            searchController: _controller,
-            barHintText: l10n.searchHint,
-            suggestionsBuilder: _suggestionTiles,
-            barLeading: const Icon(Icons.search),
+          child: SearchBar(
+            controller: _controller,
+            hintText: l10n.searchHint,
+            leading: const Icon(Icons.search),
             onSubmitted: _search,
           ),
         ),
         Expanded(
           child: _query.isEmpty
-              ? _SearchHistory(onSelect: _searchFromHistory)
+              ? (_controller.text.trim().isNotEmpty
+                    ? ListView(
+                        children: _suggestionTiles(_controller.text.trim()),
+                      )
+                    : _SearchHistory(onSelect: _searchFromHistory))
               : FeedStateView(
                   loading: _loading,
                   error: _error,
