@@ -93,6 +93,7 @@ class _PlayerViewState extends State<PlayerView> {
   int _seekFlashSide = 0;
   Timer? _seekFlashTimer;
   double? _previewFraction;
+  bool _statsVisible = false;
   bool _holding = false;
   double _heldRate = 1.0;
   int _dragSide = 0;
@@ -304,6 +305,13 @@ class _PlayerViewState extends State<PlayerView> {
               ),
           ],
           child: Text(l10n.videoFit),
+        ),
+        MenuItemButton(
+          onPressed: () => setState(() => _statsVisible = !_statsVisible),
+          leadingIcon: _statsVisible
+              ? const Icon(Icons.check, size: 18)
+              : const SizedBox(width: 18),
+          child: Text(l10n.statsForNerds),
         ),
         SubmenuButton(
           leadingIcon: const Icon(Icons.repeat),
@@ -527,6 +535,58 @@ class _PlayerViewState extends State<PlayerView> {
           },
         );
       },
+    );
+  }
+
+  Widget _statsOverlay() {
+    final l10n = AppLocalizations.of(context);
+    String line(PlayableStream? s, String label) {
+      if (s == null) return '';
+      final parts = [
+        label,
+        s.quality,
+        if (s.width != null && s.height != null) '${s.width}x${s.height}',
+        ?s.container,
+        ?s.mimeType,
+        if (s.bitrate != null) '${s.bitrate! ~/ 1000}kbps',
+      ];
+      return parts.join(' · ');
+    }
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.75),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: StreamBuilder<Duration>(
+          stream: _player.positionStream,
+          initialData: _player.position,
+          builder: (context, posSnap) => StreamBuilder<Duration>(
+            stream: _player.bufferedStream,
+            initialData: _player.buffered,
+            builder: (context, bufSnap) {
+              final pos = posSnap.data ?? Duration.zero;
+              final buf = bufSnap.data ?? Duration.zero;
+              final text = [
+                line(widget.current, l10n.statsVideo),
+                line(widget.currentAudio, l10n.statsAudio),
+                '${l10n.statsPosition}: ${formatDuration(pos)} / ${formatDuration(_player.duration)} (${formatDuration(buf)} ${l10n.statsBuffered})',
+                '${l10n.statsRate}: ${_player.rate}x · ${l10n.statsVolume}: ${(_player.volume * 100).round()}%',
+              ].where((l) => l.isNotEmpty).join('\n');
+              return Text(
+                text,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 11,
+                  fontFamily: 'monospace',
+                ),
+              );
+            },
+          ),
+        ),
+      ),
     );
   }
 
@@ -1114,6 +1174,8 @@ class _PlayerViewState extends State<PlayerView> {
                     ),
                   ),
                 ),
+                if (_statsVisible)
+                  Positioned(top: 8, left: 8, child: _statsOverlay()),
                 if (_ended && widget.endScreenBuilder != null && !widget.live)
                   Positioned.fill(child: widget.endScreenBuilder!(context)),
               ],

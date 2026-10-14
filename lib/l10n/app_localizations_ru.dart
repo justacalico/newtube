@@ -188,6 +188,27 @@ class AppLocalizationsRu extends AppLocalizations {
   String get upcoming => 'Скоро';
 
   @override
+  String get statsForNerds => 'Статистика для сисадминов';
+
+  @override
+  String get statsVideo => 'Видео';
+
+  @override
+  String get statsAudio => 'Аудио';
+
+  @override
+  String get statsPosition => 'Позиция';
+
+  @override
+  String get statsBuffered => 'буфер';
+
+  @override
+  String get statsRate => 'Скорость';
+
+  @override
+  String get statsVolume => 'Громкость';
+
+  @override
   String get videoFit => 'Масштаб видео';
 
   @override

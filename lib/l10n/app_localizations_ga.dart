@@ -189,6 +189,27 @@ class AppLocalizationsGa extends AppLocalizations {
   String get upcoming => 'Le teacht';
 
   @override
+  String get statsForNerds => 'Staitisticí do nirt';
+
+  @override
+  String get statsVideo => 'Físeán';
+
+  @override
+  String get statsAudio => 'Fuaim';
+
+  @override
+  String get statsPosition => 'Ionad';
+
+  @override
+  String get statsBuffered => 'maolánaithe';
+
+  @override
+  String get statsRate => 'Luas';
+
+  @override
+  String get statsVolume => 'Airde';
+
+  @override
   String get videoFit => 'Oiriúnú físe';
 
   @override
