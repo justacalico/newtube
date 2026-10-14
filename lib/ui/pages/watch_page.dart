@@ -15,6 +15,7 @@ import '../../state/playback_session.dart';
 import '../../utils/chapters.dart';
 import '../../utils/debug_log.dart';
 import '../../utils/format.dart';
+import '../../utils/storyboard.dart';
 import '../../utils/stream_picker.dart';
 import '../shell/title_bar.dart';
 import '../widgets/comment_tile.dart';
@@ -545,6 +546,7 @@ class _WatchPageState extends State<WatchPage>
               audioOnly: _audioOnly,
               artworkUrl: widget.video.thumbnailUrl,
               onAudioOnlyChanged: _setAudioOnly,
+              storyboard: bestStoryboard(_details?.storyboards ?? const []),
             ),
           ),
         )
@@ -626,6 +628,7 @@ class _WatchPageState extends State<WatchPage>
                             artworkUrl: widget.video.thumbnailUrl,
                             onAudioOnlyChanged: _setAudioOnly,
                             onDismiss: () => Navigator.of(context).pop(),
+                            storyboard: bestStoryboard(_details!.storyboards),
                           ),
                   ),
                   Padding(
@@ -861,6 +864,7 @@ class _FullscreenPlayer extends StatefulWidget {
   final bool audioOnly;
   final String? artworkUrl;
   final ValueChanged<bool>? onAudioOnlyChanged;
+  final Storyboard? storyboard;
 
   const _FullscreenPlayer({
     required this.player,
@@ -880,6 +884,7 @@ class _FullscreenPlayer extends StatefulWidget {
     this.audioOnly = false,
     this.artworkUrl,
     this.onAudioOnlyChanged,
+    this.storyboard,
   });
 
   @override
@@ -945,6 +950,7 @@ class _FullscreenPlayerState extends State<_FullscreenPlayer> {
           audioOnly: widget.audioOnly,
           artworkUrl: widget.artworkUrl,
           onAudioOnlyChanged: widget.onAudioOnlyChanged,
+          storyboard: widget.storyboard,
         ),
       ),
     );

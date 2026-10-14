@@ -63,6 +63,15 @@ class WebPlayerController implements PlayerController {
   bool get buffering => playing && _video.readyState < 3;
 
   @override
+  Duration get buffered {
+    final ranges = _video.buffered;
+    if (ranges.length == 0) return Duration.zero;
+    return Duration(
+      milliseconds: (ranges.end(ranges.length - 1) * 1000).round(),
+    );
+  }
+
+  @override
   double get rate => _rate;
 
   @override
@@ -79,6 +88,8 @@ class WebPlayerController implements PlayerController {
   Stream<bool> get playingStream => _playing.stream;
   @override
   Stream<bool> get bufferingStream => _buffering.stream;
+  @override
+  Stream<Duration> get bufferedStream => _position.stream.map((_) => buffered);
   @override
   Stream<double> get rateStream => _rateChanges.stream;
   @override

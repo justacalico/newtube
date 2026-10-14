@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import '../models/video_info.dart';
 import '../utils/captions.dart';
 import '../utils/debug_log.dart';
+import '../utils/storyboard.dart';
 import '../utils/stream_probe.dart';
 import 'innertube.dart';
 import 'proxy_client.dart';
@@ -183,7 +184,17 @@ class InnertubeApi implements YouTubeApi {
       description: details['shortDescription'] as String? ?? '',
       streams: streams,
       captions: _captionTracks(r['captions']),
+      storyboards: _storyboards(r['storyboards']),
     );
+  }
+
+  List<Storyboard> _storyboards(dynamic node) {
+    if (node is! Map<String, dynamic>) return const [];
+    final renderer = node['playerStoryboardSpecRenderer'];
+    if (renderer is! Map<String, dynamic>) return const [];
+    final spec = renderer['spec'];
+    if (spec is! String) return const [];
+    return parseStoryboardSpec(spec);
   }
 
   List<CaptionTrack> _captionTracks(dynamic node) {

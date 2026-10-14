@@ -8,6 +8,7 @@ import 'player_factory_stub.dart'
 abstract class PlayerController {
   Duration get position;
   Duration get duration;
+  Duration get buffered;
   bool get playing;
   bool get buffering;
   double get rate;
@@ -16,6 +17,7 @@ abstract class PlayerController {
 
   Stream<Duration> get positionStream;
   Stream<Duration> get durationStream;
+  Stream<Duration> get bufferedStream;
   Stream<bool> get playingStream;
   Stream<bool> get bufferingStream;
   Stream<double> get rateStream;
