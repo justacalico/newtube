@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.20.0 - 2026-10-14
+#### Features
+- (**player**) 触摸手势控制 - (ed7ca91) - HttpAnimations
+
+- - -
+
 ## v0.19.0 - 2026-10-14
 #### Features
 - (**player**) 字幕与隐藏式字幕支持 - (0a50c96) - HttpAnimations
