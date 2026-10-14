@@ -212,6 +212,7 @@ class _SearchPageState extends State<SearchPage> {
                   videos: visibleVideos(
                     _results.videos,
                     AppScope.read(context).settings,
+                    AppScope.read(context),
                   ),
                   onRetry: _load,
                   child: Column(
@@ -333,6 +334,7 @@ class _SearchPageState extends State<SearchPage> {
                           videos: visibleVideos(
                             _results.videos,
                             AppScope.read(context).settings,
+                            AppScope.read(context),
                           ),
                           onVideoTap: _openVideo,
                           onChannelTap: (v) => _openChannel(v.channelId),

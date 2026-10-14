@@ -31,6 +31,7 @@ class SettingsStore extends ChangeNotifier {
   static const _captionLanguageKey = 'caption_language';
   static const _audioOnlyKey = 'audio_only';
   static const _hideShortsKey = 'hide_shorts';
+  static const _hideWatchedKey = 'hide_watched';
   static const _preferredQualityKey = 'preferred_quality';
   static const _defaultSpeedKey = 'default_speed';
   static const defaultSponsorBlockCategories = {'sponsor', 'selfpromo'};
@@ -53,6 +54,7 @@ class SettingsStore extends ChangeNotifier {
   String _captionLanguage;
   bool _audioOnly;
   bool _hideShorts;
+  bool _hideWatched;
   int _preferredQuality;
   double _defaultSpeed;
 
@@ -75,6 +77,7 @@ class SettingsStore extends ChangeNotifier {
     this._captionLanguage = '',
     this._audioOnly = false,
     this._hideShorts = false,
+    this._hideWatched = false,
     this._preferredQuality = 0,
     this._defaultSpeed = 1.0,
   }) : _sponsorBlockCategories =
@@ -109,6 +112,7 @@ class SettingsStore extends ChangeNotifier {
       captionLanguage: prefs.getString(_captionLanguageKey) ?? '',
       audioOnly: prefs.getBool(_audioOnlyKey) ?? false,
       hideShorts: prefs.getBool(_hideShortsKey) ?? false,
+      hideWatched: prefs.getBool(_hideWatchedKey) ?? false,
       preferredQuality: prefs.getInt(_preferredQualityKey) ?? 0,
       defaultSpeed: prefs.getDouble(_defaultSpeedKey) ?? 1.0,
     );
@@ -151,6 +155,7 @@ class SettingsStore extends ChangeNotifier {
   String get captionLanguage => _captionLanguage;
   bool get audioOnly => _audioOnly;
   bool get hideShorts => _hideShorts;
+  bool get hideWatched => _hideWatched;
   int get preferredQuality => _preferredQuality;
   double get defaultSpeed => _defaultSpeed;
 
@@ -289,6 +294,12 @@ class SettingsStore extends ChangeNotifier {
   Future<void> setHideShorts(bool value, SharedPreferences prefs) async {
     _hideShorts = value;
     await prefs.setBool(_hideShortsKey, value);
+    notifyListeners();
+  }
+
+  Future<void> setHideWatched(bool value, SharedPreferences prefs) async {
+    _hideWatched = value;
+    await prefs.setBool(_hideWatchedKey, value);
     notifyListeners();
   }
 

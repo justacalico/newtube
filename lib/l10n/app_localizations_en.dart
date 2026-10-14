@@ -716,6 +716,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shortsBadge => 'SHORTS';
+
+  @override
+  String get hideWatched => 'Hide watched';
+
+  @override
+  String get hideWatchedHint => 'Filter watched videos out of feeds and search';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1429,4 +1435,10 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get shortsBadge => 'SHORTS';
+
+  @override
+  String get hideWatched => 'Hide watched';
+
+  @override
+  String get hideWatchedHint => 'Filter watched videos out of feeds and search';
 }

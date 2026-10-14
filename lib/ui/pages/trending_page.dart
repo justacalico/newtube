@@ -59,10 +59,18 @@ class _TrendingPageState extends State<TrendingPage> {
     return FeedStateView(
       loading: _loading,
       error: _error,
-      videos: visibleVideos(_videos, AppScope.read(context).settings),
+      videos: visibleVideos(
+        _videos,
+        AppScope.read(context).settings,
+        AppScope.read(context),
+      ),
       onRetry: _load,
       child: VideoGrid(
-        videos: visibleVideos(_videos, AppScope.read(context).settings),
+        videos: visibleVideos(
+          _videos,
+          AppScope.read(context).settings,
+          AppScope.read(context),
+        ),
         onVideoTap: _openVideo,
         onChannelTap: _openChannel,
       ),

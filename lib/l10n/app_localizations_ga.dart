@@ -720,4 +720,10 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get shortsBadge => 'SHORTS';
+
+  @override
+  String get hideWatched => 'Folaigh feicthe';
+
+  @override
+  String get hideWatchedHint => 'Scag físeáin feicthe as fothaí agus cuardaigh';
 }
