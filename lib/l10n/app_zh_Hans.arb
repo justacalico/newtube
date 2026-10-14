@@ -376,5 +376,10 @@
   "sponsorCategoryChapter": "章节（社区标记）",
   "jumpToHighlight": "跳到精彩点",
   "networkProxy": "网络代理",
-  "networkProxyHint": "SOCKS5 或 HTTP 代理，重启后生效"
+  "networkProxyHint": "SOCKS5 或 HTTP 代理，重启后生效",
+  "preferredCodec": "首选编解码器",
+  "codecAuto": "自动",
+  "codecAvc": "AVC (H.264)",
+  "codecVp9": "VP9",
+  "codecAv1": "AV1"
 }

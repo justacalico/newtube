@@ -881,6 +881,21 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get networkProxyHint => 'SOCKS5 或 HTTP 代理，重启后生效';
+
+  @override
+  String get preferredCodec => '首选编解码器';
+
+  @override
+  String get codecAuto => '自动';
+
+  @override
+  String get codecAvc => 'AVC (H.264)';
+
+  @override
+  String get codecVp9 => 'VP9';
+
+  @override
+  String get codecAv1 => 'AV1';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1759,4 +1774,19 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get networkProxyHint => 'SOCKS5 或 HTTP 代理，重启后生效';
+
+  @override
+  String get preferredCodec => '首选编解码器';
+
+  @override
+  String get codecAuto => '自动';
+
+  @override
+  String get codecAvc => 'AVC (H.264)';
+
+  @override
+  String get codecVp9 => 'VP9';
+
+  @override
+  String get codecAv1 => 'AV1';
 }

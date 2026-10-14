@@ -900,4 +900,19 @@ class AppLocalizationsGa extends AppLocalizations {
   @override
   String get networkProxyHint =>
       'SOCKS5 nó HTTP, curtha i bhfeidhm ar an athtús';
+
+  @override
+  String get preferredCodec => 'Códec is fearr';
+
+  @override
+  String get codecAuto => 'Uathoibríoch';
+
+  @override
+  String get codecAvc => 'AVC (H.264)';
+
+  @override
+  String get codecVp9 => 'VP9';
+
+  @override
+  String get codecAv1 => 'AV1';
 }

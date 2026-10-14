@@ -376,5 +376,10 @@
   "sponsorCategoryChapter": "Глава (отмечена сообществом)",
   "jumpToHighlight": "Перейти к яркому моменту",
   "networkProxy": "Сетевой прокси",
-  "networkProxyHint": "SOCKS5 или HTTP прокси, применяется после перезапуска"
+  "networkProxyHint": "SOCKS5 или HTTP прокси, применяется после перезапуска",
+  "preferredCodec": "Предпочитаемый кодек",
+  "codecAuto": "Авто",
+  "codecAvc": "AVC (H.264)",
+  "codecVp9": "VP9",
+  "codecAv1": "AV1"
 }

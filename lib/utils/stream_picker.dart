@@ -32,17 +32,36 @@ PlayableStream? bestAudio(List<PlayableStream> streams, {String? container}) {
   return best;
 }
 
+String? streamCodec(PlayableStream s) {
+  final mime = s.mimeType?.toLowerCase() ?? '';
+  if (mime.contains('av01') || mime.contains('av1')) return 'av1';
+  if (mime.contains('vp9') || mime.contains('vp09')) return 'vp9';
+  if (mime.contains('avc') || mime.contains('h264')) return 'avc';
+  return null;
+}
+
 StreamChoice? pickDefaultStream(
   List<PlayableStream> streams, {
   required bool desktop,
   int preferredQuality = 0,
+  int preferredCodec = 0,
 }) {
-  final videoStreams = streams.where((s) => s.hasVideo).toList()
-    ..sort((a, b) {
-      final byRes = streamPixels(b).compareTo(streamPixels(a));
-      if (byRes != 0) return byRes;
-      return (b.hasAudio ? 1 : 0).compareTo(a.hasAudio ? 1 : 0);
-    });
+  const codecOrder = [null, 'avc', 'vp9', 'av1'];
+  final wantedCodec = preferredCodec >= 0 && preferredCodec < codecOrder.length
+      ? codecOrder[preferredCodec]
+      : null;
+  var videoStreams = streams.where((s) => s.hasVideo).toList();
+  if (wantedCodec != null) {
+    final matching = videoStreams
+        .where((s) => streamCodec(s) == wantedCodec)
+        .toList();
+    if (matching.isNotEmpty) videoStreams = matching;
+  }
+  videoStreams.sort((a, b) {
+    final byRes = streamPixels(b).compareTo(streamPixels(a));
+    if (byRes != 0) return byRes;
+    return (b.hasAudio ? 1 : 0).compareTo(a.hasAudio ? 1 : 0);
+  });
   if (videoStreams.isEmpty) {
     final audio = bestAudio(streams);
     if (audio == null) {

@@ -895,6 +895,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get networkProxyHint => 'SOCKS5 or HTTP proxy, applied on restart';
+
+  @override
+  String get preferredCodec => 'Preferred codec';
+
+  @override
+  String get codecAuto => 'Auto';
+
+  @override
+  String get codecAvc => 'AVC (H.264)';
+
+  @override
+  String get codecVp9 => 'VP9';
+
+  @override
+  String get codecAv1 => 'AV1';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1787,4 +1802,19 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get networkProxyHint => 'SOCKS5 or HTTP proxy, applied on restart';
+
+  @override
+  String get preferredCodec => 'Preferred codec';
+
+  @override
+  String get codecAuto => 'Auto';
+
+  @override
+  String get codecAvc => 'AVC (H.264)';
+
+  @override
+  String get codecVp9 => 'VP9';
+
+  @override
+  String get codecAv1 => 'AV1';
 }
