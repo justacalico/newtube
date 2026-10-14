@@ -286,6 +286,5 @@
   "hideShorts": "Hide Shorts",
   "hideShortsHint": "Filter Shorts out of feeds and search",
   "shortsBadge": "SHORTS",
-  "hideWatched": "Hide watched",
-  "hideWatchedHint": "Filter watched videos out of feeds and search"
+  "refreshFeed": "Refresh"
 }

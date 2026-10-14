@@ -1430,17 +1430,11 @@ abstract class AppLocalizations {
   /// **'SHORTS'**
   String get shortsBadge;
 
-  /// No description provided for @hideWatched.
+  /// No description provided for @refreshFeed.
   ///
   /// In en_GB, this message translates to:
-  /// **'Hide watched'**
-  String get hideWatched;
-
-  /// No description provided for @hideWatchedHint.
-  ///
-  /// In en_GB, this message translates to:
-  /// **'Filter watched videos out of feeds and search'**
-  String get hideWatchedHint;
+  /// **'Refresh'**
+  String get refreshFeed;
 }
 
 class _AppLocalizationsDelegate

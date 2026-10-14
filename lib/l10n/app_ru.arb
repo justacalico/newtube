@@ -286,6 +286,5 @@
   "hideShorts": "Скрыть Shorts",
   "hideShortsHint": "Убрать Shorts из лент и поиска",
   "shortsBadge": "SHORTS",
-  "hideWatched": "Скрыть просмотренные",
-  "hideWatchedHint": "Убрать просмотренные видео из лент и поиска"
+  "refreshFeed": "Обновить"
 }

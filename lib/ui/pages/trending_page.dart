@@ -65,6 +65,7 @@ class _TrendingPageState extends State<TrendingPage> {
         AppScope.read(context),
       ),
       onRetry: _load,
+      onRefresh: _load,
       child: VideoGrid(
         videos: visibleVideos(
           _videos,

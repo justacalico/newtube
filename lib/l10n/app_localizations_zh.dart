@@ -705,10 +705,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get shortsBadge => '短视频';
 
   @override
-  String get hideWatched => '隐藏已看';
-
-  @override
-  String get hideWatchedHint => '在推荐、订阅和搜索中过滤已看过的视频';
+  String get refreshFeed => '刷新';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1411,8 +1408,5 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get shortsBadge => '短视频';
 
   @override
-  String get hideWatched => '隐藏已看';
-
-  @override
-  String get hideWatchedHint => '在推荐、订阅和搜索中过滤已看过的视频';
+  String get refreshFeed => '刷新';
 }

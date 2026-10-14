@@ -725,8 +725,5 @@ class AppLocalizationsRu extends AppLocalizations {
   String get shortsBadge => 'SHORTS';
 
   @override
-  String get hideWatched => 'Скрыть просмотренные';
-
-  @override
-  String get hideWatchedHint => 'Убрать просмотренные видео из лент и поиска';
+  String get refreshFeed => 'Обновить';
 }
