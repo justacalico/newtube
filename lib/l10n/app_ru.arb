@@ -403,5 +403,6 @@
   "shortcutStartEnd": "В начало / конец",
   "shortcutCaptions": "Субтитры",
   "shortcutPip": "Мини-плеер",
-  "shortcutSpeed": "Скорость"
+  "shortcutSpeed": "Скорость",
+  "previousVideo": "Назад"
 }

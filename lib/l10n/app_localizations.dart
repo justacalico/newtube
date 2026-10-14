@@ -1927,6 +1927,12 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Playback speed'**
   String get shortcutSpeed;
+
+  /// No description provided for @previousVideo.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Previous'**
+  String get previousVideo;
 }
 
 class _AppLocalizationsDelegate

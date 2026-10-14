@@ -981,4 +981,7 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get shortcutSpeed => 'Luas athsheinm';
+
+  @override
+  String get previousVideo => 'Roimhe seo';
 }

@@ -27,6 +27,7 @@ class PlaybackSession extends ChangeNotifier {
   bool _audioOnly = false;
   double? _lastRate;
   final List<VideoInfo> _queue = [];
+  final List<VideoInfo> _playedBefore = [];
 
   PlayerController? get player => _player;
   VideoInfo? get video => _video;
@@ -113,10 +114,24 @@ class PlaybackSession extends ChangeNotifier {
 
   VideoInfo? takeNext() {
     if (_queue.isEmpty) return null;
+    final current = _video;
+    if (current != null) _playedBefore.add(current);
     final next = _queue.removeAt(0);
     notifyListeners();
     return next;
   }
+
+  VideoInfo? takePrevious() {
+    if (_playedBefore.isEmpty) return null;
+    final prev = _playedBefore.removeLast();
+    final current = _video;
+    if (current != null) _queue.insert(0, current);
+    notifyListeners();
+    return prev;
+  }
+
+  bool get hasPrevious => _playedBefore.isNotEmpty;
+  bool get hasNext => _queue.isNotEmpty;
 
   VideoInfo? takeNextFrom(int index) {
     if (index < 0 || index >= _queue.length) return null;
