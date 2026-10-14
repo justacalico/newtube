@@ -434,6 +434,12 @@ abstract class AppLocalizations {
   /// **'Default playback speed'**
   String get defaultSpeed;
 
+  /// No description provided for @chapters.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Chapters'**
+  String get chapters;
+
   /// No description provided for @about.
   ///
   /// In en_GB, this message translates to:
