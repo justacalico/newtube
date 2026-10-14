@@ -197,6 +197,7 @@ class _WatchPageState extends State<WatchPage>
         final choice = pickDefaultStream(
           details.streams,
           desktop: isDesktopPlatform,
+          preferredQuality: state.settings.preferredQuality,
         );
         _videoStream = choice?.stream;
         final audioTrack = _audioOnly ? bestAudio(details.streams) : null;
@@ -433,7 +434,11 @@ class _WatchPageState extends State<WatchPage>
     }
     final video =
         _videoStream ??
-        pickDefaultStream(streams, desktop: isDesktopPlatform)?.stream;
+        pickDefaultStream(
+          streams,
+          desktop: isDesktopPlatform,
+          preferredQuality: _state.settings.preferredQuality,
+        )?.stream;
     if (video == null) return;
     final choice = pairWithAudio(video, streams, audio: _currentAudio);
     setState(() {

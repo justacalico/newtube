@@ -311,6 +311,24 @@ class _SettingsPageState extends State<SettingsPage> {
               value: settings.audioOnly,
               onChanged: (value) => settings.setAudioOnly(value, state.prefs),
             ),
+            ListTile(
+              leading: const Icon(Icons.high_quality_outlined),
+              title: Text(l10n.defaultQuality),
+              trailing: _SettingsDropdown<int>(
+                value: settings.preferredQuality,
+                onChanged: (value) {
+                  if (value != null) {
+                    settings.setPreferredQuality(value, state.prefs);
+                  }
+                },
+                items: [
+                  DropdownMenuItem(value: 0, child: Text(l10n.qualityAuto)),
+                  for (final pixels in const [2160, 1440, 1080, 720, 480, 360])
+                    DropdownMenuItem(value: pixels, child: Text('${pixels}p')),
+                  DropdownMenuItem(value: -1, child: Text(l10n.qualityLowest)),
+                ],
+              ),
+            ),
             SwitchListTile(
               secondary: const Icon(Icons.content_cut_outlined),
               title: Text(l10n.sponsorBlock),

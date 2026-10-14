@@ -58,6 +58,9 @@ void touchAll(AppLocalizations l) {
   l.autoplayHint;
   l.audioOnly;
   l.audioOnlyHint;
+  l.defaultQuality;
+  l.qualityAuto;
+  l.qualityLowest;
   l.about;
   l.version;
   l.checkForUpdates;

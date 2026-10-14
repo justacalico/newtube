@@ -29,6 +29,7 @@ class SettingsStore extends ChangeNotifier {
   static const _captionsEnabledKey = 'captions_enabled';
   static const _captionLanguageKey = 'caption_language';
   static const _audioOnlyKey = 'audio_only';
+  static const _preferredQualityKey = 'preferred_quality';
   static const defaultSponsorBlockCategories = {'sponsor', 'selfpromo'};
 
   AppTheme _theme;
@@ -47,6 +48,7 @@ class SettingsStore extends ChangeNotifier {
   bool _captionsEnabled;
   String _captionLanguage;
   bool _audioOnly;
+  int _preferredQuality;
 
   SettingsStore({
     this._theme = AppTheme.system,
@@ -65,6 +67,7 @@ class SettingsStore extends ChangeNotifier {
     this._captionsEnabled = false,
     this._captionLanguage = '',
     this._audioOnly = false,
+    this._preferredQuality = 0,
   }) : _sponsorBlockCategories =
            sponsorBlockCategories ?? Set.of(defaultSponsorBlockCategories);
 
@@ -95,6 +98,7 @@ class SettingsStore extends ChangeNotifier {
       captionsEnabled: prefs.getBool(_captionsEnabledKey) ?? false,
       captionLanguage: prefs.getString(_captionLanguageKey) ?? '',
       audioOnly: prefs.getBool(_audioOnlyKey) ?? false,
+      preferredQuality: prefs.getInt(_preferredQualityKey) ?? 0,
     );
   }
 
@@ -133,6 +137,7 @@ class SettingsStore extends ChangeNotifier {
   bool get captionsEnabled => _captionsEnabled;
   String get captionLanguage => _captionLanguage;
   bool get audioOnly => _audioOnly;
+  int get preferredQuality => _preferredQuality;
 
   Future<void> setTheme(AppTheme theme, SharedPreferences prefs) async {
     _theme = theme;
@@ -239,6 +244,12 @@ class SettingsStore extends ChangeNotifier {
   Future<void> setCaptionsEnabled(bool value, SharedPreferences prefs) async {
     _captionsEnabled = value;
     await prefs.setBool(_captionsEnabledKey, value);
+    notifyListeners();
+  }
+
+  Future<void> setPreferredQuality(int value, SharedPreferences prefs) async {
+    _preferredQuality = value;
+    await prefs.setInt(_preferredQualityKey, value);
     notifyListeners();
   }
 

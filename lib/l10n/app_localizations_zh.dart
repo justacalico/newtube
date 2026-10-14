@@ -163,6 +163,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get audioOnlyHint => '仅播放音频流并显示封面';
 
   @override
+  String get defaultQuality => '默认视频画质';
+
+  @override
+  String get qualityAuto => '自动';
+
+  @override
+  String get qualityLowest => '最低';
+
+  @override
   String get about => '关于';
 
   @override
@@ -678,6 +687,15 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get audioOnlyHint => '仅播放音频流并显示封面';
+
+  @override
+  String get defaultQuality => '默认视频画质';
+
+  @override
+  String get qualityAuto => '自动';
+
+  @override
+  String get qualityLowest => '最低';
 
   @override
   String get about => '关于';

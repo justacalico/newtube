@@ -89,6 +89,8 @@ void main() {
     await tester.pump();
     expect(state.settings.audioOnly, isTrue);
 
+    await tester.scrollUntilVisible(find.text('About'), 200);
+    await tester.ensureVisible(find.text('About'));
     expect(find.text('About'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('Version 1.2.3'), 200);
     expect(find.text('Version 1.2.3'), findsOneWidget);
@@ -156,12 +158,15 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
-    await tester.tap(find.widgetWithText(SwitchListTile, 'Search history'));
+    await tester.scrollUntilVisible(find.text('Search history'), 200);
+    await tester.ensureVisible(find.text('Search history'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Search history'));
     await tester.pump();
     expect(state.settings.searchHistoryEnabled, isFalse);
     expect(state.prefs.getBool('search_history_enabled'), isFalse);
 
-    await tester.tap(find.widgetWithText(SwitchListTile, 'Search history'));
+    await tester.tap(find.text('Search history'));
     await tester.pump();
     expect(state.settings.searchHistoryEnabled, isTrue);
     expect(state.prefs.getBool('search_history_enabled'), isTrue);
@@ -177,6 +182,9 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
+    await tester.scrollUntilVisible(find.text('Clear history'), 200);
+    await tester.ensureVisible(find.text('Clear history'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Clear history'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Clear'));
@@ -197,6 +205,9 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
+    await tester.scrollUntilVisible(find.text('Clear history'), 200);
+    await tester.ensureVisible(find.text('Clear history'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Clear history'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Cancel'));
@@ -341,11 +352,18 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
+    await tester.scrollUntilVisible(find.text('SponsorBlock'), 200);
+    await tester.ensureVisible(find.text('SponsorBlock'));
+    await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(SwitchListTile, 'SponsorBlock'));
     await tester.pump();
     expect(state.settings.sponsorBlockEnabled, isTrue);
     expect(find.text('Skip automatically'), findsOneWidget);
 
+    await tester.ensureVisible(
+      find.widgetWithText(SwitchListTile, 'Skip automatically'),
+    );
+    await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(SwitchListTile, 'Skip automatically'));
     await tester.pump();
     expect(state.settings.sponsorBlockAutoSkip, isFalse);
