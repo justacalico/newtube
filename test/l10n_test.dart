@@ -9,6 +9,7 @@ import 'package:newtube/l10n/app_localizations_zh.dart';
 void touchAll(AppLocalizations l) {
   l.appTitle;
   l.navHome;
+  l.navTrending;
   l.navSearch;
   l.navSubscriptions;
   l.navHistory;
@@ -98,6 +99,13 @@ void touchAll(AppLocalizations l) {
   l.licenceText;
   l.openVideo;
   l.replay;
+  l.upNext;
+  l.showReplies;
+  l.hideReplies;
+  l.creator;
+  l.commentsSort;
+  l.commentsTop;
+  l.commentsNewest;
   l.nextVideo;
   l.play;
   l.pause;
