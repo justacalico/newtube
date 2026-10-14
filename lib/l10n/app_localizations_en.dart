@@ -979,6 +979,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get previousVideo => 'Previous';
+
+  @override
+  String get showComments => 'Show comments';
+
+  @override
+  String get showRelated => 'Show related videos';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1955,4 +1961,10 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get previousVideo => 'Previous';
+
+  @override
+  String get showComments => 'Show comments';
+
+  @override
+  String get showRelated => 'Show related videos';
 }

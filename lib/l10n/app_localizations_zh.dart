@@ -965,6 +965,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get previousVideo => '上一个';
+
+  @override
+  String get showComments => '显示评论';
+
+  @override
+  String get showRelated => '显示相关视频';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1927,4 +1933,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get previousVideo => '上一个';
+
+  @override
+  String get showComments => '显示评论';
+
+  @override
+  String get showRelated => '显示相关视频';
 }

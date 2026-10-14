@@ -404,5 +404,7 @@
   "shortcutCaptions": "Cycle captions",
   "shortcutPip": "Mini player",
   "shortcutSpeed": "Playback speed",
-  "previousVideo": "Previous"
+  "previousVideo": "Previous",
+  "showComments": "Show comments",
+  "showRelated": "Show related videos"
 }

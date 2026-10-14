@@ -206,6 +206,8 @@ void touchAll(AppLocalizations l) {
   l.shortcutPip;
   l.shortcutSpeed;
   l.previousVideo;
+  l.showComments;
+  l.showRelated;
   l.playNow;
   l.showReplies;
   l.hideReplies;
