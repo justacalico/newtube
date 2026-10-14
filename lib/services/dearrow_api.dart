@@ -45,6 +45,9 @@ class DeArrowApi implements YouTubeApi {
   Future<List<VideoInfo>> homeFeed() => inner.homeFeed().then(_applyAll);
 
   @override
+  Future<List<VideoInfo>> trending() => inner.trending().then(_applyAll);
+
+  @override
   Future<SearchResults> search(String query) async {
     final results = await inner.search(query);
     return SearchResults(

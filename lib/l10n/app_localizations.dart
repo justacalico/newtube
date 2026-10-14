@@ -116,6 +116,12 @@ abstract class AppLocalizations {
   /// **'Home'**
   String get navHome;
 
+  /// No description provided for @navTrending.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Trending'**
+  String get navTrending;
+
   /// No description provided for @navSearch.
   ///
   /// In en_GB, this message translates to:

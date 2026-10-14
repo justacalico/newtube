@@ -2,6 +2,7 @@
   "@@locale": "en",
   "appTitle": "NewTube",
   "navHome": "Home",
+  "navTrending": "Trending",
   "navSearch": "Search",
   "navSubscriptions": "Subscriptions",
   "navHistory": "History",

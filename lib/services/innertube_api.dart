@@ -72,6 +72,14 @@ class InnertubeApi implements YouTubeApi {
   }
 
   @override
+  Future<List<VideoInfo>> trending() async {
+    final r = await _post('browse', {'browseId': 'FEtrending'});
+    final videos = <VideoInfo>[];
+    collectVideos(r, videos);
+    return _proxiedThumbs(videos);
+  }
+
+  @override
   Future<SearchResults> search(String query) async {
     final r = await _post('search', {'query': query});
     final videos = <VideoInfo>[];

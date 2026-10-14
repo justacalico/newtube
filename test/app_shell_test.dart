@@ -29,12 +29,12 @@ void main() {
 
     await tester.tap(find.text('History'));
     await tester.pumpAndSettle();
-    expect(state.tabIndex, 3);
+    expect(state.tabIndex, 4);
     expect(find.text('Nothing watched yet'), findsOneWidget);
 
     await tester.tap(find.text('Subscriptions'));
     await tester.pumpAndSettle();
-    expect(state.tabIndex, 2);
+    expect(state.tabIndex, 3);
     debugDefaultTargetPlatformOverride = null;
   });
 
@@ -49,7 +49,7 @@ void main() {
 
     await tester.tap(find.byIcon(Icons.settings_outlined));
     await tester.pumpAndSettle();
-    expect(state.tabIndex, 6);
+    expect(state.tabIndex, 7);
     expect(find.text('Theme'), findsOneWidget);
     debugDefaultTargetPlatformOverride = null;
   });
@@ -146,7 +146,7 @@ void main() {
 
     await tester.tap(find.descendant(of: nav, matching: find.text('Settings')));
     await tester.pumpAndSettle();
-    expect(state.tabIndex, 6);
+    expect(state.tabIndex, 7);
     expect(find.text('Search history'), findsOneWidget);
 
     await state.settings.setSearchHistoryEnabled(true, state.prefs);
@@ -279,7 +279,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(state.tabIndex, 6);
+    expect(state.tabIndex, 7);
     expect(find.text('Theme'), findsOneWidget);
     expect(find.text('A video description'), findsNothing);
     expect(player.disposed, isFalse);
@@ -325,7 +325,7 @@ void main() {
       find.descendant(of: find.byType(SideNav), matching: find.text('Search')),
     );
     await tester.pumpAndSettle();
-    expect(state.tabIndex, 1);
+    expect(state.tabIndex, 2);
 
     await tester.enterText(find.byType(TextField).first, 'kittens');
     await tester.testTextInput.receiveAction(TextInputAction.done);

@@ -127,6 +127,7 @@ class FakeYouTubeApi implements YouTubeApi {
   @override
   Future<List<VideoInfo>> homeFeed() async => error != null ? _fail() : feed;
 
+  @override
   Future<List<VideoInfo>> trending() async =>
       error != null ? _fail() : trendingFeed;
 

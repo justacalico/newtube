@@ -40,6 +40,9 @@ class _FeedApi implements YouTubeApi {
   }
 
   @override
+  Future<List<VideoInfo>> trending() async => feed;
+
+  @override
   Future<List<VideoInfo>> relatedVideos(String videoId) async {
     calls.add('related:$videoId');
     if (failingRelated.contains(videoId)) throw StateError('related down');

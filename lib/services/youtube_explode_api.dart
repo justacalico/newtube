@@ -39,6 +39,9 @@ class YouTubeExplodeApi implements YouTubeApi {
   String _proxied(String url) => proxiedUrl(url, _proxyPrefix?.call());
 
   @override
+  Future<List<VideoInfo>> trending() => _innertube.trending();
+
+  @override
   Future<List<VideoInfo>> homeFeed() async {
     try {
       final feed = await _innertubeBrowse('FEwhat_to_watch');
