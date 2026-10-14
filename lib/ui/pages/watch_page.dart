@@ -89,6 +89,13 @@ class _WatchPageState extends State<WatchPage>
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.hidden) {
       unawaited(player.setVideoEnabled(false));
+      final pip = _pipActions;
+      if (pip != null &&
+          !pip.pipMode.value &&
+          player.playing &&
+          !isDesktopPlatform) {
+        unawaited(pip.enterPip());
+      }
     } else if (state == AppLifecycleState.resumed) {
       unawaited(player.setVideoEnabled(true));
     }
@@ -230,6 +237,11 @@ class _WatchPageState extends State<WatchPage>
         stream: current,
         audio: currentAudio,
         sleepTimer: _sleepTimer,
+      );
+      _pipActions?.updatePlayback(
+        player,
+        url: current?.url,
+        audioUrl: currentAudio?.url,
       );
       final lifecycle = WidgetsBinding.instance.lifecycleState;
       if (lifecycle == AppLifecycleState.paused ||
@@ -411,6 +423,7 @@ class _WatchPageState extends State<WatchPage>
   Future<void> _switchTo(String url, {String? audioUrl}) async {
     final player = _player;
     if (player == null) return;
+    _pipActions?.updatePlayback(player, url: url, audioUrl: audioUrl);
     final generation = ++_switches;
     final position = player.position;
     final wasPlaying = player.playing;

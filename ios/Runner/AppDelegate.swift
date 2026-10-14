@@ -17,5 +17,8 @@ import flutter_local_notifications
 
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "newtube.pip") {
+      PipController.register(with: registrar)
+    }
   }
 }

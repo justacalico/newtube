@@ -566,7 +566,10 @@ Future<void> pumpPage(
 class FakePipActions implements PipActions {
   int enters = 0;
   int exits = 0;
+  int updates = 0;
   bool supported = true;
+  String? lastUrl;
+  String? lastAudioUrl;
 
   @override
   final ValueNotifier<bool> pipMode = ValueNotifier<bool>(false);
@@ -580,6 +583,17 @@ class FakePipActions implements PipActions {
   @override
   Future<void> exitPip() async {
     exits++;
+  }
+
+  @override
+  void updatePlayback(
+    PlayerController? player, {
+    String? url,
+    String? audioUrl,
+  }) {
+    updates++;
+    lastUrl = url;
+    lastAudioUrl = audioUrl;
   }
 }
 
