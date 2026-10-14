@@ -89,12 +89,30 @@ void main() {
     await tester.pump();
     expect(state.settings.audioOnly, isTrue);
 
-    await tester.scrollUntilVisible(find.text('About'), 200);
+    await tester.scrollUntilVisible(
+      find.text('About'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
     await tester.ensureVisible(find.text('About'));
     expect(find.text('About'), findsOneWidget);
-    await tester.scrollUntilVisible(find.text('Version 1.2.3'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Version 1.2.3'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
     expect(find.text('Version 1.2.3'), findsOneWidget);
-    await tester.scrollUntilVisible(find.text('Check for updates'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Check for updates'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
     expect(find.text('Check for updates'), findsOneWidget);
   });
 
@@ -103,9 +121,21 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(find.text('Version 1.2.3'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Version 1.2.3'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
     expect(find.text('Version 1.2.3'), findsOneWidget);
-    await tester.scrollUntilVisible(find.text('Check for updates'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Check for updates'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
     await tester.ensureVisible(find.text('Check for updates'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Check for updates'));
@@ -128,7 +158,13 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(find.text('Check for updates'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Check for updates'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
     await tester.ensureVisible(find.text('Check for updates'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Check for updates'));
@@ -145,7 +181,13 @@ void main() {
     );
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(find.text('Check for updates'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Check for updates'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
     await tester.ensureVisible(find.text('Check for updates'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Check for updates'));
@@ -158,7 +200,13 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(find.text('Search history'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Search history'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
     await tester.ensureVisible(find.text('Search history'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Search history'));
@@ -182,7 +230,13 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(find.text('Clear history'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Clear history'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
     await tester.ensureVisible(find.text('Clear history'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Clear history'));
@@ -205,7 +259,13 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(find.text('Clear history'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Clear history'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
     await tester.ensureVisible(find.text('Clear history'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Clear history'));
@@ -222,15 +282,33 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(find.text('All releases'), 200);
+    await tester.scrollUntilVisible(
+      find.text('All releases'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
     await tester.ensureVisible(find.text('All releases'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('All releases'));
-    await tester.scrollUntilVisible(find.text('Source code'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Source code'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
     await tester.ensureVisible(find.text('Source code'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Source code'));
-    await tester.scrollUntilVisible(find.text('Licence'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Licence'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
     await tester.ensureVisible(find.text('Licence'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Licence'));
@@ -255,7 +333,9 @@ void main() {
     await tester.scrollUntilVisible(
       tile,
       150,
-      scrollable: find.byType(Scrollable).first,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
     );
     expect(tile, findsOneWidget);
     expect(
@@ -271,7 +351,13 @@ void main() {
     expect(find.text('http://127.0.0.1:8642/mcp'), findsOneWidget);
     expect(find.text('Export server file'), findsOneWidget);
 
-    await tester.scrollUntilVisible(find.text('Export server file'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Export server file'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
     await tester.ensureVisible(find.text('Export server file'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Export server file'));
@@ -279,7 +365,7 @@ void main() {
 
     await tester.dragUntilVisible(
       find.widgetWithText(SwitchListTile, 'MCP server'),
-      find.byType(ListView).first,
+      find.byType(ListView).at(0),
       const Offset(0, 200),
     );
     await tester.pumpAndSettle();
@@ -305,7 +391,9 @@ void main() {
     await tester.scrollUntilVisible(
       find.text('Could not start the MCP server'),
       150,
-      scrollable: find.byType(Scrollable).first,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
     );
     expect(find.text('Could not start the MCP server'), findsOneWidget);
     debugDefaultTargetPlatformOverride = null;
@@ -326,7 +414,13 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(find.text('Export server file'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Export server file'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
     await tester.ensureVisible(find.text('Export server file'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Export server file'));
@@ -363,7 +457,13 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(find.text('Export server file'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Export server file'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
     await tester.ensureVisible(find.text('Export server file'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Export server file'));
@@ -377,7 +477,13 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(find.text('SponsorBlock'), 200);
+    await tester.scrollUntilVisible(
+      find.text('SponsorBlock'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
     await tester.ensureVisible(find.text('SponsorBlock'));
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(SwitchListTile, 'SponsorBlock'));
@@ -418,9 +524,15 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
-    await tester.drag(find.byType(ListView), const Offset(0, -400));
+    await tester.scrollUntilVisible(
+      find.text('DeArrow'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
+    await tester.ensureVisible(find.byType(DropdownButton<DeArrowMode>));
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(find.text('DeArrow'), -200);
     await tester.tap(find.byType(DropdownButton<DeArrowMode>));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Titles and thumbnails'));
@@ -433,7 +545,13 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(find.text('Hide Shorts'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Hide Shorts'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
     await tester.ensureVisible(find.text('Hide Shorts'));
     await tester.tap(find.text('Hide Shorts'));
     await tester.pumpAndSettle();

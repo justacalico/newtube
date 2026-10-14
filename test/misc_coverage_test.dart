@@ -85,7 +85,13 @@ void main() {
     final state = await testState(versionChecker: checker);
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(find.text('Check for updates'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Check for updates'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
     await tester.ensureVisible(find.text('Check for updates'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Check for updates'));

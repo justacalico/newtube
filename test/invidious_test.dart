@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+import 'package:newtube/models/video_info.dart';
 import 'package:newtube/services/fallback_api.dart';
 import 'package:newtube/state/settings_store.dart';
 import 'package:newtube/ui/pages/settings_page.dart';
@@ -171,9 +172,61 @@ void main() {
     expect(state.settings.fallbackBackend, 'https://inv.example');
   });
 
+  test('fallback delegates every call to primary then secondary', () async {
+    var fail = true;
+    final fake = FakeYouTubeApi(
+      feed: [testVideos.first],
+      trendingFeed: [testVideos.first],
+    );
+    final probe = _CountingApi(fake, () => fail);
+    final api = FallbackApi(probe, fake);
+    expect((await api.homeFeed()).single.id, 'v1');
+    expect((await api.trending()).single.id, 'v1');
+    expect((await api.search('x')).videos, isEmpty);
+    expect(await api.resolveUrl('https://youtu.be/v1'), isNull);
+    expect(await api.searchSuggestions('x'), isEmpty);
+    expect((await api.videoDetails('v1')).info.id, isNotEmpty);
+    expect(await api.relatedVideos('v1'), isEmpty);
+    expect((await api.comments('v1')).comments, isEmpty);
+    expect((await api.channel('c1')).name, 'Channel One');
+    expect(await api.channelShorts('c1'), isEmpty);
+    expect(await api.channelPlaylists('c1'), isEmpty);
+    expect((await api.channelAbout('c1')).description, '');
+    expect(await api.channelSearch('c1', 'x'), isEmpty);
+    expect((await api.playlist('p')).id, 'pl1');
+    expect(await api.resolveChannel('https://youtube.com/@x'), isNull);
+    expect(await api.channelVideos('c1'), isEmpty);
+    expect(probe.calls, 2);
+    fail = false;
+    expect((await api.homeFeed()).single.id, 'v1');
+    expect(probe.calls, 3);
+  });
+
   test('resolveUrl parses links locally', () async {
     final route = await api.resolveUrl('https://youtu.be/abc');
     expect(route?.videoId, 'abc');
     expect(await api.resolveChannel('https://youtube.com/channel/UC5'), 'UC5');
   });
+}
+
+class _CountingApi extends FakeYouTubeApi {
+  final FakeYouTubeApi inner;
+  final bool Function() shouldFail;
+  int calls = 0;
+
+  _CountingApi(this.inner, this.shouldFail);
+
+  @override
+  Future<List<VideoInfo>> homeFeed() {
+    calls++;
+    if (shouldFail()) throw StateError('down');
+    return inner.homeFeed();
+  }
+
+  @override
+  Future<List<VideoInfo>> trending() {
+    calls++;
+    if (shouldFail()) throw StateError('down');
+    return inner.trending();
+  }
 }

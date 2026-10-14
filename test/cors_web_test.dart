@@ -100,7 +100,13 @@ void main() {
     await pumpPage(tester, state, SettingsPage());
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(find.text('CORS proxy prefix'), 200);
+    await tester.scrollUntilVisible(
+      find.text('CORS proxy prefix'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
     await tester.ensureVisible(find.text('CORS proxy prefix'));
     await tester.pumpAndSettle();
     expect(find.text('CORS proxy prefix'), findsOneWidget);

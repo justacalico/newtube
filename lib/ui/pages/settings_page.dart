@@ -313,25 +313,28 @@ class _SettingsPageState extends State<SettingsPage> {
       builder: (context) => StatefulBuilder(
         builder: (context, setLocal) => AlertDialog(
           title: Text(l10n.sponsorBlockCategories),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (final id in [
-                ...sponsorBlockCategoryIds,
-                sponsorBlockJumpCategory,
-              ])
-                CheckboxListTile(
-                  dense: true,
-                  controlAffinity: ListTileControlAffinity.leading,
-                  title: Text(_categoryLabel(l10n, id)),
-                  value: selected.contains(id),
-                  onChanged: (checked) => setLocal(
-                    () => checked == true
-                        ? selected.add(id)
-                        : selected.remove(id),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                for (final id in [
+                  ...sponsorBlockCategoryIds,
+                  sponsorBlockJumpCategory,
+                ])
+                  CheckboxListTile(
+                    dense: true,
+                    controlAffinity: ListTileControlAffinity.leading,
+                    title: Text(_categoryLabel(l10n, id)),
+                    value: selected.contains(id),
+                    onChanged: (checked) => setLocal(
+                      () => checked == true
+                          ? selected.add(id)
+                          : selected.remove(id),
+                    ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
           actions: [
             FilledButton(

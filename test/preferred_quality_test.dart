@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/state/settings_store.dart';
 import 'package:newtube/ui/pages/settings_page.dart';
@@ -88,7 +89,28 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Auto'));
+    await tester.scrollUntilVisible(
+      find.text('Default video quality'),
+      300,
+      scrollable: find
+          .descendant(
+            of: find
+                .byWidgetPredicate(
+                  (w) => w is ListView && w.scrollDirection == Axis.vertical,
+                )
+                .first,
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
+    await tester.ensureVisible(find.text('Default video quality'));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.descendant(
+        of: find.widgetWithText(ListTile, 'Default video quality'),
+        matching: find.text('Auto'),
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text('720p'));
     await tester.pumpAndSettle();

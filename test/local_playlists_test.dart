@@ -148,7 +148,7 @@ void main() {
       await pumpPage(tester, state, PlaylistsPage());
       await tester.pumpAndSettle();
 
-      expect(find.text('2 videos'), findsOneWidget);
+      expect(find.textContaining('2 videos'), findsOneWidget);
 
       await tester.tap(find.byIcon(Icons.more_vert));
       await tester.pumpAndSettle();
@@ -224,13 +224,13 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Mix'), findsWidgets);
-      expect(find.text('2 videos'), findsOneWidget);
+      expect(find.textContaining('2 videos'), findsOneWidget);
       expect(find.text('First video'), findsOneWidget);
 
       await tester.tap(find.byIcon(Icons.remove_circle_outline).first);
       await tester.pumpAndSettle();
       expect(store.byId('p1')!.videos.single.id, 'v2');
-      expect(find.text('1 video'), findsOneWidget);
+      expect(find.textContaining('1 video'), findsOneWidget);
 
       await tester.tap(find.text('Second video'));
       await tester.pumpAndSettle();

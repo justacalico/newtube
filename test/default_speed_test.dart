@@ -83,7 +83,20 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
-    await tester.ensureVisible(find.text('Normal'));
+    await tester.scrollUntilVisible(
+      find.text('Normal'),
+      300,
+      scrollable: find
+          .descendant(
+            of: find
+                .byWidgetPredicate(
+                  (w) => w is ListView && w.scrollDirection == Axis.vertical,
+                )
+                .first,
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
     await tester.tap(find.text('Normal'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('1.25x'));

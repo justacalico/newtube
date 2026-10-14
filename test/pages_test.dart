@@ -317,7 +317,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('First video'), findsOneWidget);
-      expect(find.text('3:21'), findsOneWidget);
+      expect(find.byIcon(Icons.delete_outline), findsOneWidget);
 
       await tester.tap(find.text('First video'));
       await tester.pumpAndSettle();

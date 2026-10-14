@@ -216,7 +216,13 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(find.text('Upload notifications'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Upload notifications'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(
       find.widgetWithText(SwitchListTile, 'Upload notifications'),

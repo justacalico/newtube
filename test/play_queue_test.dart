@@ -70,7 +70,12 @@ void main() {
     await tester.scrollUntilVisible(
       find.text('Queued A'),
       200,
-      scrollable: find.byType(Scrollable).first,
+      scrollable: find
+          .descendant(
+            of: find.byType(SingleChildScrollView).first,
+            matching: find.byType(Scrollable),
+          )
+          .first,
     );
     expect(find.text('Up next'), findsOneWidget);
     await tester.tap(find.byIcon(Icons.close).last);
@@ -88,7 +93,12 @@ void main() {
     await tester.scrollUntilVisible(
       find.text('Queued A'),
       200,
-      scrollable: find.byType(Scrollable).first,
+      scrollable: find
+          .descendant(
+            of: find.byType(SingleChildScrollView).first,
+            matching: find.byType(Scrollable),
+          )
+          .first,
     );
     await tester.tap(find.text('Queued A'));
     await tester.pumpAndSettle();

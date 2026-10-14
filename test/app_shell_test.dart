@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/models/video_info.dart';
 import 'package:newtube/state/settings_store.dart';
 import 'package:newtube/ui/pages/watch_page.dart';
+import 'package:newtube/ui/pages/settings_page.dart';
 import 'package:newtube/ui/shell/app_shell.dart';
 import 'package:newtube/ui/widgets/mini_player.dart';
 import 'package:newtube/ui/shell/side_nav.dart';
@@ -47,7 +48,9 @@ void main() {
     expect(find.byType(NavigationBar), findsOneWidget);
     expect(find.byType(SideNav), findsNothing);
 
-    await tester.tap(find.byIcon(Icons.settings_outlined));
+    await tester.tap(find.byIcon(Icons.menu));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Settings'));
     await tester.pumpAndSettle();
     expect(state.tabIndex, 8);
     expect(find.text('Theme'), findsOneWidget);
@@ -147,6 +150,18 @@ void main() {
     await tester.tap(find.descendant(of: nav, matching: find.text('Settings')));
     await tester.pumpAndSettle();
     expect(state.tabIndex, 8);
+    await tester.scrollUntilVisible(
+      find.text('Search history'),
+      200,
+      scrollable: find.descendant(
+        of: find.byType(SettingsPage),
+        matching: find.byWidgetPredicate(
+          (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+        ),
+      ),
+    );
+    await tester.ensureVisible(find.text('Search history'));
+    await tester.pumpAndSettle();
     expect(find.text('Search history'), findsOneWidget);
 
     await state.settings.setSearchHistoryEnabled(true, state.prefs);

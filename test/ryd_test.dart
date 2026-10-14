@@ -78,7 +78,13 @@ void main() {
     final state = await testState();
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(find.text('Show dislike counts'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Show dislike counts'),
+      200,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
+    );
     await tester.ensureVisible(find.text('Show dislike counts'));
     await tester.pumpAndSettle();
     await tester.tap(

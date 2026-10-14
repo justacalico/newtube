@@ -99,7 +99,9 @@ void main() {
     await tester.scrollUntilVisible(
       find.text('Manage groups'),
       150,
-      scrollable: find.byType(Scrollable).first,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
     );
     await tester.tap(find.text('Manage groups'));
     await tester.pumpAndSettle();

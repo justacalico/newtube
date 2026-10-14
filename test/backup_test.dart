@@ -49,7 +49,9 @@ void main() {
     await tester.scrollUntilVisible(
       find.text('Export backup'),
       150,
-      scrollable: find.byType(Scrollable).first,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
     );
     await tester.tap(find.text('Export backup'));
     await tester.pumpAndSettle();
@@ -61,7 +63,9 @@ void main() {
     await tester.scrollUntilVisible(
       find.text('Import backup'),
       150,
-      scrollable: find.byType(Scrollable).first,
+      scrollable: find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      ),
     );
     await tester.tap(find.text('Import backup'));
     await tester.pumpAndSettle();
