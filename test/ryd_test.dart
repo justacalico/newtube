@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:newtube/services/ryd.dart';
 import 'package:newtube/state/settings_store.dart';
+import 'package:newtube/ui/pages/settings_page.dart';
 import 'package:newtube/ui/pages/watch_page.dart';
 
 import 'fakes.dart';
@@ -72,7 +74,24 @@ void main() {
     expect(find.textContaining('dislikes'), findsNothing);
   });
 
+  testWidgets('settings toggle enables dislikes', (tester) async {
+    final state = await testState();
+    await pumpPage(tester, state, const SettingsPage());
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('Show dislike counts'), 200);
+    await tester.ensureVisible(find.text('Show dislike counts'));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.widgetWithText(SwitchListTile, 'Show dislike counts'),
+    );
+    await tester.pumpAndSettle();
+    expect(state.settings.rydEnabled, isTrue);
+  });
+
   test('RydException formats its message', () {
-    expect(RydException('rate limited').toString(), 'RydException: rate limited');
+    expect(
+      RydException('rate limited').toString(),
+      'RydException: rate limited',
+    );
   });
 }
