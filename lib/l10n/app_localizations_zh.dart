@@ -178,6 +178,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get chapters => '章节';
 
   @override
+  String get live => '直播';
+
+  @override
+  String get upcoming => '即将上线';
+
+  @override
   String get videoFit => '画面缩放';
 
   @override
@@ -720,6 +726,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get chapters => '章节';
+
+  @override
+  String get live => '直播';
+
+  @override
+  String get upcoming => '即将上线';
 
   @override
   String get videoFit => '画面缩放';

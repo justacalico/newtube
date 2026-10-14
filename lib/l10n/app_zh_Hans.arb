@@ -56,6 +56,8 @@
   "qualityLowest": "最低",
   "defaultSpeed": "默认播放速度",
   "chapters": "章节",
+  "live": "直播",
+  "upcoming": "即将上线",
   "videoFit": "画面缩放",
   "fitContain": "适配",
   "fitCover": "拉伸填充",

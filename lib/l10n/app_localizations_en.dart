@@ -182,6 +182,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chapters => 'Chapters';
 
   @override
+  String get live => 'Live';
+
+  @override
+  String get upcoming => 'Upcoming';
+
+  @override
   String get videoFit => 'Video fit';
 
   @override
@@ -736,6 +742,12 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get chapters => 'Chapters';
+
+  @override
+  String get live => 'Live';
+
+  @override
+  String get upcoming => 'Upcoming';
 
   @override
   String get videoFit => 'Video fit';

@@ -67,6 +67,8 @@ void touchAll(AppLocalizations l) {
   l.fitContain;
   l.fitCover;
   l.fitFill;
+  l.live;
+  l.upcoming;
   l.about;
   l.version;
   l.checkForUpdates;

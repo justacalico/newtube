@@ -154,6 +154,7 @@ VideoInfo? parseLockup(Map<String, dynamic> l) {
     channelId: channelId ?? '',
     thumbnailUrl: _lastSource(_deepFind(l['contentImage'], 'sources')),
     duration: _lockupDuration(l['contentImage']),
+    isLive: _lockupLive(l['contentImage']),
     viewCount: compactCount(views),
     uploaded: uploaded.isEmpty ? null : uploaded,
   );
@@ -201,6 +202,23 @@ dynamic _deepFind(dynamic node, String key) {
     }
   }
   return null;
+}
+
+bool _lockupLive(dynamic node) {
+  if (node is Map<String, dynamic>) {
+    final badge = node['thumbnailBadgeViewModel'];
+    if (badge is Map<String, dynamic> && badge['text'] == 'LIVE') {
+      return true;
+    }
+    for (final value in node.values) {
+      if (_lockupLive(value)) return true;
+    }
+  } else if (node is List) {
+    for (final item in node) {
+      if (_lockupLive(item)) return true;
+    }
+  }
+  return false;
 }
 
 Duration? _lockupDuration(dynamic node) {
@@ -328,7 +346,34 @@ VideoInfo? parseVideoRenderer(Map<String, dynamic> r) {
     duration: duration(r['lengthText']),
     viewCount: compactCount(runs(r['viewCountText']) ?? ''),
     uploaded: runs(r['publishedTimeText']),
+    isLive: _timeStatus(r) == 'LIVE',
+    isUpcoming: _timeStatus(r) == 'UPCOMING',
   );
+}
+
+String? _timeStatus(Map<String, dynamic> r) {
+  final overlays = r['thumbnailOverlays'];
+  if (overlays is List) {
+    for (final overlay in overlays) {
+      final status = overlay is Map<String, dynamic>
+          ? overlay['thumbnailOverlayTimeStatusRenderer']
+          : null;
+      final style = status is Map<String, dynamic> ? status['style'] : null;
+      if (style is String) return style;
+    }
+  }
+  final badges = r['badges'];
+  if (badges is List) {
+    for (final badge in badges) {
+      final meta = badge is Map<String, dynamic>
+          ? badge['metadataBadgeRenderer']
+          : null;
+      final style = meta is Map<String, dynamic> ? meta['style'] : null;
+      if (style is String && style.contains('LIVE_NOW')) return 'LIVE';
+      if (style is String && style.contains('UPCOMING')) return 'UPCOMING';
+    }
+  }
+  return null;
 }
 
 int compactCount(String text) {

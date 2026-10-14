@@ -7,6 +7,8 @@ class VideoInfo {
   final Duration? duration;
   final int viewCount;
   final String? uploaded;
+  final bool isLive;
+  final bool isUpcoming;
 
   const VideoInfo({
     required this.id,
@@ -17,6 +19,8 @@ class VideoInfo {
     this.duration,
     this.viewCount = 0,
     this.uploaded,
+    this.isLive = false,
+    this.isUpcoming = false,
   });
 
   VideoInfo copyWith({
@@ -28,6 +32,8 @@ class VideoInfo {
     Duration? duration,
     int? viewCount,
     String? uploaded,
+    bool? isLive,
+    bool? isUpcoming,
   }) => VideoInfo(
     id: id ?? this.id,
     title: title ?? this.title,
@@ -37,6 +43,8 @@ class VideoInfo {
     duration: duration ?? this.duration,
     viewCount: viewCount ?? this.viewCount,
     uploaded: uploaded ?? this.uploaded,
+    isLive: isLive ?? this.isLive,
+    isUpcoming: isUpcoming ?? this.isUpcoming,
   );
 }
 

@@ -4,6 +4,7 @@ import '../../models/video_info.dart';
 import '../../utils/format.dart';
 import 'thumbnail.dart';
 import 'video_actions_menu.dart';
+import 'live_badge.dart';
 import 'watched_badge.dart';
 
 class VideoListTile extends StatelessWidget {
@@ -49,6 +50,10 @@ class VideoListTile extends StatelessWidget {
         children: [
           if (trailing != null)
             trailing!
+          else if (video.isLive)
+            const LiveBadge()
+          else if (video.isUpcoming)
+            const LiveBadge(upcoming: true)
           else if (video.duration != null)
             Text(formatDuration(video.duration)),
           VideoActionsMenu(video: video),

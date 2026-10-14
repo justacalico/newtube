@@ -5,6 +5,7 @@ import '../../models/video_info.dart';
 import '../../utils/format.dart';
 import 'thumbnail.dart';
 import 'video_actions_menu.dart';
+import 'live_badge.dart';
 import 'watched_badge.dart';
 
 class VideoCard extends StatelessWidget {
@@ -51,7 +52,15 @@ class VideoCard extends StatelessWidget {
                     top: 6,
                     child: WatchedBadge(videoId: video.id),
                   ),
-                  if (duration.isNotEmpty)
+                  if (video.isLive)
+                    const Positioned(right: 6, bottom: 6, child: LiveBadge())
+                  else if (video.isUpcoming)
+                    const Positioned(
+                      right: 6,
+                      bottom: 6,
+                      child: LiveBadge(upcoming: true),
+                    )
+                  else if (duration.isNotEmpty)
                     Positioned(
                       right: 6,
                       bottom: 6,
