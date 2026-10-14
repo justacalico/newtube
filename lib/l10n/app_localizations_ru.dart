@@ -1019,4 +1019,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get dataSaverHint => 'Скрыть миниатюры и ограничить качество 480p';
+
+  @override
+  String get navMore => 'Ещё';
 }

@@ -216,6 +216,10 @@ class _AppShellState extends State<AppShell> {
           ),
         ];
 
+        final mobileBar = destinations.length > 5
+            ? destinations.sublist(0, 4)
+            : destinations;
+
         final selected = destinations.indexWhere(
           (d) => d.page == state.tabIndex,
         );
@@ -298,24 +302,55 @@ class _AppShellState extends State<AppShell> {
         }
 
         return Scaffold(
+          drawer: mobileBar.length < destinations.length
+              ? Drawer(
+                  child: SafeArea(
+                    child: ListView(
+                      children: [
+                        for (var i = 0; i < destinations.length; i++)
+                          ListTile(
+                            leading: Icon(destinations[i].destination.icon),
+                            title: Text(destinations[i].destination.label),
+                            selected: i == index,
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              onSelected(i);
+                            },
+                          ),
+                      ],
+                    ),
+                  ),
+                )
+              : null,
           body: SafeArea(child: body),
           bottomNavigationBar: ValueListenableBuilder<bool>(
             valueListenable: state.pipActions?.pipMode ?? ValueNotifier(false),
             builder: (context, pip, _) => pip
                 ? const SizedBox.shrink()
-                : NavigationBar(
-                    labelBehavior:
-                        NavigationDestinationLabelBehavior.onlyShowSelected,
-                    selectedIndex: index,
-                    onDestinationSelected: onSelected,
-                    destinations: [
-                      for (final d in destinations)
-                        NavigationDestination(
-                          icon: Icon(d.destination.icon),
-                          selectedIcon: Icon(d.destination.selectedIcon),
-                          label: d.destination.label,
-                        ),
-                    ],
+                : Builder(
+                    builder: (context) => NavigationBar(
+                      labelBehavior:
+                          NavigationDestinationLabelBehavior.onlyShowSelected,
+                      selectedIndex: index < mobileBar.length
+                          ? index
+                          : mobileBar.length,
+                      onDestinationSelected: (i) => i >= mobileBar.length
+                          ? Scaffold.of(context).openDrawer()
+                          : onSelected(i),
+                      destinations: [
+                        for (final d in mobileBar)
+                          NavigationDestination(
+                            icon: Icon(d.destination.icon),
+                            selectedIcon: Icon(d.destination.selectedIcon),
+                            label: d.destination.label,
+                          ),
+                        if (mobileBar.length < destinations.length)
+                          NavigationDestination(
+                            icon: const Icon(Icons.menu),
+                            label: l10n.navMore,
+                          ),
+                      ],
+                    ),
                   ),
           ),
         );

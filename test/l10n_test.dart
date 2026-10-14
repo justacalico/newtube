@@ -217,6 +217,7 @@ void touchAll(AppLocalizations l) {
   l.feedCompact;
   l.dataSaver;
   l.dataSaverHint;
+  l.navMore;
   l.playNow;
   l.showReplies;
   l.hideReplies;

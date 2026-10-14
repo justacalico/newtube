@@ -998,6 +998,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get dataSaverHint => '隐藏缩略图并将画质上限设为 480p';
+
+  @override
+  String get navMore => '更多';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1993,4 +1996,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get dataSaverHint => '隐藏缩略图并将画质上限设为 480p';
+
+  @override
+  String get navMore => '更多';
 }

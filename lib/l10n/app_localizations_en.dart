@@ -1012,6 +1012,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dataSaverHint => 'Hide thumbnails and cap quality at 480p';
+
+  @override
+  String get navMore => 'More';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -2021,4 +2024,7 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get dataSaverHint => 'Hide thumbnails and cap quality at 480p';
+
+  @override
+  String get navMore => 'More';
 }

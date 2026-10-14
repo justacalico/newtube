@@ -1999,6 +1999,12 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Hide thumbnails and cap quality at 480p'**
   String get dataSaverHint;
+
+  /// No description provided for @navMore.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'More'**
+  String get navMore;
 }
 
 class _AppLocalizationsDelegate
