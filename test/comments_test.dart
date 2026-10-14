@@ -180,6 +180,30 @@ void main() {
       expect(result.continuation, isNull);
     });
 
+    test('continuation pages parse bare comment replies', () async {
+      final api = _api(
+        (endpoint, body) => _commentsPage([
+          {
+            'commentRenderer': {
+              'authorText': {
+                'runs': [
+                  {'text': 'Replier'},
+                ],
+              },
+              'contentText': {
+                'runs': [
+                  {'text': 'a reply'},
+                ],
+              },
+            },
+          },
+        ]),
+      );
+      final result = await api.comments('v1', continuation: 'replytok');
+      expect(result.comments.single.author, 'Replier');
+      expect(result.comments.single.text, 'a reply');
+    });
+
     test('reloadContinuationItemsCommand is also parsed', () async {
       final api = _api(
         (endpoint, body) => {

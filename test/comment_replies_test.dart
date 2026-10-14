@@ -194,4 +194,83 @@ void main() {
     await tester.pumpAndSettle();
     expect(api.commentSortCalls, contains(CommentSort.newest));
   });
+
+  testWidgets('reply load failure clears the spinner', (tester) async {
+    final api = FakeYouTubeApi(
+      feed: testVideos,
+      commentsResult: const CommentsResult(
+        comments: [
+          CommentInfo(
+            author: 'Ann',
+            text: 'top',
+            replyCount: 1,
+            replyContinuation: 'replytok',
+          ),
+        ],
+      ),
+    )..failingCommentPages = {'replytok'};
+    final state = await testState(api: api);
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Show replies'));
+    await tester.tap(find.text('Show replies'));
+    await tester.pumpAndSettle();
+    expect(find.text('Show replies'), findsOneWidget);
+  });
+
+  testWidgets('replies re-expand after collapsing', (tester) async {
+    final api = FakeYouTubeApi(
+      feed: testVideos,
+      commentsResult: const CommentsResult(
+        comments: [
+          CommentInfo(
+            author: 'Ann',
+            text: 'top',
+            replyCount: 1,
+            replyContinuation: 'replytok',
+          ),
+        ],
+      ),
+      commentPages: {
+        'replytok': const CommentsResult(
+          comments: [CommentInfo(author: 'Bob', text: 'a reply')],
+        ),
+      },
+    );
+    final state = await testState(api: api);
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Show replies'));
+    await tester.tap(find.text('Show replies'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Hide replies'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Show replies'));
+    await tester.pumpAndSettle();
+    expect(find.text('a reply'), findsOneWidget);
+    expect(api.commentSortCalls.where((c) => c == null).length, greaterThan(0));
+  });
+
+  testWidgets('sort failure keeps existing comments', (tester) async {
+    final api = FakeYouTubeApi(
+      feed: testVideos,
+      commentsResult: const CommentsResult(
+        comments: [CommentInfo(author: 'Ann', text: 'first')],
+      ),
+    )..failingSorts = {CommentSort.newest};
+    final state = await testState(api: api);
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Sort comments'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Sort comments'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Sort comments'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Sort comments'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Newest'));
+    await tester.pumpAndSettle();
+    expect(find.text('first'), findsOneWidget);
+  });
 }
