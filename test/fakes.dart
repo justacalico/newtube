@@ -186,11 +186,14 @@ class FakePlayerController implements PlayerController {
   final _volumeChanges = StreamController<double>.broadcast();
   final _mutedChanges = StreamController<bool>.broadcast();
   final _completed = StreamController<bool>.broadcast();
+  final _buffered = StreamController<Duration>.broadcast();
 
   @override
   Duration position = Duration.zero;
   @override
   Duration duration = const Duration(minutes: 3);
+  @override
+  Duration buffered = Duration.zero;
   @override
   bool playing = false;
   @override
@@ -215,12 +218,15 @@ class FakePlayerController implements PlayerController {
   void emitDuration(Duration d) => _duration.add(d);
   void emitPlaying(bool v) => _playing.add(v);
   void emitBuffering(bool v) => _buffering.add(v);
+  void emitBuffered(Duration d) => _buffered.add(d);
   void emitCompleted() => _completed.add(true);
 
   @override
   Stream<Duration> get positionStream => _position.stream;
   @override
   Stream<Duration> get durationStream => _duration.stream;
+  @override
+  Stream<Duration> get bufferedStream => _buffered.stream;
   @override
   Stream<bool> get playingStream => _playing.stream;
   @override

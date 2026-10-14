@@ -7,10 +7,12 @@ void main() {
     final player = UnsupportedPlayerController();
     expect(player.position, Duration.zero);
     expect(player.duration, Duration.zero);
+    expect(player.buffered, Duration.zero);
     expect(player.playing, isFalse);
     expect(player.buffering, isFalse);
     expect(await player.positionStream.isEmpty, isTrue);
     expect(await player.durationStream.isEmpty, isTrue);
+    expect(await player.bufferedStream.isEmpty, isTrue);
     expect(await player.playingStream.isEmpty, isTrue);
     expect(await player.bufferingStream.isEmpty, isTrue);
     expect(player.rate, 1.0);

@@ -9,6 +9,8 @@ class UnsupportedPlayerController implements PlayerController {
   @override
   Duration get duration => Duration.zero;
   @override
+  Duration get buffered => Duration.zero;
+  @override
   bool get playing => false;
   @override
   bool get buffering => false;
@@ -23,6 +25,8 @@ class UnsupportedPlayerController implements PlayerController {
   Stream<Duration> get positionStream => const Stream.empty();
   @override
   Stream<Duration> get durationStream => const Stream.empty();
+  @override
+  Stream<Duration> get bufferedStream => const Stream.empty();
   @override
   Stream<bool> get playingStream => const Stream.empty();
   @override

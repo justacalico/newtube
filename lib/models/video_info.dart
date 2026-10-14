@@ -88,13 +88,43 @@ class VideoDetails {
   final String description;
   final List<PlayableStream> streams;
   final List<CaptionTrack> captions;
+  final List<Storyboard> storyboards;
 
   const VideoDetails({
     required this.info,
     required this.description,
     required this.streams,
     this.captions = const [],
+    this.storyboards = const [],
   });
+}
+
+class Storyboard {
+  final String urlTemplate;
+  final String sigh;
+  final int tileWidth;
+  final int tileHeight;
+  final int tileCount;
+  final int cols;
+  final int rows;
+  final Duration interval;
+
+  const Storyboard({
+    required this.urlTemplate,
+    required this.sigh,
+    required this.tileWidth,
+    required this.tileHeight,
+    required this.tileCount,
+    required this.cols,
+    required this.rows,
+    required this.interval,
+  });
+
+  int get tilesPerBoard => cols * rows;
+
+  String boardUrl(int board) =>
+      urlTemplate.replaceAll(r'$M', '$board') +
+      (sigh.isEmpty ? '' : '?sigh=$sigh');
 }
 
 class CaptionTrack {

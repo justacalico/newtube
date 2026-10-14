@@ -28,6 +28,8 @@ class MediaKitPlayerController implements PlayerController {
   @override
   bool get buffering => _player.state.buffering;
   @override
+  Duration get buffered => _player.state.buffer;
+  @override
   double get rate => _player.state.rate;
   @override
   double get volume => _player.state.volume / 100;
@@ -42,6 +44,8 @@ class MediaKitPlayerController implements PlayerController {
   Stream<bool> get playingStream => _player.stream.playing;
   @override
   Stream<bool> get bufferingStream => _player.stream.buffering;
+  @override
+  Stream<Duration> get bufferedStream => _player.stream.buffer;
   @override
   Stream<double> get rateStream => _player.stream.rate;
   @override
