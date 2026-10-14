@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/app_update.dart';
 import '../models/video_info.dart';
 import '../services/brightness.dart';
+import '../services/downloads.dart';
 import '../services/file_opener.dart';
 import '../services/file_saver.dart';
 import '../services/launcher.dart';
@@ -21,6 +22,7 @@ import '../services/uploads_watcher.dart';
 import '../services/version_checker.dart';
 import '../services/window_actions.dart';
 import '../services/youtube_api.dart';
+import 'downloads_store.dart';
 import 'history_store.dart';
 import 'playback_session.dart';
 import 'playlists_store.dart';
@@ -52,6 +54,8 @@ class AppState extends ChangeNotifier {
   final UploadsWatcher? uploads;
   final PipActions? pipActions;
   final OrientationActions? orientation;
+  final DownloadActions? downloads;
+  final DownloadsStore downloadsStore;
   final MediaControls? mediaControls;
   final BrightnessControl? brightness;
   final PlaybackSession playback;
@@ -89,10 +93,13 @@ class AppState extends ChangeNotifier {
     this.pipActions,
     this.orientation,
     this.mediaControls,
+    this.downloads,
+    DownloadsStore? downloadsStore,
     this.brightness,
     this._versionChecker,
     this.isWeb = false,
-  }) : playback = PlaybackSession(mediaControls: mediaControls) {
+  }) : playback = PlaybackSession(mediaControls: mediaControls),
+       downloadsStore = downloadsStore ?? DownloadsStore() {
     settings.addListener(_syncMcpServer);
     final factory = createMcpServer;
     if (factory != null) _initMcp(factory);

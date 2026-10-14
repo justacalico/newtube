@@ -723,4 +723,36 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get shortsBadge => 'SHORTS';
+
+  @override
+  String get downloads => 'Загрузки';
+
+  @override
+  String get noDownloads => 'Нет загрузок';
+
+  @override
+  String get deleteDownload => 'Удалить загрузку';
+
+  @override
+  String get download => 'Скачать';
+
+  @override
+  String get downloadVideo => 'Скачать видео';
+
+  @override
+  String get downloadAudio => 'Только аудио';
+
+  @override
+  String downloadedTo(String path) {
+    return 'Сохранено в $path';
+  }
+
+  @override
+  String get downloadFailed => 'Ошибка загрузки';
+
+  @override
+  String get pickDownloadStream => 'Выберите качество для загрузки';
+
+  @override
+  String get downloadsNav => 'Загрузки';
 }

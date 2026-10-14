@@ -716,6 +716,38 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shortsBadge => 'SHORTS';
+
+  @override
+  String get downloads => 'Downloads';
+
+  @override
+  String get noDownloads => 'No downloads yet';
+
+  @override
+  String get deleteDownload => 'Delete download';
+
+  @override
+  String get download => 'Download';
+
+  @override
+  String get downloadVideo => 'Download video';
+
+  @override
+  String get downloadAudio => 'Download audio only';
+
+  @override
+  String downloadedTo(String path) {
+    return 'Saved to $path';
+  }
+
+  @override
+  String get downloadFailed => 'Download failed';
+
+  @override
+  String get pickDownloadStream => 'Pick a quality to download';
+
+  @override
+  String get downloadsNav => 'Downloads';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1429,4 +1461,36 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get shortsBadge => 'SHORTS';
+
+  @override
+  String get downloads => 'Downloads';
+
+  @override
+  String get noDownloads => 'No downloads yet';
+
+  @override
+  String get deleteDownload => 'Delete download';
+
+  @override
+  String get download => 'Download';
+
+  @override
+  String get downloadVideo => 'Download video';
+
+  @override
+  String get downloadAudio => 'Download audio only';
+
+  @override
+  String downloadedTo(String path) {
+    return 'Saved to $path';
+  }
+
+  @override
+  String get downloadFailed => 'Download failed';
+
+  @override
+  String get pickDownloadStream => 'Pick a quality to download';
+
+  @override
+  String get downloadsNav => 'Downloads';
 }

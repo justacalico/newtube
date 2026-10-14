@@ -13,6 +13,7 @@ import '../../services/sleep_timer.dart';
 import '../../services/orientation.dart';
 import '../../services/sponsor_block.dart';
 import '../../state/app_state.dart';
+import '../../state/downloads_store.dart';
 import '../../state/playback_session.dart';
 import '../../utils/chapters.dart';
 import '../../utils/description.dart';
@@ -382,6 +383,77 @@ class _WatchPageState extends State<WatchPage>
           ? WatchPage(video: next, playlist: widget.playlist, index: i)
           : WatchPage(video: next),
     );
+  }
+
+  void _showDownloadPicker() {
+    final downloads = _state.downloads;
+    final details = _details;
+    if (downloads == null || details == null) return;
+    final l10n = AppLocalizations.of(context);
+    final muxed = [
+      for (final st in details.streams)
+        if (st.hasVideo && st.hasAudio) st,
+    ];
+    final audioOnly = [
+      for (final st in details.streams)
+        if (!st.hasVideo && st.hasAudio) st,
+    ];
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Text(
+                l10n.pickDownloadStream,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+            ),
+            for (final st in muxed)
+              ListTile(
+                leading: const Icon(Icons.movie_outlined),
+                title: Text('${l10n.downloadVideo} · ${st.quality}'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _startDownload(st);
+                },
+              ),
+            if (audioOnly.isNotEmpty)
+              ListTile(
+                leading: const Icon(Icons.music_note_outlined),
+                title: Text(l10n.downloadAudio),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _startDownload(audioOnly.first);
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _startDownload(PlayableStream stream) async {
+    final l10n = AppLocalizations.of(context);
+    final path = await _state.downloads!.download(
+      stream.url,
+      '${widget.video.id}_${stream.quality}.mp4',
+    );
+    if (!mounted) return;
+    if (path == null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l10n.downloadFailed)));
+      return;
+    }
+    await _state.downloadsStore.add(
+      DownloadEntry(video: widget.video, path: path),
+      _state.prefs,
+    );
+    if (!mounted) return;
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(l10n.downloadedTo(path))));
   }
 
   void _replay(PlayerController player) {
@@ -797,6 +869,12 @@ class _WatchPageState extends State<WatchPage>
                                   showPlaylistPicker(context, widget.video),
                             ),
                             _ShareMenu(video: widget.video, player: _player),
+                            if (state.downloads != null)
+                              IconButton(
+                                tooltip: l10n.download,
+                                icon: const Icon(Icons.download_outlined),
+                                onPressed: _showDownloadPicker,
+                              ),
                           ],
                         ),
                         if (_details!.description.isNotEmpty) ...[

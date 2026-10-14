@@ -703,6 +703,38 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get shortsBadge => '短视频';
+
+  @override
+  String get downloads => '下载';
+
+  @override
+  String get noDownloads => '暂无下载';
+
+  @override
+  String get deleteDownload => '删除下载';
+
+  @override
+  String get download => '下载';
+
+  @override
+  String get downloadVideo => '下载视频';
+
+  @override
+  String get downloadAudio => '仅下载音频';
+
+  @override
+  String downloadedTo(String path) {
+    return '已保存到 $path';
+  }
+
+  @override
+  String get downloadFailed => '下载失败';
+
+  @override
+  String get pickDownloadStream => '选择下载画质';
+
+  @override
+  String get downloadsNav => '下载';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1403,4 +1435,36 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get shortsBadge => '短视频';
+
+  @override
+  String get downloads => '下载';
+
+  @override
+  String get noDownloads => '暂无下载';
+
+  @override
+  String get deleteDownload => '删除下载';
+
+  @override
+  String get download => '下载';
+
+  @override
+  String get downloadVideo => '下载视频';
+
+  @override
+  String get downloadAudio => '仅下载音频';
+
+  @override
+  String downloadedTo(String path) {
+    return '已保存到 $path';
+  }
+
+  @override
+  String get downloadFailed => '下载失败';
+
+  @override
+  String get pickDownloadStream => '选择下载画质';
+
+  @override
+  String get downloadsNav => '下载';
 }

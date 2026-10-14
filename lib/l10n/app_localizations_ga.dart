@@ -720,4 +720,36 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get shortsBadge => 'SHORTS';
+
+  @override
+  String get downloads => 'Íoslódálaí';
+
+  @override
+  String get noDownloads => 'Níl aon íoslódáil fós';
+
+  @override
+  String get deleteDownload => 'Scrios íoslódáil';
+
+  @override
+  String get download => 'Íoslódáil';
+
+  @override
+  String get downloadVideo => 'Íoslódáil físeán';
+
+  @override
+  String get downloadAudio => 'Fuaim amháin';
+
+  @override
+  String downloadedTo(String path) {
+    return 'Sábháilte go $path';
+  }
+
+  @override
+  String get downloadFailed => 'Theip ar an íoslódáil';
+
+  @override
+  String get pickDownloadStream => 'Roghnaigh cáilíocht le hioslódáil';
+
+  @override
+  String get downloadsNav => 'Íoslódálaí';
 }

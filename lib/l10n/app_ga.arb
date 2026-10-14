@@ -285,5 +285,22 @@
   "videoActions": "Tuilleadh roghanna",
   "hideShorts": "Folaigh Shorts",
   "hideShortsHint": "Scag Shorts as fothaí agus cuardaigh",
-  "shortsBadge": "SHORTS"
+  "shortsBadge": "SHORTS",
+  "downloads": "Íoslódálaí",
+  "noDownloads": "Níl aon íoslódáil fós",
+  "deleteDownload": "Scrios íoslódáil",
+  "download": "Íoslódáil",
+  "downloadVideo": "Íoslódáil físeán",
+  "downloadAudio": "Fuaim amháin",
+  "downloadedTo": "Sábháilte go {path}",
+  "downloadFailed": "Theip ar an íoslódáil",
+  "pickDownloadStream": "Roghnaigh cáilíocht le hioslódáil",
+  "downloadsNav": "Íoslódálaí",
+  "@downloadedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  }
 }
