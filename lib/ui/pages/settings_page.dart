@@ -618,6 +618,34 @@ class _SettingsPageState extends State<SettingsPage> {
               onChanged: (value) =>
                   settings.setSponsorBlockEnabled(value, state.prefs),
             ),
+            if (settings.sponsorBlockEnabled) ...[
+              Padding(
+                padding: const EdgeInsets.only(left: 24),
+                child: SwitchListTile(
+                  secondary: const Icon(Icons.fast_forward_outlined),
+                  title: Text(l10n.sponsorBlockAutoSkip),
+                  subtitle: Text(l10n.sponsorBlockAutoSkipHint),
+                  value: settings.sponsorBlockAutoSkip,
+                  onChanged: (value) =>
+                      settings.setSponsorBlockAutoSkip(value, state.prefs),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 24),
+                child: ListTile(
+                  leading: const Icon(Icons.category_outlined),
+                  title: Text(l10n.sponsorBlockCategories),
+                  subtitle: Text(
+                    [
+                      for (final id in sponsorBlockCategoryIds)
+                        if (settings.sponsorBlockCategories.contains(id))
+                          _categoryLabel(l10n, id),
+                    ].join(', '),
+                  ),
+                  onTap: _editSponsorBlockCategories,
+                ),
+              ),
+            ],
             if (state.openFile != null)
               ListTile(
                 leading: const Icon(Icons.upload_file_outlined),
@@ -727,28 +755,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     ],
                   ),
                 ),
-            ],
-            if (settings.sponsorBlockEnabled) ...[
-              SwitchListTile(
-                secondary: const Icon(Icons.fast_forward_outlined),
-                title: Text(l10n.sponsorBlockAutoSkip),
-                subtitle: Text(l10n.sponsorBlockAutoSkipHint),
-                value: settings.sponsorBlockAutoSkip,
-                onChanged: (value) =>
-                    settings.setSponsorBlockAutoSkip(value, state.prefs),
-              ),
-              ListTile(
-                leading: const Icon(Icons.category_outlined),
-                title: Text(l10n.sponsorBlockCategories),
-                subtitle: Text(
-                  [
-                    for (final id in sponsorBlockCategoryIds)
-                      if (settings.sponsorBlockCategories.contains(id))
-                        _categoryLabel(l10n, id),
-                  ].join(', '),
-                ),
-                onTap: _editSponsorBlockCategories,
-              ),
             ],
             if (!state.isWeb) ...[
               const Divider(),
