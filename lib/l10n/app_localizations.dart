@@ -1843,6 +1843,18 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Accent colour'**
   String get accentColor;
+
+  /// No description provided for @errorAgeRestricted.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'This video is age-restricted'**
+  String get errorAgeRestricted;
+
+  /// No description provided for @errorUnavailable.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'This video is unavailable'**
+  String get errorUnavailable;
 }
 
 class _AppLocalizationsDelegate

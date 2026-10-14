@@ -188,11 +188,28 @@ class InnertubeApi implements YouTubeApi {
 
   @override
   Future<VideoDetails> videoDetails(String videoId) async {
-    final r = await _post('player', {
+    var r = await _post('player', {
       'videoId': videoId,
       'contentCheckOk': true,
       'racyCheckOk': true,
     }, client: 'ANDROID');
+    var status = r['playabilityStatus'];
+    if (status is Map<String, dynamic> &&
+        status['status'] == 'LOGIN_REQUIRED') {
+      debugLog('[api] $videoId: login required, retrying via VISIONOS');
+      r = await _post('player', {
+        'videoId': videoId,
+        'contentCheckOk': true,
+        'racyCheckOk': true,
+      }, client: 'VISIONOS');
+      status = r['playabilityStatus'];
+    }
+    if (status is Map<String, dynamic> && status['status'] != 'OK') {
+      throw PlayabilityException(
+        status['status'] as String? ?? 'ERROR',
+        status['reason'] as String? ?? '',
+      );
+    }
     final details = r['videoDetails'];
     if (details is! Map<String, dynamic>) {
       throw InnertubeException('no videoDetails for $videoId');
@@ -864,6 +881,22 @@ class InnertubeApi implements YouTubeApi {
     }
     return null;
   }
+}
+
+class PlayabilityException implements Exception {
+  final String status;
+  final String reason;
+  const PlayabilityException(this.status, this.reason);
+
+  bool get isAgeGate => status == 'LOGIN_REQUIRED';
+  bool get isPrivate => status == 'LOGIN_REQUIRED' || status == 'ERROR';
+  bool get isUnavailable =>
+      status == 'ERROR' ||
+      status == 'UNPLAYABLE' ||
+      status == 'LIVE_STREAM_OFFLINE';
+
+  @override
+  String toString() => 'PlayabilityException: $status $reason';
 }
 
 class InnertubeException implements Exception {

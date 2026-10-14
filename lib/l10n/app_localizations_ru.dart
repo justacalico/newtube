@@ -941,4 +941,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get accentColor => 'Акцентный цвет';
+
+  @override
+  String get errorAgeRestricted => 'Видео с возрастным ограничением';
+
+  @override
+  String get errorUnavailable => 'Видео недоступно';
 }

@@ -11,6 +11,7 @@ import '../../services/pip_actions.dart';
 import '../../services/player_controller.dart';
 import '../../services/sleep_timer.dart';
 import '../../services/orientation.dart';
+import '../../services/innertube_api.dart';
 import '../../services/sponsor_block.dart';
 import '../../state/app_state.dart';
 import '../../state/downloads_store.dart';
@@ -776,6 +777,16 @@ class _WatchPageState extends State<WatchPage>
     );
   }
 
+  String _errorMessage(AppLocalizations l10n) {
+    final e = _error;
+    if (e is PlayabilityException) {
+      if (e.isAgeGate) return l10n.errorAgeRestricted;
+      if (e.isUnavailable) return l10n.errorUnavailable;
+      return e.reason.isEmpty ? l10n.errorLoading : e.reason;
+    }
+    return l10n.errorLoading;
+  }
+
   Widget _buildPage() {
     final l10n = AppLocalizations.of(context);
     final state = AppScope.read(context);
@@ -788,7 +799,7 @@ class _WatchPageState extends State<WatchPage>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(l10n.errorLoading),
+                  Text(_errorMessage(l10n)),
                   const SizedBox(height: 8),
                   FilledButton(onPressed: _load, child: Text(l10n.retry)),
                 ],
