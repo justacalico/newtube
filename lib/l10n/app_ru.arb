@@ -388,5 +388,6 @@
   "channelTabAbout": "О канале",
   "searchThisChannel": "Поиск по каналу",
   "noPlaylists": "Нет плейлистов",
-  "noAboutInfo": "Нет информации о канале"
+  "noAboutInfo": "Нет информации о канале",
+  "accentColor": "Акцентный цвет"
 }

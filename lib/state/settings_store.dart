@@ -14,6 +14,7 @@ enum DeArrowMode { off, titles, thumbnails, both }
 
 class SettingsStore extends ChangeNotifier {
   static const _themeKey = 'theme';
+  static const _accentColorKey = 'accent_color';
   static const _localeKey = 'locale';
   static const _autoplayKey = 'autoplay';
   static const _proxyPrefixKey = 'proxy_prefix';
@@ -39,6 +40,7 @@ class SettingsStore extends ChangeNotifier {
   static const defaultSponsorBlockCategories = {'sponsor', 'selfpromo'};
 
   AppTheme _theme;
+  int _accentColor;
   Locale? _locale;
   bool _autoplay;
   String _proxyPrefix;
@@ -64,6 +66,7 @@ class SettingsStore extends ChangeNotifier {
 
   SettingsStore({
     this._theme = AppTheme.system,
+    this._accentColor = 0xFFD32F2F,
     this._locale,
     this._autoplay = true,
     this._proxyPrefix = '',
@@ -94,6 +97,7 @@ class SettingsStore extends ChangeNotifier {
       theme:
           AppTheme.values.asNameMap()[prefs.getString(_themeKey)] ??
           AppTheme.system,
+      accentColor: prefs.getInt(_accentColorKey) ?? 0xFFD32F2F,
       locale: _parseLocale(prefs.getString(_localeKey)),
       autoplay: prefs.getBool(_autoplayKey) ?? true,
       proxyPrefix: prefs.getString(_proxyPrefixKey) ?? '',
@@ -129,6 +133,7 @@ class SettingsStore extends ChangeNotifier {
   Future<void> reload(SharedPreferences prefs) async {
     final fresh = await SettingsStore.load(prefs);
     _theme = fresh._theme;
+    _accentColor = fresh._accentColor;
     _locale = fresh._locale;
     _autoplay = fresh._autoplay;
     _proxyPrefix = fresh._proxyPrefix;
@@ -169,6 +174,7 @@ class SettingsStore extends ChangeNotifier {
       : '${locale.languageCode}_${locale.countryCode}';
 
   AppTheme get theme => _theme;
+  int get accentColor => _accentColor;
   Locale? get locale => _locale;
   bool get autoplay => _autoplay;
   String get proxyPrefix => _proxyPrefix;
@@ -200,6 +206,12 @@ class SettingsStore extends ChangeNotifier {
   Future<void> setTheme(AppTheme theme, SharedPreferences prefs) async {
     _theme = theme;
     await prefs.setString(_themeKey, theme.name);
+    notifyListeners();
+  }
+
+  Future<void> setAccentColor(int value, SharedPreferences prefs) async {
+    _accentColor = value;
+    await prefs.setInt(_accentColorKey, value);
     notifyListeners();
   }
 

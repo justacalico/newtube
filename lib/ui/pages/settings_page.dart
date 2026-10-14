@@ -330,6 +330,40 @@ class _SettingsPageState extends State<SettingsPage> {
         return ListView(
           children: [
             ListTile(
+              leading: const Icon(Icons.format_color_fill_outlined),
+              title: Text(l10n.accentColor),
+              subtitle: SizedBox(
+                height: 40,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    for (final color in const [
+                      0xFFD32F2F,
+                      0xFF1976D2,
+                      0xFF388E3C,
+                      0xFFF57C00,
+                      0xFF7B1FA2,
+                      0xFF0097A7,
+                    ])
+                      Padding(
+                        padding: const EdgeInsets.only(right: 6, top: 6),
+                        child: InkWell(
+                          onTap: () =>
+                              settings.setAccentColor(color, state.prefs),
+                          child: CircleAvatar(
+                            radius: 14,
+                            backgroundColor: Color(color),
+                            child: settings.accentColor == color
+                                ? const Icon(Icons.check, size: 14)
+                                : null,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+            ListTile(
               leading: const Icon(Icons.palette_outlined),
               title: Text(l10n.theme),
               trailing: _SettingsDropdown<AppTheme>(

@@ -936,4 +936,7 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get noAboutInfo => 'Gan eolas cainéal';
+
+  @override
+  String get accentColor => 'Dath béime';
 }

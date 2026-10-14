@@ -9,9 +9,13 @@ import 'ui/shell/app_shell.dart';
 class NewtubeApp extends StatelessWidget {
   const NewtubeApp({super.key});
 
-  ThemeData _theme(Brightness brightness, {bool oled = false}) {
+  ThemeData _theme(
+    Brightness brightness, {
+    bool oled = false,
+    int seedColor = 0xFFD32F2F,
+  }) {
     final scheme = ColorScheme.fromSeed(
-      seedColor: const Color(0xFFD32F2F),
+      seedColor: Color(seedColor),
       brightness: brightness,
     );
     final theme = ThemeData(colorScheme: scheme, fontFamily: 'Inter');
@@ -44,8 +48,15 @@ class NewtubeApp extends StatelessWidget {
         final oled = state.settings.theme == AppTheme.oled;
         return MaterialApp(
           title: 'NewTube',
-          theme: _theme(Brightness.light),
-          darkTheme: _theme(Brightness.dark, oled: oled),
+          theme: _theme(
+            Brightness.light,
+            seedColor: state.settings.accentColor,
+          ),
+          darkTheme: _theme(
+            Brightness.dark,
+            oled: oled,
+            seedColor: state.settings.accentColor,
+          ),
           themeMode: _themeMode(state.settings.theme),
           locale: state.settings.locale,
           supportedLocales: AppLocalizations.supportedLocales,

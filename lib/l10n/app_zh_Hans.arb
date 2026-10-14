@@ -388,5 +388,6 @@
   "channelTabAbout": "简介",
   "searchThisChannel": "搜索此频道",
   "noPlaylists": "没有播放列表",
-  "noAboutInfo": "没有频道信息"
+  "noAboutInfo": "没有频道信息",
+  "accentColor": "强调色"
 }

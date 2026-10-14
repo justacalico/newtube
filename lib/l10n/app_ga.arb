@@ -388,5 +388,6 @@
   "channelTabAbout": "Faoi",
   "searchThisChannel": "Cuardaigh an cainéal seo",
   "noPlaylists": "Gan seinmliostaí",
-  "noAboutInfo": "Gan eolas cainéal"
+  "noAboutInfo": "Gan eolas cainéal",
+  "accentColor": "Dath béime"
 }
