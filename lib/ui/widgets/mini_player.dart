@@ -39,9 +39,20 @@ class MiniPlayer extends StatelessWidget {
                       children: [
                         AspectRatio(
                           aspectRatio: 16 / 9,
-                          child: VideoThumbnail(
-                            url: video.thumbnailUrl,
-                            borderRadius: BorderRadius.zero,
+                          child: ClipRect(
+                            child: session.audioOnly
+                                ? VideoThumbnail(
+                                    url: video.thumbnailUrl,
+                                    borderRadius: BorderRadius.zero,
+                                  )
+                                : FittedBox(
+                                    fit: BoxFit.cover,
+                                    child: SizedBox(
+                                      width: 320,
+                                      height: 180,
+                                      child: player.buildView(context),
+                                    ),
+                                  ),
                           ),
                         ),
                         const SizedBox(width: 12),
