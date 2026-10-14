@@ -111,8 +111,14 @@ class DeArrowApi implements YouTubeApi {
   Future<String?> resolveChannel(String url) => inner.resolveChannel(url);
 
   @override
-  Future<PlaylistInfo> playlist(String playlistId) async {
-    final playlist = await inner.playlist(playlistId);
+  Future<PlaylistInfo> playlist(
+    String playlistId, {
+    String? continuation,
+  }) async {
+    final playlist = await inner.playlist(
+      playlistId,
+      continuation: continuation,
+    );
     return PlaylistInfo(
       id: playlist.id,
       title: playlist.title,
@@ -120,6 +126,7 @@ class DeArrowApi implements YouTubeApi {
       thumbnailUrl: playlist.thumbnailUrl,
       videoCount: playlist.videoCount,
       videos: await _applyAll(playlist.videos),
+      continuation: playlist.continuation,
     );
   }
 

@@ -234,8 +234,10 @@ class FakeYouTubeApi implements YouTubeApi {
   PlaylistInfo playlistInfo;
 
   @override
-  Future<PlaylistInfo> playlist(String playlistId) async =>
-      error != null ? _fail() : playlistInfo;
+  Future<PlaylistInfo> playlist(
+    String playlistId, {
+    String? continuation,
+  }) async => error != null ? _fail() : playlistInfo;
 
   List<CaptionCue> captionCues = const [];
   Object? captionsError;

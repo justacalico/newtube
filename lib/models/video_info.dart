@@ -236,6 +236,7 @@ class PlaylistInfo {
   final String? thumbnailUrl;
   final int videoCount;
   final List<VideoInfo> videos;
+  final String? continuation;
 
   const PlaylistInfo({
     required this.id,
@@ -244,7 +245,19 @@ class PlaylistInfo {
     this.thumbnailUrl,
     this.videoCount = 0,
     this.videos = const [],
+    this.continuation,
   });
+
+  PlaylistInfo withContinuation(List<VideoInfo> more, String? next) =>
+      PlaylistInfo(
+        id: id,
+        title: title,
+        author: author,
+        thumbnailUrl: thumbnailUrl,
+        videoCount: videoCount,
+        videos: [...videos, ...more],
+        continuation: next,
+      );
 }
 
 class ChannelAbout {
