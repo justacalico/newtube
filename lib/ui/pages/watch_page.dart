@@ -61,6 +61,7 @@ class _WatchPageState extends State<WatchPage>
   PlayableStream? _currentStream;
   PlayableStream? _currentAudio;
   List<VideoChapter> _chapters = const [];
+  CaptionTrack? _caption;
   List<CommentInfo> _comments = const [];
   String? _commentsToken;
   bool _loadingMoreComments = false;
@@ -228,6 +229,7 @@ class _WatchPageState extends State<WatchPage>
         _chapters = parseChapters(details.description);
         _currentStream = current;
         _currentAudio = currentAudio;
+        _caption = _initialCaption(details.captions);
       });
       session.attach(
         player,
@@ -269,6 +271,23 @@ class _WatchPageState extends State<WatchPage>
       if (!mounted) return;
       setState(() => _error = e);
     }
+  }
+
+  CaptionTrack? _initialCaption(List<CaptionTrack> tracks) {
+    if (tracks.isEmpty || !_state.settings.captionsEnabled) return null;
+    final language = _state.settings.captionLanguage;
+    for (final track in tracks) {
+      if (track.languageCode == language) return track;
+    }
+    return tracks.first;
+  }
+
+  void _selectCaption(CaptionTrack? track) {
+    setState(() => _caption = track);
+    unawaited(_state.settings.setCaptionsEnabled(track != null, _state.prefs));
+    unawaited(
+      _state.settings.setCaptionLanguage(track?.languageCode, _state.prefs),
+    );
   }
 
   int? get _nextPlaylistIndex {
@@ -456,6 +475,9 @@ class _WatchPageState extends State<WatchPage>
               segmentSkipper: _skipper,
               pipActions: _pipActions,
               endScreenBuilder: (context) => _endScreen(context, player),
+              captions: _details?.captions ?? const [],
+              selectedCaption: _caption,
+              onCaptionSelected: _selectCaption,
             ),
           ),
         )
@@ -530,6 +552,9 @@ class _WatchPageState extends State<WatchPage>
                             pipActions: _pipActions,
                             endScreenBuilder: (context) =>
                                 _endScreen(context, player),
+                            captions: _details!.captions,
+                            selectedCaption: _caption,
+                            onCaptionSelected: _selectCaption,
                           ),
                   ),
                   Padding(
@@ -714,6 +739,9 @@ class _FullscreenPlayer extends StatefulWidget {
   final SegmentSkipper? segmentSkipper;
   final PipActions? pipActions;
   final WidgetBuilder? endScreenBuilder;
+  final List<CaptionTrack> captions;
+  final CaptionTrack? selectedCaption;
+  final ValueChanged<CaptionTrack?>? onCaptionSelected;
 
   const _FullscreenPlayer({
     required this.player,
@@ -727,6 +755,9 @@ class _FullscreenPlayer extends StatefulWidget {
     this.segmentSkipper,
     this.pipActions,
     this.endScreenBuilder,
+    this.captions = const [],
+    this.selectedCaption,
+    this.onCaptionSelected,
   });
 
   @override
@@ -736,6 +767,12 @@ class _FullscreenPlayer extends StatefulWidget {
 class _FullscreenPlayerState extends State<_FullscreenPlayer> {
   late PlayableStream? _current = widget.current;
   late PlayableStream? _currentAudio = widget.currentAudio;
+  late CaptionTrack? _caption = widget.selectedCaption;
+
+  void _selectCaption(CaptionTrack? track) {
+    widget.onCaptionSelected?.call(track);
+    setState(() => _caption = track);
+  }
 
   void _selectStream(PlayableStream stream) {
     widget.onQualitySelected(stream);
@@ -780,6 +817,9 @@ class _FullscreenPlayerState extends State<_FullscreenPlayer> {
           segmentSkipper: widget.segmentSkipper,
           pipActions: widget.pipActions,
           endScreenBuilder: widget.endScreenBuilder,
+          captions: widget.captions,
+          selectedCaption: _caption,
+          onCaptionSelected: _selectCaption,
         ),
       ),
     );

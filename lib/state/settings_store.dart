@@ -26,6 +26,8 @@ class SettingsStore extends ChangeNotifier {
   static const _deArrowModeKey = 'dearrow_mode';
   static const _uploadNotifyKey = 'upload_notify';
   static const _uploadIntervalKey = 'upload_interval';
+  static const _captionsEnabledKey = 'captions_enabled';
+  static const _captionLanguageKey = 'caption_language';
   static const defaultSponsorBlockCategories = {'sponsor', 'selfpromo'};
 
   AppTheme _theme;
@@ -41,6 +43,8 @@ class SettingsStore extends ChangeNotifier {
   DeArrowMode _deArrowMode;
   bool _uploadNotificationsEnabled;
   int _uploadCheckIntervalMinutes;
+  bool _captionsEnabled;
+  String _captionLanguage;
 
   SettingsStore({
     this._theme = AppTheme.system,
@@ -56,6 +60,8 @@ class SettingsStore extends ChangeNotifier {
     this._deArrowMode = DeArrowMode.off,
     this._uploadNotificationsEnabled = false,
     this._uploadCheckIntervalMinutes = 30,
+    this._captionsEnabled = false,
+    this._captionLanguage = '',
   }) : _sponsorBlockCategories =
            sponsorBlockCategories ?? Set.of(defaultSponsorBlockCategories);
 
@@ -83,6 +89,8 @@ class SettingsStore extends ChangeNotifier {
           const {15, 30, 60, 120}.contains(prefs.getInt(_uploadIntervalKey))
           ? prefs.getInt(_uploadIntervalKey)!
           : 30,
+      captionsEnabled: prefs.getBool(_captionsEnabledKey) ?? false,
+      captionLanguage: prefs.getString(_captionLanguageKey) ?? '',
     );
   }
 
@@ -118,6 +126,8 @@ class SettingsStore extends ChangeNotifier {
       _deArrowMode == DeArrowMode.both;
   bool get uploadNotificationsEnabled => _uploadNotificationsEnabled;
   int get uploadCheckIntervalMinutes => _uploadCheckIntervalMinutes;
+  bool get captionsEnabled => _captionsEnabled;
+  String get captionLanguage => _captionLanguage;
 
   Future<void> setTheme(AppTheme theme, SharedPreferences prefs) async {
     _theme = theme;
@@ -218,6 +228,21 @@ class SettingsStore extends ChangeNotifier {
   ) async {
     _uploadCheckIntervalMinutes = value;
     await prefs.setInt(_uploadIntervalKey, value);
+    notifyListeners();
+  }
+
+  Future<void> setCaptionsEnabled(bool value, SharedPreferences prefs) async {
+    _captionsEnabled = value;
+    await prefs.setBool(_captionsEnabledKey, value);
+    notifyListeners();
+  }
+
+  Future<void> setCaptionLanguage(
+    String? value,
+    SharedPreferences prefs,
+  ) async {
+    _captionLanguage = value ?? '';
+    await prefs.setString(_captionLanguageKey, _captionLanguage);
     notifyListeners();
   }
 }

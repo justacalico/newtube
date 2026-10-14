@@ -10,7 +10,10 @@ import '../../services/pip_actions.dart';
 import '../../services/player_controller.dart';
 import '../../services/sleep_timer.dart';
 import '../../services/sponsor_block.dart';
+import '../../state/app_state.dart';
+import '../../utils/captions.dart';
 import '../../utils/chapters.dart';
+import '../../utils/debug_log.dart';
 import '../../utils/format.dart';
 
 class PlayerView extends StatefulWidget {
@@ -27,6 +30,9 @@ class PlayerView extends StatefulWidget {
   final SegmentSkipper? segmentSkipper;
   final PipActions? pipActions;
   final WidgetBuilder? endScreenBuilder;
+  final List<CaptionTrack> captions;
+  final CaptionTrack? selectedCaption;
+  final ValueChanged<CaptionTrack?>? onCaptionSelected;
 
   const PlayerView({
     super.key,
@@ -43,6 +49,9 @@ class PlayerView extends StatefulWidget {
     this.segmentSkipper,
     this.pipActions,
     this.endScreenBuilder,
+    this.captions = const [],
+    this.selectedCaption,
+    this.onCaptionSelected,
   });
 
   @override
@@ -60,6 +69,8 @@ class _PlayerViewState extends State<PlayerView> {
   Timer? _hideTimer;
   bool _controlsVisible = true;
   bool _ended = false;
+  List<CaptionCue> _cues = const [];
+  CaptionTrack? _cuesTrack;
 
   @override
   void initState() {
@@ -67,6 +78,7 @@ class _PlayerViewState extends State<PlayerView> {
     _playingSub = _player.playingStream.listen(_onPlayingChanged);
     _completedSub = _player.completedStream.listen(_onCompleted);
     if (_player.playing) _scheduleHide();
+    _loadCues();
   }
 
   @override
@@ -78,6 +90,27 @@ class _PlayerViewState extends State<PlayerView> {
       _completedSub?.cancel();
       _completedSub = _player.completedStream.listen(_onCompleted);
     }
+    if (oldWidget.selectedCaption != widget.selectedCaption) _loadCues();
+  }
+
+  void _loadCues() {
+    final track = widget.selectedCaption;
+    if (track == _cuesTrack) return;
+    _cuesTrack = track;
+    if (track == null) {
+      if (_cues.isNotEmpty) setState(() => _cues = const []);
+      return;
+    }
+    AppScope.read(context).api
+        .captions(track)
+        .then((cues) {
+          if (mounted && widget.selectedCaption == track) {
+            setState(() => _cues = cues);
+          }
+        })
+        .catchError((Object e) {
+          debugLog('[player] captions ${track.languageCode}: $e');
+        });
   }
 
   @override
@@ -178,6 +211,28 @@ class _PlayerViewState extends State<PlayerView> {
               widget.onAudioSelected,
             ),
             child: Text(l10n.audio),
+          ),
+        if (widget.captions.isNotEmpty && widget.onCaptionSelected != null)
+          SubmenuButton(
+            leadingIcon: const Icon(Icons.closed_caption),
+            menuChildren: [
+              MenuItemButton(
+                onPressed: () => widget.onCaptionSelected!(null),
+                leadingIcon: widget.selectedCaption == null
+                    ? const Icon(Icons.check, size: 18)
+                    : const SizedBox(width: 18),
+                child: Text(l10n.captionsOff),
+              ),
+              for (final t in widget.captions)
+                MenuItemButton(
+                  onPressed: () => widget.onCaptionSelected!(t),
+                  leadingIcon: t == widget.selectedCaption
+                      ? const Icon(Icons.check, size: 18)
+                      : const SizedBox(width: 18),
+                  child: Text(t.name.isEmpty ? t.languageCode : t.name),
+                ),
+            ],
+            child: Text(l10n.captions),
           ),
         SubmenuButton(
           leadingIcon: const Icon(Icons.speed),
@@ -334,6 +389,41 @@ class _PlayerViewState extends State<PlayerView> {
                     builder: (context, snapshot) => snapshot.data == true
                         ? const LinearProgressIndicator(minHeight: 3)
                         : const SizedBox(height: 3),
+                  ),
+                ),
+                Positioned(
+                  left: 16,
+                  right: 16,
+                  bottom: 52,
+                  child: IgnorePointer(
+                    child: StreamBuilder<Duration>(
+                      stream: _player.positionStream,
+                      initialData: _player.position,
+                      builder: (context, snapshot) {
+                        final cue = captionCueAt(
+                          _cues,
+                          snapshot.data ?? Duration.zero,
+                        );
+                        if (cue == null) return const SizedBox.shrink();
+                        return Center(
+                          child: Container(
+                            color: Colors.black54,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            child: Text(
+                              cue.text,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
                 Positioned(

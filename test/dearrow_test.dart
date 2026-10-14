@@ -182,6 +182,12 @@ void main() {
       expect((await a.playlist('pl1')).videos.first.title, 'Honest title');
       expect((await a.playlist('pl1')).title, 'Test playlist');
       expect(await a.channel('c1'), testChannel);
+      const track = CaptionTrack(
+        url: 'https://cap/en',
+        languageCode: 'en',
+        name: 'English',
+      );
+      expect(await a.captions(track), isEmpty);
     });
 
     test('keeps the original when branding fails or is missing', () async {

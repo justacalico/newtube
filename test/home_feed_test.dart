@@ -77,6 +77,10 @@ class _FeedApi implements YouTubeApi {
 
   @override
   Future<String?> resolveChannel(String url) => throw UnimplementedError();
+
+  @override
+  Future<List<CaptionCue>> captions(CaptionTrack track) =>
+      throw UnimplementedError();
 }
 
 HomeFeed _feedFor(

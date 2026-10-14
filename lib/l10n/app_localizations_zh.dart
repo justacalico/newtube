@@ -226,6 +226,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get speedNormal => '正常';
 
   @override
+  String get captions => '字幕';
+
+  @override
+  String get captionsOff => '关闭';
+
+  @override
   String get searchResultsFor => '搜索结果';
 
   @override
@@ -705,6 +711,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get speedNormal => '正常';
+
+  @override
+  String get captions => '字幕';
+
+  @override
+  String get captionsOff => '关闭';
 
   @override
   String get searchResultsFor => '搜索结果';

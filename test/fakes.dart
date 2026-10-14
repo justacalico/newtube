@@ -162,6 +162,18 @@ class FakeYouTubeApi implements YouTubeApi {
   @override
   Future<PlaylistInfo> playlist(String playlistId) async =>
       error != null ? _fail() : playlistInfo;
+
+  List<CaptionCue> captionCues = const [];
+  Object? captionsError;
+  final captionRequests = <CaptionTrack>[];
+
+  @override
+  Future<List<CaptionCue>> captions(CaptionTrack track) async {
+    captionRequests.add(track);
+    final e = captionsError;
+    if (e != null) throw e;
+    return captionCues;
+  }
 }
 
 class FakePlayerController implements PlayerController {

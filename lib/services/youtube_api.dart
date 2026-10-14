@@ -10,4 +10,5 @@ abstract class YouTubeApi {
   Future<PlaylistInfo> playlist(String playlistId);
   Future<String?> resolveChannel(String url);
   Future<List<VideoInfo>> channelVideos(String channelId);
+  Future<List<CaptionCue>> captions(CaptionTrack track);
 }
