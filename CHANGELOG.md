@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.21.0 - 2026-10-14
+#### Features
+- (**player**) 屏幕音量与静音控制 - (d76bee7) - HttpAnimations
+
+- - -
+
 ## v0.20.0 - 2026-10-14
 #### Features
 - (**player**) 触摸手势控制 - (ed7ca91) - HttpAnimations
