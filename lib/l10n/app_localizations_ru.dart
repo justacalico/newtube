@@ -324,7 +324,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get commentsNewest => 'Сначала новые';
 
   @override
-  String get upNext => 'Следующее';
+  String get upNext => 'Далее';
 
   @override
   String get playNow => 'Играть сейчас';
@@ -725,13 +725,14 @@ class AppLocalizationsRu extends AppLocalizations {
   String get shortsBadge => 'SHORTS';
 
   @override
-  String resumedFrom(String position) {
-    return 'Продолжено с $position';
-  }
+  String get playNext => 'Следующим';
 
   @override
-  String get startOver => 'Сначала';
+  String get addToQueue => 'В очередь';
 
   @override
-  String get continueWatching => 'Продолжить просмотр';
+  String get queued => 'Добавлено в очередь';
+
+  @override
+  String get queuedNext => 'Будет следующим';
 }

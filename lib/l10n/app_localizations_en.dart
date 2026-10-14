@@ -718,15 +718,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shortsBadge => 'SHORTS';
 
   @override
-  String resumedFrom(String position) {
-    return 'Resumed from $position';
-  }
+  String get playNext => 'Play next';
 
   @override
-  String get startOver => 'Start over';
+  String get addToQueue => 'Add to queue';
 
   @override
-  String get continueWatching => 'Continue watching';
+  String get queued => 'Added to queue';
+
+  @override
+  String get queuedNext => 'Will play next';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1442,13 +1443,14 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   String get shortsBadge => 'SHORTS';
 
   @override
-  String resumedFrom(String position) {
-    return 'Resumed from $position';
-  }
+  String get playNext => 'Play next';
 
   @override
-  String get startOver => 'Start over';
+  String get addToQueue => 'Add to queue';
 
   @override
-  String get continueWatching => 'Continue watching';
+  String get queued => 'Added to queue';
+
+  @override
+  String get queuedNext => 'Will play next';
 }

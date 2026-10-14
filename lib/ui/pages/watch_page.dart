@@ -388,6 +388,7 @@ class _WatchPageState extends State<WatchPage>
   }
 
   VideoInfo? get _nextVideo {
+    if (_state.playback.queue.isNotEmpty) return _state.playback.queue.first;
     final i = _nextPlaylistIndex;
     if (i != null) return widget.playlist!.videos[i];
     return _related.firstOrNull;
@@ -402,9 +403,12 @@ class _WatchPageState extends State<WatchPage>
   }
 
   void _openNext() {
-    final next = _nextVideo;
+    final queued = _state.playback.queue.isNotEmpty
+        ? _state.playback.takeNext()
+        : null;
+    final next = queued ?? _nextVideo;
     if (!mounted || next == null) return;
-    final i = _nextPlaylistIndex;
+    final i = queued == null ? _nextPlaylistIndex : null;
     _replaceWith(
       i != null
           ? WatchPage(video: next, playlist: widget.playlist, index: i)
@@ -1019,6 +1023,50 @@ class _WatchPageState extends State<WatchPage>
                                       child: Text(l10n.loadMoreComments),
                                     ),
                             ),
+                        ],
+                        if (_state.playback.queue.isNotEmpty) ...[
+                          const SizedBox(height: 16),
+                          Text(
+                            l10n.upNext,
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                          const SizedBox(height: 8),
+                          ReorderableListView(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            onReorderItem: (from, to) =>
+                                _state.playback.moveQueued(from, to),
+                            children: [
+                              for (
+                                var i = 0;
+                                i < _state.playback.queue.length;
+                                i++
+                              )
+                                ListTile(
+                                  key: ValueKey(
+                                    'queue-$i-${_state.playback.queue[i].id}',
+                                  ),
+                                  dense: true,
+                                  leading: const Icon(Icons.drag_handle),
+                                  title: Text(
+                                    _state.playback.queue[i].title,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  trailing: IconButton(
+                                    icon: const Icon(Icons.close, size: 18),
+                                    onPressed: () =>
+                                        _state.playback.removeQueued(i),
+                                  ),
+                                  onTap: () {
+                                    final v = _state.playback.takeNextFrom(i);
+                                    if (v != null) {
+                                      _replaceWith(WatchPage(video: v));
+                                    }
+                                  },
+                                ),
+                            ],
+                          ),
                         ],
                         if (_related.isNotEmpty) ...[
                           const SizedBox(height: 16),

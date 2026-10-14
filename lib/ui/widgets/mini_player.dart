@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../../state/app_state.dart';
 import '../../state/playback_session.dart';
 import 'thumbnail.dart';
 
@@ -60,6 +61,17 @@ class MiniPlayer extends StatelessWidget {
                           ],
                         ),
                       ),
+                      if (session.queue.isNotEmpty)
+                        IconButton(
+                          tooltip: l10n.playNext,
+                          icon: const Icon(Icons.skip_next),
+                          onPressed: () {
+                            final next = session.takeNext();
+                            if (next != null) {
+                              AppScope.read(context).requestWatch(next);
+                            }
+                          },
+                        ),
                       StreamBuilder<bool>(
                         stream: player.playingStream,
                         initialData: player.playing,

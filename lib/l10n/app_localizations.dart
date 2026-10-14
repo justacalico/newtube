@@ -1430,23 +1430,29 @@ abstract class AppLocalizations {
   /// **'SHORTS'**
   String get shortsBadge;
 
-  /// No description provided for @resumedFrom.
+  /// No description provided for @playNext.
   ///
   /// In en_GB, this message translates to:
-  /// **'Resumed from {position}'**
-  String resumedFrom(String position);
+  /// **'Play next'**
+  String get playNext;
 
-  /// No description provided for @startOver.
+  /// No description provided for @addToQueue.
   ///
   /// In en_GB, this message translates to:
-  /// **'Start over'**
-  String get startOver;
+  /// **'Add to queue'**
+  String get addToQueue;
 
-  /// No description provided for @continueWatching.
+  /// No description provided for @queued.
   ///
   /// In en_GB, this message translates to:
-  /// **'Continue watching'**
-  String get continueWatching;
+  /// **'Added to queue'**
+  String get queued;
+
+  /// No description provided for @queuedNext.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Will play next'**
+  String get queuedNext;
 }
 
 class _AppLocalizationsDelegate
