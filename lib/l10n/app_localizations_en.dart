@@ -182,6 +182,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chapters => 'Chapters';
 
   @override
+  String get videoFit => 'Video fit';
+
+  @override
+  String get fitContain => 'Fit';
+
+  @override
+  String get fitCover => 'Zoom to fill';
+
+  @override
+  String get fitFill => 'Stretch';
+
+  @override
   String get about => 'About';
 
   @override
@@ -724,6 +736,18 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get chapters => 'Chapters';
+
+  @override
+  String get videoFit => 'Video fit';
+
+  @override
+  String get fitContain => 'Fit';
+
+  @override
+  String get fitCover => 'Zoom to fill';
+
+  @override
+  String get fitFill => 'Stretch';
 
   @override
   String get about => 'About';

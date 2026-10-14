@@ -440,6 +440,30 @@ abstract class AppLocalizations {
   /// **'Chapters'**
   String get chapters;
 
+  /// No description provided for @videoFit.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Video fit'**
+  String get videoFit;
+
+  /// No description provided for @fitContain.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Fit'**
+  String get fitContain;
+
+  /// No description provided for @fitCover.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Zoom to fill'**
+  String get fitCover;
+
+  /// No description provided for @fitFill.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Stretch'**
+  String get fitFill;
+
   /// No description provided for @about.
   ///
   /// In en_GB, this message translates to:

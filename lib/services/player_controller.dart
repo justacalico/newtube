@@ -14,6 +14,7 @@ abstract class PlayerController {
   double get rate;
   double get volume;
   bool get muted;
+  ValueNotifier<BoxFit> get videoFit;
 
   Stream<Duration> get positionStream;
   Stream<Duration> get durationStream;

@@ -178,6 +178,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get chapters => '章节';
 
   @override
+  String get videoFit => '画面缩放';
+
+  @override
+  String get fitContain => '适配';
+
+  @override
+  String get fitCover => '拉伸填充';
+
+  @override
+  String get fitFill => '拉伸';
+
+  @override
   String get about => '关于';
 
   @override
@@ -708,6 +720,18 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get chapters => '章节';
+
+  @override
+  String get videoFit => '画面缩放';
+
+  @override
+  String get fitContain => '适配';
+
+  @override
+  String get fitCover => '拉伸填充';
+
+  @override
+  String get fitFill => '拉伸';
 
   @override
   String get about => '关于';

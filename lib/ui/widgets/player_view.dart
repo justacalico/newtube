@@ -285,6 +285,24 @@ class _PlayerViewState extends State<PlayerView> {
           child: Text(l10n.playbackSpeed),
         ),
         SubmenuButton(
+          leadingIcon: const Icon(Icons.aspect_ratio),
+          menuChildren: [
+            for (final entry in [
+              (BoxFit.contain, l10n.fitContain),
+              (BoxFit.cover, l10n.fitCover),
+              (BoxFit.fill, l10n.fitFill),
+            ])
+              MenuItemButton(
+                onPressed: () => _player.videoFit.value = entry.$1,
+                leadingIcon: entry.$1 == _player.videoFit.value
+                    ? const Icon(Icons.check, size: 18)
+                    : const SizedBox(width: 18),
+                child: Text(entry.$2),
+              ),
+          ],
+          child: Text(l10n.videoFit),
+        ),
+        SubmenuButton(
           leadingIcon: const Icon(Icons.repeat),
           menuChildren: [
             for (final entry in [

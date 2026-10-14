@@ -183,6 +183,18 @@ class AppLocalizationsGa extends AppLocalizations {
   String get chapters => 'Caibidlí';
 
   @override
+  String get videoFit => 'Oiriúnú físe';
+
+  @override
+  String get fitContain => 'Oiriúnú';
+
+  @override
+  String get fitCover => 'Líon go hiomlán';
+
+  @override
+  String get fitFill => 'Sín';
+
+  @override
   String get about => 'Faoi';
 
   @override

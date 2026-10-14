@@ -182,6 +182,18 @@ class AppLocalizationsRu extends AppLocalizations {
   String get chapters => 'Главы';
 
   @override
+  String get videoFit => 'Масштаб видео';
+
+  @override
+  String get fitContain => 'По размеру';
+
+  @override
+  String get fitCover => 'Заполнить';
+
+  @override
+  String get fitFill => 'Растянуть';
+
+  @override
   String get about => 'О программе';
 
   @override

@@ -63,6 +63,10 @@ void touchAll(AppLocalizations l) {
   l.qualityLowest;
   l.defaultSpeed;
   l.chapters;
+  l.videoFit;
+  l.fitContain;
+  l.fitCover;
+  l.fitFill;
   l.about;
   l.version;
   l.checkForUpdates;
