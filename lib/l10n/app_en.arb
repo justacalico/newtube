@@ -54,6 +54,7 @@
   "defaultQuality": "Default video quality",
   "qualityAuto": "Auto",
   "qualityLowest": "Lowest",
+  "defaultSpeed": "Default playback speed",
   "about": "About",
   "version": "Version",
   "checkForUpdates": "Check for updates",

@@ -428,6 +428,12 @@ abstract class AppLocalizations {
   /// **'Lowest'**
   String get qualityLowest;
 
+  /// No description provided for @defaultSpeed.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Default playback speed'**
+  String get defaultSpeed;
+
   /// No description provided for @about.
   ///
   /// In en_GB, this message translates to:

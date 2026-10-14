@@ -54,6 +54,7 @@
   "defaultQuality": "默认视频画质",
   "qualityAuto": "自动",
   "qualityLowest": "最低",
+  "defaultSpeed": "默认播放速度",
   "about": "关于",
   "version": "版本",
   "checkForUpdates": "检查更新",

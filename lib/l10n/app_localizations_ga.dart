@@ -177,6 +177,9 @@ class AppLocalizationsGa extends AppLocalizations {
   String get qualityLowest => 'Is ísle';
 
   @override
+  String get defaultSpeed => 'Luas réamhshocraithe';
+
+  @override
   String get about => 'Faoi';
 
   @override

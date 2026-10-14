@@ -54,6 +54,7 @@
   "defaultQuality": "Качество по умолчанию",
   "qualityAuto": "Авто",
   "qualityLowest": "Минимальное",
+  "defaultSpeed": "Скорость по умолчанию",
   "about": "О программе",
   "version": "Версия",
   "checkForUpdates": "Проверить обновления",
