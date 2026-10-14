@@ -409,5 +409,9 @@
   "showRelated": "显示相关视频",
   "hiddenItems": "已隐藏的视频与频道",
   "notInterested": "不感兴趣",
-  "dontRecommendChannel": "不再推荐此频道"
+  "dontRecommendChannel": "不再推荐此频道",
+  "feedLayout": "信息流布局",
+  "feedGrid": "网格",
+  "feedList": "列表",
+  "feedCompact": "紧凑网格"
 }

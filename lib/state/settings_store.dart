@@ -17,6 +17,7 @@ class SettingsStore extends ChangeNotifier {
   static const _accentColorKey = 'accent_color';
   static const _showCommentsKey = 'show_comments';
   static const _showRelatedKey = 'show_related';
+  static const _feedDensityKey = 'feed_density';
   static const _localeKey = 'locale';
   static const _autoplayKey = 'autoplay';
   static const _proxyPrefixKey = 'proxy_prefix';
@@ -45,6 +46,7 @@ class SettingsStore extends ChangeNotifier {
   int _accentColor;
   bool _showComments;
   bool _showRelated;
+  int _feedDensity;
   Locale? _locale;
   bool _autoplay;
   String _proxyPrefix;
@@ -73,6 +75,7 @@ class SettingsStore extends ChangeNotifier {
     this._accentColor = 0xFFD32F2F,
     this._showComments = true,
     this._showRelated = true,
+    this._feedDensity = 0,
     this._locale,
     this._autoplay = true,
     this._proxyPrefix = '',
@@ -106,6 +109,7 @@ class SettingsStore extends ChangeNotifier {
       accentColor: prefs.getInt(_accentColorKey) ?? 0xFFD32F2F,
       showComments: prefs.getBool(_showCommentsKey) ?? true,
       showRelated: prefs.getBool(_showRelatedKey) ?? true,
+      feedDensity: prefs.getInt(_feedDensityKey) ?? 0,
       locale: _parseLocale(prefs.getString(_localeKey)),
       autoplay: prefs.getBool(_autoplayKey) ?? true,
       proxyPrefix: prefs.getString(_proxyPrefixKey) ?? '',
@@ -144,6 +148,7 @@ class SettingsStore extends ChangeNotifier {
     _accentColor = fresh._accentColor;
     _showComments = fresh._showComments;
     _showRelated = fresh._showRelated;
+    _feedDensity = fresh._feedDensity;
     _locale = fresh._locale;
     _autoplay = fresh._autoplay;
     _proxyPrefix = fresh._proxyPrefix;
@@ -187,6 +192,7 @@ class SettingsStore extends ChangeNotifier {
   int get accentColor => _accentColor;
   bool get showComments => _showComments;
   bool get showRelated => _showRelated;
+  int get feedDensity => _feedDensity;
   Locale? get locale => _locale;
   bool get autoplay => _autoplay;
   String get proxyPrefix => _proxyPrefix;
@@ -224,6 +230,12 @@ class SettingsStore extends ChangeNotifier {
   Future<void> setShowComments(bool value, SharedPreferences prefs) async {
     _showComments = value;
     await prefs.setBool(_showCommentsKey, value);
+    notifyListeners();
+  }
+
+  Future<void> setFeedDensity(int value, SharedPreferences prefs) async {
+    _feedDensity = value;
+    await prefs.setInt(_feedDensityKey, value);
     notifyListeners();
   }
 

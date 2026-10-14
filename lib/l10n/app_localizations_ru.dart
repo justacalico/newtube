@@ -1001,4 +1001,16 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get dontRecommendChannel => 'Не рекомендовать канал';
+
+  @override
+  String get feedLayout => 'Вид ленты';
+
+  @override
+  String get feedGrid => 'Сетка';
+
+  @override
+  String get feedList => 'Список';
+
+  @override
+  String get feedCompact => 'Компактная сетка';
 }

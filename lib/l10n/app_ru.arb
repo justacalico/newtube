@@ -409,5 +409,9 @@
   "showRelated": "Показывать похожие видео",
   "hiddenItems": "Скрытые видео и каналы",
   "notInterested": "Не интересует",
-  "dontRecommendChannel": "Не рекомендовать канал"
+  "dontRecommendChannel": "Не рекомендовать канал",
+  "feedLayout": "Вид ленты",
+  "feedGrid": "Сетка",
+  "feedList": "Список",
+  "feedCompact": "Компактная сетка"
 }

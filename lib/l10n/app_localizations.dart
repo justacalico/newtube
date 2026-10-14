@@ -1963,6 +1963,30 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Don\'t recommend channel'**
   String get dontRecommendChannel;
+
+  /// No description provided for @feedLayout.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Feed layout'**
+  String get feedLayout;
+
+  /// No description provided for @feedGrid.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Grid'**
+  String get feedGrid;
+
+  /// No description provided for @feedList.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'List'**
+  String get feedList;
+
+  /// No description provided for @feedCompact.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Compact grid'**
+  String get feedCompact;
 }
 
 class _AppLocalizationsDelegate

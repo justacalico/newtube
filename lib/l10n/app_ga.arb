@@ -409,5 +409,9 @@
   "showRelated": "Taispeáin físeáin ghaolmhara",
   "hiddenItems": "Físeáin agus cainéil i bhfolach",
   "notInterested": "Gan suim",
-  "dontRecommendChannel": "Ná mol an cainéal seo"
+  "dontRecommendChannel": "Ná mol an cainéal seo",
+  "feedLayout": "Leagan amach fotha",
+  "feedGrid": "Greille",
+  "feedList": "Liosta",
+  "feedCompact": "Greille dlúth"
 }

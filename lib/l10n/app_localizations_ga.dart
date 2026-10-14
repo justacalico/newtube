@@ -999,4 +999,16 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get dontRecommendChannel => 'Ná mol an cainéal seo';
+
+  @override
+  String get feedLayout => 'Leagan amach fotha';
+
+  @override
+  String get feedGrid => 'Greille';
+
+  @override
+  String get feedList => 'Liosta';
+
+  @override
+  String get feedCompact => 'Greille dlúth';
 }
