@@ -391,5 +391,17 @@
   "noAboutInfo": "Нет информации о канале",
   "accentColor": "Акцентный цвет",
   "errorAgeRestricted": "Видео с возрастным ограничением",
-  "errorUnavailable": "Видео недоступно"
+  "errorUnavailable": "Видео недоступно",
+  "keyboardShortcuts": "Горячие клавиши",
+  "shortcutPlayPause": "Воспроизведение / пауза",
+  "shortcutSeek": "Перемотка",
+  "shortcutVolume": "Громкость",
+  "shortcutMute": "Без звука",
+  "shortcutFullscreen": "Полный экран",
+  "shortcutNextPrev": "Следующее / предыдущее видео",
+  "shortcutPercent": "Переход по проценту",
+  "shortcutStartEnd": "В начало / конец",
+  "shortcutCaptions": "Субтитры",
+  "shortcutPip": "Мини-плеер",
+  "shortcutSpeed": "Скорость"
 }

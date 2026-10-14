@@ -37,6 +37,9 @@ class PlayerView extends StatefulWidget {
   final CaptionTrack? selectedCaption;
   final ValueChanged<CaptionTrack?>? onCaptionSelected;
   final VoidCallback? onDismiss;
+  final VoidCallback? onNext;
+  final VoidCallback? onPrevious;
+  final VoidCallback? onPip;
   final bool audioOnly;
   final String? artworkUrl;
   final ValueChanged<bool>? onAudioOnlyChanged;
@@ -63,6 +66,9 @@ class PlayerView extends StatefulWidget {
     this.selectedCaption,
     this.onCaptionSelected,
     this.onDismiss,
+    this.onNext,
+    this.onPrevious,
+    this.onPip,
     this.audioOnly = false,
     this.storyboard,
     this.heatmap = const [],
@@ -374,6 +380,69 @@ class _PlayerViewState extends State<PlayerView> {
     );
   }
 
+  void _seekPercent(double fraction) =>
+      widget.player.seek(widget.player.duration * fraction);
+
+  void _cycleCaption() {
+    final onCaption = widget.onCaptionSelected;
+    if (onCaption == null || widget.captions.isEmpty) return;
+    final idx = widget.captions.indexWhere((t) => t == widget.selectedCaption);
+    onCaption(
+      idx + 1 >= widget.captions.length ? null : widget.captions[idx + 1],
+    );
+  }
+
+  void _showShortcutsHelp() {
+    final l10n = AppLocalizations.of(context);
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.keyboardShortcuts),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final (keys, label) in [
+              ('Space / K', l10n.shortcutPlayPause),
+              ('J / L', l10n.shortcutSeek),
+              ('← / →', l10n.shortcutSeek),
+              ('↑ / ↓', l10n.shortcutVolume),
+              ('M', l10n.shortcutMute),
+              ('F', l10n.shortcutFullscreen),
+              ('N / P', l10n.shortcutNextPrev),
+              ('0–9', l10n.shortcutPercent),
+              ('Home / End', l10n.shortcutStartEnd),
+              ('C', l10n.shortcutCaptions),
+              ('I', l10n.shortcutPip),
+              (', / .', l10n.shortcutSpeed),
+            ])
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 90,
+                      child: Text(
+                        keys,
+                        style: const TextStyle(fontFamily: 'monospace'),
+                      ),
+                    ),
+                    Expanded(child: Text(label)),
+                  ],
+                ),
+              ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(l10n.close),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _togglePlayback() {
     _showControls();
     _player.playing ? _player.pause() : _player.play();
@@ -643,6 +712,27 @@ class _PlayerViewState extends State<PlayerView> {
             _adjustVolume(-0.05),
         const SingleActivator(LogicalKeyboardKey.comma): () => _stepRate(-1),
         const SingleActivator(LogicalKeyboardKey.period): () => _stepRate(1),
+        const SingleActivator(LogicalKeyboardKey.keyN): () =>
+            widget.onNext?.call(),
+        const SingleActivator(LogicalKeyboardKey.keyN, shift: true): () =>
+            widget.onNext?.call(),
+        const SingleActivator(LogicalKeyboardKey.keyP): () =>
+            widget.onPrevious?.call(),
+        const SingleActivator(LogicalKeyboardKey.keyP, shift: true): () =>
+            widget.onPrevious?.call(),
+        const SingleActivator(LogicalKeyboardKey.home): () =>
+            widget.player.seek(Duration.zero),
+        const SingleActivator(LogicalKeyboardKey.end): () =>
+            widget.player.seek(widget.player.duration),
+        const SingleActivator(LogicalKeyboardKey.keyI): () =>
+            widget.onPip?.call(),
+        const SingleActivator(LogicalKeyboardKey.keyC): _cycleCaption,
+        const SingleActivator(LogicalKeyboardKey.escape): () {},
+        const SingleActivator(LogicalKeyboardKey.slash, shift: true):
+            _showShortcutsHelp,
+        for (var i = 0; i <= 9; i++)
+          SingleActivator(LogicalKeyboardKey(0x00000030 + i)): () =>
+              _seekPercent(i / 10),
       },
       child: Focus(
         autofocus: true,

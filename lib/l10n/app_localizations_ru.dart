@@ -947,4 +947,40 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get errorUnavailable => 'Видео недоступно';
+
+  @override
+  String get keyboardShortcuts => 'Горячие клавиши';
+
+  @override
+  String get shortcutPlayPause => 'Воспроизведение / пауза';
+
+  @override
+  String get shortcutSeek => 'Перемотка';
+
+  @override
+  String get shortcutVolume => 'Громкость';
+
+  @override
+  String get shortcutMute => 'Без звука';
+
+  @override
+  String get shortcutFullscreen => 'Полный экран';
+
+  @override
+  String get shortcutNextPrev => 'Следующее / предыдущее видео';
+
+  @override
+  String get shortcutPercent => 'Переход по проценту';
+
+  @override
+  String get shortcutStartEnd => 'В начало / конец';
+
+  @override
+  String get shortcutCaptions => 'Субтитры';
+
+  @override
+  String get shortcutPip => 'Мини-плеер';
+
+  @override
+  String get shortcutSpeed => 'Скорость';
 }

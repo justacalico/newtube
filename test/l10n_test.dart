@@ -193,6 +193,18 @@ void touchAll(AppLocalizations l) {
   l.accentColor;
   l.errorAgeRestricted;
   l.errorUnavailable;
+  l.keyboardShortcuts;
+  l.shortcutPlayPause;
+  l.shortcutSeek;
+  l.shortcutVolume;
+  l.shortcutMute;
+  l.shortcutFullscreen;
+  l.shortcutNextPrev;
+  l.shortcutPercent;
+  l.shortcutStartEnd;
+  l.shortcutCaptions;
+  l.shortcutPip;
+  l.shortcutSpeed;
   l.playNow;
   l.showReplies;
   l.hideReplies;

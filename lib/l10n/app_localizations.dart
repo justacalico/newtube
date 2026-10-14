@@ -1855,6 +1855,78 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'This video is unavailable'**
   String get errorUnavailable;
+
+  /// No description provided for @keyboardShortcuts.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Keyboard shortcuts'**
+  String get keyboardShortcuts;
+
+  /// No description provided for @shortcutPlayPause.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Play / pause'**
+  String get shortcutPlayPause;
+
+  /// No description provided for @shortcutSeek.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Seek'**
+  String get shortcutSeek;
+
+  /// No description provided for @shortcutVolume.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Volume'**
+  String get shortcutVolume;
+
+  /// No description provided for @shortcutMute.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Mute'**
+  String get shortcutMute;
+
+  /// No description provided for @shortcutFullscreen.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Fullscreen'**
+  String get shortcutFullscreen;
+
+  /// No description provided for @shortcutNextPrev.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Next / previous video'**
+  String get shortcutNextPrev;
+
+  /// No description provided for @shortcutPercent.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Jump to percentage'**
+  String get shortcutPercent;
+
+  /// No description provided for @shortcutStartEnd.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Jump to start / end'**
+  String get shortcutStartEnd;
+
+  /// No description provided for @shortcutCaptions.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Cycle captions'**
+  String get shortcutCaptions;
+
+  /// No description provided for @shortcutPip.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Mini player'**
+  String get shortcutPip;
+
+  /// No description provided for @shortcutSpeed.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Playback speed'**
+  String get shortcutSpeed;
 }
 
 class _AppLocalizationsDelegate

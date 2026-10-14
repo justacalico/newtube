@@ -391,5 +391,17 @@
   "noAboutInfo": "Gan eolas cainéal",
   "accentColor": "Dath béime",
   "errorAgeRestricted": "Físeán faoi theorainn aoise",
-  "errorUnavailable": "Níl an físeán ar fáil"
+  "errorUnavailable": "Níl an físeán ar fáil",
+  "keyboardShortcuts": "Aicearraí méarchláir",
+  "shortcutPlayPause": "Seinn / sos",
+  "shortcutSeek": "Lorg",
+  "shortcutVolume": "Toirt",
+  "shortcutMute": "Balbhaigh",
+  "shortcutFullscreen": "Lánscáileán",
+  "shortcutNextPrev": "Físeán roimhe / ina dhiaidh",
+  "shortcutPercent": "Léim go céatadán",
+  "shortcutStartEnd": "Tús / deireadh",
+  "shortcutCaptions": "Fotheidil",
+  "shortcutPip": "Mion-réamhamharc",
+  "shortcutSpeed": "Luas athsheinm"
 }

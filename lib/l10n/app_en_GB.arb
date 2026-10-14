@@ -391,5 +391,17 @@
   "noAboutInfo": "No channel info",
   "accentColor": "Accent colour",
   "errorAgeRestricted": "This video is age-restricted",
-  "errorUnavailable": "This video is unavailable"
+  "errorUnavailable": "This video is unavailable",
+  "keyboardShortcuts": "Keyboard shortcuts",
+  "shortcutPlayPause": "Play / pause",
+  "shortcutSeek": "Seek",
+  "shortcutVolume": "Volume",
+  "shortcutMute": "Mute",
+  "shortcutFullscreen": "Fullscreen",
+  "shortcutNextPrev": "Next / previous video",
+  "shortcutPercent": "Jump to percentage",
+  "shortcutStartEnd": "Jump to start / end",
+  "shortcutCaptions": "Cycle captions",
+  "shortcutPip": "Mini player",
+  "shortcutSpeed": "Playback speed"
 }
