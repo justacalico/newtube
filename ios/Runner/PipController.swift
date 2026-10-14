@@ -98,7 +98,7 @@ final class PipController: NSObject {
       if let videoTrack = try await videoAsset.loadTracks(withMediaType: .video).first,
          let track = composition.addMutableTrack(
            withMediaType: .video,
-           preferredTrackID: CMPersistentTrackId(0)
+           preferredTrackID: 0
          ) {
         let duration = try await videoAsset.load(.duration)
         try track.insertTimeRange(
@@ -110,7 +110,7 @@ final class PipController: NSObject {
       if let audioTrack = try await audioAsset.loadTracks(withMediaType: .audio).first,
          let track = composition.addMutableTrack(
            withMediaType: .audio,
-           preferredTrackID: CMPersistentTrackId(0)
+           preferredTrackID: 0
          ) {
         let duration = try await audioAsset.load(.duration)
         try track.insertTimeRange(
