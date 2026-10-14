@@ -302,5 +302,18 @@
         "type": "String"
       }
     }
+  },
+  "playlistName": "Playlist name",
+  "save": "Save",
+  "shufflePlay": "Shuffle play",
+  "exportPlaylist": "Export playlist",
+  "exportCancelled": "Export cancelled",
+  "exportedTo": "Exported to {path}",
+  "@exportedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
   }
 }

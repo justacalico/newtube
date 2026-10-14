@@ -1,8 +1,12 @@
+import 'dart:math';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../state/app_state.dart';
+import '../../utils/format.dart';
 import '../widgets/video_list_tile.dart';
 import 'watch_page.dart';
 
@@ -20,6 +24,72 @@ class LocalPlaylistPage extends StatelessWidget {
     );
   }
 
+  void _rename(BuildContext context, PlaylistInfo playlist) {
+    final state = AppScope.read(context);
+    final l10n = AppLocalizations.of(context);
+    final controller = TextEditingController(text: playlist.title);
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.renamePlaylist),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: InputDecoration(labelText: l10n.playlistName),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () {
+              final title = controller.text.trim();
+              if (title.isNotEmpty) {
+                state.playlists.rename(playlist.id, title, state.prefs);
+              }
+              Navigator.of(context).pop();
+            },
+            child: Text(l10n.save),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _shufflePlay(BuildContext context, PlaylistInfo playlist) {
+    final state = AppScope.read(context);
+    state.playback.shuffle = true;
+    final start = Random().nextInt(playlist.videos.length);
+    _openVideo(context, playlist, start);
+  }
+
+  Future<void> _export(BuildContext context, PlaylistInfo playlist) async {
+    final state = AppScope.read(context);
+    final l10n = AppLocalizations.of(context);
+    final urls = playlist.videos
+        .map((v) => 'https://www.youtube.com/watch?v=${v.id}')
+        .join('\n');
+    final messenger = ScaffoldMessenger.of(context);
+    final save = state.saveFile;
+    if (save != null) {
+      final path = await save(
+        '${playlist.title}.txt',
+        Uint8List.fromList(urls.codeUnits),
+        extension: 'txt',
+      );
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(
+            path == null ? l10n.exportCancelled : l10n.exportedTo(path),
+          ),
+        ),
+      );
+    } else {
+      state.share?.share(urls);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = AppScope.of(context);
@@ -30,7 +100,28 @@ class LocalPlaylistPage extends StatelessWidget {
       builder: (context, _) {
         final playlist = state.playlists.byId(playlistId);
         return Scaffold(
-          appBar: AppBar(title: Text(playlist?.title ?? '')),
+          appBar: AppBar(
+            title: Text(playlist?.title ?? ''),
+            actions: [
+              if (playlist != null) ...[
+                IconButton(
+                  tooltip: l10n.shufflePlay,
+                  icon: const Icon(Icons.shuffle),
+                  onPressed: () => _shufflePlay(context, playlist),
+                ),
+                IconButton(
+                  tooltip: l10n.renamePlaylist,
+                  icon: const Icon(Icons.edit_outlined),
+                  onPressed: () => _rename(context, playlist),
+                ),
+                IconButton(
+                  tooltip: l10n.exportPlaylist,
+                  icon: const Icon(Icons.ios_share),
+                  onPressed: () => _export(context, playlist),
+                ),
+              ],
+            ],
+          ),
           body: playlist == null || playlist.videos.isEmpty
               ? Center(child: Text(l10n.playlistEmpty))
               : CustomScrollView(
@@ -47,29 +138,39 @@ class LocalPlaylistPage extends StatelessWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              l10n.videoCount(playlist.videos.length),
+                              '${l10n.videoCount(playlist.videos.length)} · ${formatDuration(Duration(seconds: playlist.videos.fold<int>(0, (sum, v) => sum + (v.duration?.inSeconds ?? 0))))}',
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                           ],
                         ),
                       ),
                     ),
-                    SliverList.builder(
+                    SliverReorderableList(
                       itemCount: playlist.videos.length,
+                      onReorderItem: (from, to) => state.playlists.moveVideo(
+                        playlist.id,
+                        from,
+                        to,
+                        state.prefs,
+                      ),
                       itemBuilder: (context, index) {
                         final video = playlist.videos[index];
-                        return VideoListTile(
-                          video: video,
-                          trailing: IconButton(
-                            tooltip: l10n.removeFromPlaylist,
-                            icon: const Icon(Icons.remove_circle_outline),
-                            onPressed: () => state.playlists.removeVideo(
-                              playlist.id,
-                              video.id,
-                              state.prefs,
+                        return ReorderableDelayedDragStartListener(
+                          key: ValueKey('pl-$index-${video.id}'),
+                          index: index,
+                          child: VideoListTile(
+                            video: video,
+                            trailing: IconButton(
+                              tooltip: l10n.removeFromPlaylist,
+                              icon: const Icon(Icons.remove_circle_outline),
+                              onPressed: () => state.playlists.removeVideo(
+                                playlist.id,
+                                video.id,
+                                state.prefs,
+                              ),
                             ),
+                            onTap: () => _openVideo(context, playlist, index),
                           ),
-                          onTap: () => _openVideo(context, playlist, index),
                         );
                       },
                     ),

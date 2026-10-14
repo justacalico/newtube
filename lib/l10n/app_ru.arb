@@ -302,5 +302,18 @@
         "type": "String"
       }
     }
+  },
+  "playlistName": "Название плейлиста",
+  "save": "Сохранить",
+  "shufflePlay": "Воспроизвести вперемешку",
+  "exportPlaylist": "Экспорт плейлиста",
+  "exportCancelled": "Экспорт отменён",
+  "exportedTo": "Экспортировано в {path}",
+  "@exportedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
   }
 }

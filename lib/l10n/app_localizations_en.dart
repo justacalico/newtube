@@ -748,6 +748,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get downloadsNav => 'Downloads';
+
+  @override
+  String get playlistName => 'Playlist name';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get shufflePlay => 'Shuffle play';
+
+  @override
+  String get exportPlaylist => 'Export playlist';
+
+  @override
+  String get exportCancelled => 'Export cancelled';
+
+  @override
+  String exportedTo(String path) {
+    return 'Exported to $path';
+  }
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1493,4 +1513,24 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get downloadsNav => 'Downloads';
+
+  @override
+  String get playlistName => 'Playlist name';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get shufflePlay => 'Shuffle play';
+
+  @override
+  String get exportPlaylist => 'Export playlist';
+
+  @override
+  String get exportCancelled => 'Export cancelled';
+
+  @override
+  String exportedTo(String path) {
+    return 'Exported to $path';
+  }
 }

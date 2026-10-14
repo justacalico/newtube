@@ -735,6 +735,26 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get downloadsNav => '下载';
+
+  @override
+  String get playlistName => '播放列表名称';
+
+  @override
+  String get save => '保存';
+
+  @override
+  String get shufflePlay => '随机播放';
+
+  @override
+  String get exportPlaylist => '导出播放列表';
+
+  @override
+  String get exportCancelled => '导出已取消';
+
+  @override
+  String exportedTo(String path) {
+    return '已导出到 $path';
+  }
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1467,4 +1487,24 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get downloadsNav => '下载';
+
+  @override
+  String get playlistName => '播放列表名称';
+
+  @override
+  String get save => '保存';
+
+  @override
+  String get shufflePlay => '随机播放';
+
+  @override
+  String get exportPlaylist => '导出播放列表';
+
+  @override
+  String get exportCancelled => '导出已取消';
+
+  @override
+  String exportedTo(String path) {
+    return '已导出到 $path';
+  }
 }

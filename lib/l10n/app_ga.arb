@@ -273,7 +273,7 @@
   "playlistNameHint": "Ainm an tseinmliosta",
   "create": "Cruthaigh",
   "rename": "Athainmnigh",
-  "renamePlaylist": "Athainmnigh an seinmliosta",
+  "renamePlaylist": "Athainmnigh an seinnliosta",
   "delete": "Scrios",
   "deletePlaylist": "Scrios an seinmliosta",
   "deletePlaylistConfirm": "Fanfaidh na físeáin i do stair.",
@@ -297,6 +297,19 @@
   "pickDownloadStream": "Roghnaigh cáilíocht le hioslódáil",
   "downloadsNav": "Íoslódálaí",
   "@downloadedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "playlistName": "Ainm an tseinnliosta",
+  "save": "Sábháil",
+  "shufflePlay": "Seinn go randamach",
+  "exportPlaylist": "Easpórtáil seinnliosta",
+  "exportCancelled": "Cealaíodh an easpórtáil",
+  "exportedTo": "Easpórtáilte go {path}",
+  "@exportedTo": {
     "placeholders": {
       "path": {
         "type": "String"

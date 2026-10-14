@@ -141,6 +141,13 @@ void touchAll(AppLocalizations l) {
   l.downloadFailed;
   l.pickDownloadStream;
   l.downloadsNav;
+  l.renamePlaylist;
+  l.playlistName;
+  l.save;
+  l.shufflePlay;
+  l.exportPlaylist;
+  l.exportCancelled;
+  l.exportedTo('/tmp/x');
   l.playNow;
   l.showReplies;
   l.hideReplies;
