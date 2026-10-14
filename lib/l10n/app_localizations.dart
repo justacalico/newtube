@@ -1205,7 +1205,7 @@ abstract class AppLocalizations {
   /// No description provided for @importSubscriptionsHint.
   ///
   /// In en_GB, this message translates to:
-  /// **'From an OPML file (NewPipe, FreeTube, Takeout)'**
+  /// **'Import subscriptions from OPML or a YouTube Takeout CSV'**
   String get importSubscriptionsHint;
 
   /// No description provided for @exportSubscriptions.

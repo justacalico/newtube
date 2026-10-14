@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xml/xml.dart';
 
@@ -39,13 +41,38 @@ List<OpmlEntry> parseOpml(String text) {
 
 final _channelIdPattern = RegExp(r'(?:channel_id=|/channel/)([\w-]+)');
 
+List<OpmlEntry> parseTakeoutCsv(String text) {
+  final entries = <OpmlEntry>[];
+  for (var line in const LineSplitter().convert(text)) {
+    line = line.trim();
+    if (line.isEmpty) continue;
+    final parts = line.split(',');
+    if (parts.length < 3) continue;
+    final id = parts[0].trim();
+    if (!id.startsWith('UC')) continue;
+    final title = parts
+        .sublist(2)
+        .join(',')
+        .trim()
+        .replaceAll(RegExp(r'^"|"$'), '');
+    entries.add(
+      OpmlEntry(title: title, url: 'https://www.youtube.com/channel/$id'),
+    );
+  }
+  return entries;
+}
+
+bool looksLikeTakeoutCsv(String text) => parseTakeoutCsv(text).isNotEmpty;
+
 Future<OpmlImportResult> importOpml(
   String opml,
   YouTubeApi api,
   SubscriptionsStore store,
   SharedPreferences prefs,
 ) async {
-  final entries = parseOpml(opml);
+  final entries = looksLikeTakeoutCsv(opml)
+      ? parseTakeoutCsv(opml)
+      : parseOpml(opml);
   var imported = 0;
   var failed = 0;
   for (final entry in entries) {

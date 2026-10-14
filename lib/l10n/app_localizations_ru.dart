@@ -591,7 +591,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get importSubscriptionsHint =>
-      'Из файла OPML (NewPipe, FreeTube, Takeout)';
+      'Импорт подписок из OPML или CSV из YouTube Takeout';
 
   @override
   String get exportSubscriptions => 'Экспорт подписок';

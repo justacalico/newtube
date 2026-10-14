@@ -204,7 +204,7 @@
     }
   },
   "importSubscriptions": "Import subscriptions",
-  "importSubscriptionsHint": "From an OPML file (NewPipe, FreeTube, Takeout)",
+  "importSubscriptionsHint": "Import subscriptions from OPML or a YouTube Takeout CSV",
   "exportSubscriptions": "Export subscriptions",
   "exportSubscriptionsHint": "Save the subscription list as OPML",
   "subscriptionsImported": "Imported {imported} channels, {failed} failed",

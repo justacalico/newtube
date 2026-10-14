@@ -586,7 +586,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get importSubscriptionsHint =>
-      'From an OPML file (NewPipe, FreeTube, Takeout)';
+      'Import subscriptions from OPML or a YouTube Takeout CSV';
 
   @override
   String get exportSubscriptions => 'Export subscriptions';
@@ -1423,7 +1423,7 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get importSubscriptionsHint =>
-      'From an OPML file (NewPipe, FreeTube, Takeout)';
+      'Import subscriptions from OPML or a YouTube Takeout CSV';
 
   @override
   String get exportSubscriptions => 'Export subscriptions';
