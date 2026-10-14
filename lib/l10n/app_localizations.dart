@@ -1987,6 +1987,18 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Compact grid'**
   String get feedCompact;
+
+  /// No description provided for @dataSaver.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Data saver'**
+  String get dataSaver;
+
+  /// No description provided for @dataSaverHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Hide thumbnails and cap quality at 480p'**
+  String get dataSaverHint;
 }
 
 class _AppLocalizationsDelegate

@@ -230,7 +230,11 @@ class _WatchPageState extends State<WatchPage>
         final choice = pickDefaultStream(
           details.streams,
           desktop: isDesktopPlatform,
-          preferredQuality: state.settings.preferredQuality,
+          preferredQuality: state.settings.dataSaver
+              ? (state.settings.preferredQuality <= 0
+                    ? 480
+                    : state.settings.preferredQuality.clamp(-1, 480))
+              : state.settings.preferredQuality,
           preferredCodec: state.settings.preferredCodec,
         );
         _videoStream = choice?.stream;

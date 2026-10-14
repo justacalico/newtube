@@ -413,5 +413,7 @@
   "feedLayout": "Вид ленты",
   "feedGrid": "Сетка",
   "feedList": "Список",
-  "feedCompact": "Компактная сетка"
+  "feedCompact": "Компактная сетка",
+  "dataSaver": "Экономия трафика",
+  "dataSaverHint": "Скрыть миниатюры и ограничить качество 480p"
 }

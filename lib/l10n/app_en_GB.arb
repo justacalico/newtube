@@ -413,5 +413,7 @@
   "feedLayout": "Feed layout",
   "feedGrid": "Grid",
   "feedList": "List",
-  "feedCompact": "Compact grid"
+  "feedCompact": "Compact grid",
+  "dataSaver": "Data saver",
+  "dataSaverHint": "Hide thumbnails and cap quality at 480p"
 }

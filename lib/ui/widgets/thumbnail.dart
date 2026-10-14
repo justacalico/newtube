@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../state/app_state.dart';
+
 class VideoThumbnail extends StatelessWidget {
   final String? url;
   final double? width;
@@ -23,7 +25,11 @@ class VideoThumbnail extends StatelessWidget {
       child: const Icon(Icons.play_circle_outline, size: 32),
     );
 
-    if (url == null || url!.isEmpty) {
+    final scope =
+        context.getElementForInheritedWidgetOfExactType<AppScope>()?.widget
+            as AppScope?;
+    final saver = scope?.notifier?.settings.dataSaver ?? false;
+    if (url == null || url!.isEmpty || saver) {
       return ClipRRect(borderRadius: borderRadius, child: placeholder);
     }
 

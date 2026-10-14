@@ -413,5 +413,7 @@
   "feedLayout": "Leagan amach fotha",
   "feedGrid": "Greille",
   "feedList": "Liosta",
-  "feedCompact": "Greille dlúth"
+  "feedCompact": "Greille dlúth",
+  "dataSaver": "Sábháil sonraí",
+  "dataSaverHint": "Folaigh mionsamhlacha agus teorainn 480p"
 }

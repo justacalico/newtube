@@ -1013,4 +1013,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get feedCompact => 'Компактная сетка';
+
+  @override
+  String get dataSaver => 'Экономия трафика';
+
+  @override
+  String get dataSaverHint => 'Скрыть миниатюры и ограничить качество 480p';
 }
