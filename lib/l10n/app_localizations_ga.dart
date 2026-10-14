@@ -720,4 +720,15 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get shortsBadge => 'SHORTS';
+
+  @override
+  String resumedFrom(String position) {
+    return 'Lean ar aghaidh ó $position';
+  }
+
+  @override
+  String get startOver => 'Tosaigh arís';
+
+  @override
+  String get continueWatching => 'Lean ort ag féachaint';
 }

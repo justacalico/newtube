@@ -140,6 +140,8 @@ class _WatchPageState extends State<WatchPage>
     if (!mounted || player == null || !_sharedPlayer) return;
     if (identical(_state.playback.player, player)) return;
     _sharedPlayer = false;
+    _positionTimer?.cancel();
+    _positionTimer = null;
     _completedSub?.cancel();
     _completedSub = null;
     _skipper?.dispose();
@@ -247,8 +249,27 @@ class _WatchPageState extends State<WatchPage>
             await player.setRate(
               session.lastRate ?? state.settings.defaultSpeed,
             );
-            if (widget.startSeconds > 0) {
-              await player.seek(Duration(seconds: widget.startSeconds));
+            final resumed = widget.startSeconds == 0;
+            final resumeSeconds = widget.startSeconds > 0
+                ? widget.startSeconds
+                : (state.history.positionFor(widget.video.id)?.inSeconds ?? 0);
+            if (resumeSeconds > 0) {
+              await player.seek(Duration(seconds: resumeSeconds));
+              if (resumed && mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      AppLocalizations.of(context).resumedFrom(
+                        formatDuration(Duration(seconds: resumeSeconds)),
+                      ),
+                    ),
+                    action: SnackBarAction(
+                      label: AppLocalizations.of(context).startOver,
+                      onPressed: () => player.seek(Duration.zero),
+                    ),
+                  ),
+                );
+              }
             }
             if (!state.settings.autoplay) {
               await player.pause();
@@ -311,8 +332,15 @@ class _WatchPageState extends State<WatchPage>
             });
       }
       _loadSegments(player);
+      _positionTimer = Timer.periodic(const Duration(seconds: 5), (_) {
+        final pos = _player?.position;
+        if (pos != null && pos > Duration.zero) {
+          state.history.savePosition(widget.video.id, pos, state.prefs);
+        }
+      });
       _completedSub = player.completedStream.listen((done) {
         if (!done) return;
+        unawaited(state.history.clearPosition(widget.video.id, state.prefs));
         if (state.playback.repeatMode == RepeatMode.one) {
           _replay(player);
         } else if (state.settings.autoplay &&
@@ -440,6 +468,7 @@ class _WatchPageState extends State<WatchPage>
 
   CommentSort _commentSort = CommentSort.top;
   Timer? _autoplayTimer;
+  Timer? _positionTimer;
   bool _autoplayPending = false;
 
   void _startAutoplayCountdown() {
@@ -638,6 +667,18 @@ class _WatchPageState extends State<WatchPage>
     watchRouteObserver.unsubscribe(this);
     _state.playback.removeListener(_onSessionChanged);
     _completedSub?.cancel();
+    _positionTimer?.cancel();
+    final pos = _player?.position;
+    final dur = _player?.duration;
+    if (pos != null && pos > Duration.zero) {
+      if (dur != null && dur > Duration.zero && pos >= dur * 0.95) {
+        unawaited(_state.history.clearPosition(widget.video.id, _state.prefs));
+      } else {
+        unawaited(
+          _state.history.savePosition(widget.video.id, pos, _state.prefs),
+        );
+      }
+    }
     _autoplayTimer?.cancel();
     _skipper?.dispose();
     final player = _player;

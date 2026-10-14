@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../state/app_state.dart';
+
 import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../utils/format.dart';
@@ -75,6 +77,34 @@ class VideoCard extends StatelessWidget {
                         ),
                       ),
                     ),
+                  Builder(
+                    builder: (context) {
+                      final state = AppScope.read(context);
+                      final pos = state.history.positionFor(video.id);
+                      final total = video.duration;
+                      if (pos == null ||
+                          pos <= Duration.zero ||
+                          total == null ||
+                          total <= Duration.zero) {
+                        return const SizedBox.shrink();
+                      }
+                      final frac = (pos.inMilliseconds / total.inMilliseconds)
+                          .clamp(0.0, 1.0);
+                      return Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        child: LinearProgressIndicator(
+                          value: frac,
+                          minHeight: 3,
+                          backgroundColor: Colors.black54,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Theme.of(context).colorScheme.error,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                   if (video.isLive)
                     const Positioned(right: 6, bottom: 6, child: LiveBadge())
                   else if (video.isUpcoming)

@@ -723,4 +723,15 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get shortsBadge => 'SHORTS';
+
+  @override
+  String resumedFrom(String position) {
+    return 'Продолжено с $position';
+  }
+
+  @override
+  String get startOver => 'Сначала';
+
+  @override
+  String get continueWatching => 'Продолжить просмотр';
 }

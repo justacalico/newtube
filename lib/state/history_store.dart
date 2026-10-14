@@ -10,24 +10,66 @@ class HistoryStore extends ChangeNotifier {
   static const _maxEntries = 200;
 
   final List<VideoInfo> _entries;
+  final Map<String, int> _positions;
 
-  HistoryStore([List<VideoInfo>? entries])
-    : _entries = List.of(entries ?? const []);
+  HistoryStore([List<VideoInfo>? entries, Map<String, int>? positions])
+    : _entries = List.of(entries ?? const []),
+      _positions = Map.of(positions ?? const {});
+
+  static const _positionsKey = 'history_positions';
 
   static Future<HistoryStore> load(SharedPreferences prefs) async {
     final raw = prefs.getString(_key);
-    if (raw == null) return HistoryStore();
+    final positions = <String, int>{};
+    final rawPos = prefs.getString(_positionsKey);
+    if (rawPos != null) {
+      try {
+        final decoded = jsonDecode(rawPos);
+        if (decoded is Map) {
+          decoded.forEach((k, v) {
+            if (k is String && v is int) positions[k] = v;
+          });
+        }
+      } catch (_) {}
+    }
+    if (raw == null) return HistoryStore(null, positions);
     try {
       final decoded = jsonDecode(raw);
-      if (decoded is! List) return HistoryStore();
+      if (decoded is! List) return HistoryStore(null, positions);
       return HistoryStore([
         for (final e in decoded)
           if (e is Map<String, dynamic>) _decodeVideo(e),
-      ]);
+      ], positions);
     } catch (_) {
-      return HistoryStore();
+      return HistoryStore(null, positions);
     }
   }
+
+  Duration? positionFor(String videoId) {
+    final seconds = _positions[videoId];
+    return seconds == null ? null : Duration(seconds: seconds);
+  }
+
+  Future<void> savePosition(
+    String videoId,
+    Duration position,
+    SharedPreferences prefs,
+  ) async {
+    _positions[videoId] = position.inSeconds;
+    await prefs.setString(_positionsKey, jsonEncode(_positions));
+    notifyListeners();
+  }
+
+  Future<void> clearPosition(String videoId, SharedPreferences prefs) async {
+    if (_positions.remove(videoId) == null) return;
+    await prefs.setString(_positionsKey, jsonEncode(_positions));
+    notifyListeners();
+  }
+
+  List<VideoInfo> get inProgress => [
+    for (final v in _entries)
+      if ((_positions[v.id] ?? 0) > 0) v,
+  ];
 
   static VideoInfo _decodeVideo(Map<String, dynamic> json) => VideoInfo(
     id: json['id'] as String? ?? '',
@@ -58,7 +100,9 @@ class HistoryStore extends ChangeNotifier {
 
   Future<void> clear(SharedPreferences prefs) async {
     _entries.clear();
+    _positions.clear();
     await _save(prefs);
+    await prefs.setString(_positionsKey, '{}');
     notifyListeners();
   }
 

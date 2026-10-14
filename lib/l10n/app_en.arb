@@ -285,5 +285,15 @@
   "videoActions": "More options",
   "hideShorts": "Hide Shorts",
   "hideShortsHint": "Filter Shorts out of feeds and search",
-  "shortsBadge": "SHORTS"
+  "shortsBadge": "SHORTS",
+  "resumedFrom": "Resumed from {position}",
+  "startOver": "Start over",
+  "continueWatching": "Continue watching",
+  "@resumedFrom": {
+    "placeholders": {
+      "position": {
+        "type": "String"
+      }
+    }
+  }
 }

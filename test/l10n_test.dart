@@ -12,6 +12,9 @@ void touchAll(AppLocalizations l) {
   l.hideShorts;
   l.hideShortsHint;
   l.shortsBadge;
+  l.resumedFrom('1:23');
+  l.startOver;
+  l.continueWatching;
   l.navTrending;
   l.filterSort;
   l.filterType;

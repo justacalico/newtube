@@ -285,5 +285,15 @@
   "videoActions": "Tuilleadh roghanna",
   "hideShorts": "Folaigh Shorts",
   "hideShortsHint": "Scag Shorts as fothaí agus cuardaigh",
-  "shortsBadge": "SHORTS"
+  "shortsBadge": "SHORTS",
+  "resumedFrom": "Lean ar aghaidh ó {position}",
+  "startOver": "Tosaigh arís",
+  "continueWatching": "Lean ort ag féachaint",
+  "@resumedFrom": {
+    "placeholders": {
+      "position": {
+        "type": "String"
+      }
+    }
+  }
 }
