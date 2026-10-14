@@ -227,7 +227,7 @@ class InvidiousApi implements YouTubeApi {
     CommentSort? sort,
   }) async {
     final body = await _get('/api/v1/comments/$videoId', {
-      if (continuation != null) 'continuation': continuation,
+      'continuation': ?continuation,
       if (sort != null) 'sort_by': sort == CommentSort.top ? 'top' : 'new',
     });
     if (body is! Map<String, dynamic>) return const CommentsResult();

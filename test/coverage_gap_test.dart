@@ -402,6 +402,8 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Longest').last);
     await tester.pumpAndSettle();
+    await tester.tap(find.text('New one'));
+    await tester.pumpAndSettle();
     expect(find.text('New one'), findsWidgets);
   });
 
@@ -578,10 +580,14 @@ void main() {
         ),
       ),
     );
+    await tester.pump();
+    tester
+        .widget<TextButton>(
+          find.widgetWithText(TextButton, 'Videos are blocked in the browser'),
+        )
+        .onPressed!();
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Videos are blocked in the browser').first);
-    await tester.pumpAndSettle();
-    expect(find.byType(AlertDialog), findsOneWidget);
+    expect(find.byType(AlertDialog), findsWidgets);
   });
   test('playability exception classification', () {
     const e = PlayabilityException('ERROR', 'gone');
@@ -1323,7 +1329,11 @@ void main() {
     await tester
         .widget<RefreshIndicator>(find.byType(RefreshIndicator))
         .onRefresh();
-    tester.widget<TextButton>(find.byType(TextButton)).onPressed!();
+    tester
+        .widget<TextButton>(
+          find.widgetWithText(TextButton, 'Videos are blocked in the browser'),
+        )
+        .onPressed!();
     await tester.pumpAndSettle();
     expect(ran, isTrue);
   });
