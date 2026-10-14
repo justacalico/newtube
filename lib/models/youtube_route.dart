@@ -54,6 +54,7 @@ int _timeParam(String? raw) {
 
 bool looksLikeYouTubeLink(String text) {
   var t = text.trim();
+  if (t.startsWith('newtube://')) return true;
   if (!t.contains('://')) t = 'https://$t';
   final uri = Uri.tryParse(t);
   if (uri == null) return false;
@@ -65,6 +66,9 @@ bool looksLikeYouTubeLink(String text) {
 
 YouTubeRoute? parseYouTubeLink(String text) {
   var t = text.trim();
+  if (t.startsWith('newtube://')) {
+    t = 'https://youtube.com/${t.substring(10)}';
+  }
   if (!t.contains('://')) t = 'https://$t';
   final uri = Uri.tryParse(t);
   if (uri == null || !looksLikeYouTubeLink(text)) return null;

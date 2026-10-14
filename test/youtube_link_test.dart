@@ -67,6 +67,8 @@ void main() {
       expect(parseYouTubeLink('plain search text'), isNull);
       expect(parseYouTubeLink('https://example.com/watch?v=x'), isNull);
       expect(looksLikeYouTubeLink('youtube.com/watch?v=x'), isTrue);
+      expect(parseYouTubeLink('newtube://watch?v=abc')!.videoId, 'abc');
+      expect(parseYouTubeLink('newtube://channel/UC9')!.channelId, 'UC9');
       expect(looksLikeYouTubeLink('https://notyoutube.com'), isFalse);
     });
   });
