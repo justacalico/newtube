@@ -1011,6 +1011,8 @@ void main() {
     expect(player.paused, isFalse);
     expect(player.playing, isTrue);
 
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
     await tester.pump();
     expect(player.videoEnabled, isTrue);
