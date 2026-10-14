@@ -1,6 +1,7 @@
 import 'dart:async';
+import 'dart:math';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide RepeatMode;
 
 import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
@@ -10,6 +11,7 @@ import '../../services/player_controller.dart';
 import '../../services/sleep_timer.dart';
 import '../../services/sponsor_block.dart';
 import '../../state/app_state.dart';
+import '../../state/playback_session.dart';
 import '../../utils/chapters.dart';
 import '../../utils/debug_log.dart';
 import '../../utils/format.dart';
@@ -52,6 +54,7 @@ class WatchPage extends StatefulWidget {
 class _WatchPageState extends State<WatchPage>
     with WidgetsBindingObserver, RouteAware {
   late final AppState _state;
+  final _random = Random();
   PlayerController? _player;
   SleepTimer? _sleepTimer;
   SegmentSkipper? _skipper;
@@ -264,7 +267,12 @@ class _WatchPageState extends State<WatchPage>
       }
       _loadSegments(player);
       _completedSub = player.completedStream.listen((done) {
-        if (done && state.settings.autoplay) _openNext();
+        if (!done) return;
+        if (state.playback.repeatMode == RepeatMode.one) {
+          _replay(player);
+        } else if (state.settings.autoplay) {
+          _openNext();
+        }
       });
     } catch (e) {
       debugLog('[watch] ${widget.video.id}: load failed: $e');
@@ -294,7 +302,15 @@ class _WatchPageState extends State<WatchPage>
     final playlist = widget.playlist;
     final index = widget.index;
     if (playlist == null || index == null) return null;
-    return index + 1 < playlist.videos.length ? index + 1 : null;
+    final count = playlist.videos.length;
+    if (_state.playback.shuffle && count > 1) {
+      var next = _random.nextInt(count);
+      while (next == index) next = _random.nextInt(count);
+      return next;
+    }
+    final next = index + 1;
+    if (next < count) return next;
+    return _state.playback.repeatMode == RepeatMode.all ? 0 : null;
   }
 
   VideoInfo? get _nextVideo {
@@ -659,13 +675,58 @@ class _WatchPageState extends State<WatchPage>
                         if (widget.playlist != null &&
                             widget.index != null) ...[
                           const SizedBox(height: 16),
-                          Text(
-                            l10n.playlistProgress(
-                              widget.playlist!.title,
-                              widget.index! + 1,
-                              widget.playlist!.videos.length,
-                            ),
-                            style: Theme.of(context).textTheme.titleSmall,
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  l10n.playlistProgress(
+                                    widget.playlist!.title,
+                                    widget.index! + 1,
+                                    widget.playlist!.videos.length,
+                                  ),
+                                  style: Theme.of(context).textTheme.titleSmall,
+                                ),
+                              ),
+                              ListenableBuilder(
+                                listenable: _state.playback,
+                                builder: (context, _) {
+                                  final session = _state.playback;
+                                  return Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        tooltip: switch (session.repeatMode) {
+                                          RepeatMode.off => l10n.repeatOff,
+                                          RepeatMode.all => l10n.repeatAll,
+                                          RepeatMode.one => l10n.repeatOne,
+                                        },
+                                        icon: Icon(switch (session.repeatMode) {
+                                          RepeatMode.off => Icons.repeat,
+                                          RepeatMode.all => Icons.repeat_on,
+                                          RepeatMode.one => Icons.repeat_one_on,
+                                        }),
+                                        onPressed: () => session.repeatMode =
+                                            RepeatMode.values[(session
+                                                        .repeatMode
+                                                        .index +
+                                                    1) %
+                                                RepeatMode.values.length],
+                                      ),
+                                      IconButton(
+                                        tooltip: l10n.shuffle,
+                                        icon: Icon(
+                                          session.shuffle
+                                              ? Icons.shuffle_on
+                                              : Icons.shuffle,
+                                        ),
+                                        onPressed: () =>
+                                            session.shuffle = !session.shuffle,
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 4),
                           for (

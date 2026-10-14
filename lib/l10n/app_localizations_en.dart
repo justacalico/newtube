@@ -235,6 +235,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get volume => 'Volume';
 
   @override
+  String get repeat => 'Repeat';
+
+  @override
+  String get repeatOff => 'Off';
+
+  @override
+  String get repeatAll => 'All';
+
+  @override
+  String get repeatOne => 'One';
+
+  @override
+  String get shuffle => 'Shuffle';
+
+  @override
   String get speedNormal => 'Normal';
 
   @override
@@ -740,6 +755,21 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get volume => 'Volume';
+
+  @override
+  String get repeat => 'Repeat';
+
+  @override
+  String get repeatOff => 'Off';
+
+  @override
+  String get repeatAll => 'All';
+
+  @override
+  String get repeatOne => 'One';
+
+  @override
+  String get shuffle => 'Shuffle';
 
   @override
   String get speedNormal => 'Normal';

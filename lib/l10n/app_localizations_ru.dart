@@ -236,6 +236,21 @@ class AppLocalizationsRu extends AppLocalizations {
   String get volume => 'Громкость';
 
   @override
+  String get repeat => 'Повтор';
+
+  @override
+  String get repeatOff => 'Выкл.';
+
+  @override
+  String get repeatAll => 'Все';
+
+  @override
+  String get repeatOne => 'Одно видео';
+
+  @override
+  String get shuffle => 'В случайном порядке';
+
+  @override
   String get speedNormal => 'Обычная';
 
   @override

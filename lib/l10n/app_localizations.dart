@@ -548,6 +548,36 @@ abstract class AppLocalizations {
   /// **'Volume'**
   String get volume;
 
+  /// No description provided for @repeat.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Repeat'**
+  String get repeat;
+
+  /// No description provided for @repeatOff.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Off'**
+  String get repeatOff;
+
+  /// No description provided for @repeatAll.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'All'**
+  String get repeatAll;
+
+  /// No description provided for @repeatOne.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'One'**
+  String get repeatOne;
+
+  /// No description provided for @shuffle.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Shuffle'**
+  String get shuffle;
+
   /// No description provided for @speedNormal.
   ///
   /// In en_GB, this message translates to:

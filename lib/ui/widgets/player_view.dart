@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide RepeatMode;
 import 'package:flutter/services.dart';
 
 import '../../l10n/app_localizations.dart';
@@ -11,6 +11,7 @@ import '../../services/player_controller.dart';
 import '../../services/sleep_timer.dart';
 import '../../services/sponsor_block.dart';
 import '../../state/app_state.dart';
+import '../../state/playback_session.dart';
 import '../../utils/captions.dart';
 import '../../utils/chapters.dart';
 import '../../utils/debug_log.dart';
@@ -203,6 +204,7 @@ class _PlayerViewState extends State<PlayerView> {
 
   Widget _settingsMenu(AppLocalizations l10n, double rate) {
     final timer = widget.sleepTimer;
+    final session = AppScope.read(context).playback;
     final audioStreams = widget.streams.where((s) => !s.hasVideo);
     return MenuAnchor(
       builder: (context, controller, child) => IconButton(
@@ -269,6 +271,31 @@ class _PlayerViewState extends State<PlayerView> {
               ),
           ],
           child: Text(l10n.playbackSpeed),
+        ),
+        SubmenuButton(
+          leadingIcon: const Icon(Icons.repeat),
+          menuChildren: [
+            for (final entry in [
+              (RepeatMode.off, l10n.repeatOff),
+              (RepeatMode.all, l10n.repeatAll),
+              (RepeatMode.one, l10n.repeatOne),
+            ])
+              MenuItemButton(
+                onPressed: () => session.repeatMode = entry.$1,
+                leadingIcon: entry.$1 == session.repeatMode
+                    ? const Icon(Icons.check, size: 18)
+                    : const SizedBox(width: 18),
+                child: Text(entry.$2),
+              ),
+          ],
+          child: Text(l10n.repeat),
+        ),
+        MenuItemButton(
+          onPressed: () => session.shuffle = !session.shuffle,
+          leadingIcon: session.shuffle
+              ? const Icon(Icons.check, size: 18)
+              : const SizedBox(width: 18),
+          child: Text(l10n.shuffle),
         ),
         if (timer != null)
           SubmenuButton(
