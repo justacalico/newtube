@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -44,9 +46,8 @@ void main() {
   });
 
   testWidgets('suggestion chips search on tap', (tester) async {
-    final api = FakeYouTubeApi(
-      searchResults: SearchResults(videos: testVideos),
-    )..suggestions = ['flutter widgets', 'flutter tutorial'];
+    final api = FakeYouTubeApi(searchResults: SearchResults(videos: testVideos))
+      ..suggestions = ['flutter widgets', 'flutter tutorial'];
     final state = await testState(api: api);
     await pumpPage(tester, state, const SearchPage());
     await tester.pumpAndSettle();
@@ -62,9 +63,8 @@ void main() {
   });
 
   testWidgets('local history mixes into suggestions', (tester) async {
-    final api = FakeYouTubeApi(
-      searchResults: SearchResults(videos: testVideos),
-    )..suggestions = ['flutter remote'];
+    final api = FakeYouTubeApi(searchResults: SearchResults(videos: testVideos))
+      ..suggestions = ['flutter remote'];
     final state = await testState(
       api: api,
       initialPrefs: {'search_history': '["flutter widgets"]'},
@@ -78,5 +78,43 @@ void main() {
 
     expect(find.byIcon(Icons.history), findsWidgets);
     expect(find.byIcon(Icons.search), findsWidgets);
+  });
+
+  testWidgets('clearing the field resets suggestions', (tester) async {
+    final api = FakeYouTubeApi(searchResults: SearchResults(videos: testVideos))
+      ..suggestions = ['flutter widgets'];
+    final state = await testState(api: api);
+    await pumpPage(tester, state, const SearchPage());
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'flutter');
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pumpAndSettle();
+    expect(find.text('flutter widgets'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextField), '');
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pumpAndSettle();
+    expect(find.text('flutter widgets'), findsNothing);
+    expect(find.text('No searches yet'), findsOneWidget);
+  });
+
+  testWidgets('a stale suggestion response is dropped', (tester) async {
+    final gate = Completer<List<String>>();
+    final api = FakeYouTubeApi(searchResults: SearchResults(videos: testVideos))
+      ..suggestionsGate = gate
+      ..suggestions = ['fresh result'];
+    final state = await testState(api: api);
+    await pumpPage(tester, state, const SearchPage());
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'flutter');
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.enterText(find.byType(TextField), 'flutter more');
+    await tester.pump(const Duration(milliseconds: 400));
+    gate.complete(['stale result']);
+    await tester.pumpAndSettle();
+    expect(find.text('stale result'), findsNothing);
+    expect(find.text('fresh result'), findsOneWidget);
   });
 }

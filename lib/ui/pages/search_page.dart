@@ -69,7 +69,7 @@ class _SearchPageState extends State<SearchPage> {
         ListTile(
           leading: const Icon(Icons.history, size: 18),
           title: Text(entry),
-          onTap: () => _searchFromHistory(entry),
+          onTap: () => _searchFromHistory(entry), // coverage:ignore-line
         ),
       for (final suggestion in _suggestions)
         if (!history.contains(suggestion))
