@@ -513,6 +513,7 @@ class _PlayerViewState extends State<PlayerView> {
   void _onVerticalDragUpdate(DragUpdateDetails details) {
     if (_dragSide == 0) {
       _dragDy += details.delta.dy;
+      setState(() {});
       return;
     }
     final base = _dragBase;
@@ -742,551 +743,560 @@ class _PlayerViewState extends State<PlayerView> {
               : SystemMouseCursors.none,
           onHover: (_) => _showControls(),
           onExit: (_) => _hideControls(),
-          child: ColoredBox(
-            color: Colors.black,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                Center(
-                  child: widget.audioOnly && widget.artworkUrl != null
-                      ? Image.network(
-                          widget.artworkUrl!,
-                          fit: BoxFit.contain,
-                          errorBuilder: (_, _, _) =>
-                              const Icon(Icons.music_note, size: 64),
-                        )
-                      : _player.buildView(context),
-                ),
-                Positioned.fill(
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTapUp: _onTapUp,
-                    onLongPressStart: _onHoldStart,
-                    onLongPressEnd: (_) => _onHoldEnd(),
-                    onLongPressCancel: _onHoldEnd,
-                    onVerticalDragStart: _onVerticalDragStart,
-                    onVerticalDragUpdate: _onVerticalDragUpdate,
-                    onVerticalDragEnd: (_) => _onVerticalDragEnd(),
-                    onVerticalDragCancel: _onVerticalDragEnd,
+          child: Transform.scale(
+            scale: _dragSide == 0 && _dragDy > 0
+                ? (1 - _dragDy / 800).clamp(0.7, 1.0)
+                : 1.0,
+            child: ColoredBox(
+              color: Colors.black,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Center(
+                    child: widget.audioOnly && widget.artworkUrl != null
+                        ? Image.network(
+                            widget.artworkUrl!,
+                            fit: BoxFit.contain,
+                            errorBuilder: (_, _, _) =>
+                                const Icon(Icons.music_note, size: 64),
+                          )
+                        : _player.buildView(context),
                   ),
-                ),
-                if (_seekFlashSide != 0)
-                  Positioned(
-                    left: _seekFlashSide < 0 ? 32 : null,
-                    right: _seekFlashSide > 0 ? 32 : null,
-                    top: 0,
-                    bottom: 0,
-                    child: IgnorePointer(
-                      child: Center(
-                        child: Container(
-                          color: Colors.black54,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 6,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                _seekFlashSide < 0
-                                    ? Icons.fast_rewind
-                                    : Icons.fast_forward,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                              const SizedBox(width: 4),
-                              const Text(
-                                '10s',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                if (_hudValue != null)
                   Positioned.fill(
-                    child: IgnorePointer(
-                      child: Center(
-                        child: Container(
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTapUp: _onTapUp,
+                      onLongPressStart: _onHoldStart,
+                      onLongPressEnd: (_) => _onHoldEnd(),
+                      onLongPressCancel: _onHoldEnd,
+                      onVerticalDragStart: _onVerticalDragStart,
+                      onVerticalDragUpdate: _onVerticalDragUpdate,
+                      onVerticalDragEnd: (_) => _onVerticalDragEnd(),
+                      onVerticalDragCancel: _onVerticalDragEnd,
+                    ),
+                  ),
+                  if (_seekFlashSide != 0)
+                    Positioned(
+                      left: _seekFlashSide < 0 ? 32 : null,
+                      right: _seekFlashSide > 0 ? 32 : null,
+                      top: 0,
+                      bottom: 0,
+                      child: IgnorePointer(
+                        child: Center(
+                          child: Container(
+                            color: Colors.black54,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 6,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  _seekFlashSide < 0
+                                      ? Icons.fast_rewind
+                                      : Icons.fast_forward,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
+                                const SizedBox(width: 4),
+                                const Text(
+                                  '10s',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  if (_hudValue != null)
+                    Positioned.fill(
+                      child: IgnorePointer(
+                        child: Center(
+                          child: Container(
+                            color: Colors.black54,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 8,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  _hudVolume
+                                      ? Icons.volume_up
+                                      : Icons.brightness_6,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  '${(_hudValue! * 100).round()}%',
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  if (_holding)
+                    const Positioned(
+                      top: 8,
+                      right: 8,
+                      child: IgnorePointer(
+                        child: ColoredBox(
                           color: Colors.black54,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                _hudVolume
-                                    ? Icons.volume_up
-                                    : Icons.brightness_6,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                '${(_hudValue! * 100).round()}%',
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            ],
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            child: Text(
+                              '2x',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                if (_holding)
-                  const Positioned(
-                    top: 8,
-                    right: 8,
-                    child: IgnorePointer(
-                      child: ColoredBox(
+                  if (_volumePopup && !wide)
+                    Positioned(
+                      right: 8,
+                      bottom: 56,
+                      child: Container(
                         color: Colors.black54,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          child: Text(
-                            '2x',
-                            style: TextStyle(color: Colors.white),
-                          ),
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [_volumeControls(true, l10n)],
                         ),
                       ),
                     ),
-                  ),
-                if (_volumePopup && !wide)
-                  Positioned(
-                    right: 8,
-                    bottom: 56,
-                    child: Container(
-                      color: Colors.black54,
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [_volumeControls(true, l10n)],
-                      ),
-                    ),
-                  ),
-                if (widget.segmentSkipper != null)
-                  Positioned(
-                    right: 8,
-                    bottom: 56,
-                    child: ListenableBuilder(
-                      listenable: widget.segmentSkipper!,
-                      builder: (context, _) {
-                        final skipper = widget.segmentSkipper!;
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            if (skipper.highlight != null)
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 8),
-                                child: FilledButton.icon(
+                  if (widget.segmentSkipper != null)
+                    Positioned(
+                      right: 8,
+                      bottom: 56,
+                      child: ListenableBuilder(
+                        listenable: widget.segmentSkipper!,
+                        builder: (context, _) {
+                          final skipper = widget.segmentSkipper!;
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              if (skipper.highlight != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 8),
+                                  child: FilledButton.icon(
+                                    style: FilledButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      foregroundColor: Colors.black,
+                                    ),
+                                    onPressed: skipper.jumpToHighlight,
+                                    icon: const Icon(Icons.star, size: 18),
+                                    label: Text(l10n.jumpToHighlight),
+                                  ),
+                                ),
+                              if (skipper.active != null)
+                                FilledButton.icon(
                                   style: FilledButton.styleFrom(
                                     backgroundColor: Colors.white,
                                     foregroundColor: Colors.black,
                                   ),
-                                  onPressed: skipper.jumpToHighlight,
-                                  icon: const Icon(Icons.star, size: 18),
-                                  label: Text(l10n.jumpToHighlight),
+                                  onPressed: skipper.skip,
+                                  icon: const Icon(Icons.skip_next, size: 18),
+                                  label: Text(l10n.skipSegment),
                                 ),
-                              ),
-                            if (skipper.active != null)
-                              FilledButton.icon(
-                                style: FilledButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  foregroundColor: Colors.black,
-                                ),
-                                onPressed: skipper.skip,
-                                icon: const Icon(Icons.skip_next, size: 18),
-                                label: Text(l10n.skipSegment),
-                              ),
-                          ],
-                        );
-                      },
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    child: StreamBuilder<bool>(
+                      stream: _player.bufferingStream,
+                      initialData: _player.buffering,
+                      builder: (context, snapshot) => snapshot.data == true
+                          ? const LinearProgressIndicator(minHeight: 3)
+                          : const SizedBox(height: 3),
                     ),
                   ),
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  child: StreamBuilder<bool>(
-                    stream: _player.bufferingStream,
-                    initialData: _player.buffering,
-                    builder: (context, snapshot) => snapshot.data == true
-                        ? const LinearProgressIndicator(minHeight: 3)
-                        : const SizedBox(height: 3),
+                  Positioned(
+                    left: 16,
+                    right: 16,
+                    bottom: 52,
+                    child: IgnorePointer(
+                      child: StreamBuilder<Duration>(
+                        stream: _player.positionStream,
+                        initialData: _player.position,
+                        builder: (context, snapshot) {
+                          final cue = captionCueAt(
+                            _cues,
+                            snapshot.data ?? Duration.zero,
+                          );
+                          if (cue == null) return const SizedBox.shrink();
+                          return Center(
+                            child: Container(
+                              color: Colors.black54,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
+                              child: Text(
+                                cue.text,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ),
-                ),
-                Positioned(
-                  left: 16,
-                  right: 16,
-                  bottom: 52,
-                  child: IgnorePointer(
-                    child: StreamBuilder<Duration>(
-                      stream: _player.positionStream,
-                      initialData: _player.position,
-                      builder: (context, snapshot) {
-                        final cue = captionCueAt(
-                          _cues,
-                          snapshot.data ?? Duration.zero,
-                        );
-                        if (cue == null) return const SizedBox.shrink();
-                        return Center(
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: AnimatedOpacity(
+                      opacity: _controlsVisible ? 1.0 : 0.0,
+                      duration: const Duration(milliseconds: 200),
+                      child: IgnorePointer(
+                        ignoring: !_controlsVisible,
+                        child: Listener(
+                          onPointerDown: (_) => _showControls(),
                           child: Container(
                             color: Colors.black54,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 2,
-                            ),
-                            child: Text(
-                              cue.text,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: AnimatedOpacity(
-                    opacity: _controlsVisible ? 1.0 : 0.0,
-                    duration: const Duration(milliseconds: 200),
-                    child: IgnorePointer(
-                      ignoring: !_controlsVisible,
-                      child: Listener(
-                        onPointerDown: (_) => _showControls(),
-                        child: Container(
-                          color: Colors.black54,
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Row(
-                            children: [
-                              StreamBuilder<bool>(
-                                stream: _player.playingStream,
-                                initialData: _player.playing,
-                                builder: (context, snapshot) => IconButton(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: Row(
+                              children: [
+                                StreamBuilder<bool>(
+                                  stream: _player.playingStream,
+                                  initialData: _player.playing,
+                                  builder: (context, snapshot) => IconButton(
+                                    icon: Icon(
+                                      snapshot.data == true
+                                          ? Icons.pause
+                                          : Icons.play_arrow,
+                                    ),
+                                    color: Colors.white,
+                                    onPressed: () => snapshot.data == true
+                                        ? _player.pause()
+                                        : _player.play(),
+                                  ),
+                                ),
+                                _volumeControls(wide, l10n),
+                                StreamBuilder<Duration>(
+                                  stream: _player.durationStream,
+                                  initialData: _player.duration,
+                                  builder: (context, durationSnap) {
+                                    final total =
+                                        durationSnap.data ?? Duration.zero;
+                                    return StreamBuilder<Duration>(
+                                      stream: _player.positionStream,
+                                      initialData: _player.position,
+                                      builder: (context, posSnap) {
+                                        final pos =
+                                            posSnap.data ?? Duration.zero;
+                                        final clamped = pos > total
+                                            ? total
+                                            : pos;
+                                        final chapter = chapterAt(
+                                          widget.chapters,
+                                          clamped,
+                                        );
+                                        return Expanded(
+                                          child: widget.live
+                                              ? const Row(
+                                                  children: [
+                                                    LiveBadge(),
+                                                    Spacer(),
+                                                  ],
+                                                )
+                                              : Row(
+                                                  children: [
+                                                    Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          formatDuration(
+                                                            clamped,
+                                                          ),
+                                                          style:
+                                                              const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 12,
+                                                              ),
+                                                        ),
+                                                        if (chapter != null)
+                                                          ConstrainedBox(
+                                                            constraints:
+                                                                const BoxConstraints(
+                                                                  maxWidth: 120,
+                                                                ),
+                                                            child: Text(
+                                                              chapter.title,
+                                                              maxLines: 1,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style:
+                                                                  const TextStyle(
+                                                                    color: Colors
+                                                                        .white70,
+                                                                    fontSize:
+                                                                        10,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                      ],
+                                                    ),
+                                                    Expanded(
+                                                      child: LayoutBuilder(
+                                                        builder: (context, sliderCons) {
+                                                          return MouseRegion(
+                                                            onHover: (e) => setState(
+                                                              () => _previewFraction =
+                                                                  (e.localPosition.dx /
+                                                                          sliderCons
+                                                                              .maxWidth)
+                                                                      .clamp(
+                                                                        0.0,
+                                                                        1.0,
+                                                                      ),
+                                                            ),
+                                                            onExit: (_) => setState(
+                                                              () =>
+                                                                  _previewFraction =
+                                                                      null,
+                                                            ),
+                                                            child: Stack(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              children: [
+                                                                StreamBuilder<
+                                                                  Duration
+                                                                >(
+                                                                  stream: _player
+                                                                      .bufferedStream,
+                                                                  initialData:
+                                                                      _player
+                                                                          .buffered,
+                                                                  builder: (context, bufSnap) {
+                                                                    final buffered =
+                                                                        bufSnap
+                                                                            .data ??
+                                                                        Duration
+                                                                            .zero;
+                                                                    return Slider(
+                                                                      key:
+                                                                          const ValueKey(
+                                                                            'seekSlider',
+                                                                          ),
+                                                                      value: clamped
+                                                                          .inMilliseconds
+                                                                          .toDouble()
+                                                                          .clamp(
+                                                                            0,
+                                                                            (total.inMilliseconds).toDouble(),
+                                                                          ),
+                                                                      max: total
+                                                                          .inMilliseconds
+                                                                          .toDouble()
+                                                                          .clamp(
+                                                                            1,
+                                                                            double.infinity,
+                                                                          ),
+                                                                      secondaryTrackValue:
+                                                                          total >
+                                                                              Duration.zero
+                                                                          ? (buffered.inMilliseconds / total.inMilliseconds).clamp(
+                                                                              0.0,
+                                                                              1.0,
+                                                                            )
+                                                                          : null,
+                                                                      onChanged:
+                                                                          total ==
+                                                                              Duration.zero
+                                                                          ? null
+                                                                          : (
+                                                                              v,
+                                                                            ) {
+                                                                              setState(
+                                                                                () => _previewFraction = (v / total.inMilliseconds).clamp(0.0, 1.0),
+                                                                              );
+                                                                              _player.seek(
+                                                                                Duration(milliseconds: v.round()),
+                                                                              );
+                                                                            },
+                                                                    );
+                                                                  },
+                                                                ),
+                                                                if (total >
+                                                                    Duration
+                                                                        .zero)
+                                                                  Positioned.fill(
+                                                                    child: IgnorePointer(
+                                                                      child: LayoutBuilder(
+                                                                        builder: (context, cons) => Stack(
+                                                                          children: [
+                                                                            for (final marker
+                                                                                in widget.chapters)
+                                                                              if (marker.start > Duration.zero && marker.start < total)
+                                                                                Positioned(
+                                                                                  left: 12 + (cons.maxWidth - 24) * (marker.start.inMilliseconds / total.inMilliseconds),
+                                                                                  top: (cons.maxHeight - 10) / 2,
+                                                                                  child: Container(width: 2, height: 10, color: Colors.white38),
+                                                                                ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                if (total >
+                                                                        Duration
+                                                                            .zero &&
+                                                                    widget
+                                                                        .heatmap
+                                                                        .isNotEmpty)
+                                                                  Positioned.fill(
+                                                                    child: IgnorePointer(
+                                                                      child: CustomPaint(
+                                                                        painter: _HeatMapPainter(
+                                                                          widget
+                                                                              .heatmap,
+                                                                          total,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                if (_previewFraction !=
+                                                                        null &&
+                                                                    widget.storyboard !=
+                                                                        null &&
+                                                                    total >
+                                                                        Duration
+                                                                            .zero)
+                                                                  Positioned(
+                                                                    left: ((_previewFraction! * sliderCons.maxWidth) - widget.storyboard!.tileWidth / 2).clamp(
+                                                                      0.0,
+                                                                      sliderCons
+                                                                              .maxWidth -
+                                                                          widget
+                                                                              .storyboard!
+                                                                              .tileWidth,
+                                                                    ),
+                                                                    bottom: 24,
+                                                                    child: IgnorePointer(
+                                                                      child: _SeekPreview(
+                                                                        board: widget
+                                                                            .storyboard!,
+                                                                        time: Duration(
+                                                                          milliseconds:
+                                                                              (_previewFraction! * total.inMilliseconds).round(),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                              ],
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      formatDuration(total),
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                                if (widget.pipActions != null)
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.picture_in_picture_alt_outlined,
+                                      color: Colors.white,
+                                    ),
+                                    tooltip: l10n.pictureInPicture,
+                                    onPressed: () =>
+                                        widget.pipActions!.enterPip(),
+                                  ),
+                                StreamBuilder<double>(
+                                  stream: _player.rateStream,
+                                  initialData: _player.rate,
+                                  builder: (context, snapshot) {
+                                    final timer = widget.sleepTimer;
+                                    if (timer == null) {
+                                      return _settingsMenu(
+                                        l10n,
+                                        snapshot.data ?? _player.rate,
+                                      );
+                                    }
+                                    return ListenableBuilder(
+                                      listenable: timer,
+                                      builder: (context, _) => Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          if (timer.remaining != null)
+                                            Text(
+                                              formatDuration(timer.remaining!),
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          _settingsMenu(
+                                            l10n,
+                                            snapshot.data ?? _player.rate,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                                IconButton(
                                   icon: Icon(
-                                    snapshot.data == true
-                                        ? Icons.pause
-                                        : Icons.play_arrow,
+                                    widget.isFullscreen
+                                        ? Icons.fullscreen_exit
+                                        : Icons.fullscreen,
                                   ),
                                   color: Colors.white,
-                                  onPressed: () => snapshot.data == true
-                                      ? _player.pause()
-                                      : _player.play(),
+                                  tooltip: l10n.fullscreen,
+                                  onPressed: widget.onToggleFullscreen,
                                 ),
-                              ),
-                              _volumeControls(wide, l10n),
-                              StreamBuilder<Duration>(
-                                stream: _player.durationStream,
-                                initialData: _player.duration,
-                                builder: (context, durationSnap) {
-                                  final total =
-                                      durationSnap.data ?? Duration.zero;
-                                  return StreamBuilder<Duration>(
-                                    stream: _player.positionStream,
-                                    initialData: _player.position,
-                                    builder: (context, posSnap) {
-                                      final pos = posSnap.data ?? Duration.zero;
-                                      final clamped = pos > total ? total : pos;
-                                      final chapter = chapterAt(
-                                        widget.chapters,
-                                        clamped,
-                                      );
-                                      return Expanded(
-                                        child: widget.live
-                                            ? const Row(
-                                                children: [
-                                                  LiveBadge(),
-                                                  Spacer(),
-                                                ],
-                                              )
-                                            : Row(
-                                                children: [
-                                                  Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        formatDuration(clamped),
-                                                        style: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 12,
-                                                        ),
-                                                      ),
-                                                      if (chapter != null)
-                                                        ConstrainedBox(
-                                                          constraints:
-                                                              const BoxConstraints(
-                                                                maxWidth: 120,
-                                                              ),
-                                                          child: Text(
-                                                            chapter.title,
-                                                            maxLines: 1,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            style:
-                                                                const TextStyle(
-                                                                  color: Colors
-                                                                      .white70,
-                                                                  fontSize: 10,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                    ],
-                                                  ),
-                                                  Expanded(
-                                                    child: LayoutBuilder(
-                                                      builder: (context, sliderCons) {
-                                                        return MouseRegion(
-                                                          onHover: (e) => setState(
-                                                            () => _previewFraction =
-                                                                (e.localPosition.dx /
-                                                                        sliderCons
-                                                                            .maxWidth)
-                                                                    .clamp(
-                                                                      0.0,
-                                                                      1.0,
-                                                                    ),
-                                                          ),
-                                                          onExit: (_) => setState(
-                                                            () =>
-                                                                _previewFraction =
-                                                                    null,
-                                                          ),
-                                                          child: Stack(
-                                                            alignment: Alignment
-                                                                .center,
-                                                            children: [
-                                                              StreamBuilder<
-                                                                Duration
-                                                              >(
-                                                                stream: _player
-                                                                    .bufferedStream,
-                                                                initialData:
-                                                                    _player
-                                                                        .buffered,
-                                                                builder: (context, bufSnap) {
-                                                                  final buffered =
-                                                                      bufSnap
-                                                                          .data ??
-                                                                      Duration
-                                                                          .zero;
-                                                                  return Slider(
-                                                                    key:
-                                                                        const ValueKey(
-                                                                          'seekSlider',
-                                                                        ),
-                                                                    value: clamped
-                                                                        .inMilliseconds
-                                                                        .toDouble()
-                                                                        .clamp(
-                                                                          0,
-                                                                          (total.inMilliseconds)
-                                                                              .toDouble(),
-                                                                        ),
-                                                                    max: total
-                                                                        .inMilliseconds
-                                                                        .toDouble()
-                                                                        .clamp(
-                                                                          1,
-                                                                          double
-                                                                              .infinity,
-                                                                        ),
-                                                                    secondaryTrackValue:
-                                                                        total >
-                                                                            Duration.zero
-                                                                        ? (buffered.inMilliseconds / total.inMilliseconds).clamp(
-                                                                            0.0,
-                                                                            1.0,
-                                                                          )
-                                                                        : null,
-                                                                    onChanged:
-                                                                        total ==
-                                                                            Duration.zero
-                                                                        ? null
-                                                                        : (v) {
-                                                                            setState(
-                                                                              () => _previewFraction = (v / total.inMilliseconds).clamp(
-                                                                                0.0,
-                                                                                1.0,
-                                                                              ),
-                                                                            );
-                                                                            _player.seek(
-                                                                              Duration(
-                                                                                milliseconds: v.round(),
-                                                                              ),
-                                                                            );
-                                                                          },
-                                                                  );
-                                                                },
-                                                              ),
-                                                              if (total >
-                                                                  Duration.zero)
-                                                                Positioned.fill(
-                                                                  child: IgnorePointer(
-                                                                    child: LayoutBuilder(
-                                                                      builder: (context, cons) => Stack(
-                                                                        children: [
-                                                                          for (final marker
-                                                                              in widget.chapters)
-                                                                            if (marker.start > Duration.zero &&
-                                                                                marker.start < total)
-                                                                              Positioned(
-                                                                                left: 12 + (cons.maxWidth - 24) * (marker.start.inMilliseconds / total.inMilliseconds),
-                                                                                top: (cons.maxHeight - 10) / 2,
-                                                                                child: Container(width: 2, height: 10, color: Colors.white38),
-                                                                              ),
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              if (total >
-                                                                      Duration
-                                                                          .zero &&
-                                                                  widget
-                                                                      .heatmap
-                                                                      .isNotEmpty)
-                                                                Positioned.fill(
-                                                                  child: IgnorePointer(
-                                                                    child: CustomPaint(
-                                                                      painter: _HeatMapPainter(
-                                                                        widget
-                                                                            .heatmap,
-                                                                        total,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              if (_previewFraction !=
-                                                                      null &&
-                                                                  widget.storyboard !=
-                                                                      null &&
-                                                                  total >
-                                                                      Duration
-                                                                          .zero)
-                                                                Positioned(
-                                                                  left: ((_previewFraction! * sliderCons.maxWidth) - widget.storyboard!.tileWidth / 2).clamp(
-                                                                    0.0,
-                                                                    sliderCons
-                                                                            .maxWidth -
-                                                                        widget
-                                                                            .storyboard!
-                                                                            .tileWidth,
-                                                                  ),
-                                                                  bottom: 24,
-                                                                  child: IgnorePointer(
-                                                                    child: _SeekPreview(
-                                                                      board: widget
-                                                                          .storyboard!,
-                                                                      time: Duration(
-                                                                        milliseconds:
-                                                                            (_previewFraction! * total.inMilliseconds).round(),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                            ],
-                                                          ),
-                                                        );
-                                                      },
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    formatDuration(total),
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                              if (widget.pipActions != null)
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.picture_in_picture_alt_outlined,
-                                    color: Colors.white,
-                                  ),
-                                  tooltip: l10n.pictureInPicture,
-                                  onPressed: () =>
-                                      widget.pipActions!.enterPip(),
-                                ),
-                              StreamBuilder<double>(
-                                stream: _player.rateStream,
-                                initialData: _player.rate,
-                                builder: (context, snapshot) {
-                                  final timer = widget.sleepTimer;
-                                  if (timer == null) {
-                                    return _settingsMenu(
-                                      l10n,
-                                      snapshot.data ?? _player.rate,
-                                    );
-                                  }
-                                  return ListenableBuilder(
-                                    listenable: timer,
-                                    builder: (context, _) => Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        if (timer.remaining != null)
-                                          Text(
-                                            formatDuration(timer.remaining!),
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        _settingsMenu(
-                                          l10n,
-                                          snapshot.data ?? _player.rate,
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                              IconButton(
-                                icon: Icon(
-                                  widget.isFullscreen
-                                      ? Icons.fullscreen_exit
-                                      : Icons.fullscreen,
-                                ),
-                                color: Colors.white,
-                                tooltip: l10n.fullscreen,
-                                onPressed: widget.onToggleFullscreen,
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                if (_statsVisible)
-                  Positioned(top: 8, left: 8, child: _statsOverlay()),
-                if (_ended && widget.endScreenBuilder != null && !widget.live)
-                  Positioned.fill(child: widget.endScreenBuilder!(context)),
-              ],
+                  if (_statsVisible)
+                    Positioned(top: 8, left: 8, child: _statsOverlay()),
+                  if (_ended && widget.endScreenBuilder != null && !widget.live)
+                    Positioned.fill(child: widget.endScreenBuilder!(context)),
+                ],
+              ),
             ),
           ),
         ),
