@@ -51,7 +51,7 @@ https://gitlab.com/HttpAnimations/newtube/-/raw/main/repos/altstore.json
 ### Flatpak (Linux)
 
 ```
-flatpak remote-add newtube https://httpanimations.gitlab.io/newtube/flatpak
+flatpak remote-add --no-gpg-verify newtube https://httpanimations.gitlab.io/newtube/flatpak
 flatpak install newtube gitlab.httpanimations.newtube
 ```
 
