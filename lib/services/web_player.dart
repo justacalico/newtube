@@ -81,6 +81,17 @@ class WebPlayerController implements PlayerController {
   bool get muted => _video.muted;
 
   @override
+  final ValueNotifier<BoxFit> videoFit = ValueNotifier(BoxFit.contain);
+
+  void _syncFit() {
+    _video.style.objectFit = switch (videoFit.value) {
+      BoxFit.cover => 'cover',
+      BoxFit.fill => 'fill',
+      _ => 'contain',
+    };
+  }
+
+  @override
   Stream<Duration> get positionStream => _position.stream;
   @override
   Stream<Duration> get durationStream => _duration.stream;
@@ -124,6 +135,7 @@ class WebPlayerController implements PlayerController {
       debugLog('[player] playing=$p');
       _playing.add(p);
     }
+    _syncFit();
     final b = buffering;
     if (b != _lastBuffering) {
       _lastBuffering = b;

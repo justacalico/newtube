@@ -204,6 +204,8 @@ class FakePlayerController implements PlayerController {
   double volume = 1.0;
   @override
   bool muted = false;
+  @override
+  final ValueNotifier<BoxFit> videoFit = ValueNotifier(BoxFit.contain);
   bool disposed = false;
   Completer<void>? openGate;
   Object? openError;

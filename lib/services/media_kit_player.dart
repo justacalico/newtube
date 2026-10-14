@@ -37,6 +37,9 @@ class MediaKitPlayerController implements PlayerController {
   bool get muted => _muted;
 
   @override
+  final ValueNotifier<BoxFit> videoFit = ValueNotifier(BoxFit.contain);
+
+  @override
   Stream<Duration> get positionStream => _player.stream.position;
   @override
   Stream<Duration> get durationStream => _player.stream.duration;
@@ -112,10 +115,14 @@ class MediaKitPlayerController implements PlayerController {
   }
 
   @override
-  Widget buildView(BuildContext context) => Video(
-    controller: _videoController,
-    controls: NoVideoControls,
-    pauseUponEnteringBackgroundMode: false,
+  Widget buildView(BuildContext context) => ValueListenableBuilder<BoxFit>(
+    valueListenable: videoFit,
+    builder: (context, fit, _) => Video(
+      controller: _videoController,
+      controls: NoVideoControls,
+      pauseUponEnteringBackgroundMode: false,
+      fit: fit,
+    ),
   );
 
   @override

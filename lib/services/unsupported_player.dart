@@ -20,6 +20,8 @@ class UnsupportedPlayerController implements PlayerController {
   double get volume => 1.0;
   @override
   bool get muted => false;
+  @override
+  final ValueNotifier<BoxFit> videoFit = ValueNotifier(BoxFit.contain);
 
   @override
   Stream<Duration> get positionStream => const Stream.empty();
