@@ -86,6 +86,10 @@ class FakeYouTubeApi implements YouTubeApi {
   List<VideoInfo> uploads;
   CommentsResult commentsResult;
   Map<String, CommentsResult> commentPages;
+  List<VideoInfo> trendingFeed;
+  final commentSortCalls = <CommentSort?>[];
+  Set<CommentSort> failingSorts = const {};
+  Set<String> failingCommentPages = const {};
 
   FakeYouTubeApi({
     this.feed = const [],
@@ -96,6 +100,7 @@ class FakeYouTubeApi implements YouTubeApi {
     this.uploads = const [],
     this.commentsResult = const CommentsResult(),
     this.commentPages = const {},
+    this.trendingFeed = const [],
     PlaylistInfo? playlistInfo,
   }) : playlistInfo =
            playlistInfo ??
@@ -122,9 +127,25 @@ class FakeYouTubeApi implements YouTubeApi {
   @override
   Future<List<VideoInfo>> homeFeed() async => error != null ? _fail() : feed;
 
+  Future<List<VideoInfo>> trending() async =>
+      error != null ? _fail() : trendingFeed;
+
   @override
   Future<SearchResults> search(String query) async =>
       error != null ? _fail() : searchResults;
+
+  Future<List<String>> searchSuggestions(String query) async {
+    if (error != null) return _fail();
+    final gate = suggestionsGate;
+    if (gate != null) {
+      suggestionsGate = null;
+      return gate.future;
+    }
+    return suggestions;
+  }
+
+  List<String> suggestions = const [];
+  Completer<List<String>>? suggestionsGate;
 
   @override
   Future<VideoDetails> videoDetails(String videoId) async {
@@ -142,11 +163,20 @@ class FakeYouTubeApi implements YouTubeApi {
   Future<CommentsResult> comments(
     String videoId, {
     String? continuation,
-  }) async => error != null
-      ? _fail()
-      : continuation == null
-      ? commentsResult
-      : commentPages[continuation] ?? const CommentsResult();
+    CommentSort? sort,
+  }) async {
+    commentSortCalls.add(sort);
+    if (error != null) return _fail();
+    if (sort != null && failingSorts.contains(sort)) {
+      throw StateError('sort down');
+    }
+    if (continuation != null && failingCommentPages.contains(continuation)) {
+      throw StateError('replies down');
+    }
+    return continuation == null
+        ? commentsResult
+        : commentPages[continuation] ?? const CommentsResult();
+  }
 
   @override
   Future<ChannelInfo> channel(String channelId) async =>

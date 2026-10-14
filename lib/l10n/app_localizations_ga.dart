@@ -234,6 +234,24 @@ class AppLocalizationsGa extends AppLocalizations {
   String get copiedToClipboard => 'Nasc cóipeáilte';
 
   @override
+  String get showReplies => 'Taispeáin freagraí';
+
+  @override
+  String get hideReplies => 'Folaigh freagraí';
+
+  @override
+  String get creator => 'Cruthaitheoir';
+
+  @override
+  String get commentsSort => 'Sórtáil tuairimí';
+
+  @override
+  String get commentsTop => 'Barr';
+
+  @override
+  String get commentsNewest => 'Is nuaí';
+
+  @override
   String get videoFit => 'Oiriúnú físe';
 
   @override

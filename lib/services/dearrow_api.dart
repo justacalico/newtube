@@ -70,8 +70,11 @@ class DeArrowApi implements YouTubeApi {
       inner.relatedVideos(videoId).then(_applyAll);
 
   @override
-  Future<CommentsResult> comments(String videoId, {String? continuation}) =>
-      inner.comments(videoId, continuation: continuation);
+  Future<CommentsResult> comments(
+    String videoId, {
+    String? continuation,
+    CommentSort? sort,
+  }) => inner.comments(videoId, continuation: continuation, sort: sort);
 
   @override
   Future<ChannelInfo> channel(String channelId) => inner.channel(channelId);

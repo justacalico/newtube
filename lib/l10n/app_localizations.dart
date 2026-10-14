@@ -542,6 +542,42 @@ abstract class AppLocalizations {
   /// **'Link copied'**
   String get copiedToClipboard;
 
+  /// No description provided for @showReplies.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Show replies'**
+  String get showReplies;
+
+  /// No description provided for @hideReplies.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Hide replies'**
+  String get hideReplies;
+
+  /// No description provided for @creator.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Creator'**
+  String get creator;
+
+  /// No description provided for @commentsSort.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Sort comments'**
+  String get commentsSort;
+
+  /// No description provided for @commentsTop.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Top'**
+  String get commentsTop;
+
+  /// No description provided for @commentsNewest.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Newest'**
+  String get commentsNewest;
+
   /// No description provided for @videoFit.
   ///
   /// In en_GB, this message translates to:

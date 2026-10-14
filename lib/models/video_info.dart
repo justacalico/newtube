@@ -200,6 +200,8 @@ class CommentInfo {
   final int replyCount;
   final bool pinned;
   final bool hearted;
+  final bool isOwner;
+  final String? replyContinuation;
 
   const CommentInfo({
     required this.author,
@@ -211,8 +213,12 @@ class CommentInfo {
     this.replyCount = 0,
     this.pinned = false,
     this.hearted = false,
+    this.isOwner = false,
+    this.replyContinuation,
   });
 }
+
+enum CommentSort { top, newest }
 
 class CommentsResult {
   final List<CommentInfo> comments;

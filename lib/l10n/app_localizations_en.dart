@@ -234,6 +234,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get copiedToClipboard => 'Link copied';
 
   @override
+  String get showReplies => 'Show replies';
+
+  @override
+  String get hideReplies => 'Hide replies';
+
+  @override
+  String get creator => 'Creator';
+
+  @override
+  String get commentsSort => 'Sort comments';
+
+  @override
+  String get commentsTop => 'Top';
+
+  @override
+  String get commentsNewest => 'Newest';
+
+  @override
   String get videoFit => 'Video fit';
 
   @override
@@ -840,6 +858,24 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get copiedToClipboard => 'Link copied';
+
+  @override
+  String get showReplies => 'Show replies';
+
+  @override
+  String get hideReplies => 'Hide replies';
+
+  @override
+  String get creator => 'Creator';
+
+  @override
+  String get commentsSort => 'Sort comments';
+
+  @override
+  String get commentsTop => 'Top';
+
+  @override
+  String get commentsNewest => 'Newest';
 
   @override
   String get videoFit => 'Video fit';

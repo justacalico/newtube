@@ -412,6 +412,26 @@ class _WatchPageState extends State<WatchPage>
     }
   }
 
+  CommentSort _commentSort = CommentSort.top;
+
+  void _setCommentSort(CommentSort sort) {
+    if (sort == _commentSort) return;
+    setState(() => _commentSort = sort);
+    final state = AppScope.read(context);
+    state.api
+        .comments(widget.video.id, sort: sort)
+        .then((result) {
+          if (!mounted) return;
+          setState(() {
+            _comments = result.comments;
+            _commentsToken = result.continuation;
+          });
+        })
+        .catchError((e) {
+          debugLog('[watch] ${widget.video.id}: comments sort failed: $e');
+        });
+  }
+
   Future<void> _loadMoreComments() async {
     final token = _commentsToken;
     if (token == null || _loadingMoreComments) return;
@@ -865,13 +885,45 @@ class _WatchPageState extends State<WatchPage>
                         ],
                         if (_comments.isNotEmpty) ...[
                           const SizedBox(height: 16),
-                          Text(
-                            l10n.comments,
-                            style: Theme.of(context).textTheme.titleSmall,
+                          Row(
+                            children: [
+                              Text(
+                                l10n.comments,
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                              const Spacer(),
+                              MenuAnchor(
+                                builder: (context, controller, child) =>
+                                    TextButton.icon(
+                                      icon: const Icon(Icons.sort, size: 16),
+                                      label: Text(l10n.commentsSort),
+                                      onPressed: () => controller.isOpen
+                                          ? controller.close()
+                                          : controller.open(),
+                                    ),
+                                menuChildren: [
+                                  for (final sort in CommentSort.values)
+                                    MenuItemButton(
+                                      onPressed: () => _setCommentSort(sort),
+                                      leadingIcon: sort == _commentSort
+                                          ? const Icon(Icons.check, size: 18)
+                                          : const SizedBox(width: 18),
+                                      child: Text(
+                                        sort == CommentSort.top
+                                            ? l10n.commentsTop
+                                            : l10n.commentsNewest,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 4),
                           for (final comment in _comments)
-                            CommentTile(comment: comment),
+                            CommentTile(
+                              comment: comment,
+                              videoId: widget.video.id,
+                            ),
                           if (_commentsToken != null)
                             Center(
                               child: _loadingMoreComments
