@@ -282,5 +282,8 @@
   "playlistEmpty": "Tá an seinmliosta seo folamh",
   "savePlaylist": "Sábháil an seinmliosta",
   "playlistSaved": "Sábháilte i do sheinmliostaí",
-  "videoActions": "Tuilleadh roghanna"
+  "videoActions": "Tuilleadh roghanna",
+  "hideShorts": "Folaigh Shorts",
+  "hideShortsHint": "Scag Shorts as fothaí agus cuardaigh",
+  "shortsBadge": "SHORTS"
 }

@@ -311,6 +311,13 @@ class _SettingsPageState extends State<SettingsPage> {
               value: settings.audioOnly,
               onChanged: (value) => settings.setAudioOnly(value, state.prefs),
             ),
+            SwitchListTile(
+              secondary: const Icon(Icons.movie_outlined),
+              title: Text(l10n.hideShorts),
+              subtitle: Text(l10n.hideShortsHint),
+              value: settings.hideShorts,
+              onChanged: (value) => settings.setHideShorts(value, state.prefs),
+            ),
             ListTile(
               leading: const Icon(Icons.high_quality_outlined),
               title: Text(l10n.defaultQuality),

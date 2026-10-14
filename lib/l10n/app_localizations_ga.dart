@@ -711,4 +711,13 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get videoActions => 'Tuilleadh roghanna';
+
+  @override
+  String get hideShorts => 'Folaigh Shorts';
+
+  @override
+  String get hideShortsHint => 'Scag Shorts as fothaí agus cuardaigh';
+
+  @override
+  String get shortsBadge => 'SHORTS';
 }

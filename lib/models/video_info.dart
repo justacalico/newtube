@@ -9,6 +9,7 @@ class VideoInfo {
   final String? uploaded;
   final bool isLive;
   final bool isUpcoming;
+  final bool isShort;
 
   const VideoInfo({
     required this.id,
@@ -21,6 +22,7 @@ class VideoInfo {
     this.uploaded,
     this.isLive = false,
     this.isUpcoming = false,
+    this.isShort = false,
   });
 
   VideoInfo copyWith({

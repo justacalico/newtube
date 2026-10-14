@@ -694,6 +694,15 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get videoActions => '更多选项';
+
+  @override
+  String get hideShorts => '隐藏短视频';
+
+  @override
+  String get hideShortsHint => '在推荐、订阅和搜索中过滤 Shorts';
+
+  @override
+  String get shortsBadge => '短视频';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1385,4 +1394,13 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get videoActions => '更多选项';
+
+  @override
+  String get hideShorts => '隐藏短视频';
+
+  @override
+  String get hideShortsHint => '在推荐、订阅和搜索中过滤 Shorts';
+
+  @override
+  String get shortsBadge => '短视频';
 }
