@@ -85,6 +85,10 @@ void main() {
     await tester.pump();
     expect(state.settings.autoplay, isFalse);
 
+    await tester.tap(find.widgetWithText(SwitchListTile, 'Audio only'));
+    await tester.pump();
+    expect(state.settings.audioOnly, isTrue);
+
     expect(find.text('About'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('Version 1.2.3'), 200);
     expect(find.text('Version 1.2.3'), findsOneWidget);

@@ -63,6 +63,8 @@ class _WatchPageState extends State<WatchPage>
   List<VideoInfo> _related = const [];
   PlayableStream? _currentStream;
   PlayableStream? _currentAudio;
+  PlayableStream? _videoStream;
+  bool _audioOnly = false;
   List<VideoChapter> _chapters = const [];
   CaptionTrack? _caption;
   List<CommentInfo> _comments = const [];
@@ -188,23 +190,30 @@ class _WatchPageState extends State<WatchPage>
         player = shared;
         current = session.stream;
         currentAudio = session.audio;
+        _audioOnly = session.audioOnly;
       } else {
         player = state.createPlayer();
+        _audioOnly = state.settings.audioOnly;
         final choice = pickDefaultStream(
           details.streams,
           desktop: isDesktopPlatform,
         );
+        _videoStream = choice?.stream;
+        final audioTrack = _audioOnly ? bestAudio(details.streams) : null;
+        final open = audioTrack != null
+            ? StreamChoice(audioTrack, null)
+            : choice;
         PlayableStream? picked;
         PlayableStream? pickedAudio;
-        if (choice != null) {
-          picked = choice.stream;
-          pickedAudio = choice.audio;
+        if (open != null) {
+          picked = open.stream;
+          pickedAudio = open.audio;
           debugLog(
-            '[watch] ${widget.video.id}: opening ${choice.stream.quality}'
-            '${choice.audioUrl == null ? '' : ' + separate audio'}',
+            '[watch] ${widget.video.id}: opening ${open.stream.quality}'
+            '${open.audioUrl == null ? '' : ' + separate audio'}',
           );
           try {
-            await player.open(choice.stream.url, audioUrl: choice.audioUrl);
+            await player.open(open.stream.url, audioUrl: open.audioUrl);
             if (!state.settings.autoplay) {
               await player.pause();
             }
@@ -305,7 +314,9 @@ class _WatchPageState extends State<WatchPage>
     final count = playlist.videos.length;
     if (_state.playback.shuffle && count > 1) {
       var next = _random.nextInt(count);
-      while (next == index) next = _random.nextInt(count);
+      while (next == index) {
+        next = _random.nextInt(count);
+      }
       return next;
     }
     final next = index + 1;
@@ -403,6 +414,38 @@ class _WatchPageState extends State<WatchPage>
     }
   }
 
+  void _setAudioOnly(bool enabled) {
+    if (_player == null || _audioOnly == enabled) return;
+    final streams = _details?.streams ?? const <PlayableStream>[];
+    if (enabled) {
+      final audio = bestAudio(streams, container: _currentStream?.container);
+      if (audio == null) return;
+      if (_currentStream?.hasVideo == true) _videoStream = _currentStream;
+      setState(() {
+        _audioOnly = true;
+        _currentStream = audio;
+        _currentAudio = null;
+      });
+      _state.playback.audioOnly = true;
+      _state.playback.updateStream(audio, null);
+      _switchTo(audio.url);
+      return;
+    }
+    final video =
+        _videoStream ??
+        pickDefaultStream(streams, desktop: isDesktopPlatform)?.stream;
+    if (video == null) return;
+    final choice = pairWithAudio(video, streams, audio: _currentAudio);
+    setState(() {
+      _audioOnly = false;
+      _currentStream = video;
+      _currentAudio = choice.audio;
+    });
+    _state.playback.audioOnly = false;
+    _state.playback.updateStream(video, choice.audio);
+    _switchTo(video.url, audioUrl: choice.audioUrl);
+  }
+
   void _selectStream(PlayableStream stream) {
     final choice = pairWithAudio(
       stream,
@@ -494,6 +537,9 @@ class _WatchPageState extends State<WatchPage>
               captions: _details?.captions ?? const [],
               selectedCaption: _caption,
               onCaptionSelected: _selectCaption,
+              audioOnly: _audioOnly,
+              artworkUrl: widget.video.thumbnailUrl,
+              onAudioOnlyChanged: _setAudioOnly,
             ),
           ),
         )
@@ -571,6 +617,9 @@ class _WatchPageState extends State<WatchPage>
                             captions: _details!.captions,
                             selectedCaption: _caption,
                             onCaptionSelected: _selectCaption,
+                            audioOnly: _audioOnly,
+                            artworkUrl: widget.video.thumbnailUrl,
+                            onAudioOnlyChanged: _setAudioOnly,
                             onDismiss: () => Navigator.of(context).pop(),
                           ),
                   ),
@@ -804,6 +853,9 @@ class _FullscreenPlayer extends StatefulWidget {
   final List<CaptionTrack> captions;
   final CaptionTrack? selectedCaption;
   final ValueChanged<CaptionTrack?>? onCaptionSelected;
+  final bool audioOnly;
+  final String? artworkUrl;
+  final ValueChanged<bool>? onAudioOnlyChanged;
 
   const _FullscreenPlayer({
     required this.player,
@@ -820,6 +872,9 @@ class _FullscreenPlayer extends StatefulWidget {
     this.captions = const [],
     this.selectedCaption,
     this.onCaptionSelected,
+    this.audioOnly = false,
+    this.artworkUrl,
+    this.onAudioOnlyChanged,
   });
 
   @override
@@ -882,6 +937,9 @@ class _FullscreenPlayerState extends State<_FullscreenPlayer> {
           captions: widget.captions,
           selectedCaption: _caption,
           onCaptionSelected: _selectCaption,
+          audioOnly: widget.audioOnly,
+          artworkUrl: widget.artworkUrl,
+          onAudioOnlyChanged: widget.onAudioOnlyChanged,
         ),
       ),
     );

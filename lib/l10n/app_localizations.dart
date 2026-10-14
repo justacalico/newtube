@@ -398,6 +398,18 @@ abstract class AppLocalizations {
   /// **'Play videos and the next video automatically'**
   String get autoplayHint;
 
+  /// No description provided for @audioOnly.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Audio only'**
+  String get audioOnly;
+
+  /// No description provided for @audioOnlyHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Play just the audio track and keep the artwork on screen'**
+  String get audioOnlyHint;
+
   /// No description provided for @about.
   ///
   /// In en_GB, this message translates to:

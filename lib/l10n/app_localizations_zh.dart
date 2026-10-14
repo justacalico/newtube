@@ -157,6 +157,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get autoplayHint => '自动播放视频，结束后自动播放下一个';
 
   @override
+  String get audioOnly => '仅音频';
+
+  @override
+  String get audioOnlyHint => '仅播放音频流并显示封面';
+
+  @override
   String get about => '关于';
 
   @override
@@ -666,6 +672,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get autoplayHint => '自动播放视频，结束后自动播放下一个';
+
+  @override
+  String get audioOnly => '仅音频';
+
+  @override
+  String get audioOnlyHint => '仅播放音频流并显示封面';
 
   @override
   String get about => '关于';

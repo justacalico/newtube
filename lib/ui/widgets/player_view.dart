@@ -35,6 +35,9 @@ class PlayerView extends StatefulWidget {
   final CaptionTrack? selectedCaption;
   final ValueChanged<CaptionTrack?>? onCaptionSelected;
   final VoidCallback? onDismiss;
+  final bool audioOnly;
+  final String? artworkUrl;
+  final ValueChanged<bool>? onAudioOnlyChanged;
 
   const PlayerView({
     super.key,
@@ -55,6 +58,9 @@ class PlayerView extends StatefulWidget {
     this.selectedCaption,
     this.onCaptionSelected,
     this.onDismiss,
+    this.audioOnly = false,
+    this.artworkUrl,
+    this.onAudioOnlyChanged,
   });
 
   @override
@@ -290,6 +296,14 @@ class _PlayerViewState extends State<PlayerView> {
           ],
           child: Text(l10n.repeat),
         ),
+        if (widget.onAudioOnlyChanged != null)
+          MenuItemButton(
+            onPressed: () => widget.onAudioOnlyChanged!(!widget.audioOnly),
+            leadingIcon: widget.audioOnly
+                ? const Icon(Icons.check, size: 18)
+                : const SizedBox(width: 18),
+            child: Text(l10n.audioOnly),
+          ),
         MenuItemButton(
           onPressed: () => session.shuffle = !session.shuffle,
           leadingIcon: session.shuffle
@@ -551,7 +565,16 @@ class _PlayerViewState extends State<PlayerView> {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                Center(child: _player.buildView(context)),
+                Center(
+                  child: widget.audioOnly && widget.artworkUrl != null
+                      ? Image.network(
+                          widget.artworkUrl!,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, _, _) =>
+                              const Icon(Icons.music_note, size: 64),
+                        )
+                      : _player.buildView(context),
+                ),
                 Positioned.fill(
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,

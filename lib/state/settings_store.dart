@@ -28,6 +28,7 @@ class SettingsStore extends ChangeNotifier {
   static const _uploadIntervalKey = 'upload_interval';
   static const _captionsEnabledKey = 'captions_enabled';
   static const _captionLanguageKey = 'caption_language';
+  static const _audioOnlyKey = 'audio_only';
   static const defaultSponsorBlockCategories = {'sponsor', 'selfpromo'};
 
   AppTheme _theme;
@@ -45,6 +46,7 @@ class SettingsStore extends ChangeNotifier {
   int _uploadCheckIntervalMinutes;
   bool _captionsEnabled;
   String _captionLanguage;
+  bool _audioOnly;
 
   SettingsStore({
     this._theme = AppTheme.system,
@@ -62,6 +64,7 @@ class SettingsStore extends ChangeNotifier {
     this._uploadCheckIntervalMinutes = 30,
     this._captionsEnabled = false,
     this._captionLanguage = '',
+    this._audioOnly = false,
   }) : _sponsorBlockCategories =
            sponsorBlockCategories ?? Set.of(defaultSponsorBlockCategories);
 
@@ -91,6 +94,7 @@ class SettingsStore extends ChangeNotifier {
           : 30,
       captionsEnabled: prefs.getBool(_captionsEnabledKey) ?? false,
       captionLanguage: prefs.getString(_captionLanguageKey) ?? '',
+      audioOnly: prefs.getBool(_audioOnlyKey) ?? false,
     );
   }
 
@@ -128,6 +132,7 @@ class SettingsStore extends ChangeNotifier {
   int get uploadCheckIntervalMinutes => _uploadCheckIntervalMinutes;
   bool get captionsEnabled => _captionsEnabled;
   String get captionLanguage => _captionLanguage;
+  bool get audioOnly => _audioOnly;
 
   Future<void> setTheme(AppTheme theme, SharedPreferences prefs) async {
     _theme = theme;
@@ -234,6 +239,12 @@ class SettingsStore extends ChangeNotifier {
   Future<void> setCaptionsEnabled(bool value, SharedPreferences prefs) async {
     _captionsEnabled = value;
     await prefs.setBool(_captionsEnabledKey, value);
+    notifyListeners();
+  }
+
+  Future<void> setAudioOnly(bool value, SharedPreferences prefs) async {
+    _audioOnly = value;
+    await prefs.setBool(_audioOnlyKey, value);
     notifyListeners();
   }
 

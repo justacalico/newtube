@@ -162,6 +162,12 @@ class AppLocalizationsGa extends AppLocalizations {
       'Seinn físeáin agus an chéad físeán eile go huathoibríoch';
 
   @override
+  String get audioOnly => 'Fuaim amháin';
+
+  @override
+  String get audioOnlyHint => 'Seinn an rian fuaime amháin';
+
+  @override
   String get about => 'Faoi';
 
   @override
