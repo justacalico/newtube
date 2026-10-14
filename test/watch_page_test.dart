@@ -874,6 +874,98 @@ void main() {
     expect(find.byIcon(Icons.fullscreen_exit), findsOneWidget);
   });
 
+  testWidgets('pip actions track the current stream', (tester) async {
+    final pip = FakePipActions();
+    final state = await testState(
+      api: FakeYouTubeApi(),
+      player: FakePlayerController(),
+      pipActions: pip,
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+    expect(pip.lastUrl, 'https://video.example.com/360');
+    expect(pip.lastAudioUrl, isNull);
+
+    await _openSettings(tester, 'Quality');
+    await tester.tap(find.text('720p').last);
+    await tester.pumpAndSettle();
+    expect(pip.lastUrl, 'https://video.example.com/720');
+    expect(pip.lastAudioUrl, 'https://audio.example.com/128');
+  });
+
+  testWidgets('leaving the app during playback enters pip', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+    final pip = FakePipActions();
+    final player = FakePlayerController();
+    final state = await testState(
+      api: FakeYouTubeApi(),
+      player: player,
+      pipActions: pip,
+    );
+    addTearDown(
+      () => tester.binding.handleAppLifecycleStateChanged(
+        AppLifecycleState.resumed,
+      ),
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+    expect(player.playing, isTrue);
+
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    await tester.pump();
+    expect(pip.enters, 1);
+    debugDefaultTargetPlatformOverride = null;
+  });
+
+  testWidgets('leaving the app while paused does not enter pip', (
+    tester,
+  ) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+    final pip = FakePipActions();
+    final player = FakePlayerController();
+    final state = await testState(
+      api: FakeYouTubeApi(),
+      player: player,
+      pipActions: pip,
+    );
+    addTearDown(
+      () => tester.binding.handleAppLifecycleStateChanged(
+        AppLifecycleState.resumed,
+      ),
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+    await player.pause();
+
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    await tester.pump();
+    expect(pip.enters, 0);
+    debugDefaultTargetPlatformOverride = null;
+  });
+
+  testWidgets('leaving the app on desktop does not enter pip', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    final pip = FakePipActions();
+    final player = FakePlayerController();
+    final state = await testState(
+      api: FakeYouTubeApi(),
+      player: player,
+      pipActions: pip,
+    );
+    addTearDown(
+      () => tester.binding.handleAppLifecycleStateChanged(
+        AppLifecycleState.resumed,
+      ),
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    await tester.pump();
+    expect(pip.enters, 0);
+    debugDefaultTargetPlatformOverride = null;
+  });
+
   testWidgets('pip mode before the player loads stays black', (tester) async {
     final pip = FakePipActions();
     final api = FakeYouTubeApi()..detailsGate = Completer<VideoDetails>();
