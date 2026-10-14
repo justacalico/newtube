@@ -317,11 +317,8 @@ class _WatchPageState extends State<WatchPage>
     if (playlist == null || index == null) return null;
     final count = playlist.videos.length;
     if (_state.playback.shuffle && count > 1) {
-      var next = _random.nextInt(count);
-      while (next == index) {
-        next = _random.nextInt(count);
-      }
-      return next;
+      final next = _random.nextInt(count - 1);
+      return next >= index ? next + 1 : next;
     }
     final next = index + 1;
     if (next < count) return next;
