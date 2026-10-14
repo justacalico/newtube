@@ -15,6 +15,9 @@ import 'services/mcp_server.dart';
 import 'services/dearrow.dart';
 import 'services/dearrow_api.dart';
 import 'services/downloads.dart';
+import 'services/fallback_api.dart';
+import 'services/youtube_api.dart';
+import 'services/invidious_api.dart';
 import 'services/network_proxy.dart';
 import 'services/file_opener.dart';
 import 'services/media_controls.dart';
@@ -56,6 +59,25 @@ Future<void> _initWindow() async {
 }
 // coverage:ignore-end
 
+YouTubeApi _primaryApi(SettingsStore settings) {
+  // coverage:ignore-start
+  final client = proxyHttpClient(settings.networkProxy);
+  final base = kIsWeb
+      ? InnertubeApi(
+          proxyPrefix: () => settings.proxyPrefix,
+          httpClient: client,
+        )
+      : YouTubeExplodeApi(
+          proxyPrefix: () => settings.proxyPrefix,
+          httpClient: client,
+        );
+  if (settings.fallbackBackend.isNotEmpty) {
+    return FallbackApi(base, InvidiousApi(instance: settings.fallbackBackend));
+  }
+  return base;
+  // coverage:ignore-end
+}
+
 Future<AppState> createAppState(SharedPreferences prefs) async {
   final settings = await SettingsStore.load(prefs);
   final subscriptions = await SubscriptionsStore.load(prefs);
@@ -64,16 +86,7 @@ Future<AppState> createAppState(SharedPreferences prefs) async {
     api: DeArrowApi(
       settings: settings,
       client: DeArrowClient(),
-      inner:
-          kIsWeb // coverage:ignore-start
-          ? InnertubeApi(
-              proxyPrefix: () => settings.proxyPrefix,
-              httpClient: proxyHttpClient(settings.networkProxy),
-            )
-          : YouTubeExplodeApi(
-              proxyPrefix: () => settings.proxyPrefix,
-              httpClient: proxyHttpClient(settings.networkProxy),
-            ), // coverage:ignore-end
+      inner: _primaryApi(settings),
     ),
     isWeb: kIsWeb,
     settings: settings,

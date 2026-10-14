@@ -1010,6 +1010,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get sortLongest => '最长';
+
+  @override
+  String get fallbackBackend => '备用后端';
+
+  @override
+  String get fallbackBackendHint => '当 YouTube 不可用时使用的 Invidious 实例';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -2017,4 +2023,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get sortLongest => '最长';
+
+  @override
+  String get fallbackBackend => '备用后端';
+
+  @override
+  String get fallbackBackendHint => '当 YouTube 不可用时使用的 Invidious 实例';
 }

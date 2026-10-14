@@ -1024,6 +1024,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sortLongest => 'Longest';
+
+  @override
+  String get fallbackBackend => 'Fallback backend';
+
+  @override
+  String get fallbackBackendHint =>
+      'Invidious instance used when YouTube is unreachable';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -2045,4 +2052,11 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get sortLongest => 'Longest';
+
+  @override
+  String get fallbackBackend => 'Fallback backend';
+
+  @override
+  String get fallbackBackendHint =>
+      'Invidious instance used when YouTube is unreachable';
 }

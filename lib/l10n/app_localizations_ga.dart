@@ -1029,4 +1029,11 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get sortLongest => 'Is faide';
+
+  @override
+  String get fallbackBackend => 'Cúltaca inneal';
+
+  @override
+  String get fallbackBackendHint =>
+      'Invidious nuair nach bhfuil YouTube ar fáil';
 }

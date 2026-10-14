@@ -419,5 +419,7 @@
   "navMore": "更多",
   "sortAdded": "添加顺序",
   "sortNewest": "最新",
-  "sortLongest": "最长"
+  "sortLongest": "最长",
+  "fallbackBackend": "备用后端",
+  "fallbackBackendHint": "当 YouTube 不可用时使用的 Invidious 实例"
 }

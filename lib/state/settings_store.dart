@@ -23,6 +23,7 @@ class SettingsStore extends ChangeNotifier {
   static const _autoplayKey = 'autoplay';
   static const _proxyPrefixKey = 'proxy_prefix';
   static const _networkProxyKey = 'network_proxy';
+  static const _fallbackBackendKey = 'fallback_backend';
   static const _searchHistoryKey = 'search_history_enabled';
   static const _mcpEnabledKey = 'mcp_enabled';
   static const _sidebarCollapsedKey = 'sidebar_collapsed';
@@ -53,6 +54,7 @@ class SettingsStore extends ChangeNotifier {
   bool _autoplay;
   String _proxyPrefix;
   String _networkProxy;
+  String _fallbackBackend;
   bool _searchHistoryEnabled;
   bool _mcpEnabled;
   bool _sidebarCollapsed;
@@ -83,6 +85,7 @@ class SettingsStore extends ChangeNotifier {
     this._autoplay = true,
     this._proxyPrefix = '',
     this._networkProxy = '',
+    this._fallbackBackend = '',
     this._searchHistoryEnabled = true,
     this._mcpEnabled = false,
     this._sidebarCollapsed = false,
@@ -118,6 +121,7 @@ class SettingsStore extends ChangeNotifier {
       autoplay: prefs.getBool(_autoplayKey) ?? true,
       proxyPrefix: prefs.getString(_proxyPrefixKey) ?? '',
       networkProxy: prefs.getString(_networkProxyKey) ?? '',
+      fallbackBackend: prefs.getString(_fallbackBackendKey) ?? '',
       searchHistoryEnabled: prefs.getBool(_searchHistoryKey) ?? true,
       mcpEnabled: prefs.getBool(_mcpEnabledKey) ?? false,
       sidebarCollapsed: prefs.getBool(_sidebarCollapsedKey) ?? false,
@@ -158,6 +162,7 @@ class SettingsStore extends ChangeNotifier {
     _autoplay = fresh._autoplay;
     _proxyPrefix = fresh._proxyPrefix;
     _networkProxy = fresh._networkProxy;
+    _fallbackBackend = fresh._fallbackBackend;
     _searchHistoryEnabled = fresh._searchHistoryEnabled;
     _mcpEnabled = fresh._mcpEnabled;
     _sidebarCollapsed = fresh._sidebarCollapsed;
@@ -203,6 +208,7 @@ class SettingsStore extends ChangeNotifier {
   bool get autoplay => _autoplay;
   String get proxyPrefix => _proxyPrefix;
   String get networkProxy => _networkProxy;
+  String get fallbackBackend => _fallbackBackend;
   bool get searchHistoryEnabled => _searchHistoryEnabled;
   bool get mcpEnabled => _mcpEnabled;
   bool get sidebarCollapsed => _sidebarCollapsed;
@@ -272,6 +278,12 @@ class SettingsStore extends ChangeNotifier {
   Future<void> setProxyPrefix(String value, SharedPreferences prefs) async {
     _proxyPrefix = value.trim();
     await prefs.setString(_proxyPrefixKey, _proxyPrefix);
+    notifyListeners();
+  }
+
+  Future<void> setFallbackBackend(String value, SharedPreferences prefs) async {
+    _fallbackBackend = value.trim();
+    await prefs.setString(_fallbackBackendKey, _fallbackBackend);
     notifyListeners();
   }
 

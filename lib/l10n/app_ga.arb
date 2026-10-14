@@ -419,5 +419,7 @@
   "navMore": "Tuilleadh",
   "sortAdded": "Ord breise",
   "sortNewest": "Is nuaí",
-  "sortLongest": "Is faide"
+  "sortLongest": "Is faide",
+  "fallbackBackend": "Cúltaca inneal",
+  "fallbackBackendHint": "Invidious nuair nach bhfuil YouTube ar fáil"
 }
