@@ -440,6 +440,18 @@ abstract class AppLocalizations {
   /// **'Chapters'**
   String get chapters;
 
+  /// No description provided for @live.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Live'**
+  String get live;
+
+  /// No description provided for @upcoming.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Upcoming'**
+  String get upcoming;
+
   /// No description provided for @videoFit.
   ///
   /// In en_GB, this message translates to:

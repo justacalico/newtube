@@ -181,6 +181,8 @@ class InnertubeApi implements YouTubeApi {
           seconds: int.tryParse(details['lengthSeconds'] as String? ?? '') ?? 0,
         ),
         viewCount: int.tryParse(details['viewCount'] as String? ?? '') ?? 0,
+        isLive: details['isLive'] == true,
+        isUpcoming: details['isUpcoming'] == true,
       ),
       description: details['shortDescription'] as String? ?? '',
       streams: streams,
@@ -327,6 +329,8 @@ class InnertubeApi implements YouTubeApi {
             duration: v.duration,
             viewCount: v.viewCount,
             uploaded: v.uploaded,
+            isLive: v.isLive,
+            isUpcoming: v.isUpcoming,
           ),
       ];
 

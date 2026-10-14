@@ -548,6 +548,7 @@ class _WatchPageState extends State<WatchPage>
               onAudioOnlyChanged: _setAudioOnly,
               storyboard: bestStoryboard(_details?.storyboards ?? const []),
               heatmap: _details?.heatmap ?? const [],
+              live: _details?.info.isLive ?? widget.video.isLive,
             ),
           ),
         )
@@ -902,6 +903,7 @@ class _FullscreenPlayer extends StatefulWidget {
   final ValueChanged<bool>? onAudioOnlyChanged;
   final Storyboard? storyboard;
   final List<HeatMarker> heatmap;
+  final bool live;
 
   const _FullscreenPlayer({
     required this.player,
@@ -923,6 +925,7 @@ class _FullscreenPlayer extends StatefulWidget {
     this.onAudioOnlyChanged,
     this.storyboard,
     this.heatmap = const [],
+    this.live = false,
   });
 
   @override
@@ -990,6 +993,7 @@ class _FullscreenPlayerState extends State<_FullscreenPlayer> {
           onAudioOnlyChanged: widget.onAudioOnlyChanged,
           storyboard: widget.storyboard,
           heatmap: widget.heatmap,
+          live: widget.live,
         ),
       ),
     );

@@ -17,6 +17,7 @@ import '../../utils/chapters.dart';
 import '../../utils/storyboard.dart';
 import '../../utils/debug_log.dart';
 import '../../utils/format.dart';
+import 'live_badge.dart';
 
 class PlayerView extends StatefulWidget {
   final PlayerController player;
@@ -41,6 +42,7 @@ class PlayerView extends StatefulWidget {
   final ValueChanged<bool>? onAudioOnlyChanged;
   final Storyboard? storyboard;
   final List<HeatMarker> heatmap;
+  final bool live;
 
   const PlayerView({
     super.key,
@@ -64,6 +66,7 @@ class PlayerView extends StatefulWidget {
     this.audioOnly = false,
     this.storyboard,
     this.heatmap = const [],
+    this.live = false,
     this.artworkUrl,
     this.onAudioOnlyChanged,
   });
@@ -834,222 +837,218 @@ class _PlayerViewState extends State<PlayerView> {
                                         clamped,
                                       );
                                       return Expanded(
-                                        child: Row(
-                                          children: [
-                                            Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  formatDuration(clamped),
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 12,
-                                                  ),
-                                                ),
-                                                if (chapter != null)
-                                                  ConstrainedBox(
-                                                    constraints:
-                                                        const BoxConstraints(
-                                                          maxWidth: 120,
+                                        child: widget.live
+                                            ? const Row(
+                                                children: [
+                                                  LiveBadge(),
+                                                  Spacer(),
+                                                ],
+                                              )
+                                            : Row(
+                                                children: [
+                                                  Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        formatDuration(clamped),
+                                                        style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 12,
                                                         ),
-                                                    child: Text(
-                                                      chapter.title,
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: const TextStyle(
-                                                        color: Colors.white70,
-                                                        fontSize: 10,
                                                       ),
-                                                    ),
-                                                  ),
-                                              ],
-                                            ),
-                                            Expanded(
-                                              child: LayoutBuilder(
-                                                builder: (context, sliderCons) {
-                                                  return MouseRegion(
-                                                    onHover: (e) => setState(
-                                                      () => _previewFraction =
-                                                          (e.localPosition.dx /
-                                                                  sliderCons
-                                                                      .maxWidth)
-                                                              .clamp(0.0, 1.0),
-                                                    ),
-                                                    onExit: (_) => setState(
-                                                      () => _previewFraction =
-                                                          null,
-                                                    ),
-                                                    child: Stack(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      children: [
-                                                        StreamBuilder<Duration>(
-                                                          stream: _player
-                                                              .bufferedStream,
-                                                          initialData:
-                                                              _player.buffered,
-                                                          builder: (context, bufSnap) {
-                                                            final buffered =
-                                                                bufSnap.data ??
-                                                                Duration.zero;
-                                                            return Slider(
-                                                              key: const ValueKey(
-                                                                'seekSlider',
+                                                      if (chapter != null)
+                                                        ConstrainedBox(
+                                                          constraints:
+                                                              const BoxConstraints(
+                                                                maxWidth: 120,
                                                               ),
-                                                              value: clamped
-                                                                  .inMilliseconds
-                                                                  .toDouble()
-                                                                  .clamp(
-                                                                    0,
-                                                                    (total.inMilliseconds)
-                                                                        .toDouble(),
-                                                                  ),
-                                                              max: total
-                                                                  .inMilliseconds
-                                                                  .toDouble()
-                                                                  .clamp(
-                                                                    1,
-                                                                    double
-                                                                        .infinity,
-                                                                  ),
-                                                              secondaryTrackValue:
-                                                                  total >
-                                                                      Duration
-                                                                          .zero
-                                                                  ? (buffered.inMilliseconds /
-                                                                            total.inMilliseconds)
-                                                                        .clamp(
-                                                                          0.0,
-                                                                          1.0,
-                                                                        )
-                                                                  : null,
-                                                              onChanged:
-                                                                  total ==
-                                                                      Duration
-                                                                          .zero
-                                                                  ? null
-                                                                  : (v) {
-                                                                      setState(
-                                                                        () => _previewFraction =
-                                                                            (v / total.inMilliseconds).clamp(
-                                                                              0.0,
-                                                                              1.0,
-                                                                            ),
-                                                                      );
-                                                                      _player.seek(
-                                                                        Duration(
-                                                                          milliseconds:
-                                                                              v.round(),
-                                                                        ),
-                                                                      );
-                                                                    },
-                                                            );
-                                                          },
-                                                        ),
-                                                        if (total >
-                                                            Duration.zero)
-                                                          Positioned.fill(
-                                                            child: IgnorePointer(
-                                                              child: LayoutBuilder(
-                                                                builder: (context, cons) => Stack(
-                                                                  children: [
-                                                                    for (final marker
-                                                                        in widget
-                                                                            .chapters)
-                                                                      if (marker.start >
-                                                                              Duration.zero &&
-                                                                          marker.start <
-                                                                              total)
-                                                                        Positioned(
-                                                                          left:
-                                                                              12 +
-                                                                              (cons.maxWidth - 24) * (marker.start.inMilliseconds / total.inMilliseconds),
-                                                                          top:
-                                                                              (cons.maxHeight - 10) /
-                                                                              2,
-                                                                          child: Container(
-                                                                            width:
-                                                                                2,
-                                                                            height:
-                                                                                10,
-                                                                            color:
-                                                                                Colors.white38,
-                                                                          ),
-                                                                        ),
-                                                                  ],
+                                                          child: Text(
+                                                            chapter.title,
+                                                            maxLines: 1,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style:
+                                                                const TextStyle(
+                                                                  color: Colors
+                                                                      .white70,
+                                                                  fontSize: 10,
                                                                 ),
-                                                              ),
-                                                            ),
                                                           ),
-                                                        if (total >
-                                                                Duration.zero &&
-                                                            widget
-                                                                .heatmap
-                                                                .isNotEmpty)
-                                                          Positioned.fill(
-                                                            child: IgnorePointer(
-                                                              child: CustomPaint(
-                                                                painter:
-                                                                    _HeatMapPainter(
-                                                                      widget
-                                                                          .heatmap,
-                                                                      total,
-                                                                    ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        if (_previewFraction !=
-                                                                null &&
-                                                            widget.storyboard !=
-                                                                null &&
-                                                            total >
-                                                                Duration.zero)
-                                                          Positioned(
-                                                            left:
-                                                                ((_previewFraction! *
-                                                                            sliderCons.maxWidth) -
-                                                                        widget.storyboard!.tileWidth /
-                                                                            2)
+                                                        ),
+                                                    ],
+                                                  ),
+                                                  Expanded(
+                                                    child: LayoutBuilder(
+                                                      builder: (context, sliderCons) {
+                                                        return MouseRegion(
+                                                          onHover: (e) => setState(
+                                                            () => _previewFraction =
+                                                                (e.localPosition.dx /
+                                                                        sliderCons
+                                                                            .maxWidth)
                                                                     .clamp(
                                                                       0.0,
-                                                                      sliderCons
-                                                                              .maxWidth -
-                                                                          widget
-                                                                              .storyboard!
-                                                                              .tileWidth,
+                                                                      1.0,
                                                                     ),
-                                                            bottom: 24,
-                                                            child: IgnorePointer(
-                                                              child: _SeekPreview(
-                                                                board: widget
-                                                                    .storyboard!,
-                                                                time: Duration(
-                                                                  milliseconds:
-                                                                      (_previewFraction! *
-                                                                              total.inMilliseconds)
-                                                                          .round(),
-                                                                ),
-                                                              ),
-                                                            ),
                                                           ),
-                                                      ],
+                                                          onExit: (_) => setState(
+                                                            () =>
+                                                                _previewFraction =
+                                                                    null,
+                                                          ),
+                                                          child: Stack(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            children: [
+                                                              StreamBuilder<
+                                                                Duration
+                                                              >(
+                                                                stream: _player
+                                                                    .bufferedStream,
+                                                                initialData:
+                                                                    _player
+                                                                        .buffered,
+                                                                builder: (context, bufSnap) {
+                                                                  final buffered =
+                                                                      bufSnap
+                                                                          .data ??
+                                                                      Duration
+                                                                          .zero;
+                                                                  return Slider(
+                                                                    key:
+                                                                        const ValueKey(
+                                                                          'seekSlider',
+                                                                        ),
+                                                                    value: clamped
+                                                                        .inMilliseconds
+                                                                        .toDouble()
+                                                                        .clamp(
+                                                                          0,
+                                                                          (total.inMilliseconds)
+                                                                              .toDouble(),
+                                                                        ),
+                                                                    max: total
+                                                                        .inMilliseconds
+                                                                        .toDouble()
+                                                                        .clamp(
+                                                                          1,
+                                                                          double
+                                                                              .infinity,
+                                                                        ),
+                                                                    secondaryTrackValue:
+                                                                        total >
+                                                                            Duration.zero
+                                                                        ? (buffered.inMilliseconds / total.inMilliseconds).clamp(
+                                                                            0.0,
+                                                                            1.0,
+                                                                          )
+                                                                        : null,
+                                                                    onChanged:
+                                                                        total ==
+                                                                            Duration.zero
+                                                                        ? null
+                                                                        : (v) {
+                                                                            setState(
+                                                                              () => _previewFraction = (v / total.inMilliseconds).clamp(
+                                                                                0.0,
+                                                                                1.0,
+                                                                              ),
+                                                                            );
+                                                                            _player.seek(
+                                                                              Duration(
+                                                                                milliseconds: v.round(),
+                                                                              ),
+                                                                            );
+                                                                          },
+                                                                  );
+                                                                },
+                                                              ),
+                                                              if (total >
+                                                                  Duration.zero)
+                                                                Positioned.fill(
+                                                                  child: IgnorePointer(
+                                                                    child: LayoutBuilder(
+                                                                      builder: (context, cons) => Stack(
+                                                                        children: [
+                                                                          for (final marker
+                                                                              in widget.chapters)
+                                                                            if (marker.start > Duration.zero &&
+                                                                                marker.start < total)
+                                                                              Positioned(
+                                                                                left: 12 + (cons.maxWidth - 24) * (marker.start.inMilliseconds / total.inMilliseconds),
+                                                                                top: (cons.maxHeight - 10) / 2,
+                                                                                child: Container(width: 2, height: 10, color: Colors.white38),
+                                                                              ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              if (total >
+                                                                      Duration
+                                                                          .zero &&
+                                                                  widget
+                                                                      .heatmap
+                                                                      .isNotEmpty)
+                                                                Positioned.fill(
+                                                                  child: IgnorePointer(
+                                                                    child: CustomPaint(
+                                                                      painter: _HeatMapPainter(
+                                                                        widget
+                                                                            .heatmap,
+                                                                        total,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              if (_previewFraction !=
+                                                                      null &&
+                                                                  widget.storyboard !=
+                                                                      null &&
+                                                                  total >
+                                                                      Duration
+                                                                          .zero)
+                                                                Positioned(
+                                                                  left: ((_previewFraction! * sliderCons.maxWidth) - widget.storyboard!.tileWidth / 2).clamp(
+                                                                    0.0,
+                                                                    sliderCons
+                                                                            .maxWidth -
+                                                                        widget
+                                                                            .storyboard!
+                                                                            .tileWidth,
+                                                                  ),
+                                                                  bottom: 24,
+                                                                  child: IgnorePointer(
+                                                                    child: _SeekPreview(
+                                                                      board: widget
+                                                                          .storyboard!,
+                                                                      time: Duration(
+                                                                        milliseconds:
+                                                                            (_previewFraction! * total.inMilliseconds).round(),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                      },
                                                     ),
-                                                  );
-                                                },
+                                                  ),
+                                                  Text(
+                                                    formatDuration(total),
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ),
-                                            Text(
-                                              formatDuration(total),
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
                                       );
                                     },
                                   );
@@ -1115,7 +1114,7 @@ class _PlayerViewState extends State<PlayerView> {
                     ),
                   ),
                 ),
-                if (_ended && widget.endScreenBuilder != null)
+                if (_ended && widget.endScreenBuilder != null && !widget.live)
                   Positioned.fill(child: widget.endScreenBuilder!(context)),
               ],
             ),
