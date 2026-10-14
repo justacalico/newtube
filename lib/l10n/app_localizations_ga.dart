@@ -219,6 +219,21 @@ class AppLocalizationsGa extends AppLocalizations {
   String get dislikes => 'míthaitneamh';
 
   @override
+  String get share => 'Roinn';
+
+  @override
+  String get copyLink => 'Cóipeáil nasc';
+
+  @override
+  String get copyLinkAtTime => 'Cóipeáil nasc ag an am reatha';
+
+  @override
+  String get watchOnYouTube => 'Féach ar YouTube';
+
+  @override
+  String get copiedToClipboard => 'Nasc cóipeáilte';
+
+  @override
   String get videoFit => 'Oiriúnú físe';
 
   @override

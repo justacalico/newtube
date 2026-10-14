@@ -79,6 +79,11 @@ void touchAll(AppLocalizations l) {
   l.showDislikes;
   l.showDislikesHint;
   l.dislikes;
+  l.share;
+  l.copyLink;
+  l.copyLinkAtTime;
+  l.watchOnYouTube;
+  l.copiedToClipboard;
   l.about;
   l.version;
   l.checkForUpdates;

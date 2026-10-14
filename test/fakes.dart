@@ -19,6 +19,7 @@ import 'package:newtube/services/media_controls.dart';
 import 'package:newtube/services/orientation.dart';
 import 'package:newtube/services/pip_actions.dart';
 import 'package:newtube/services/ryd.dart';
+import 'package:newtube/services/share.dart';
 import 'package:newtube/services/uploads_watcher.dart';
 import 'package:newtube/services/version_checker.dart';
 import 'package:newtube/services/window_actions.dart';
@@ -218,7 +219,11 @@ class FakePlayerController implements PlayerController {
   bool played = false;
   bool videoEnabled = true;
 
-  void emitPosition(Duration d) => _position.add(d);
+  void emitPosition(Duration d) {
+    position = d;
+    _position.add(d);
+  }
+
   void emitDuration(Duration d) => _duration.add(d);
   void emitPlaying(bool v) => _playing.add(v);
   void emitBuffering(bool v) => _buffering.add(v);
@@ -322,6 +327,13 @@ class FakeRydClient extends RydClient {
     if (e != null) throw e;
     return count;
   }
+}
+
+class FakeShareActions extends ShareActions {
+  final List<String> shared = [];
+
+  @override
+  Future<void> share(String text) async => shared.add(text);
 }
 
 class FakeOrientationActions extends OrientationActions {
@@ -429,6 +441,7 @@ Future<AppState> testState({
   OrientationActions? orientation,
   MediaControls? mediaControls,
   RydClient? ryd,
+  ShareActions? share,
   BrightnessControl? brightness,
   Map<String, Object> initialPrefs = const {},
 }) async {
@@ -465,6 +478,7 @@ Future<AppState> testState({
     pipActions: pipActions,
     orientation: orientation,
     ryd: ryd,
+    share: share,
     mediaControls: mediaControls,
     brightness: brightness,
     versionChecker: versionChecker ?? FakeVersionChecker(),

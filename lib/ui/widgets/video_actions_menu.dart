@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
@@ -36,6 +37,34 @@ class VideoActionsMenu extends StatelessWidget {
               leadingIcon: const Icon(Icons.playlist_add),
               onPressed: () => showPlaylistPicker(context, video),
               child: Text(l10n.addToPlaylist),
+            ),
+            MenuItemButton(
+              leadingIcon: const Icon(Icons.share),
+              onPressed: () => state.share?.share(
+                'https://www.youtube.com/watch?v=${video.id}',
+              ),
+              child: Text(l10n.share),
+            ),
+            MenuItemButton(
+              leadingIcon: const Icon(Icons.link),
+              onPressed: () {
+                Clipboard.setData(
+                  ClipboardData(
+                    text: 'https://www.youtube.com/watch?v=${video.id}',
+                  ),
+                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(l10n.copiedToClipboard)));
+              },
+              child: Text(l10n.copyLink),
+            ),
+            MenuItemButton(
+              leadingIcon: const Icon(Icons.open_in_new),
+              onPressed: () => state.launch(
+                Uri.parse('https://www.youtube.com/watch?v=${video.id}'),
+              ),
+              child: Text(l10n.watchOnYouTube),
             ),
           ],
         );

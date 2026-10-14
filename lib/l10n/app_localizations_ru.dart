@@ -219,6 +219,21 @@ class AppLocalizationsRu extends AppLocalizations {
   String get dislikes => 'дизлайков';
 
   @override
+  String get share => 'Поделиться';
+
+  @override
+  String get copyLink => 'Копировать ссылку';
+
+  @override
+  String get copyLinkAtTime => 'Копировать ссылку с меткой времени';
+
+  @override
+  String get watchOnYouTube => 'Смотреть на YouTube';
+
+  @override
+  String get copiedToClipboard => 'Ссылка скопирована';
+
+  @override
   String get videoFit => 'Масштаб видео';
 
   @override

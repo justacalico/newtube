@@ -214,6 +214,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dislikes => '点踩';
 
   @override
+  String get share => '分享';
+
+  @override
+  String get copyLink => '复制链接';
+
+  @override
+  String get copyLinkAtTime => '复制当前时间链接';
+
+  @override
+  String get watchOnYouTube => '在 YouTube 上观看';
+
+  @override
+  String get copiedToClipboard => '链接已复制';
+
+  @override
   String get videoFit => '画面缩放';
 
   @override
@@ -792,6 +807,21 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get dislikes => '点踩';
+
+  @override
+  String get share => '分享';
+
+  @override
+  String get copyLink => '复制链接';
+
+  @override
+  String get copyLinkAtTime => '复制当前时间链接';
+
+  @override
+  String get watchOnYouTube => '在 YouTube 上观看';
+
+  @override
+  String get copiedToClipboard => '链接已复制';
 
   @override
   String get videoFit => '画面缩放';
