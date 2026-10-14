@@ -135,6 +135,7 @@ class FakeYouTubeApi implements YouTubeApi {
   Future<SearchResults> search(String query) async =>
       error != null ? _fail() : searchResults;
 
+  @override
   Future<List<String>> searchSuggestions(String query) async {
     if (error != null) return _fail();
     final gate = suggestionsGate;

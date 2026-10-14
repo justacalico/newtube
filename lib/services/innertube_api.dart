@@ -80,6 +80,32 @@ class InnertubeApi implements YouTubeApi {
   }
 
   @override
+  Future<List<String>> searchSuggestions(String query) async {
+    final r = await _post('suggest_queries', {'input': query});
+    final suggestions = <String>[];
+    void walk(dynamic node) {
+      if (node is Map<String, dynamic>) {
+        final item = node['querySuggestion'];
+        if (item is Map<String, dynamic>) {
+          final text = item['text'];
+          if (text is String && text.isNotEmpty) suggestions.add(text);
+          return;
+        }
+        for (final value in node.values) {
+          walk(value);
+        }
+      } else if (node is List) {
+        for (final item in node) {
+          walk(item);
+        }
+      }
+    }
+
+    walk(r);
+    return suggestions;
+  }
+
+  @override
   Future<SearchResults> search(String query) async {
     final r = await _post('search', {'query': query});
     final videos = <VideoInfo>[];

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
@@ -22,11 +24,71 @@ class _SearchPageState extends State<SearchPage> {
   SearchResults _results = const SearchResults();
   bool _loading = false;
   Object? _error;
+  List<String> _suggestions = const [];
+  Timer? _suggestionDebounce;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(_onQueryChanged);
+  }
 
   @override
   void dispose() {
+    _suggestionDebounce?.cancel();
     _controller.dispose();
     super.dispose();
+  }
+
+  void _onQueryChanged() {
+    _suggestionDebounce?.cancel();
+    _suggestionDebounce = Timer(const Duration(milliseconds: 250), _suggest);
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _suggest() async {
+    final q = _controller.text.trim();
+    if (q.isEmpty) {
+      if (mounted && _suggestions.isNotEmpty) {
+        setState(() => _suggestions = const []);
+      }
+      return;
+    }
+    final state = AppScope.read(context);
+    try {
+      final suggestions = await state.api.searchSuggestions(q);
+      if (!mounted || _controller.text.trim() != q) return;
+      setState(() => _suggestions = suggestions);
+    } catch (_) {}
+  }
+
+  List<Widget> _suggestionTiles(String q) {
+    final history = _searchHistoryMatches(q);
+    return [
+      for (final entry in history)
+        ListTile(
+          leading: const Icon(Icons.history, size: 18),
+          title: Text(entry),
+          onTap: () => _searchFromHistory(entry), // coverage:ignore-line
+        ),
+      for (final suggestion in _suggestions)
+        if (!history.contains(suggestion))
+          ListTile(
+            leading: const Icon(Icons.search, size: 18),
+            title: Text(suggestion),
+            onTap: () => _searchFromHistory(suggestion),
+          ),
+    ];
+  }
+
+  List<String> _searchHistoryMatches(String q) {
+    if (q.isEmpty) return const [];
+    final state = AppScope.read(context);
+    if (!state.settings.searchHistoryEnabled) return const [];
+    return [
+      for (final e in state.searchHistory.entries)
+        if (e.toLowerCase().contains(q.toLowerCase()) && e != q) e,
+    ];
   }
 
   void _search(String query) {
@@ -87,7 +149,11 @@ class _SearchPageState extends State<SearchPage> {
         ),
         Expanded(
           child: _query.isEmpty
-              ? _SearchHistory(onSelect: _searchFromHistory)
+              ? (_controller.text.trim().isNotEmpty
+                    ? ListView(
+                        children: _suggestionTiles(_controller.text.trim()),
+                      )
+                    : _SearchHistory(onSelect: _searchFromHistory))
               : FeedStateView(
                   loading: _loading,
                   error: _error,

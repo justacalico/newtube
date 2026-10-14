@@ -183,6 +183,9 @@ class YouTubeExplodeApi implements YouTubeApi {
   }
 
   @override
+  Future<List<String>> searchSuggestions(String query) => _innertube.searchSuggestions(query);
+
+  @override
   Future<SearchResults> search(String query) async {
     final results = await _yt.search.searchContent(query);
     final videos = <VideoInfo>[];

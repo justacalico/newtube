@@ -4,6 +4,7 @@ abstract class YouTubeApi {
   Future<List<VideoInfo>> homeFeed();
   Future<List<VideoInfo>> trending();
   Future<SearchResults> search(String query);
+  Future<List<String>> searchSuggestions(String query);
   Future<VideoDetails> videoDetails(String videoId);
   Future<List<VideoInfo>> relatedVideos(String videoId);
   Future<CommentsResult> comments(
