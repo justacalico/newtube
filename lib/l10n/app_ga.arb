@@ -316,12 +316,14 @@
       }
     }
   },
-  "hideWatched": "Folaigh feicthe",
-  "hideWatchedHint": "Scag físeáin feicthe as fothaí agus cuardaigh",
-  "refreshFeed": "Athnuaigh",
   "resumedFrom": "Lean ar aghaidh ó {position}",
   "startOver": "Tosaigh arís",
   "continueWatching": "Lean ort ag féachaint",
+  "filterHistory": "Scag stair",
+  "removeFromHistory": "Bain as an stair",
+  "noResults": "Gan toradh",
+  "markWatched": "Marcáil mar fheicthe",
+  "markUnwatched": "Marcáil mar neamhfheicthe",
   "@resumedFrom": {
     "placeholders": {
       "position": {
@@ -329,6 +331,9 @@
       }
     }
   },
+  "refreshFeed": "Athnuaigh",
+  "hideWatched": "Folaigh feicthe",
+  "hideWatchedHint": "Scag físeáin feicthe as fothaí agus cuardaigh",
   "playNext": "Seinm ina dhiaidh",
   "addToQueue": "Cuir leis an scuaine",
   "queued": "Curtha leis an scuaine",

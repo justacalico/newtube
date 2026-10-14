@@ -1526,24 +1526,6 @@ abstract class AppLocalizations {
   /// **'Exported to {path}'**
   String exportedTo(String path);
 
-  /// No description provided for @hideWatched.
-  ///
-  /// In en_GB, this message translates to:
-  /// **'Hide watched'**
-  String get hideWatched;
-
-  /// No description provided for @hideWatchedHint.
-  ///
-  /// In en_GB, this message translates to:
-  /// **'Filter watched videos out of feeds and search'**
-  String get hideWatchedHint;
-
-  /// No description provided for @refreshFeed.
-  ///
-  /// In en_GB, this message translates to:
-  /// **'Refresh'**
-  String get refreshFeed;
-
   /// No description provided for @resumedFrom.
   ///
   /// In en_GB, this message translates to:
@@ -1561,6 +1543,54 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Continue watching'**
   String get continueWatching;
+
+  /// No description provided for @filterHistory.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Filter history'**
+  String get filterHistory;
+
+  /// No description provided for @removeFromHistory.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Remove from history'**
+  String get removeFromHistory;
+
+  /// No description provided for @noResults.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'No results'**
+  String get noResults;
+
+  /// No description provided for @markWatched.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Mark as watched'**
+  String get markWatched;
+
+  /// No description provided for @markUnwatched.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Mark as unwatched'**
+  String get markUnwatched;
+
+  /// No description provided for @refreshFeed.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Refresh'**
+  String get refreshFeed;
+
+  /// No description provided for @hideWatched.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Hide watched'**
+  String get hideWatched;
+
+  /// No description provided for @hideWatchedHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Filter watched videos out of feeds and search'**
+  String get hideWatchedHint;
 
   /// No description provided for @playNext.
   ///

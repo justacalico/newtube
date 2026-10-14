@@ -148,6 +148,11 @@ void touchAll(AppLocalizations l) {
   l.exportPlaylist;
   l.exportCancelled;
   l.exportedTo('/tmp/x');
+  l.filterHistory;
+  l.removeFromHistory;
+  l.noResults;
+  l.markWatched;
+  l.markUnwatched;
   l.playNow;
   l.showReplies;
   l.hideReplies;

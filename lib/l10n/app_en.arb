@@ -316,12 +316,14 @@
       }
     }
   },
-  "hideWatched": "Hide watched",
-  "hideWatchedHint": "Filter watched videos out of feeds and search",
-  "refreshFeed": "Refresh",
   "resumedFrom": "Resumed from {position}",
   "startOver": "Start over",
   "continueWatching": "Continue watching",
+  "filterHistory": "Filter history",
+  "removeFromHistory": "Remove from history",
+  "noResults": "No results",
+  "markWatched": "Mark as watched",
+  "markUnwatched": "Mark as unwatched",
   "@resumedFrom": {
     "placeholders": {
       "position": {
@@ -329,6 +331,9 @@
       }
     }
   },
+  "refreshFeed": "Refresh",
+  "hideWatched": "Hide watched",
+  "hideWatchedHint": "Filter watched videos out of feeds and search",
   "playNext": "Play next",
   "addToQueue": "Add to queue",
   "queued": "Added to queue",

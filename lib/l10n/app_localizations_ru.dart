@@ -777,15 +777,6 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get hideWatched => 'Скрыть просмотренные';
-
-  @override
-  String get hideWatchedHint => 'Убрать просмотренные видео из лент и поиска';
-
-  @override
-  String get refreshFeed => 'Обновить';
-
-  @override
   String resumedFrom(String position) {
     return 'Продолжено с $position';
   }
@@ -795,6 +786,30 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get continueWatching => 'Продолжить просмотр';
+
+  @override
+  String get filterHistory => 'Фильтр истории';
+
+  @override
+  String get removeFromHistory => 'Удалить из истории';
+
+  @override
+  String get noResults => 'Нет результатов';
+
+  @override
+  String get markWatched => 'Отметить просмотренным';
+
+  @override
+  String get markUnwatched => 'Отметить непросмотренным';
+
+  @override
+  String get refreshFeed => 'Обновить';
+
+  @override
+  String get hideWatched => 'Скрыть просмотренные';
+
+  @override
+  String get hideWatchedHint => 'Убрать просмотренные видео из лент и поиска';
 
   @override
   String get playNext => 'Следующим';

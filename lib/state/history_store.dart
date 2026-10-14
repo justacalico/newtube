@@ -98,6 +98,14 @@ class HistoryStore extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> remove(String videoId, SharedPreferences prefs) async {
+    _entries.removeWhere((v) => v.id == videoId);
+    _positions.remove(videoId);
+    await _save(prefs);
+    await prefs.setString(_positionsKey, jsonEncode(_positions));
+    notifyListeners();
+  }
+
   Future<void> clear(SharedPreferences prefs) async {
     _entries.clear();
     _positions.clear();

@@ -757,15 +757,6 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get hideWatched => '隐藏已看';
-
-  @override
-  String get hideWatchedHint => '在推荐、订阅和搜索中过滤已看过的视频';
-
-  @override
-  String get refreshFeed => '刷新';
-
-  @override
   String resumedFrom(String position) {
     return '从 $position 继续播放';
   }
@@ -775,6 +766,30 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get continueWatching => '继续观看';
+
+  @override
+  String get filterHistory => '筛选历史';
+
+  @override
+  String get removeFromHistory => '从历史删除';
+
+  @override
+  String get noResults => '无结果';
+
+  @override
+  String get markWatched => '标记为已看';
+
+  @override
+  String get markUnwatched => '标记为未看';
+
+  @override
+  String get refreshFeed => '刷新';
+
+  @override
+  String get hideWatched => '隐藏已看';
+
+  @override
+  String get hideWatchedHint => '在推荐、订阅和搜索中过滤已看过的视频';
 
   @override
   String get playNext => '下一个播放';
@@ -1541,15 +1556,6 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get hideWatched => '隐藏已看';
-
-  @override
-  String get hideWatchedHint => '在推荐、订阅和搜索中过滤已看过的视频';
-
-  @override
-  String get refreshFeed => '刷新';
-
-  @override
   String resumedFrom(String position) {
     return '从 $position 继续播放';
   }
@@ -1559,6 +1565,30 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get continueWatching => '继续观看';
+
+  @override
+  String get filterHistory => '筛选历史';
+
+  @override
+  String get removeFromHistory => '从历史删除';
+
+  @override
+  String get noResults => '无结果';
+
+  @override
+  String get markWatched => '标记为已看';
+
+  @override
+  String get markUnwatched => '标记为未看';
+
+  @override
+  String get refreshFeed => '刷新';
+
+  @override
+  String get hideWatched => '隐藏已看';
+
+  @override
+  String get hideWatchedHint => '在推荐、订阅和搜索中过滤已看过的视频';
 
   @override
   String get playNext => '下一个播放';
