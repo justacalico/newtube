@@ -983,4 +983,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get shortcutSpeed => 'Скорость';
+
+  @override
+  String get previousVideo => 'Назад';
 }

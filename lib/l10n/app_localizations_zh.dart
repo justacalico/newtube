@@ -962,6 +962,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get shortcutSpeed => '播放速度';
+
+  @override
+  String get previousVideo => '上一个';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1921,4 +1924,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get shortcutSpeed => '播放速度';
+
+  @override
+  String get previousVideo => '上一个';
 }

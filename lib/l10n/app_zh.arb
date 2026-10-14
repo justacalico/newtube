@@ -403,5 +403,6 @@
   "shortcutStartEnd": "跳到开头 / 结尾",
   "shortcutCaptions": "切换字幕",
   "shortcutPip": "迷你播放器",
-  "shortcutSpeed": "播放速度"
+  "shortcutSpeed": "播放速度",
+  "previousVideo": "上一个"
 }
