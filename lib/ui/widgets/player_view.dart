@@ -1101,58 +1101,51 @@ class _PlayerViewState extends State<PlayerView> {
                                                                             .data ??
                                                                         Duration
                                                                             .zero;
-                                                                    return SliderTheme(
-                                                                      data: SliderTheme.of(context).copyWith(
-                                                                        thumbShape: RoundSliderThumbShape(
-                                                                          enabledThumbRadius:
+                                                                    return Semantics(
+                                                                      label: l10n
+                                                                          .shortcutSeek,
+                                                                      child: SliderTheme(
+                                                                        data: SliderTheme.of(context).copyWith(
+                                                                          thumbShape: RoundSliderThumbShape(
+                                                                            enabledThumbRadius:
+                                                                                wide
+                                                                                ? 5
+                                                                                : 10,
+                                                                          ),
+                                                                          trackHeight:
                                                                               wide
-                                                                              ? 5
-                                                                              : 10,
+                                                                              ? 2
+                                                                              : 6,
+                                                                          overlayShape: const RoundSliderOverlayShape(
+                                                                            overlayRadius:
+                                                                                16,
+                                                                          ),
                                                                         ),
-                                                                        trackHeight:
-                                                                            wide
-                                                                            ? 2
-                                                                            : 6,
-                                                                        overlayShape: const RoundSliderOverlayShape(
-                                                                          overlayRadius:
-                                                                              16,
+                                                                        child: Slider(
+                                                                          key:
+                                                                              const ValueKey(
+                                                                                'seekSlider',
+                                                                              ),
+                                                                          value: clamped.inMilliseconds.toDouble().clamp(
+                                                                            0,
+                                                                            (total.inMilliseconds).toDouble(),
+                                                                          ),
+                                                                          max: total.inMilliseconds.toDouble().clamp(
+                                                                            1,
+                                                                            double.infinity,
+                                                                          ),
+                                                                          secondaryTrackValue:
+                                                                              total > Duration.zero
+                                                                              ? (buffered.inMilliseconds / total.inMilliseconds).clamp(0.0, 1.0)
+                                                                              : null,
+                                                                          onChanged:
+                                                                              total == Duration.zero
+                                                                              ? null
+                                                                              : (v) {
+                                                                                  setState(() => _previewFraction = (v / total.inMilliseconds).clamp(0.0, 1.0));
+                                                                                  _player.seek(Duration(milliseconds: v.round()));
+                                                                                },
                                                                         ),
-                                                                      ),
-                                                                      child: Slider(
-                                                                        key:
-                                                                            const ValueKey(
-                                                                              'seekSlider',
-                                                                            ),
-                                                                        value: clamped
-                                                                            .inMilliseconds
-                                                                            .toDouble()
-                                                                            .clamp(
-                                                                              0,
-                                                                              (total.inMilliseconds).toDouble(),
-                                                                            ),
-                                                                        max: total
-                                                                            .inMilliseconds
-                                                                            .toDouble()
-                                                                            .clamp(
-                                                                              1,
-                                                                              double.infinity,
-                                                                            ),
-                                                                        secondaryTrackValue:
-                                                                            total >
-                                                                                Duration.zero
-                                                                            ? (buffered.inMilliseconds / total.inMilliseconds).clamp(
-                                                                                0.0,
-                                                                                1.0,
-                                                                              )
-                                                                            : null,
-                                                                        onChanged:
-                                                                            total ==
-                                                                                Duration.zero
-                                                                            ? null
-                                                                            : (v) {
-                                                                                setState(() => _previewFraction = (v / total.inMilliseconds).clamp(0.0, 1.0));
-                                                                                _player.seek(Duration(milliseconds: v.round()));
-                                                                              },
                                                                       ),
                                                                     );
                                                                   },
