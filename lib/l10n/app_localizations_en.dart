@@ -770,15 +770,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get hideWatched => 'Hide watched';
-
-  @override
-  String get hideWatchedHint => 'Filter watched videos out of feeds and search';
-
-  @override
-  String get refreshFeed => 'Refresh';
-
-  @override
   String resumedFrom(String position) {
     return 'Resumed from $position';
   }
@@ -788,6 +779,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get continueWatching => 'Continue watching';
+
+  @override
+  String get filterHistory => 'Filter history';
+
+  @override
+  String get removeFromHistory => 'Remove from history';
+
+  @override
+  String get noResults => 'No results';
+
+  @override
+  String get markWatched => 'Mark as watched';
+
+  @override
+  String get markUnwatched => 'Mark as unwatched';
+
+  @override
+  String get refreshFeed => 'Refresh';
+
+  @override
+  String get hideWatched => 'Hide watched';
+
+  @override
+  String get hideWatchedHint => 'Filter watched videos out of feeds and search';
 
   @override
   String get playNext => 'Play next';
@@ -1567,15 +1582,6 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   }
 
   @override
-  String get hideWatched => 'Hide watched';
-
-  @override
-  String get hideWatchedHint => 'Filter watched videos out of feeds and search';
-
-  @override
-  String get refreshFeed => 'Refresh';
-
-  @override
   String resumedFrom(String position) {
     return 'Resumed from $position';
   }
@@ -1585,6 +1591,30 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get continueWatching => 'Continue watching';
+
+  @override
+  String get filterHistory => 'Filter history';
+
+  @override
+  String get removeFromHistory => 'Remove from history';
+
+  @override
+  String get noResults => 'No results';
+
+  @override
+  String get markWatched => 'Mark as watched';
+
+  @override
+  String get markUnwatched => 'Mark as unwatched';
+
+  @override
+  String get refreshFeed => 'Refresh';
+
+  @override
+  String get hideWatched => 'Hide watched';
+
+  @override
+  String get hideWatchedHint => 'Filter watched videos out of feeds and search';
 
   @override
   String get playNext => 'Play next';

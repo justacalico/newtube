@@ -774,15 +774,6 @@ class AppLocalizationsGa extends AppLocalizations {
   }
 
   @override
-  String get hideWatched => 'Folaigh feicthe';
-
-  @override
-  String get hideWatchedHint => 'Scag físeáin feicthe as fothaí agus cuardaigh';
-
-  @override
-  String get refreshFeed => 'Athnuaigh';
-
-  @override
   String resumedFrom(String position) {
     return 'Lean ar aghaidh ó $position';
   }
@@ -792,6 +783,30 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get continueWatching => 'Lean ort ag féachaint';
+
+  @override
+  String get filterHistory => 'Scag stair';
+
+  @override
+  String get removeFromHistory => 'Bain as an stair';
+
+  @override
+  String get noResults => 'Gan toradh';
+
+  @override
+  String get markWatched => 'Marcáil mar fheicthe';
+
+  @override
+  String get markUnwatched => 'Marcáil mar neamhfheicthe';
+
+  @override
+  String get refreshFeed => 'Athnuaigh';
+
+  @override
+  String get hideWatched => 'Folaigh feicthe';
+
+  @override
+  String get hideWatchedHint => 'Scag físeáin feicthe as fothaí agus cuardaigh';
 
   @override
   String get playNext => 'Seinm ina dhiaidh';

@@ -252,6 +252,11 @@ void main() {
     await tester.pumpAndSettle();
 
     final tile = find.widgetWithText(SwitchListTile, 'MCP server');
+    await tester.scrollUntilVisible(
+      tile,
+      150,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(tile, findsOneWidget);
     expect(
       find.text('Allow AI tools to search and play videos'),
@@ -259,8 +264,6 @@ void main() {
     );
     expect(find.text('Export server file'), findsNothing);
 
-    await tester.drag(find.byType(ListView).first, const Offset(0, -120));
-    await tester.pumpAndSettle();
     await tester.tap(tile);
     await tester.pumpAndSettle();
     expect(state.settings.mcpEnabled, isTrue);
@@ -299,6 +302,11 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
+    await tester.scrollUntilVisible(
+      find.text('Could not start the MCP server'),
+      150,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('Could not start the MCP server'), findsOneWidget);
     debugDefaultTargetPlatformOverride = null;
   });

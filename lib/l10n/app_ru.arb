@@ -316,12 +316,14 @@
       }
     }
   },
-  "hideWatched": "Скрыть просмотренные",
-  "hideWatchedHint": "Убрать просмотренные видео из лент и поиска",
-  "refreshFeed": "Обновить",
   "resumedFrom": "Продолжено с {position}",
   "startOver": "Сначала",
   "continueWatching": "Продолжить просмотр",
+  "filterHistory": "Фильтр истории",
+  "removeFromHistory": "Удалить из истории",
+  "noResults": "Нет результатов",
+  "markWatched": "Отметить просмотренным",
+  "markUnwatched": "Отметить непросмотренным",
   "@resumedFrom": {
     "placeholders": {
       "position": {
@@ -329,6 +331,9 @@
       }
     }
   },
+  "refreshFeed": "Обновить",
+  "hideWatched": "Скрыть просмотренные",
+  "hideWatchedHint": "Убрать просмотренные видео из лент и поиска",
   "playNext": "Следующим",
   "addToQueue": "В очередь",
   "queued": "Добавлено в очередь",

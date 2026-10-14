@@ -16,9 +16,10 @@ class VideoActionsMenu extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final state = AppScope.read(context);
     return ListenableBuilder(
-      listenable: state.watchLater,
+      listenable: Listenable.merge([state.watchLater, state.history]),
       builder: (context, _) {
         final saved = state.watchLater.contains(video.id);
+        final watched = state.history.contains(video.id);
         return MenuAnchor(
           builder: (context, controller, child) => IconButton(
             tooltip: l10n.videoActions,
@@ -55,6 +56,15 @@ class VideoActionsMenu extends StatelessWidget {
               leadingIcon: const Icon(Icons.playlist_add),
               onPressed: () => showPlaylistPicker(context, video),
               child: Text(l10n.addToPlaylist),
+            ),
+            MenuItemButton(
+              leadingIcon: Icon(
+                watched ? Icons.visibility_off : Icons.visibility,
+              ),
+              onPressed: () => watched
+                  ? state.history.remove(video.id, state.prefs)
+                  : state.history.record(video, state.prefs),
+              child: Text(watched ? l10n.markUnwatched : l10n.markWatched),
             ),
             MenuItemButton(
               leadingIcon: const Icon(Icons.share),
