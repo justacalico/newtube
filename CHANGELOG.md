@@ -2,6 +2,37 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.27.0 - 2026-10-14
+#### Features
+- (**comments**) 回复、排序与徽章 - (d03c269) - HttpAnimations
+- (**downloads**) 离线下载 - (5d6571d) - HttpAnimations
+- (**feeds**) 下拉刷新 - (ce39603) - HttpAnimations
+- (**feeds**) 隐藏已看视频 - (ed75df2) - HttpAnimations
+- (**feeds**) 隐藏 Shorts - (7f73592) - HttpAnimations
+- (**links**) 深度链接 - (47fbcc6) - HttpAnimations
+- (**player**) 播放队列 - (575b06d) - HttpAnimations
+- (**player**) 自动播放倒计时 - (51b7633) - HttpAnimations
+- (**player**) 统计信息叠加层 - (c5de4ff) - HttpAnimations
+- (**player**) 全屏横屏旋转 - (dc169a0) - HttpAnimations
+- (**player**) 直播与首映支持 - (f026641) - HttpAnimations
+- (**player**) 画面缩放模式 - (b86584b) - HttpAnimations
+- (**playlists**) 排序重命名导出 - (1d4799b) - HttpAnimations
+- (**search**) 粘贴链接直达 - (b8d1bd7) - HttpAnimations
+- (**search**) 搜索筛选器 - (5e33ac8) - HttpAnimations
+- (**search**) 搜索建议 - (02921af) - HttpAnimations
+- (**ui**) 热门页 - (3fca4ae) - HttpAnimations
+- (**ui**) 分享与复制链接 - (14394a0) - HttpAnimations
+- (**ui**) 分享与复制链接 - (bdb3f44) - HttpAnimations
+- (**watch**) 续播与继续观看 - (ad427d3) - HttpAnimations
+- (**watch**) 章节列表 - (3fa4d42) - HttpAnimations
+- (**watch**) 描述链接与时间戳跳转 - (916d383) - HttpAnimations
+- (**watch**) 点踩数显示 - (05b120f) - HttpAnimations
+- (**watch**) 章节列表 - (4b1c6ae) - HttpAnimations
+#### Bug Fixes
+- 修复合并后的 shell 索引与 feed 过滤 - (33bd792) - HttpAnimations
+
+- - -
+
 ## v0.26.0 - 2026-10-14
 #### Features
 - (**player**) 进度条最热门区段热图 - (d3370d5) - HttpAnimations
