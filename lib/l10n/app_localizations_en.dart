@@ -226,6 +226,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playbackSpeed => 'Playback speed';
 
   @override
+  String get mute => 'Mute';
+
+  @override
+  String get unmute => 'Unmute';
+
+  @override
+  String get volume => 'Volume';
+
+  @override
   String get speedNormal => 'Normal';
 
   @override
@@ -722,6 +731,15 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get playbackSpeed => 'Playback speed';
+
+  @override
+  String get mute => 'Mute';
+
+  @override
+  String get unmute => 'Unmute';
+
+  @override
+  String get volume => 'Volume';
 
   @override
   String get speedNormal => 'Normal';

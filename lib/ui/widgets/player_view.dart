@@ -84,6 +84,7 @@ class _PlayerViewState extends State<PlayerView> {
   double? _dragBase;
   double? _hudValue;
   bool _hudVolume = true;
+  bool _volumePopup = false;
 
   @override
   void initState() {
@@ -154,7 +155,10 @@ class _PlayerViewState extends State<PlayerView> {
     _hideTimer?.cancel();
     _hideTimer = Timer(_hideDelay, () {
       if (mounted && _player.playing && _controlsVisible) {
-        setState(() => _controlsVisible = false);
+        setState(() {
+          _controlsVisible = false;
+          _volumePopup = false;
+        });
       }
     });
   }
@@ -166,7 +170,10 @@ class _PlayerViewState extends State<PlayerView> {
 
   void _hideControls() {
     if (_player.playing && _controlsVisible) {
-      setState(() => _controlsVisible = false);
+      setState(() {
+        _controlsVisible = false;
+        _volumePopup = false;
+      });
     }
   }
 
@@ -403,6 +410,58 @@ class _PlayerViewState extends State<PlayerView> {
     _player.setMuted(!_player.muted);
   }
 
+  void _changeVolume(double value) {
+    _player.setMuted(false);
+    _player.setVolume(value.clamp(0.0, 1.0));
+  }
+
+  Widget _volumeControls(bool wide, AppLocalizations l10n) {
+    return StreamBuilder<bool>(
+      stream: _player.mutedStream,
+      initialData: _player.muted,
+      builder: (context, mutedSnap) {
+        final muted = mutedSnap.data ?? _player.muted;
+        return StreamBuilder<double>(
+          stream: _player.volumeStream,
+          initialData: _player.volume,
+          builder: (context, volumeSnap) {
+            final volume = volumeSnap.data ?? _player.volume;
+            final icon = muted || volume <= 0
+                ? Icons.volume_off
+                : volume < 0.5
+                ? Icons.volume_down
+                : Icons.volume_up;
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: Icon(icon),
+                  color: Colors.white,
+                  visualDensity: VisualDensity.compact,
+                  tooltip: wide
+                      ? (muted ? l10n.unmute : l10n.mute)
+                      : l10n.volume,
+                  onPressed: wide
+                      ? _toggleMute
+                      : () => setState(() => _volumePopup = !_volumePopup),
+                ),
+                if (wide)
+                  SizedBox(
+                    width: 80,
+                    child: Slider(
+                      key: const ValueKey('volumeSlider'),
+                      value: muted ? 0.0 : volume.clamp(0.0, 1.0),
+                      onChanged: _changeVolume,
+                    ),
+                  ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   void _adjustVolume(double delta) {
     _showControls();
     _player.setVolume((_player.volume + delta).clamp(0.0, 1.0));
@@ -427,6 +486,7 @@ class _PlayerViewState extends State<PlayerView> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final wide = MediaQuery.sizeOf(context).width >= 600;
     return CallbackShortcuts(
       bindings: {
         const SingleActivator(LogicalKeyboardKey.arrowLeft): () =>
@@ -564,6 +624,19 @@ class _PlayerViewState extends State<PlayerView> {
                       ),
                     ),
                   ),
+                if (_volumePopup && !wide)
+                  Positioned(
+                    right: 8,
+                    bottom: 56,
+                    child: Container(
+                      color: Colors.black54,
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [_volumeControls(true, l10n)],
+                      ),
+                    ),
+                  ),
                 if (widget.segmentSkipper != null)
                   Positioned(
                     right: 8,
@@ -664,6 +737,7 @@ class _PlayerViewState extends State<PlayerView> {
                                       : _player.play(),
                                 ),
                               ),
+                              _volumeControls(wide, l10n),
                               StreamBuilder<Duration>(
                                 stream: _player.durationStream,
                                 initialData: _player.duration,
@@ -719,6 +793,9 @@ class _PlayerViewState extends State<PlayerView> {
                                                 alignment: Alignment.center,
                                                 children: [
                                                   Slider(
+                                                    key: const ValueKey(
+                                                      'seekSlider',
+                                                    ),
                                                     value: clamped
                                                         .inMilliseconds
                                                         .toDouble()

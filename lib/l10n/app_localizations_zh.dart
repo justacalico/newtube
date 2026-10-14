@@ -223,6 +223,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get playbackSpeed => '播放速度';
 
   @override
+  String get mute => '静音';
+
+  @override
+  String get unmute => '取消静音';
+
+  @override
+  String get volume => '音量';
+
+  @override
   String get speedNormal => '正常';
 
   @override
@@ -708,6 +717,15 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get playbackSpeed => '播放速度';
+
+  @override
+  String get mute => '静音';
+
+  @override
+  String get unmute => '取消静音';
+
+  @override
+  String get volume => '音量';
 
   @override
   String get speedNormal => '正常';

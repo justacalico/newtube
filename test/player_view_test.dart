@@ -110,7 +110,10 @@ void main() {
     await tester.pump();
     expect(find.byType(LinearProgressIndicator), findsNothing);
 
-    await tester.drag(find.byType(Slider), const Offset(50, 0));
+    await tester.drag(
+      find.byKey(const ValueKey('seekSlider')),
+      const Offset(50, 0),
+    );
     expect(player.lastSeek, isNotNull);
   });
 
@@ -130,7 +133,9 @@ void main() {
         ),
       ),
     );
-    final slider = tester.widget<Slider>(find.byType(Slider));
+    final slider = tester.widget<Slider>(
+      find.byKey(const ValueKey('seekSlider')),
+    );
     expect(slider.onChanged, isNull);
   });
 
