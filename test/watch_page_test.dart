@@ -464,7 +464,7 @@ void main() {
     await pumpPage(tester, state, WatchPage(video: testVideos.first));
     await tester.pumpAndSettle();
 
-    expect(find.text('Intro'), findsOneWidget);
+    expect(find.text('Intro'), findsWidgets);
 
     player.position = const Duration(seconds: 75);
     player.emitPosition(const Duration(seconds: 75));
@@ -1011,6 +1011,8 @@ void main() {
     expect(player.paused, isFalse);
     expect(player.playing, isTrue);
 
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
     await tester.pump();
     expect(player.videoEnabled, isTrue);

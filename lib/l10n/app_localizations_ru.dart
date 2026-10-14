@@ -179,6 +179,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get defaultSpeed => 'Скорость по умолчанию';
 
   @override
+  String get chapters => 'Главы';
+
+  @override
   String get about => 'О программе';
 
   @override

@@ -175,6 +175,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get defaultSpeed => '默认播放速度';
 
   @override
+  String get chapters => '章节';
+
+  @override
   String get about => '关于';
 
   @override
@@ -702,6 +705,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get defaultSpeed => '默认播放速度';
+
+  @override
+  String get chapters => '章节';
 
   @override
   String get about => '关于';

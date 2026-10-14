@@ -55,6 +55,7 @@
   "qualityAuto": "Auto",
   "qualityLowest": "Lowest",
   "defaultSpeed": "Default playback speed",
+  "chapters": "Chapters",
   "about": "About",
   "version": "Version",
   "checkForUpdates": "Check for updates",
