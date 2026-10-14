@@ -22,9 +22,21 @@ final class PipController: NSObject {
   private var container: UIView?
   private var possibleObservation: NSKeyValueObservation?
   private var startPending = false
+  private var pendingPosition: Double = 0
+  private var pendingRate: Float = 1
+  private var pendingPlaying = false
+  private var preparedKey: String?
   private var wasPlaying = false
   private var lastPosition: Double = 0
   private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
+
+  static func startPendingIfPossible() {
+    shared?.startPendingIfPossible()
+  }
+
+  static func stopActivePip() {
+    shared?.stopActivePip()
+  }
 
   init(channel: FlutterMethodChannel) {
     self.channel = channel
@@ -48,6 +60,19 @@ final class PipController: NSObject {
         playing: args["playing"] as? Bool ?? true,
         result: result
       )
+    case "preparePip":
+      guard
+        let args = call.arguments as? [String: Any],
+        let url = (args["url"] as? String).flatMap(URL.init(string:))
+      else {
+        result(false)
+        return
+      }
+      prepare(
+        url: url,
+        audioUrl: (args["audioUrl"] as? String).flatMap(URL.init(string:))
+      )
+      result(true)
     case "exitPip":
       startPending = false
       if pipController?.isPictureInPictureActive == true {
@@ -75,18 +100,78 @@ final class PipController: NSObject {
     result: @escaping FlutterResult
   ) {
     guard AVPictureInPictureController.isPictureInPictureSupported(),
-          let host = hostView() else {
+          pipController != nil || hostView() != nil else {
       result(false)
       return
     }
     beginBackgroundTask()
     try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback)
     try? AVAudioSession.sharedInstance().setActive(true)
+    pendingPosition = position
+    pendingRate = rate
+    pendingPlaying = playing
+    startPending = true
+    prepare(url: url, audioUrl: audioUrl)
+    if let pip = pipController, player?.currentItem != nil {
+      player?.seek(to: CMTime(seconds: position, preferredTimescale: 600))
+      startIfPossible(pip)
+    }
+    result(true)
+  }
+
+  private func prepare(url: URL, audioUrl: URL?) {
+    let key = "\(url.absoluteString)|\(audioUrl?.absoluteString ?? "")"
+    if preparedKey == key && pipController != nil { return }
+    guard let host = hostView() else { return }
+    preparedKey = key
+    ensurePipeline(host: host)
     Task { @MainActor in
       let item = await Self.makeItem(url: url, audioUrl: audioUrl)
-      self.attach(item, to: host, position: position, rate: rate, playing: playing)
-      result(true)
+      guard self.preparedKey == key else { return }
+      self.player?.replaceCurrentItem(with: item)
+      if self.startPending {
+        self.player?.seek(
+          to: CMTime(seconds: self.pendingPosition, preferredTimescale: 600)
+        )
+        if let pip = self.pipController { self.startIfPossible(pip) }
+      }
     }
+  }
+
+  @MainActor
+  private func ensurePipeline(host: UIView) {
+    guard pipController == nil else { return }
+    let holder = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
+    holder.isUserInteractionEnabled = false
+    holder.alpha = 0.01
+    host.addSubview(holder)
+    container = holder
+
+    let layer = AVPlayerLayer()
+    layer.frame = holder.bounds
+    holder.layer.addSublayer(layer)
+
+    let player = AVPlayer()
+    layer.player = player
+    self.player = player
+
+    let pip = AVPictureInPictureController(playerLayer: layer)
+    pip?.delegate = self
+    pipController = pip
+    possibleObservation = pip?.observe(\.isPictureInPicturePossible) {
+      [weak self] controller, _ in
+      self?.startIfPossible(controller)
+    }
+  }
+
+  private func startPendingIfPossible() {
+    guard let pip = pipController else { return }
+    startIfPossible(pip)
+  }
+
+  private func stopActivePip() {
+    guard let pip = pipController, pip.isPictureInPictureActive else { return }
+    pip.stopPictureInPicture()
   }
 
   private static func makeItem(url: URL, audioUrl: URL?) async -> AVPlayerItem {
@@ -123,50 +208,6 @@ final class PipController: NSObject {
     } catch {
       return AVPlayerItem(url: url)
     }
-  }
-
-  @MainActor
-  private func attach(
-    _ item: AVPlayerItem,
-    to host: UIView,
-    position: Double,
-    rate: Float,
-    playing: Bool
-  ) {
-    if pipController == nil {
-      let holder = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
-      holder.isUserInteractionEnabled = false
-      holder.alpha = 0.01
-      host.addSubview(holder)
-      container = holder
-
-      let layer = AVPlayerLayer()
-      layer.frame = holder.bounds
-      holder.layer.addSublayer(layer)
-
-      let player = AVPlayer()
-      layer.player = player
-      self.player = player
-
-      let pip = AVPictureInPictureController(playerLayer: layer)
-      pip?.delegate = self
-      pipController = pip
-      possibleObservation = pip?.observe(\.isPictureInPicturePossible) {
-        [weak self] controller, _ in
-        self?.startIfPossible(controller)
-      }
-    }
-    player?.replaceCurrentItem(with: item)
-    player?.seek(to: CMTime(seconds: position, preferredTimescale: 600))
-    if playing {
-      player?.playImmediately(atRate: rate)
-    }
-    guard let pip = pipController, !pip.isPictureInPictureActive else {
-      startPending = false
-      return
-    }
-    startPending = true
-    startIfPossible(pip)
   }
 
   private func startIfPossible(_ controller: AVPictureInPictureController) {
@@ -206,6 +247,7 @@ final class PipController: NSObject {
     player = nil
     container?.removeFromSuperview()
     container = nil
+    preparedKey = nil
     endBackgroundTask()
   }
 }
@@ -215,6 +257,9 @@ extension PipController: AVPictureInPictureControllerDelegate {
     _ controller: AVPictureInPictureController
   ) {
     startPending = false
+    if pendingPlaying {
+      player?.playImmediately(atRate: pendingRate)
+    }
     channel.invokeMethod("pipModeChanged", arguments: ["active": true])
     endBackgroundTask()
   }
@@ -246,6 +291,10 @@ extension PipController: AVPictureInPictureControllerDelegate {
     failedToStartPictureInPictureWithError error: Error
   ) {
     startPending = false
+    channel.invokeMethod(
+      "pipModeChanged",
+      arguments: ["active": false, "position": pendingPosition, "playing": pendingPlaying]
+    )
     teardown()
   }
 
