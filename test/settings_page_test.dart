@@ -90,6 +90,7 @@ void main() {
     expect(state.settings.audioOnly, isTrue);
 
     await tester.scrollUntilVisible(find.text('About'), 200);
+    await tester.ensureVisible(find.text('About'));
     expect(find.text('About'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('Version 1.2.3'), 200);
     expect(find.text('Version 1.2.3'), findsOneWidget);
@@ -182,6 +183,8 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.scrollUntilVisible(find.text('Clear history'), 200);
+    await tester.ensureVisible(find.text('Clear history'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Clear history'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Clear'));
@@ -203,6 +206,8 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.scrollUntilVisible(find.text('Clear history'), 200);
+    await tester.ensureVisible(find.text('Clear history'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Clear history'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Cancel'));
@@ -347,19 +352,18 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(
-      find.widgetWithText(SwitchListTile, 'SponsorBlock'),
-      200,
-    );
+    await tester.scrollUntilVisible(find.text('SponsorBlock'), 200);
+    await tester.ensureVisible(find.text('SponsorBlock'));
+    await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(SwitchListTile, 'SponsorBlock'));
     await tester.pump();
     expect(state.settings.sponsorBlockEnabled, isTrue);
     expect(find.text('Skip automatically'), findsOneWidget);
 
-    await tester.scrollUntilVisible(
+    await tester.ensureVisible(
       find.widgetWithText(SwitchListTile, 'Skip automatically'),
-      200,
     );
+    await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(SwitchListTile, 'Skip automatically'));
     await tester.pump();
     expect(state.settings.sponsorBlockAutoSkip, isFalse);
