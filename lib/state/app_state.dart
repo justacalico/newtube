@@ -10,6 +10,7 @@ import '../services/file_saver.dart';
 import '../services/launcher.dart';
 import '../services/mcp_server.dart';
 import '../services/media_controls.dart';
+import '../services/orientation.dart';
 import '../services/pip_actions.dart';
 import '../services/player_controller.dart';
 import '../services/sponsor_block.dart';
@@ -44,6 +45,7 @@ class AppState extends ChangeNotifier {
   final SponsorBlockClient? sponsorBlock;
   final UploadsWatcher? uploads;
   final PipActions? pipActions;
+  final OrientationActions? orientation;
   final MediaControls? mediaControls;
   final BrightnessControl? brightness;
   final PlaybackSession playback;
@@ -76,6 +78,7 @@ class AppState extends ChangeNotifier {
     this.sponsorBlock,
     this.uploads,
     this.pipActions,
+    this.orientation,
     this.mediaControls,
     this.brightness,
     this._versionChecker,

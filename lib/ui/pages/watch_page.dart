@@ -9,6 +9,7 @@ import '../../services/media_controls.dart';
 import '../../services/pip_actions.dart';
 import '../../services/player_controller.dart';
 import '../../services/sleep_timer.dart';
+import '../../services/orientation.dart';
 import '../../services/sponsor_block.dart';
 import '../../state/app_state.dart';
 import '../../state/playback_session.dart';
@@ -549,6 +550,7 @@ class _WatchPageState extends State<WatchPage>
               storyboard: bestStoryboard(_details?.storyboards ?? const []),
               heatmap: _details?.heatmap ?? const [],
               live: _details?.info.isLive ?? widget.video.isLive,
+              orientation: _state.orientation,
             ),
           ),
         )
@@ -904,6 +906,7 @@ class _FullscreenPlayer extends StatefulWidget {
   final Storyboard? storyboard;
   final List<HeatMarker> heatmap;
   final bool live;
+  final OrientationActions? orientation;
 
   const _FullscreenPlayer({
     required this.player,
@@ -926,6 +929,7 @@ class _FullscreenPlayer extends StatefulWidget {
     this.storyboard,
     this.heatmap = const [],
     this.live = false,
+    this.orientation,
   });
 
   @override
@@ -934,6 +938,19 @@ class _FullscreenPlayer extends StatefulWidget {
 
 class _FullscreenPlayerState extends State<_FullscreenPlayer> {
   late PlayableStream? _current = widget.current;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.orientation?.landscape();
+  }
+
+  @override
+  void dispose() {
+    widget.orientation?.restore();
+    super.dispose();
+  }
+
   late PlayableStream? _currentAudio = widget.currentAudio;
   late CaptionTrack? _caption = widget.selectedCaption;
 

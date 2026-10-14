@@ -16,6 +16,7 @@ import 'package:newtube/services/mcp_server.dart';
 import 'package:newtube/services/player_controller.dart';
 import 'package:newtube/services/sponsor_block.dart';
 import 'package:newtube/services/media_controls.dart';
+import 'package:newtube/services/orientation.dart';
 import 'package:newtube/services/pip_actions.dart';
 import 'package:newtube/services/uploads_watcher.dart';
 import 'package:newtube/services/version_checker.dart';
@@ -306,6 +307,17 @@ class FakePlayerController implements PlayerController {
   }
 }
 
+class FakeOrientationActions extends OrientationActions {
+  int landscapeCalls = 0;
+  int restoreCalls = 0;
+
+  @override
+  Future<void> landscape() async => landscapeCalls++;
+
+  @override
+  Future<void> restore() async => restoreCalls++;
+}
+
 class FakeMcpServer implements McpServer {
   @override
   bool running = false;
@@ -397,6 +409,7 @@ Future<AppState> testState({
   SponsorBlockClient? sponsorBlock,
   UploadsWatcher? uploads,
   PipActions? pipActions,
+  OrientationActions? orientation,
   MediaControls? mediaControls,
   BrightnessControl? brightness,
   Map<String, Object> initialPrefs = const {},
@@ -432,6 +445,7 @@ Future<AppState> testState({
     sponsorBlock: sponsorBlock,
     uploads: uploads,
     pipActions: pipActions,
+    orientation: orientation,
     mediaControls: mediaControls,
     brightness: brightness,
     versionChecker: versionChecker ?? FakeVersionChecker(),
