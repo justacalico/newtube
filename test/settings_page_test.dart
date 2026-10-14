@@ -266,10 +266,15 @@ void main() {
     expect(find.text('http://127.0.0.1:8642/mcp'), findsOneWidget);
     expect(find.text('Export server file'), findsOneWidget);
 
+    await tester.scrollUntilVisible(find.text('Export server file'), 200);
+    await tester.ensureVisible(find.text('Export server file'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Export server file'));
     await tester.pumpAndSettle();
 
-    await tester.tap(tile);
+    await tester.drag(find.byType(ListView).first, const Offset(0, 600));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(SwitchListTile, 'MCP server'));
     await tester.pumpAndSettle();
     expect(state.settings.mcpEnabled, isFalse);
     expect(fake.running, isFalse);
@@ -307,6 +312,9 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
+    await tester.scrollUntilVisible(find.text('Export server file'), 200);
+    await tester.ensureVisible(find.text('Export server file'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Export server file'));
     await tester.pumpAndSettle();
 
@@ -341,6 +349,9 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
+    await tester.scrollUntilVisible(find.text('Export server file'), 200);
+    await tester.ensureVisible(find.text('Export server file'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Export server file'));
     await tester.pumpAndSettle();
     expect(find.text('Could not save the export'), findsOneWidget);

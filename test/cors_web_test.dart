@@ -100,6 +100,8 @@ void main() {
     await pumpPage(tester, state, SettingsPage());
     await tester.pumpAndSettle();
 
+    await tester.scrollUntilVisible(find.text('CORS proxy prefix'), 200);
+    await tester.pumpAndSettle();
     expect(find.text('CORS proxy prefix'), findsOneWidget);
     await tester.enterText(
       find.byType(TextFormField),
