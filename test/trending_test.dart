@@ -111,10 +111,7 @@ void main() {
   });
 
   testWidgets('trending card opens the watch page', (tester) async {
-    final api = FakeYouTubeApi(
-      feed: testVideos,
-      trendingFeed: testVideos,
-    );
+    final api = FakeYouTubeApi(feed: testVideos, trendingFeed: testVideos);
     final state = await testState(api: api);
     await pumpPage(tester, state, const TrendingPage());
     await tester.pumpAndSettle();

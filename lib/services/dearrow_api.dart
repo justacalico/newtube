@@ -1,3 +1,5 @@
+import '../models/search_filter.dart';
+import '../models/youtube_route.dart';
 import '../models/video_info.dart';
 import '../state/settings_store.dart';
 import '../utils/debug_log.dart';
@@ -48,11 +50,15 @@ class DeArrowApi implements YouTubeApi {
   Future<List<VideoInfo>> trending() => inner.trending().then(_applyAll);
 
   @override
-  Future<List<String>> searchSuggestions(String query) => inner.searchSuggestions(query);
+  Future<List<String>> searchSuggestions(String query) =>
+      inner.searchSuggestions(query);
 
   @override
-  Future<SearchResults> search(String query) async {
-    final results = await inner.search(query);
+  Future<YouTubeRoute?> resolveUrl(String url) => inner.resolveUrl(url);
+
+  @override
+  Future<SearchResults> search(String query, {SearchFilter? filter}) async {
+    final results = await inner.search(query, filter: filter);
     return SearchResults(
       videos: await _applyAll(results.videos),
       channels: results.channels,

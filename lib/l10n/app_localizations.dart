@@ -350,6 +350,144 @@ abstract class AppLocalizations {
   /// **'Turn it on in Settings to see your searches here.'**
   String get searchHistoryOffHint;
 
+  /// No description provided for @filterSort.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Sort'**
+  String get filterSort;
+
+  /// No description provided for @filterType.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Type'**
+  String get filterType;
+
+  /// No description provided for @filterUploadDate.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Upload date'**
+  String get filterUploadDate;
+
+  /// No description provided for @filterDuration.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Duration'**
+  String get filterDuration;
+
+  /// No description provided for @sortRelevance.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Relevance'**
+  String get sortRelevance;
+
+  /// No description provided for @sortDate.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Upload date'**
+  String get sortDate;
+
+  /// No description provided for @sortViews.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'View count'**
+  String get sortViews;
+
+  /// No description provided for @sortRating.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Rating'**
+  String get sortRating;
+
+  /// No description provided for @typeAll.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'All'**
+  String get typeAll;
+
+  /// No description provided for @typeVideo.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Videos'**
+  String get typeVideo;
+
+  /// No description provided for @typeChannel.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Channels'**
+  String get typeChannel;
+
+  /// No description provided for @typePlaylist.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Playlists'**
+  String get typePlaylist;
+
+  /// No description provided for @typeLive.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Live'**
+  String get typeLive;
+
+  /// No description provided for @uploadAny.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Any time'**
+  String get uploadAny;
+
+  /// No description provided for @uploadHour.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Last hour'**
+  String get uploadHour;
+
+  /// No description provided for @uploadToday.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Today'**
+  String get uploadToday;
+
+  /// No description provided for @uploadWeek.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'This week'**
+  String get uploadWeek;
+
+  /// No description provided for @uploadMonth.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'This month'**
+  String get uploadMonth;
+
+  /// No description provided for @uploadYear.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'This year'**
+  String get uploadYear;
+
+  /// No description provided for @durationAny.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Any duration'**
+  String get durationAny;
+
+  /// No description provided for @durationShort.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Under 4 minutes'**
+  String get durationShort;
+
+  /// No description provided for @durationMedium.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'4-20 minutes'**
+  String get durationMedium;
+
+  /// No description provided for @durationLong.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Over 20 minutes'**
+  String get durationLong;
+
   /// No description provided for @theme.
   ///
   /// In en_GB, this message translates to:

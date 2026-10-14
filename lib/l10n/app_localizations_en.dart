@@ -136,6 +136,75 @@ class AppLocalizationsEn extends AppLocalizations {
       'Turn it on in Settings to see your searches here.';
 
   @override
+  String get filterSort => 'Sort';
+
+  @override
+  String get filterType => 'Type';
+
+  @override
+  String get filterUploadDate => 'Upload date';
+
+  @override
+  String get filterDuration => 'Duration';
+
+  @override
+  String get sortRelevance => 'Relevance';
+
+  @override
+  String get sortDate => 'Upload date';
+
+  @override
+  String get sortViews => 'View count';
+
+  @override
+  String get sortRating => 'Rating';
+
+  @override
+  String get typeAll => 'All';
+
+  @override
+  String get typeVideo => 'Videos';
+
+  @override
+  String get typeChannel => 'Channels';
+
+  @override
+  String get typePlaylist => 'Playlists';
+
+  @override
+  String get typeLive => 'Live';
+
+  @override
+  String get uploadAny => 'Any time';
+
+  @override
+  String get uploadHour => 'Last hour';
+
+  @override
+  String get uploadToday => 'Today';
+
+  @override
+  String get uploadWeek => 'This week';
+
+  @override
+  String get uploadMonth => 'This month';
+
+  @override
+  String get uploadYear => 'This year';
+
+  @override
+  String get durationAny => 'Any duration';
+
+  @override
+  String get durationShort => 'Under 4 minutes';
+
+  @override
+  String get durationMedium => '4-20 minutes';
+
+  @override
+  String get durationLong => 'Over 20 minutes';
+
+  @override
   String get theme => 'Theme';
 
   @override
@@ -769,6 +838,75 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   @override
   String get searchHistoryOffHint =>
       'Turn it on in Settings to see your searches here.';
+
+  @override
+  String get filterSort => 'Sort';
+
+  @override
+  String get filterType => 'Type';
+
+  @override
+  String get filterUploadDate => 'Upload date';
+
+  @override
+  String get filterDuration => 'Duration';
+
+  @override
+  String get sortRelevance => 'Relevance';
+
+  @override
+  String get sortDate => 'Upload date';
+
+  @override
+  String get sortViews => 'View count';
+
+  @override
+  String get sortRating => 'Rating';
+
+  @override
+  String get typeAll => 'All';
+
+  @override
+  String get typeVideo => 'Videos';
+
+  @override
+  String get typeChannel => 'Channels';
+
+  @override
+  String get typePlaylist => 'Playlists';
+
+  @override
+  String get typeLive => 'Live';
+
+  @override
+  String get uploadAny => 'Any time';
+
+  @override
+  String get uploadHour => 'Last hour';
+
+  @override
+  String get uploadToday => 'Today';
+
+  @override
+  String get uploadWeek => 'This week';
+
+  @override
+  String get uploadMonth => 'This month';
+
+  @override
+  String get uploadYear => 'This year';
+
+  @override
+  String get durationAny => 'Any duration';
+
+  @override
+  String get durationShort => 'Under 4 minutes';
+
+  @override
+  String get durationMedium => '4-20 minutes';
+
+  @override
+  String get durationLong => 'Over 20 minutes';
 
   @override
   String get theme => 'Theme';

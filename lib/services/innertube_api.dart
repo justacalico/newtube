@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import '../models/search_filter.dart';
+import '../models/youtube_route.dart';
 import '../models/video_info.dart';
 import '../utils/captions.dart';
 import '../utils/debug_log.dart';
@@ -106,8 +108,11 @@ class InnertubeApi implements YouTubeApi {
   }
 
   @override
-  Future<SearchResults> search(String query) async {
-    final r = await _post('search', {'query': query});
+  Future<SearchResults> search(String query, {SearchFilter? filter}) async {
+    final r = await _post('search', {
+      'query': query,
+      'params': ?filter?.toParams(),
+    });
     final videos = <VideoInfo>[];
     final channels = <ChannelInfo>[];
     final playlists = <PlaylistInfo>[];
@@ -119,6 +124,31 @@ class InnertubeApi implements YouTubeApi {
       channels: _proxiedChannels(channels),
       playlists: playlists,
     );
+  }
+
+  @override
+  Future<YouTubeRoute?> resolveUrl(String url) async {
+    final r = await _post('navigation/resolve_url', {'url': url});
+    final endpoint = r['endpoint'];
+    if (endpoint is! Map<String, dynamic>) return null;
+    final watch = endpoint['watchEndpoint'];
+    if (watch is Map<String, dynamic>) {
+      final videoId = watch['videoId'] as String?;
+      if (videoId == null) return null;
+      return YouTubeRoute.video(
+        videoId,
+        playlistId: watch['playlistId'] as String?,
+        startSeconds: watch['startTimeSeconds'] as int? ?? 0,
+      );
+    }
+    final browse = endpoint['browseEndpoint'];
+    if (browse is! Map<String, dynamic>) return null;
+    final id = browse['browseId'] as String?;
+    if (id == null) return null;
+    if (id.startsWith('VL') || id.startsWith('PL')) {
+      return YouTubeRoute.playlist(id.startsWith('VL') ? id.substring(2) : id);
+    }
+    return YouTubeRoute.channel(id);
   }
 
   @override

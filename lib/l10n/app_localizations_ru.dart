@@ -136,6 +136,75 @@ class AppLocalizationsRu extends AppLocalizations {
       'Включите её в настройках, чтобы видеть запросы здесь.';
 
   @override
+  String get filterSort => 'Сортировка';
+
+  @override
+  String get filterType => 'Тип';
+
+  @override
+  String get filterUploadDate => 'Дата загрузки';
+
+  @override
+  String get filterDuration => 'Длительность';
+
+  @override
+  String get sortRelevance => 'По релевантности';
+
+  @override
+  String get sortDate => 'По дате';
+
+  @override
+  String get sortViews => 'По просмотрам';
+
+  @override
+  String get sortRating => 'По оценке';
+
+  @override
+  String get typeAll => 'Все';
+
+  @override
+  String get typeVideo => 'Видео';
+
+  @override
+  String get typeChannel => 'Каналы';
+
+  @override
+  String get typePlaylist => 'Плейлисты';
+
+  @override
+  String get typeLive => 'Трансляции';
+
+  @override
+  String get uploadAny => 'За всё время';
+
+  @override
+  String get uploadHour => 'За час';
+
+  @override
+  String get uploadToday => 'Сегодня';
+
+  @override
+  String get uploadWeek => 'За неделю';
+
+  @override
+  String get uploadMonth => 'За месяц';
+
+  @override
+  String get uploadYear => 'За год';
+
+  @override
+  String get durationAny => 'Любая';
+
+  @override
+  String get durationShort => 'До 4 минут';
+
+  @override
+  String get durationMedium => '4-20 минут';
+
+  @override
+  String get durationLong => 'Больше 20 минут';
+
+  @override
   String get theme => 'Тема';
 
   @override

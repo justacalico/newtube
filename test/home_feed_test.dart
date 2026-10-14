@@ -1,3 +1,5 @@
+import 'package:newtube/models/search_filter.dart';
+import 'package:newtube/models/youtube_route.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/models/video_info.dart';
 import 'package:newtube/services/home_feed.dart';
@@ -61,7 +63,11 @@ class _FeedApi implements YouTubeApi {
   }
 
   @override
-  Future<SearchResults> search(String query) async {
+  @override
+  Future<YouTubeRoute?> resolveUrl(String url) async => null;
+
+  @override
+  Future<SearchResults> search(String query, {SearchFilter? filter}) async {
     calls.add('search:$query');
     if (failingQueries.contains(query)) throw StateError('search down');
     return searches[query] ?? const SearchResults();

@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:youtube_explode_dart/youtube_explode_dart.dart' as yt;
 
+import '../models/search_filter.dart';
+import '../models/youtube_route.dart';
 import '../models/video_info.dart';
 import 'innertube_api.dart';
 import 'proxy_client.dart';
@@ -183,10 +185,15 @@ class YouTubeExplodeApi implements YouTubeApi {
   }
 
   @override
-  Future<List<String>> searchSuggestions(String query) => _innertube.searchSuggestions(query);
+  Future<List<String>> searchSuggestions(String query) =>
+      _innertube.searchSuggestions(query);
 
   @override
-  Future<SearchResults> search(String query) async {
+  @override
+  Future<YouTubeRoute?> resolveUrl(String url) => _innertube.resolveUrl(url);
+
+  @override
+  Future<SearchResults> search(String query, {SearchFilter? filter}) async {
     final results = await _yt.search.searchContent(query);
     final videos = <VideoInfo>[];
     final channels = <ChannelInfo>[];

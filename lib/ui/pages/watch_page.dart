@@ -36,10 +36,16 @@ void openWatchPage(
   VideoInfo video, {
   PlaylistInfo? playlist,
   int? index,
+  int startSeconds = 0,
 }) {
   Navigator.of(context).push(
     MaterialPageRoute<void>(
-      builder: (_) => WatchPage(video: video, playlist: playlist, index: index),
+      builder: (_) => WatchPage(
+        video: video,
+        playlist: playlist,
+        index: index,
+        startSeconds: startSeconds,
+      ),
     ),
   );
 }
@@ -48,8 +54,15 @@ class WatchPage extends StatefulWidget {
   final VideoInfo video;
   final PlaylistInfo? playlist;
   final int? index;
+  final int startSeconds;
 
-  const WatchPage({super.key, required this.video, this.playlist, this.index});
+  const WatchPage({
+    super.key,
+    required this.video,
+    this.playlist,
+    this.index,
+    this.startSeconds = 0,
+  });
 
   @override
   State<WatchPage> createState() => _WatchPageState();
@@ -234,6 +247,9 @@ class _WatchPageState extends State<WatchPage>
             await player.setRate(
               session.lastRate ?? state.settings.defaultSpeed,
             );
+            if (widget.startSeconds > 0) {
+              await player.seek(Duration(seconds: widget.startSeconds));
+            }
             if (!state.settings.autoplay) {
               await player.pause();
             }
