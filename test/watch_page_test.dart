@@ -98,6 +98,8 @@ void main() {
 
     player.emitCompleted();
     await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 7));
+    await tester.pumpAndSettle();
 
     expect(find.text('Replay'), findsOneWidget);
     expect(find.text('Next video'), findsOneWidget);
@@ -126,6 +128,8 @@ void main() {
     player.position = const Duration(minutes: 3);
     player.emitCompleted();
     await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 7));
+    await tester.pumpAndSettle();
     expect(find.text('Replay'), findsOneWidget);
 
     await tester.tap(find.text('Replay'));
@@ -149,6 +153,8 @@ void main() {
     await tester.pumpAndSettle();
 
     player.emitCompleted();
+    await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 7));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Next video'));
     await tester.pumpAndSettle();
@@ -178,6 +184,8 @@ void main() {
 
     player.emitCompleted();
     await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 7));
+    await tester.pumpAndSettle();
 
     expect(find.text('Replay'), findsOneWidget);
     expect(
@@ -199,6 +207,8 @@ void main() {
 
     player.emitCompleted();
     await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 7));
+    await tester.pumpAndSettle();
 
     expect(
       find.descendant(
@@ -217,6 +227,8 @@ void main() {
     await tester.pumpAndSettle();
 
     player.emitCompleted();
+    await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 7));
     await tester.pumpAndSettle();
 
     expect(player.opened, hasLength(1));
@@ -242,6 +254,8 @@ void main() {
 
     player.emitCompleted();
     await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 7));
+    await tester.pumpAndSettle();
 
     expect(find.text('Test playlist · 2/2'), findsOneWidget);
     expect(player.opened, hasLength(2));
@@ -263,6 +277,8 @@ void main() {
     await tester.pumpAndSettle();
 
     player.emitCompleted();
+    await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 7));
     await tester.pumpAndSettle();
     expect(find.text('Replay'), findsOneWidget);
 

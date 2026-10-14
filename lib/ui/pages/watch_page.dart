@@ -15,6 +15,7 @@ import '../../services/sponsor_block.dart';
 import '../../state/app_state.dart';
 import '../../state/playback_session.dart';
 import '../../utils/chapters.dart';
+import '../../utils/description.dart';
 import '../../utils/debug_log.dart';
 import '../../utils/format.dart';
 import '../../utils/storyboard.dart';
@@ -745,7 +746,18 @@ class _WatchPageState extends State<WatchPage>
                             style: Theme.of(context).textTheme.titleSmall,
                           ),
                           const SizedBox(height: 4),
-                          Text(_details!.description),
+                          SelectableText.rich(
+                            TextSpan(
+                              children: descriptionSpans(
+                                _details!.description,
+                                linkStyle: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                                onLink: state.launch,
+                                onTimestamp: (time) => _player?.seek(time),
+                              ),
+                            ),
+                          ),
                         ],
                         if (_chapters.isNotEmpty) ...[
                           const SizedBox(height: 16),

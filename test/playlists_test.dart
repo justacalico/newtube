@@ -312,6 +312,8 @@ void main() {
       player.emitCompleted();
       await tester.pump();
       await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 7));
+      await tester.pumpAndSettle();
       expect(find.text('Mix · 2/2'), findsOneWidget);
       expect(find.text('Second video'), findsWidgets);
     });
@@ -325,7 +327,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.scrollUntilVisible(find.text('Second video'), 200);
+      await tester.ensureVisible(find.text('Second video'));
       await tester.tap(find.text('Second video'));
       await tester.pumpAndSettle();
       expect(find.text('Mix · 2/2'), findsOneWidget);
@@ -346,6 +348,8 @@ void main() {
       player.emitCompleted();
       await tester.pump();
       await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 7));
+      await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.fullscreen), findsOneWidget);
       expect(find.text('Mix · 2/2'), findsOneWidget);
@@ -362,6 +366,8 @@ void main() {
       await tester.pumpAndSettle();
       player.emitCompleted();
       await tester.pump();
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 7));
       await tester.pumpAndSettle();
       expect(find.text('Mix · 2/2'), findsOneWidget);
     });

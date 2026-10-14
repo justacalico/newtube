@@ -21,7 +21,7 @@ void main() {
     await pumpPage(tester, state, WatchPage(video: testVideos.first));
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(find.text('Chapters'), 200);
+    await tester.ensureVisible(find.text('Chapters'));
     await tester.tap(find.text('Chapters'));
     await tester.pumpAndSettle();
     expect(find.text('Intro'), findsWidgets);

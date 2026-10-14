@@ -83,7 +83,7 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(find.text('Normal'), 200);
+    await tester.ensureVisible(find.text('Normal'));
     await tester.tap(find.text('Normal'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('1.25x'));
