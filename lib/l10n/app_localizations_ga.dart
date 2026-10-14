@@ -324,7 +324,7 @@ class AppLocalizationsGa extends AppLocalizations {
   String get commentsNewest => 'Is nuaí';
 
   @override
-  String get upNext => 'Seo chugainn';
+  String get upNext => 'Ar aghaidh';
 
   @override
   String get playNow => 'Seinn anois';
@@ -720,4 +720,16 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get shortsBadge => 'SHORTS';
+
+  @override
+  String get playNext => 'Seinm ina dhiaidh';
+
+  @override
+  String get addToQueue => 'Cuir leis an scuaine';
+
+  @override
+  String get queued => 'Curtha leis an scuaine';
+
+  @override
+  String get queuedNext => 'Seinnfear ina dhiaidh';
 }

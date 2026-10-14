@@ -103,7 +103,7 @@
   "commentsSort": "Sórtáil tuairimí",
   "commentsTop": "Barr",
   "commentsNewest": "Is nuaí",
-  "upNext": "Seo chugainn",
+  "upNext": "Ar aghaidh",
   "playNow": "Seinn anois",
   "videoFit": "Oiriúnú físe",
   "fitContain": "Oiriúnú",
@@ -285,5 +285,9 @@
   "videoActions": "Tuilleadh roghanna",
   "hideShorts": "Folaigh Shorts",
   "hideShortsHint": "Scag Shorts as fothaí agus cuardaigh",
-  "shortsBadge": "SHORTS"
+  "shortsBadge": "SHORTS",
+  "playNext": "Seinm ina dhiaidh",
+  "addToQueue": "Cuir leis an scuaine",
+  "queued": "Curtha leis an scuaine",
+  "queuedNext": "Seinnfear ina dhiaidh"
 }

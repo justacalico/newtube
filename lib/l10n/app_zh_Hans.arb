@@ -103,7 +103,7 @@
   "commentsSort": "评论排序",
   "commentsTop": "热门",
   "commentsNewest": "最新",
-  "upNext": "即将播放",
+  "upNext": "接下来",
   "playNow": "立即播放",
   "videoFit": "画面缩放",
   "fitContain": "适配",
@@ -285,5 +285,9 @@
   "videoActions": "更多选项",
   "hideShorts": "隐藏短视频",
   "hideShortsHint": "在推荐、订阅和搜索中过滤 Shorts",
-  "shortsBadge": "短视频"
+  "shortsBadge": "短视频",
+  "playNext": "下一个播放",
+  "addToQueue": "添加到队列",
+  "queued": "已加入队列",
+  "queuedNext": "将接着播放"
 }

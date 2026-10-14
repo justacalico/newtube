@@ -319,7 +319,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get commentsNewest => '最新';
 
   @override
-  String get upNext => '即将播放';
+  String get upNext => '接下来';
 
   @override
   String get playNow => '立即播放';
@@ -703,6 +703,18 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get shortsBadge => '短视频';
+
+  @override
+  String get playNext => '下一个播放';
+
+  @override
+  String get addToQueue => '添加到队列';
+
+  @override
+  String get queued => '已加入队列';
+
+  @override
+  String get queuedNext => '将接着播放';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1019,7 +1031,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get commentsNewest => '最新';
 
   @override
-  String get upNext => '即将播放';
+  String get upNext => '接下来';
 
   @override
   String get playNow => '立即播放';
@@ -1403,4 +1415,16 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get shortsBadge => '短视频';
+
+  @override
+  String get playNext => '下一个播放';
+
+  @override
+  String get addToQueue => '添加到队列';
+
+  @override
+  String get queued => '已加入队列';
+
+  @override
+  String get queuedNext => '将接着播放';
 }

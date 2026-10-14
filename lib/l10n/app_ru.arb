@@ -103,7 +103,7 @@
   "commentsSort": "Сортировка комментариев",
   "commentsTop": "Популярные",
   "commentsNewest": "Сначала новые",
-  "upNext": "Следующее",
+  "upNext": "Далее",
   "playNow": "Играть сейчас",
   "videoFit": "Масштаб видео",
   "fitContain": "По размеру",
@@ -285,5 +285,9 @@
   "videoActions": "Ещё",
   "hideShorts": "Скрыть Shorts",
   "hideShortsHint": "Убрать Shorts из лент и поиска",
-  "shortsBadge": "SHORTS"
+  "shortsBadge": "SHORTS",
+  "playNext": "Следующим",
+  "addToQueue": "В очередь",
+  "queued": "Добавлено в очередь",
+  "queuedNext": "Будет следующим"
 }

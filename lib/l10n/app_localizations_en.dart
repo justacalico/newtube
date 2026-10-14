@@ -716,6 +716,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shortsBadge => 'SHORTS';
+
+  @override
+  String get playNext => 'Play next';
+
+  @override
+  String get addToQueue => 'Add to queue';
+
+  @override
+  String get queued => 'Added to queue';
+
+  @override
+  String get queuedNext => 'Will play next';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1429,4 +1441,16 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get shortsBadge => 'SHORTS';
+
+  @override
+  String get playNext => 'Play next';
+
+  @override
+  String get addToQueue => 'Add to queue';
+
+  @override
+  String get queued => 'Added to queue';
+
+  @override
+  String get queuedNext => 'Will play next';
 }

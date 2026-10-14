@@ -26,6 +26,7 @@ class PlaybackSession extends ChangeNotifier {
   bool _shuffle = false;
   bool _audioOnly = false;
   double? _lastRate;
+  final List<VideoInfo> _queue = [];
 
   PlayerController? get player => _player;
   VideoInfo? get video => _video;
@@ -41,6 +42,7 @@ class PlaybackSession extends ChangeNotifier {
   bool get shuffle => _shuffle;
   bool get audioOnly => _audioOnly;
   double? get lastRate => _lastRate;
+  List<VideoInfo> get queue => List.unmodifiable(_queue);
 
   set repeatMode(RepeatMode value) {
     if (_repeatMode == value) return;
@@ -97,6 +99,44 @@ class PlaybackSession extends ChangeNotifier {
     if (!identical(_player, player)) return;
     _attached = false;
     scheduleMicrotask(notifyListeners);
+  }
+
+  void enqueue(VideoInfo video) {
+    _queue.add(video);
+    notifyListeners();
+  }
+
+  void playNext(VideoInfo video) {
+    _queue.insert(0, video);
+    notifyListeners();
+  }
+
+  VideoInfo? takeNext() {
+    if (_queue.isEmpty) return null;
+    final next = _queue.removeAt(0);
+    notifyListeners();
+    return next;
+  }
+
+  VideoInfo? takeNextFrom(int index) {
+    if (index < 0 || index >= _queue.length) return null;
+    final next = _queue.removeAt(index);
+    notifyListeners();
+    return next;
+  }
+
+  void removeQueued(int index) {
+    if (index < 0 || index >= _queue.length) return;
+    _queue.removeAt(index);
+    notifyListeners();
+  }
+
+  void moveQueued(int from, int to) {
+    if (from < 0 || from >= _queue.length) return;
+    if (to < 0 || to >= _queue.length) return;
+    final item = _queue.removeAt(from);
+    _queue.insert(to, item);
+    notifyListeners();
   }
 
   void updateStream(PlayableStream? stream, PlayableStream? audio) {

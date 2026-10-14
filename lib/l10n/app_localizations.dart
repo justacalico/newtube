@@ -1429,6 +1429,30 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'SHORTS'**
   String get shortsBadge;
+
+  /// No description provided for @playNext.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Play next'**
+  String get playNext;
+
+  /// No description provided for @addToQueue.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Add to queue'**
+  String get addToQueue;
+
+  /// No description provided for @queued.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Added to queue'**
+  String get queued;
+
+  /// No description provided for @queuedNext.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Will play next'**
+  String get queuedNext;
 }
 
 class _AppLocalizationsDelegate

@@ -34,6 +34,24 @@ class VideoActionsMenu extends StatelessWidget {
               child: Text(saved ? l10n.watchLaterRemove : l10n.watchLaterAdd),
             ),
             MenuItemButton(
+              leadingIcon: const Icon(Icons.playlist_play),
+              onPressed: () {
+                state.playback.playNext(video);
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(l10n.queuedNext)));
+              },
+              child: Text(l10n.playNext),
+            ),
+            MenuItemButton(
+              leadingIcon: const Icon(Icons.queue),
+              onPressed: () {
+                state.playback.enqueue(video);
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(l10n.queued)));
+              },
+              child: Text(l10n.addToQueue),
+            ),
+            MenuItemButton(
               leadingIcon: const Icon(Icons.playlist_add),
               onPressed: () => showPlaylistPicker(context, video),
               child: Text(l10n.addToPlaylist),
