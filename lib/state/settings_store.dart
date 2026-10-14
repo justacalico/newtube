@@ -30,6 +30,7 @@ class SettingsStore extends ChangeNotifier {
   static const _captionLanguageKey = 'caption_language';
   static const _audioOnlyKey = 'audio_only';
   static const _preferredQualityKey = 'preferred_quality';
+  static const _defaultSpeedKey = 'default_speed';
   static const defaultSponsorBlockCategories = {'sponsor', 'selfpromo'};
 
   AppTheme _theme;
@@ -49,6 +50,7 @@ class SettingsStore extends ChangeNotifier {
   String _captionLanguage;
   bool _audioOnly;
   int _preferredQuality;
+  double _defaultSpeed;
 
   SettingsStore({
     this._theme = AppTheme.system,
@@ -68,6 +70,7 @@ class SettingsStore extends ChangeNotifier {
     this._captionLanguage = '',
     this._audioOnly = false,
     this._preferredQuality = 0,
+    this._defaultSpeed = 1.0,
   }) : _sponsorBlockCategories =
            sponsorBlockCategories ?? Set.of(defaultSponsorBlockCategories);
 
@@ -99,6 +102,7 @@ class SettingsStore extends ChangeNotifier {
       captionLanguage: prefs.getString(_captionLanguageKey) ?? '',
       audioOnly: prefs.getBool(_audioOnlyKey) ?? false,
       preferredQuality: prefs.getInt(_preferredQualityKey) ?? 0,
+      defaultSpeed: prefs.getDouble(_defaultSpeedKey) ?? 1.0,
     );
   }
 
@@ -138,6 +142,7 @@ class SettingsStore extends ChangeNotifier {
   String get captionLanguage => _captionLanguage;
   bool get audioOnly => _audioOnly;
   int get preferredQuality => _preferredQuality;
+  double get defaultSpeed => _defaultSpeed;
 
   Future<void> setTheme(AppTheme theme, SharedPreferences prefs) async {
     _theme = theme;
@@ -244,6 +249,12 @@ class SettingsStore extends ChangeNotifier {
   Future<void> setCaptionsEnabled(bool value, SharedPreferences prefs) async {
     _captionsEnabled = value;
     await prefs.setBool(_captionsEnabledKey, value);
+    notifyListeners();
+  }
+
+  Future<void> setDefaultSpeed(double value, SharedPreferences prefs) async {
+    _defaultSpeed = value;
+    await prefs.setDouble(_defaultSpeedKey, value);
     notifyListeners();
   }
 

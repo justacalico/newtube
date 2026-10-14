@@ -215,6 +215,9 @@ class _WatchPageState extends State<WatchPage>
           );
           try {
             await player.open(open.stream.url, audioUrl: open.audioUrl);
+            await player.setRate(
+              session.lastRate ?? state.settings.defaultSpeed,
+            );
             if (!state.settings.autoplay) {
               await player.pause();
             }

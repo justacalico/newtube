@@ -25,6 +25,7 @@ class PlaybackSession extends ChangeNotifier {
   RepeatMode _repeatMode = RepeatMode.off;
   bool _shuffle = false;
   bool _audioOnly = false;
+  double? _lastRate;
 
   PlayerController? get player => _player;
   VideoInfo? get video => _video;
@@ -39,6 +40,7 @@ class PlaybackSession extends ChangeNotifier {
   RepeatMode get repeatMode => _repeatMode;
   bool get shuffle => _shuffle;
   bool get audioOnly => _audioOnly;
+  double? get lastRate => _lastRate;
 
   set repeatMode(RepeatMode value) {
     if (_repeatMode == value) return;
@@ -55,6 +57,12 @@ class PlaybackSession extends ChangeNotifier {
   set audioOnly(bool value) {
     if (_audioOnly == value) return;
     _audioOnly = value;
+    notifyListeners();
+  }
+
+  set lastRate(double? value) {
+    if (_lastRate == value) return;
+    _lastRate = value;
     notifyListeners();
   }
 

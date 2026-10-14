@@ -176,6 +176,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get qualityLowest => 'Lowest';
 
   @override
+  String get defaultSpeed => 'Default playback speed';
+
+  @override
   String get about => 'About';
 
   @override
@@ -712,6 +715,9 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get qualityLowest => 'Lowest';
+
+  @override
+  String get defaultSpeed => 'Default playback speed';
 
   @override
   String get about => 'About';

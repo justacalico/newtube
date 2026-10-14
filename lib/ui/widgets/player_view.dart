@@ -269,7 +269,7 @@ class _PlayerViewState extends State<PlayerView> {
           menuChildren: [
             for (final r in _rates)
               MenuItemButton(
-                onPressed: () => _player.setRate(r),
+                onPressed: () => _setRate(r),
                 leadingIcon: r == rate
                     ? const Icon(Icons.check, size: 18)
                     : const SizedBox(width: 18),
@@ -503,6 +503,11 @@ class _PlayerViewState extends State<PlayerView> {
     );
   }
 
+  void _setRate(double rate) {
+    _player.setRate(rate);
+    AppScope.read(context).playback.lastRate = rate;
+  }
+
   void _adjustVolume(double delta) {
     _showControls();
     _player.setVolume((_player.volume + delta).clamp(0.0, 1.0));
@@ -512,7 +517,7 @@ class _PlayerViewState extends State<PlayerView> {
     _showControls();
     var index = _rates.indexWhere((r) => r >= _player.rate - 0.001);
     if (index < 0) index = _rates.length - 1;
-    _player.setRate(_rates[(index + direction).clamp(0, _rates.length - 1)]);
+    _setRate(_rates[(index + direction).clamp(0, _rates.length - 1)]);
   }
 
   void _skipBy(Duration delta) {

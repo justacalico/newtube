@@ -61,6 +61,7 @@ void touchAll(AppLocalizations l) {
   l.defaultQuality;
   l.qualityAuto;
   l.qualityLowest;
+  l.defaultSpeed;
   l.about;
   l.version;
   l.checkForUpdates;

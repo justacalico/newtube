@@ -329,6 +329,34 @@ class _SettingsPageState extends State<SettingsPage> {
                 ],
               ),
             ),
+            ListTile(
+              leading: const Icon(Icons.speed),
+              title: Text(l10n.defaultSpeed),
+              trailing: _SettingsDropdown<double>(
+                value: settings.defaultSpeed,
+                onChanged: (value) {
+                  if (value != null) {
+                    settings.setDefaultSpeed(value, state.prefs);
+                  }
+                },
+                items: [
+                  for (final rate in const [
+                    0.25,
+                    0.5,
+                    0.75,
+                    1.0,
+                    1.25,
+                    1.5,
+                    1.75,
+                    2.0,
+                  ])
+                    DropdownMenuItem(
+                      value: rate,
+                      child: Text(rate == 1.0 ? l10n.speedNormal : '${rate}x'),
+                    ),
+                ],
+              ),
+            ),
             SwitchListTile(
               secondary: const Icon(Icons.content_cut_outlined),
               title: Text(l10n.sponsorBlock),
