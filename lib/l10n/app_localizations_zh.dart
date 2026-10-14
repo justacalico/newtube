@@ -980,6 +980,18 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get dontRecommendChannel => '不再推荐此频道';
+
+  @override
+  String get feedLayout => '信息流布局';
+
+  @override
+  String get feedGrid => '网格';
+
+  @override
+  String get feedList => '列表';
+
+  @override
+  String get feedCompact => '紧凑网格';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1957,4 +1969,16 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get dontRecommendChannel => '不再推荐此频道';
+
+  @override
+  String get feedLayout => '信息流布局';
+
+  @override
+  String get feedGrid => '网格';
+
+  @override
+  String get feedList => '列表';
+
+  @override
+  String get feedCompact => '紧凑网格';
 }

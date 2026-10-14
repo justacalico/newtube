@@ -7,6 +7,7 @@ import '../../models/video_info.dart';
 import '../../state/app_state.dart';
 import 'cors_notice.dart';
 import 'video_card.dart';
+import 'video_list_tile.dart';
 
 class VideoGrid extends StatelessWidget {
   final List<VideoInfo> videos;
@@ -22,9 +23,24 @@ class VideoGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final density = AppScope.read(context).settings.feedDensity;
+    if (density == 1) {
+      return ListView.builder(
+        padding: const EdgeInsets.all(12),
+        itemCount: videos.length,
+        itemBuilder: (context, i) {
+          final video = videos[i];
+          return VideoListTile(video: video, onTap: () => onVideoTap(video));
+        },
+      );
+    }
     return LayoutBuilder(
       builder: (context, constraints) {
-        final columns = (constraints.maxWidth / 320).floor().clamp(1, 5);
+        final targetWidth = density == 2 ? 220.0 : 320.0;
+        final columns = (constraints.maxWidth / targetWidth).floor().clamp(
+          1,
+          8,
+        );
         return GridView.builder(
           padding: const EdgeInsets.all(12),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

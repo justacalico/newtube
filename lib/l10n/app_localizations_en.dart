@@ -994,6 +994,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dontRecommendChannel => 'Don\'t recommend channel';
+
+  @override
+  String get feedLayout => 'Feed layout';
+
+  @override
+  String get feedGrid => 'Grid';
+
+  @override
+  String get feedList => 'List';
+
+  @override
+  String get feedCompact => 'Compact grid';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1985,4 +1997,16 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get dontRecommendChannel => 'Don\'t recommend channel';
+
+  @override
+  String get feedLayout => 'Feed layout';
+
+  @override
+  String get feedGrid => 'Grid';
+
+  @override
+  String get feedList => 'List';
+
+  @override
+  String get feedCompact => 'Compact grid';
 }

@@ -502,6 +502,23 @@ class _SettingsPageState extends State<SettingsPage> {
               value: settings.hideWatched,
               onChanged: (value) => settings.setHideWatched(value, state.prefs),
             ),
+            ListTile(
+              leading: const Icon(Icons.view_list_outlined),
+              title: Text(l10n.feedLayout),
+              trailing: _SettingsDropdown<int>(
+                value: settings.feedDensity,
+                onChanged: (value) {
+                  if (value != null) {
+                    settings.setFeedDensity(value, state.prefs);
+                  }
+                },
+                items: [
+                  DropdownMenuItem(value: 0, child: Text(l10n.feedGrid)),
+                  DropdownMenuItem(value: 1, child: Text(l10n.feedList)),
+                  DropdownMenuItem(value: 2, child: Text(l10n.feedCompact)),
+                ],
+              ),
+            ),
             SwitchListTile(
               secondary: const Icon(Icons.comment_outlined),
               title: Text(l10n.showComments),

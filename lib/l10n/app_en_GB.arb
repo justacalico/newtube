@@ -409,5 +409,9 @@
   "showRelated": "Show related videos",
   "hiddenItems": "Hidden videos and channels",
   "notInterested": "Not interested",
-  "dontRecommendChannel": "Don't recommend channel"
+  "dontRecommendChannel": "Don't recommend channel",
+  "feedLayout": "Feed layout",
+  "feedGrid": "Grid",
+  "feedList": "List",
+  "feedCompact": "Compact grid"
 }

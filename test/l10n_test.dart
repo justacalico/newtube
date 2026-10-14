@@ -211,6 +211,10 @@ void touchAll(AppLocalizations l) {
   l.hiddenItems;
   l.notInterested;
   l.dontRecommendChannel;
+  l.feedLayout;
+  l.feedGrid;
+  l.feedList;
+  l.feedCompact;
   l.playNow;
   l.showReplies;
   l.hideReplies;
