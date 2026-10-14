@@ -992,6 +992,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get feedCompact => '紧凑网格';
+
+  @override
+  String get dataSaver => '省流模式';
+
+  @override
+  String get dataSaverHint => '隐藏缩略图并将画质上限设为 480p';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1981,4 +1987,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get feedCompact => '紧凑网格';
+
+  @override
+  String get dataSaver => '省流模式';
+
+  @override
+  String get dataSaverHint => '隐藏缩略图并将画质上限设为 480p';
 }

@@ -413,5 +413,7 @@
   "feedLayout": "信息流布局",
   "feedGrid": "网格",
   "feedList": "列表",
-  "feedCompact": "紧凑网格"
+  "feedCompact": "紧凑网格",
+  "dataSaver": "省流模式",
+  "dataSaverHint": "隐藏缩略图并将画质上限设为 480p"
 }

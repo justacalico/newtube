@@ -1011,4 +1011,10 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get feedCompact => 'Greille dlúth';
+
+  @override
+  String get dataSaver => 'Sábháil sonraí';
+
+  @override
+  String get dataSaverHint => 'Folaigh mionsamhlacha agus teorainn 480p';
 }

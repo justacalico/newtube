@@ -215,6 +215,8 @@ void touchAll(AppLocalizations l) {
   l.feedGrid;
   l.feedList;
   l.feedCompact;
+  l.dataSaver;
+  l.dataSaverHint;
   l.playNow;
   l.showReplies;
   l.hideReplies;

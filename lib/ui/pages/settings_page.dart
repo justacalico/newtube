@@ -520,6 +520,13 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             SwitchListTile(
+              secondary: const Icon(Icons.data_saver_off_outlined),
+              title: Text(l10n.dataSaver),
+              subtitle: Text(l10n.dataSaverHint),
+              value: settings.dataSaver,
+              onChanged: (value) => settings.setDataSaver(value, state.prefs),
+            ),
+            SwitchListTile(
               secondary: const Icon(Icons.comment_outlined),
               title: Text(l10n.showComments),
               value: settings.showComments,
