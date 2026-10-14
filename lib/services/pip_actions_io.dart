@@ -69,21 +69,37 @@ class _IosPipActions implements PipActions {
     _player = player;
     _url = url;
     _audioUrl = audioUrl;
+    if (url != null && url != _preparedUrl) {
+      _preparedUrl = url;
+      unawaited(
+        _channel.invokeMethod('preparePip', {
+          'url': url,
+          'audioUrl': audioUrl,
+        }),
+      );
+    }
   }
+
+  String? _preparedUrl;
 
   @override
   Future<bool> enterPip() async {
     final url = _url;
     final player = _player;
     if (_pipMode.value || url == null || player == null) return _pipMode.value;
-    return await _channel.invokeMethod<bool>('enterPip', {
+    final playing = player.playing;
+    await player.pause();
+    final ok =
+        await _channel.invokeMethod<bool>('enterPip', {
           'url': url,
           'audioUrl': _audioUrl,
           'position': player.position.inMilliseconds / 1000,
           'rate': player.rate,
-          'playing': player.playing,
+          'playing': playing,
         }) ??
         false;
+    if (!ok && playing) await player.play();
+    return ok;
   }
 
   @override
