@@ -376,5 +376,10 @@
   "sponsorCategoryChapter": "Caibidil (lipéadaithe ag an bpobal)",
   "jumpToHighlight": "Léim go dtí an bhuaicpointe",
   "networkProxy": "Seachfhreastalaí líonra",
-  "networkProxyHint": "SOCKS5 nó HTTP, curtha i bhfeidhm ar an athtús"
+  "networkProxyHint": "SOCKS5 nó HTTP, curtha i bhfeidhm ar an athtús",
+  "preferredCodec": "Códec is fearr",
+  "codecAuto": "Uathoibríoch",
+  "codecAvc": "AVC (H.264)",
+  "codecVp9": "VP9",
+  "codecAv1": "AV1"
 }

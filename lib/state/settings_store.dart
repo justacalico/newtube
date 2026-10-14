@@ -34,6 +34,7 @@ class SettingsStore extends ChangeNotifier {
   static const _hideShortsKey = 'hide_shorts';
   static const _hideWatchedKey = 'hide_watched';
   static const _preferredQualityKey = 'preferred_quality';
+  static const _preferredCodecKey = 'preferred_codec';
   static const _defaultSpeedKey = 'default_speed';
   static const defaultSponsorBlockCategories = {'sponsor', 'selfpromo'};
 
@@ -58,6 +59,7 @@ class SettingsStore extends ChangeNotifier {
   bool _hideShorts;
   bool _hideWatched;
   int _preferredQuality;
+  int _preferredCodec;
   double _defaultSpeed;
 
   SettingsStore({
@@ -82,6 +84,7 @@ class SettingsStore extends ChangeNotifier {
     this._hideShorts = false,
     this._hideWatched = false,
     this._preferredQuality = 0,
+    this._preferredCodec = 0,
     this._defaultSpeed = 1.0,
   }) : _sponsorBlockCategories =
            sponsorBlockCategories ?? Set.of(defaultSponsorBlockCategories);
@@ -118,6 +121,7 @@ class SettingsStore extends ChangeNotifier {
       hideShorts: prefs.getBool(_hideShortsKey) ?? false,
       hideWatched: prefs.getBool(_hideWatchedKey) ?? false,
       preferredQuality: prefs.getInt(_preferredQualityKey) ?? 0,
+      preferredCodec: prefs.getInt(_preferredCodecKey) ?? 0,
       defaultSpeed: prefs.getDouble(_defaultSpeedKey) ?? 1.0,
     );
   }
@@ -145,6 +149,7 @@ class SettingsStore extends ChangeNotifier {
     _hideShorts = fresh._hideShorts;
     _hideWatched = fresh._hideWatched;
     _preferredQuality = fresh._preferredQuality;
+    _preferredCodec = fresh._preferredCodec;
     _defaultSpeed = fresh._defaultSpeed;
     notifyListeners();
   }
@@ -189,6 +194,7 @@ class SettingsStore extends ChangeNotifier {
   bool get hideShorts => _hideShorts;
   bool get hideWatched => _hideWatched;
   int get preferredQuality => _preferredQuality;
+  int get preferredCodec => _preferredCodec;
   double get defaultSpeed => _defaultSpeed;
 
   Future<void> setTheme(AppTheme theme, SharedPreferences prefs) async {
@@ -320,6 +326,12 @@ class SettingsStore extends ChangeNotifier {
   Future<void> setPreferredQuality(int value, SharedPreferences prefs) async {
     _preferredQuality = value;
     await prefs.setInt(_preferredQualityKey, value);
+    notifyListeners();
+  }
+
+  Future<void> setPreferredCodec(int value, SharedPreferences prefs) async {
+    _preferredCodec = value;
+    await prefs.setInt(_preferredCodecKey, value);
     notifyListeners();
   }
 

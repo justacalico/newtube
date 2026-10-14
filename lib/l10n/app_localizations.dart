@@ -1765,6 +1765,36 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'SOCKS5 or HTTP proxy, applied on restart'**
   String get networkProxyHint;
+
+  /// No description provided for @preferredCodec.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Preferred codec'**
+  String get preferredCodec;
+
+  /// No description provided for @codecAuto.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Auto'**
+  String get codecAuto;
+
+  /// No description provided for @codecAvc.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'AVC (H.264)'**
+  String get codecAvc;
+
+  /// No description provided for @codecVp9.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'VP9'**
+  String get codecVp9;
+
+  /// No description provided for @codecAv1.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'AV1'**
+  String get codecAv1;
 }
 
 class _AppLocalizationsDelegate

@@ -376,5 +376,10 @@
   "sponsorCategoryChapter": "Chapter (community-labelled)",
   "jumpToHighlight": "Jump to highlight",
   "networkProxy": "Network proxy",
-  "networkProxyHint": "SOCKS5 or HTTP proxy, applied on restart"
+  "networkProxyHint": "SOCKS5 or HTTP proxy, applied on restart",
+  "preferredCodec": "Preferred codec",
+  "codecAuto": "Auto",
+  "codecAvc": "AVC (H.264)",
+  "codecVp9": "VP9",
+  "codecAv1": "AV1"
 }

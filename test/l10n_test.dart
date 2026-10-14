@@ -178,6 +178,11 @@ void touchAll(AppLocalizations l) {
   l.jumpToHighlight;
   l.networkProxy;
   l.networkProxyHint;
+  l.preferredCodec;
+  l.codecAuto;
+  l.codecAvc;
+  l.codecVp9;
+  l.codecAv1;
   l.playNow;
   l.showReplies;
   l.hideReplies;

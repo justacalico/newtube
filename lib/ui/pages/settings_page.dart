@@ -437,6 +437,24 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             ListTile(
+              leading: const Icon(Icons.videocam_outlined),
+              title: Text(l10n.preferredCodec),
+              trailing: _SettingsDropdown<int>(
+                value: settings.preferredCodec,
+                onChanged: (value) {
+                  if (value != null) {
+                    settings.setPreferredCodec(value, state.prefs);
+                  }
+                },
+                items: [
+                  DropdownMenuItem(value: 0, child: Text(l10n.codecAuto)),
+                  DropdownMenuItem(value: 1, child: Text(l10n.codecAvc)),
+                  DropdownMenuItem(value: 2, child: Text(l10n.codecVp9)),
+                  DropdownMenuItem(value: 3, child: Text(l10n.codecAv1)),
+                ],
+              ),
+            ),
+            ListTile(
               leading: const Icon(Icons.speed),
               title: Text(l10n.defaultSpeed),
               trailing: _SettingsDropdown<double>(
