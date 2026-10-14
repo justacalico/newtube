@@ -324,7 +324,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get commentsNewest => 'Сначала новые';
 
   @override
-  String get upNext => 'Далее';
+  String get upNext => 'Следующее';
 
   @override
   String get playNow => 'Играть сейчас';
@@ -725,14 +725,34 @@ class AppLocalizationsRu extends AppLocalizations {
   String get shortsBadge => 'SHORTS';
 
   @override
-  String get playNext => 'Следующим';
+  String get downloads => 'Загрузки';
 
   @override
-  String get addToQueue => 'В очередь';
+  String get noDownloads => 'Нет загрузок';
 
   @override
-  String get queued => 'Добавлено в очередь';
+  String get deleteDownload => 'Удалить загрузку';
 
   @override
-  String get queuedNext => 'Будет следующим';
+  String get download => 'Скачать';
+
+  @override
+  String get downloadVideo => 'Скачать видео';
+
+  @override
+  String get downloadAudio => 'Только аудио';
+
+  @override
+  String downloadedTo(String path) {
+    return 'Сохранено в $path';
+  }
+
+  @override
+  String get downloadFailed => 'Ошибка загрузки';
+
+  @override
+  String get pickDownloadStream => 'Выберите качество для загрузки';
+
+  @override
+  String get downloadsNav => 'Загрузки';
 }

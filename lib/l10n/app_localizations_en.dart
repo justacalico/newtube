@@ -718,16 +718,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shortsBadge => 'SHORTS';
 
   @override
-  String get playNext => 'Play next';
+  String get downloads => 'Downloads';
 
   @override
-  String get addToQueue => 'Add to queue';
+  String get noDownloads => 'No downloads yet';
 
   @override
-  String get queued => 'Added to queue';
+  String get deleteDownload => 'Delete download';
 
   @override
-  String get queuedNext => 'Will play next';
+  String get download => 'Download';
+
+  @override
+  String get downloadVideo => 'Download video';
+
+  @override
+  String get downloadAudio => 'Download audio only';
+
+  @override
+  String downloadedTo(String path) {
+    return 'Saved to $path';
+  }
+
+  @override
+  String get downloadFailed => 'Download failed';
+
+  @override
+  String get pickDownloadStream => 'Pick a quality to download';
+
+  @override
+  String get downloadsNav => 'Downloads';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1443,14 +1463,34 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   String get shortsBadge => 'SHORTS';
 
   @override
-  String get playNext => 'Play next';
+  String get downloads => 'Downloads';
 
   @override
-  String get addToQueue => 'Add to queue';
+  String get noDownloads => 'No downloads yet';
 
   @override
-  String get queued => 'Added to queue';
+  String get deleteDownload => 'Delete download';
 
   @override
-  String get queuedNext => 'Will play next';
+  String get download => 'Download';
+
+  @override
+  String get downloadVideo => 'Download video';
+
+  @override
+  String get downloadAudio => 'Download audio only';
+
+  @override
+  String downloadedTo(String path) {
+    return 'Saved to $path';
+  }
+
+  @override
+  String get downloadFailed => 'Download failed';
+
+  @override
+  String get pickDownloadStream => 'Pick a quality to download';
+
+  @override
+  String get downloadsNav => 'Downloads';
 }

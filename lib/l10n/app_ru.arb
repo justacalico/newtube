@@ -103,7 +103,7 @@
   "commentsSort": "Сортировка комментариев",
   "commentsTop": "Популярные",
   "commentsNewest": "Сначала новые",
-  "upNext": "Далее",
+  "upNext": "Следующее",
   "playNow": "Играть сейчас",
   "videoFit": "Масштаб видео",
   "fitContain": "По размеру",
@@ -286,8 +286,21 @@
   "hideShorts": "Скрыть Shorts",
   "hideShortsHint": "Убрать Shorts из лент и поиска",
   "shortsBadge": "SHORTS",
-  "playNext": "Следующим",
-  "addToQueue": "В очередь",
-  "queued": "Добавлено в очередь",
-  "queuedNext": "Будет следующим"
+  "downloads": "Загрузки",
+  "noDownloads": "Нет загрузок",
+  "deleteDownload": "Удалить загрузку",
+  "download": "Скачать",
+  "downloadVideo": "Скачать видео",
+  "downloadAudio": "Только аудио",
+  "downloadedTo": "Сохранено в {path}",
+  "downloadFailed": "Ошибка загрузки",
+  "pickDownloadStream": "Выберите качество для загрузки",
+  "downloadsNav": "Загрузки",
+  "@downloadedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  }
 }

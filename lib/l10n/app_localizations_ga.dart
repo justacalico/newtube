@@ -324,7 +324,7 @@ class AppLocalizationsGa extends AppLocalizations {
   String get commentsNewest => 'Is nuaí';
 
   @override
-  String get upNext => 'Ar aghaidh';
+  String get upNext => 'Seo chugainn';
 
   @override
   String get playNow => 'Seinn anois';
@@ -722,14 +722,34 @@ class AppLocalizationsGa extends AppLocalizations {
   String get shortsBadge => 'SHORTS';
 
   @override
-  String get playNext => 'Seinm ina dhiaidh';
+  String get downloads => 'Íoslódálaí';
 
   @override
-  String get addToQueue => 'Cuir leis an scuaine';
+  String get noDownloads => 'Níl aon íoslódáil fós';
 
   @override
-  String get queued => 'Curtha leis an scuaine';
+  String get deleteDownload => 'Scrios íoslódáil';
 
   @override
-  String get queuedNext => 'Seinnfear ina dhiaidh';
+  String get download => 'Íoslódáil';
+
+  @override
+  String get downloadVideo => 'Íoslódáil físeán';
+
+  @override
+  String get downloadAudio => 'Fuaim amháin';
+
+  @override
+  String downloadedTo(String path) {
+    return 'Sábháilte go $path';
+  }
+
+  @override
+  String get downloadFailed => 'Theip ar an íoslódáil';
+
+  @override
+  String get pickDownloadStream => 'Roghnaigh cáilíocht le hioslódáil';
+
+  @override
+  String get downloadsNav => 'Íoslódálaí';
 }

@@ -1430,29 +1430,65 @@ abstract class AppLocalizations {
   /// **'SHORTS'**
   String get shortsBadge;
 
-  /// No description provided for @playNext.
+  /// No description provided for @downloads.
   ///
   /// In en_GB, this message translates to:
-  /// **'Play next'**
-  String get playNext;
+  /// **'Downloads'**
+  String get downloads;
 
-  /// No description provided for @addToQueue.
+  /// No description provided for @noDownloads.
   ///
   /// In en_GB, this message translates to:
-  /// **'Add to queue'**
-  String get addToQueue;
+  /// **'No downloads yet'**
+  String get noDownloads;
 
-  /// No description provided for @queued.
+  /// No description provided for @deleteDownload.
   ///
   /// In en_GB, this message translates to:
-  /// **'Added to queue'**
-  String get queued;
+  /// **'Delete download'**
+  String get deleteDownload;
 
-  /// No description provided for @queuedNext.
+  /// No description provided for @download.
   ///
   /// In en_GB, this message translates to:
-  /// **'Will play next'**
-  String get queuedNext;
+  /// **'Download'**
+  String get download;
+
+  /// No description provided for @downloadVideo.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Download video'**
+  String get downloadVideo;
+
+  /// No description provided for @downloadAudio.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Download audio only'**
+  String get downloadAudio;
+
+  /// No description provided for @downloadedTo.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Saved to {path}'**
+  String downloadedTo(String path);
+
+  /// No description provided for @downloadFailed.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Download failed'**
+  String get downloadFailed;
+
+  /// No description provided for @pickDownloadStream.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Pick a quality to download'**
+  String get pickDownloadStream;
+
+  /// No description provided for @downloadsNav.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Downloads'**
+  String get downloadsNav;
 }
 
 class _AppLocalizationsDelegate

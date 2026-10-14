@@ -319,7 +319,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get commentsNewest => '最新';
 
   @override
-  String get upNext => '接下来';
+  String get upNext => '即将播放';
 
   @override
   String get playNow => '立即播放';
@@ -705,16 +705,36 @@ class AppLocalizationsZh extends AppLocalizations {
   String get shortsBadge => '短视频';
 
   @override
-  String get playNext => '下一个播放';
+  String get downloads => '下载';
 
   @override
-  String get addToQueue => '添加到队列';
+  String get noDownloads => '暂无下载';
 
   @override
-  String get queued => '已加入队列';
+  String get deleteDownload => '删除下载';
 
   @override
-  String get queuedNext => '将接着播放';
+  String get download => '下载';
+
+  @override
+  String get downloadVideo => '下载视频';
+
+  @override
+  String get downloadAudio => '仅下载音频';
+
+  @override
+  String downloadedTo(String path) {
+    return '已保存到 $path';
+  }
+
+  @override
+  String get downloadFailed => '下载失败';
+
+  @override
+  String get pickDownloadStream => '选择下载画质';
+
+  @override
+  String get downloadsNav => '下载';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1031,7 +1051,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get commentsNewest => '最新';
 
   @override
-  String get upNext => '接下来';
+  String get upNext => '即将播放';
 
   @override
   String get playNow => '立即播放';
@@ -1417,14 +1437,34 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get shortsBadge => '短视频';
 
   @override
-  String get playNext => '下一个播放';
+  String get downloads => '下载';
 
   @override
-  String get addToQueue => '添加到队列';
+  String get noDownloads => '暂无下载';
 
   @override
-  String get queued => '已加入队列';
+  String get deleteDownload => '删除下载';
 
   @override
-  String get queuedNext => '将接着播放';
+  String get download => '下载';
+
+  @override
+  String get downloadVideo => '下载视频';
+
+  @override
+  String get downloadAudio => '仅下载音频';
+
+  @override
+  String downloadedTo(String path) {
+    return '已保存到 $path';
+  }
+
+  @override
+  String get downloadFailed => '下载失败';
+
+  @override
+  String get pickDownloadStream => '选择下载画质';
+
+  @override
+  String get downloadsNav => '下载';
 }

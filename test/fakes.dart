@@ -27,7 +27,9 @@ import 'package:newtube/services/uploads_watcher.dart';
 import 'package:newtube/services/version_checker.dart';
 import 'package:newtube/services/window_actions.dart';
 import 'package:newtube/services/youtube_api.dart';
+import 'package:newtube/services/downloads.dart';
 import 'package:newtube/state/app_state.dart';
+import 'package:newtube/state/downloads_store.dart';
 import 'package:newtube/state/history_store.dart';
 import 'package:newtube/state/playlists_store.dart';
 import 'package:newtube/state/search_history_store.dart';
@@ -487,6 +489,8 @@ Future<AppState> testState({
   RydClient? ryd,
   ShareActions? share,
   BrightnessControl? brightness,
+  DownloadActions? downloads,
+  DownloadsStore? downloadsStore,
   Map<String, Object> initialPrefs = const {},
 }) async {
   SharedPreferences.setMockInitialValues(initialPrefs);
@@ -524,6 +528,8 @@ Future<AppState> testState({
     ryd: ryd,
     links: links,
     share: share,
+    downloads: downloads,
+    downloadsStore: downloadsStore,
     mediaControls: mediaControls,
     brightness: brightness,
     versionChecker: versionChecker ?? FakeVersionChecker(),

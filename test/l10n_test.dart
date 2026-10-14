@@ -131,6 +131,16 @@ void touchAll(AppLocalizations l) {
   l.openVideo;
   l.replay;
   l.upNext;
+  l.downloads;
+  l.noDownloads;
+  l.deleteDownload;
+  l.download;
+  l.downloadVideo;
+  l.downloadAudio;
+  l.downloadedTo('/tmp/x');
+  l.downloadFailed;
+  l.pickDownloadStream;
+  l.downloadsNav;
   l.playNow;
   l.showReplies;
   l.hideReplies;

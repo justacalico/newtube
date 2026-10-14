@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:media_kit/media_kit.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,6 +14,7 @@ import 'services/links.dart';
 import 'services/mcp_server.dart';
 import 'services/dearrow.dart';
 import 'services/dearrow_api.dart';
+import 'services/downloads.dart';
 import 'services/file_opener.dart';
 import 'services/media_controls.dart';
 import 'services/pip_actions.dart';
@@ -26,6 +28,7 @@ import 'services/uploads_watcher.dart';
 import 'services/window_actions_impl.dart';
 import 'services/youtube_explode_api.dart';
 import 'state/app_state.dart';
+import 'state/downloads_store.dart';
 import 'state/history_store.dart';
 import 'state/playlists_store.dart';
 import 'state/search_history_store.dart';
@@ -79,6 +82,11 @@ Future<AppState> createAppState(SharedPreferences prefs) async {
     windowActions: isDesktopPlatform ? WindowManagerActions() : null,
     createMcpServer: isDesktopPlatform ? createMcpServer : null,
     saveFile: isDesktopPlatform ? saveFileDialog : null,
+    downloads: kIsWeb
+        ? null
+        : NetDownloadActions(http.Client(), saveFileDialog),
+    // coverage:ignore-line
+    downloadsStore: await DownloadsStore.load(prefs),
     openFile: kIsWeb ? null : openTextFileDialog,
     sponsorBlock: SponsorBlockClient(),
     // coverage:ignore-line

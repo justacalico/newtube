@@ -7,6 +7,7 @@ import '../../state/app_state.dart';
 import '../../models/video_info.dart';
 import '../../models/youtube_route.dart';
 import '../pages/channel_page.dart';
+import '../pages/downloads_page.dart';
 import '../pages/history_page.dart';
 import '../pages/home_page.dart';
 import '../pages/playlist_page.dart';
@@ -132,6 +133,7 @@ class _AppShellState extends State<AppShell> {
       HistoryPage(),
       WatchLaterPage(),
       PlaylistsPage(),
+      DownloadsPage(),
       SettingsPage(),
     ];
 
@@ -198,11 +200,19 @@ class _AppShellState extends State<AppShell> {
           ),
           (
             destination: (
+              icon: Icons.download_outlined,
+              selectedIcon: Icons.download,
+              label: l10n.downloadsNav,
+            ),
+            page: 7,
+          ),
+          (
+            destination: (
               icon: Icons.settings_outlined,
               selectedIcon: Icons.settings,
               label: l10n.navSettings,
             ),
-            page: 7,
+            page: 8,
           ),
         ];
 

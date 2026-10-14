@@ -286,8 +286,21 @@
   "hideShorts": "Hide Shorts",
   "hideShortsHint": "Filter Shorts out of feeds and search",
   "shortsBadge": "SHORTS",
-  "playNext": "Play next",
-  "addToQueue": "Add to queue",
-  "queued": "Added to queue",
-  "queuedNext": "Will play next"
+  "downloads": "Downloads",
+  "noDownloads": "No downloads yet",
+  "deleteDownload": "Delete download",
+  "download": "Download",
+  "downloadVideo": "Download video",
+  "downloadAudio": "Download audio only",
+  "downloadedTo": "Saved to {path}",
+  "downloadFailed": "Download failed",
+  "pickDownloadStream": "Pick a quality to download",
+  "downloadsNav": "Downloads",
+  "@downloadedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  }
 }
