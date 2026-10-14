@@ -38,6 +38,7 @@ class VideoCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
+        onLongPress: () => VideoActionsMenu.open(context, video),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
