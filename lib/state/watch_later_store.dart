@@ -50,6 +50,19 @@ class WatchLaterStore extends ChangeNotifier {
 
   List<VideoInfo> get videos => _videos.values.toList();
 
+  Future<void> move(int from, int to, SharedPreferences prefs) async {
+    final entries = _videos.entries.toList();
+    if (from < 0 || from >= entries.length) return;
+    to = to.clamp(0, entries.length - 1);
+    final entry = entries.removeAt(from);
+    entries.insert(to, entry);
+    _videos
+      ..clear()
+      ..addEntries(entries);
+    await _save(prefs);
+    notifyListeners();
+  }
+
   bool contains(String videoId) => _videos.containsKey(videoId);
 
   Future<void> toggle(VideoInfo video, SharedPreferences prefs) async {

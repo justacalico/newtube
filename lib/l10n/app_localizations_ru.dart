@@ -1022,4 +1022,13 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get navMore => 'Ещё';
+
+  @override
+  String get sortAdded => 'В порядке добавления';
+
+  @override
+  String get sortNewest => 'Сначала новые';
+
+  @override
+  String get sortLongest => 'Сначала длинные';
 }
