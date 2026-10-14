@@ -89,6 +89,7 @@ class VideoDetails {
   final List<PlayableStream> streams;
   final List<CaptionTrack> captions;
   final List<Storyboard> storyboards;
+  final List<HeatMarker> heatmap;
 
   const VideoDetails({
     required this.info,
@@ -96,7 +97,15 @@ class VideoDetails {
     required this.streams,
     this.captions = const [],
     this.storyboards = const [],
+    this.heatmap = const [],
   });
+}
+
+class HeatMarker {
+  final Duration start;
+  final double intensity;
+
+  const HeatMarker({required this.start, required this.intensity});
 }
 
 class Storyboard {

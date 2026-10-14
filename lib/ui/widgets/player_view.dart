@@ -40,6 +40,7 @@ class PlayerView extends StatefulWidget {
   final String? artworkUrl;
   final ValueChanged<bool>? onAudioOnlyChanged;
   final Storyboard? storyboard;
+  final List<HeatMarker> heatmap;
 
   const PlayerView({
     super.key,
@@ -62,6 +63,7 @@ class PlayerView extends StatefulWidget {
     this.onDismiss,
     this.audioOnly = false,
     this.storyboard,
+    this.heatmap = const [],
     this.artworkUrl,
     this.onAudioOnlyChanged,
   });
@@ -964,6 +966,23 @@ class _PlayerViewState extends State<PlayerView> {
                                                               ),
                                                             ),
                                                           ),
+                                                        if (total >
+                                                                Duration.zero &&
+                                                            widget
+                                                                .heatmap
+                                                                .isNotEmpty)
+                                                          Positioned.fill(
+                                                            child: IgnorePointer(
+                                                              child: CustomPaint(
+                                                                painter:
+                                                                    _HeatMapPainter(
+                                                                      widget
+                                                                          .heatmap,
+                                                                      total,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                          ),
                                                         if (_previewFraction !=
                                                                 null &&
                                                             widget.storyboard !=
@@ -1138,4 +1157,40 @@ class _SeekPreview extends StatelessWidget {
       ),
     );
   }
+}
+
+class _HeatMapPainter extends CustomPainter {
+  final List<HeatMarker> markers;
+  final Duration total;
+
+  const _HeatMapPainter(this.markers, this.total);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (markers.isEmpty || total <= Duration.zero) return;
+    const inset = 12.0;
+    final width = (size.width - inset * 2).clamp(0.0, double.infinity);
+    if (width <= 0) return;
+    const maxHeight = 12.0;
+    final center = size.height / 2;
+    final paint = Paint()
+      ..color = Colors.white30
+      ..style = PaintingStyle.fill;
+
+    final path = Path()..moveTo(inset, center + 1);
+    final span = total.inMilliseconds;
+    for (final marker in markers) {
+      final x =
+          inset + width * (marker.start.inMilliseconds / span).clamp(0.0, 1.0);
+      path.lineTo(x, center + 1 - marker.intensity.clamp(0.0, 1.0) * maxHeight);
+    }
+    path
+      ..lineTo(inset + width, center + 1)
+      ..close();
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(_HeatMapPainter old) =>
+      old.markers != markers || old.total != total;
 }
