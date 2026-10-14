@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/models/video_info.dart';
 import 'package:newtube/ui/pages/watch_page.dart';
