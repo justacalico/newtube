@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import '../models/search_filter.dart';
 import '../models/video_info.dart';
 import '../utils/captions.dart';
 import '../utils/debug_log.dart';
@@ -106,8 +107,11 @@ class InnertubeApi implements YouTubeApi {
   }
 
   @override
-  Future<SearchResults> search(String query) async {
-    final r = await _post('search', {'query': query});
+  Future<SearchResults> search(String query, {SearchFilter? filter}) async {
+    final r = await _post('search', {
+      'query': query,
+      'params': ?filter?.toParams(),
+    });
     final videos = <VideoInfo>[];
     final channels = <ChannelInfo>[];
     final playlists = <PlaylistInfo>[];

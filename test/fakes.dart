@@ -1,3 +1,5 @@
+import 'package:newtube/models/search_filter.dart';
+
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
@@ -132,8 +134,12 @@ class FakeYouTubeApi implements YouTubeApi {
       error != null ? _fail() : trendingFeed;
 
   @override
-  Future<SearchResults> search(String query) async =>
-      error != null ? _fail() : searchResults;
+  Future<SearchResults> search(String query, {SearchFilter? filter}) async {
+    searchFilters.add(filter);
+    return error != null ? _fail() : searchResults;
+  }
+
+  final searchFilters = <SearchFilter?>[];
 
   @override
   Future<List<String>> searchSuggestions(String query) async {

@@ -137,6 +137,75 @@ class AppLocalizationsGa extends AppLocalizations {
       'Cas air i Socruithe le do chuardaigh a fheiceáil anseo.';
 
   @override
+  String get filterSort => 'Sórtáil';
+
+  @override
+  String get filterType => 'Cineál';
+
+  @override
+  String get filterUploadDate => 'Dáta uasluchtaithe';
+
+  @override
+  String get filterDuration => 'Fad';
+
+  @override
+  String get sortRelevance => 'Ábharthacht';
+
+  @override
+  String get sortDate => 'Dáta uasluchtaithe';
+
+  @override
+  String get sortViews => 'Líon radharc';
+
+  @override
+  String get sortRating => 'Rátáil';
+
+  @override
+  String get typeAll => 'Gach';
+
+  @override
+  String get typeVideo => 'Físeáin';
+
+  @override
+  String get typeChannel => 'Cains';
+
+  @override
+  String get typePlaylist => 'Seinmliostaí';
+
+  @override
+  String get typeLive => 'Beo';
+
+  @override
+  String get uploadAny => 'Am ar bith';
+
+  @override
+  String get uploadHour => 'An uair dheireanach';
+
+  @override
+  String get uploadToday => 'Inniu';
+
+  @override
+  String get uploadWeek => 'An tseachtain seo';
+
+  @override
+  String get uploadMonth => 'An mhí seo';
+
+  @override
+  String get uploadYear => 'I mbliana';
+
+  @override
+  String get durationAny => 'Fad ar bith';
+
+  @override
+  String get durationShort => 'Faoi 4 nóiméad';
+
+  @override
+  String get durationMedium => '4-20 nóiméad';
+
+  @override
+  String get durationLong => 'Os cionn 20 nóiméad';
+
+  @override
   String get theme => 'Téama';
 
   @override

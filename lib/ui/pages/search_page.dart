@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import '../../models/search_filter.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
@@ -22,6 +24,7 @@ class _SearchPageState extends State<SearchPage> {
   final _controller = TextEditingController();
   String _query = '';
   SearchResults _results = const SearchResults();
+  var _filter = const SearchFilter();
   bool _loading = false;
   Object? _error;
   List<String> _suggestions = const [];
@@ -114,7 +117,8 @@ class _SearchPageState extends State<SearchPage> {
       _error = null;
     });
     try {
-      final results = await AppScope.read(context).api.search(_query);
+      final results = await AppScope.read(context).api
+          .search(_query, filter: _filter);
       if (!mounted) return;
       setState(() {
         _results = results;
@@ -127,6 +131,11 @@ class _SearchPageState extends State<SearchPage> {
         _loading = false;
       });
     }
+  }
+
+  void _setFilter(SearchFilter filter) {
+    _filter = filter;
+    _load();
   }
 
   void _openVideo(VideoInfo video) => openWatchPage(context, video);
@@ -147,6 +156,8 @@ class _SearchPageState extends State<SearchPage> {
             onSubmitted: _search,
           ),
         ),
+        if (_query.isNotEmpty)
+          _FilterRow(filter: _filter, onChanged: _setFilter),
         Expanded(
           child: _query.isEmpty
               ? (_controller.text.trim().isNotEmpty
@@ -341,6 +352,157 @@ class _SearchHistory extends StatelessWidget {
           },
         );
       },
+    );
+  }
+}
+
+class _FilterRow extends StatelessWidget {
+  const _FilterRow({required this.filter, required this.onChanged});
+
+  final SearchFilter filter;
+  final ValueChanged<SearchFilter> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+      child: Row(
+        children: [
+          _FilterMenu<SearchSort>(
+            label: l10n.filterSort,
+            value: switch (filter.sort) {
+              SearchSort.relevance => l10n.sortRelevance,
+              SearchSort.date => l10n.sortDate,
+              SearchSort.views => l10n.sortViews,
+              SearchSort.rating => l10n.sortRating,
+            },
+            active: filter.sort != SearchSort.relevance,
+            items: {
+              SearchSort.relevance: l10n.sortRelevance,
+              SearchSort.date: l10n.sortDate,
+              SearchSort.views: l10n.sortViews,
+              SearchSort.rating: l10n.sortRating,
+            },
+            onChanged: (v) => onChanged(filter.copyWith(sort: v)),
+            theme: theme,
+          ),
+          _FilterMenu<SearchType>(
+            label: l10n.filterType,
+            value: switch (filter.type) {
+              SearchType.all => l10n.typeAll,
+              SearchType.video => l10n.typeVideo,
+              SearchType.channel => l10n.typeChannel,
+              SearchType.playlist => l10n.typePlaylist,
+              SearchType.live => l10n.typeLive,
+            },
+            active: filter.type != SearchType.all,
+            items: {
+              SearchType.all: l10n.typeAll,
+              SearchType.video: l10n.typeVideo,
+              SearchType.channel: l10n.typeChannel,
+              SearchType.playlist: l10n.typePlaylist,
+              SearchType.live: l10n.typeLive,
+            },
+            onChanged: (v) => onChanged(filter.copyWith(type: v)),
+            theme: theme,
+          ),
+          _FilterMenu<UploadDate>(
+            label: l10n.filterUploadDate,
+            value: switch (filter.uploadDate) {
+              UploadDate.any => l10n.uploadAny,
+              UploadDate.hour => l10n.uploadHour,
+              UploadDate.today => l10n.uploadToday,
+              UploadDate.week => l10n.uploadWeek,
+              UploadDate.month => l10n.uploadMonth,
+              UploadDate.year => l10n.uploadYear,
+            },
+            active: filter.uploadDate != UploadDate.any,
+            items: {
+              UploadDate.any: l10n.uploadAny,
+              UploadDate.hour: l10n.uploadHour,
+              UploadDate.today: l10n.uploadToday,
+              UploadDate.week: l10n.uploadWeek,
+              UploadDate.month: l10n.uploadMonth,
+              UploadDate.year: l10n.uploadYear,
+            },
+            onChanged: (v) => onChanged(filter.copyWith(uploadDate: v)),
+            theme: theme,
+          ),
+          _FilterMenu<VideoDuration>(
+            label: l10n.filterDuration,
+            value: switch (filter.duration) {
+              VideoDuration.any => l10n.durationAny,
+              VideoDuration.short => l10n.durationShort,
+              VideoDuration.medium => l10n.durationMedium,
+              VideoDuration.long => l10n.durationLong,
+            },
+            active: filter.duration != VideoDuration.any,
+            items: {
+              VideoDuration.any: l10n.durationAny,
+              VideoDuration.short: l10n.durationShort,
+              VideoDuration.medium: l10n.durationMedium,
+              VideoDuration.long: l10n.durationLong,
+            },
+            onChanged: (v) => onChanged(filter.copyWith(duration: v)),
+            theme: theme,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FilterMenu<T> extends StatelessWidget {
+  const _FilterMenu({
+    required this.label,
+    required this.value,
+    required this.active,
+    required this.items,
+    required this.onChanged,
+    required this.theme,
+  });
+
+  final String label;
+  final String value;
+  final bool active;
+  final Map<T, String> items;
+  final ValueChanged<T> onChanged;
+  final ThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: MenuAnchor(
+        builder: (context, controller, child) => TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: active
+                ? theme.colorScheme.secondaryContainer
+                : theme.colorScheme.surfaceContainerHighest,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            minimumSize: const Size(0, 32),
+          ),
+          onPressed: () =>
+              controller.isOpen ? controller.close() : controller.open(),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('$label · $value'),
+              const Icon(Icons.arrow_drop_down, size: 18),
+            ],
+          ),
+        ),
+        menuChildren: [
+          for (final item in items.entries)
+            MenuItemButton(
+              onPressed: () => onChanged(item.key),
+              child: Text(item.value),
+            ),
+        ],
+      ),
     );
   }
 }

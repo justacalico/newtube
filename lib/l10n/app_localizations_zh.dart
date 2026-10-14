@@ -133,6 +133,75 @@ class AppLocalizationsZh extends AppLocalizations {
   String get searchHistoryOffHint => '在设置中开启后，你的搜索会显示在这里。';
 
   @override
+  String get filterSort => '排序';
+
+  @override
+  String get filterType => '类型';
+
+  @override
+  String get filterUploadDate => '上传日期';
+
+  @override
+  String get filterDuration => '时长';
+
+  @override
+  String get sortRelevance => '相关度';
+
+  @override
+  String get sortDate => '上传日期';
+
+  @override
+  String get sortViews => '播放量';
+
+  @override
+  String get sortRating => '评分';
+
+  @override
+  String get typeAll => '全部';
+
+  @override
+  String get typeVideo => '视频';
+
+  @override
+  String get typeChannel => '频道';
+
+  @override
+  String get typePlaylist => '播放列表';
+
+  @override
+  String get typeLive => '直播';
+
+  @override
+  String get uploadAny => '任意时间';
+
+  @override
+  String get uploadHour => '过去一小时';
+
+  @override
+  String get uploadToday => '今天';
+
+  @override
+  String get uploadWeek => '本周';
+
+  @override
+  String get uploadMonth => '本月';
+
+  @override
+  String get uploadYear => '今年';
+
+  @override
+  String get durationAny => '任意时长';
+
+  @override
+  String get durationShort => '4 分钟以内';
+
+  @override
+  String get durationMedium => '4-20 分钟';
+
+  @override
+  String get durationLong => '20 分钟以上';
+
+  @override
   String get theme => '主题';
 
   @override
@@ -753,6 +822,75 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get searchHistoryOffHint => '在设置中开启后，你的搜索会显示在这里。';
+
+  @override
+  String get filterSort => '排序';
+
+  @override
+  String get filterType => '类型';
+
+  @override
+  String get filterUploadDate => '上传日期';
+
+  @override
+  String get filterDuration => '时长';
+
+  @override
+  String get sortRelevance => '相关度';
+
+  @override
+  String get sortDate => '上传日期';
+
+  @override
+  String get sortViews => '播放量';
+
+  @override
+  String get sortRating => '评分';
+
+  @override
+  String get typeAll => '全部';
+
+  @override
+  String get typeVideo => '视频';
+
+  @override
+  String get typeChannel => '频道';
+
+  @override
+  String get typePlaylist => '播放列表';
+
+  @override
+  String get typeLive => '直播';
+
+  @override
+  String get uploadAny => '任意时间';
+
+  @override
+  String get uploadHour => '过去一小时';
+
+  @override
+  String get uploadToday => '今天';
+
+  @override
+  String get uploadWeek => '本周';
+
+  @override
+  String get uploadMonth => '本月';
+
+  @override
+  String get uploadYear => '今年';
+
+  @override
+  String get durationAny => '任意时长';
+
+  @override
+  String get durationShort => '4 分钟以内';
+
+  @override
+  String get durationMedium => '4-20 分钟';
+
+  @override
+  String get durationLong => '20 分钟以上';
 
   @override
   String get theme => '主题';
