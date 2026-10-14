@@ -730,6 +730,41 @@ class _WatchPageState extends State<WatchPage>
                           const SizedBox(height: 4),
                           Text(_details!.description),
                         ],
+                        if (_chapters.isNotEmpty) ...[
+                          const SizedBox(height: 16),
+                          ExpansionTile(
+                            tilePadding: EdgeInsets.zero,
+                            title: Text(
+                              l10n.chapters,
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                            subtitle: Text(
+                              chapterAt(_chapters, player.position)?.title ??
+                                  '',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            children: [
+                              for (final chapter in _chapters)
+                                ListTile(
+                                  dense: true,
+                                  contentPadding: EdgeInsets.zero,
+                                  leading: Text(
+                                    formatDuration(chapter.start),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall,
+                                  ),
+                                  title: Text(
+                                    chapter.title,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  onTap: () => player.seek(chapter.start),
+                                ),
+                            ],
+                          ),
+                        ],
                         if (widget.playlist != null &&
                             widget.index != null) ...[
                           const SizedBox(height: 16),

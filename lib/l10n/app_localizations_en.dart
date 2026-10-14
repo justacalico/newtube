@@ -179,6 +179,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get defaultSpeed => 'Default playback speed';
 
   @override
+  String get chapters => 'Chapters';
+
+  @override
   String get about => 'About';
 
   @override
@@ -718,6 +721,9 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get defaultSpeed => 'Default playback speed';
+
+  @override
+  String get chapters => 'Chapters';
 
   @override
   String get about => 'About';

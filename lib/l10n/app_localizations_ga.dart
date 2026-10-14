@@ -180,6 +180,9 @@ class AppLocalizationsGa extends AppLocalizations {
   String get defaultSpeed => 'Luas réamhshocraithe';
 
   @override
+  String get chapters => 'Caibidlí';
+
+  @override
   String get about => 'Faoi';
 
   @override
