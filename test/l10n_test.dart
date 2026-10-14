@@ -183,6 +183,13 @@ void touchAll(AppLocalizations l) {
   l.codecAvc;
   l.codecVp9;
   l.codecAv1;
+  l.channelTabVideos;
+  l.channelTabShorts;
+  l.channelTabPlaylists;
+  l.channelTabAbout;
+  l.searchThisChannel;
+  l.noPlaylists;
+  l.noAboutInfo;
   l.playNow;
   l.showReplies;
   l.hideReplies;

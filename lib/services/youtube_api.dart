@@ -16,6 +16,31 @@ abstract class YouTubeApi {
     CommentSort? sort,
   });
   Future<ChannelInfo> channel(String channelId);
+
+  Future<List<VideoInfo>> channelShorts(String channelId) =>
+      channelVideos(channelId).then(
+        (list) => [
+          for (final v in list)
+            if (v.isShort) v,
+        ],
+      );
+
+  Future<List<PlaylistInfo>> channelPlaylists(String channelId) async {
+    return const [];
+  }
+
+  Future<ChannelAbout> channelAbout(String channelId) async {
+    return const ChannelAbout();
+  }
+
+  Future<List<VideoInfo>> channelSearch(String channelId, String query) async {
+    final q = query.toLowerCase();
+    return [
+      for (final v in await channelVideos(channelId))
+        if (v.title.toLowerCase().contains(q)) v,
+    ];
+  }
+
   Future<PlaylistInfo> playlist(String playlistId);
   Future<String?> resolveChannel(String url);
   Future<List<VideoInfo>> channelVideos(String channelId);

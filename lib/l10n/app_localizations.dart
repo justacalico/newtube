@@ -1795,6 +1795,48 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'AV1'**
   String get codecAv1;
+
+  /// No description provided for @channelTabVideos.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Videos'**
+  String get channelTabVideos;
+
+  /// No description provided for @channelTabShorts.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Shorts'**
+  String get channelTabShorts;
+
+  /// No description provided for @channelTabPlaylists.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Playlists'**
+  String get channelTabPlaylists;
+
+  /// No description provided for @channelTabAbout.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'About'**
+  String get channelTabAbout;
+
+  /// No description provided for @searchThisChannel.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Search this channel'**
+  String get searchThisChannel;
+
+  /// No description provided for @noPlaylists.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'No playlists'**
+  String get noPlaylists;
+
+  /// No description provided for @noAboutInfo.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'No channel info'**
+  String get noAboutInfo;
 }
 
 class _AppLocalizationsDelegate

@@ -724,6 +724,121 @@ class InnertubeApi implements YouTubeApi {
     return _proxiedThumbs(videos, channelId: channelId);
   }
 
+  @override
+  Future<List<VideoInfo>> channelSearch(String channelId, String query) async {
+    final results = await search(query);
+    return [
+      for (final v in results.videos)
+        if (v.channelId == channelId) v,
+    ];
+  }
+
+  String? _tabParams(dynamic node, Set<String> titles) {
+    if (node is Map<String, dynamic>) {
+      final title = node['title'];
+      if (title is String && titles.contains(title)) {
+        final endpoint = node['endpoint'];
+        if (endpoint is Map<String, dynamic>) {
+          final browse = endpoint['browseEndpoint'];
+          if (browse is Map<String, dynamic>) {
+            final params = browse['params'];
+            if (params is String) return params;
+          }
+        }
+      }
+      for (final v in node.values) {
+        final found = _tabParams(v, titles);
+        if (found != null) return found;
+      }
+    } else if (node is List) {
+      for (final item in node) {
+        final found = _tabParams(item, titles);
+        if (found != null) return found;
+      }
+    }
+    return null;
+  }
+
+  @override
+  Future<List<VideoInfo>> channelShorts(String channelId) async {
+    final r = await _post('browse', {'browseId': channelId});
+    final params = _tabParams(r, {'Shorts'});
+    if (params == null) return [];
+    final tab = await _post('browse', {
+      'browseId': channelId,
+      'params': params,
+    });
+    final videos = <VideoInfo>[];
+    collectVideos(tab, videos);
+    return _proxiedThumbs(videos, channelId: channelId);
+  }
+
+  @override
+  Future<List<PlaylistInfo>> channelPlaylists(String channelId) async {
+    final r = await _post('browse', {'browseId': channelId});
+    final params = _tabParams(r, {'Playlists'});
+    if (params == null) {
+      final playlists = <PlaylistInfo>[];
+      collectPlaylists(r, playlists);
+      return playlists;
+    }
+    final tab = await _post('browse', {
+      'browseId': channelId,
+      'params': params,
+    });
+    final playlists = <PlaylistInfo>[];
+    collectPlaylists(tab, playlists);
+    return playlists;
+  }
+
+  @override
+  Future<ChannelAbout> channelAbout(String channelId) async {
+    final r = await _post('browse', {
+      'browseId': channelId,
+      'params': 'EgVhYm91dA%3D%3D',
+    });
+    final metadata = r['metadata'];
+    final renderer = metadata is Map<String, dynamic>
+        ? metadata['channelMetadataRenderer']
+        : null;
+    final description = renderer?['description'] as String? ?? '';
+    final about = r['contents'];
+    String joined = '';
+    String? videos;
+    String? views;
+    String? subs;
+    final links = <({String label, String url})>[];
+    void scan(dynamic node) {
+      if (node is Map<String, dynamic>) {
+        final renderer = node['channelAboutFullMetadataRenderer'];
+        if (renderer is Map<String, dynamic>) {
+          joined = runs(renderer['joinedDateText']) ?? '';
+          videos = runs(renderer['videoCountText']);
+          views = runs(renderer['viewCountText']);
+          subs = runs(renderer['subscriberCountText']);
+          description.isEmpty;
+        }
+        for (final v in node.values) {
+          scan(v);
+        }
+      } else if (node is List) {
+        for (final item in node) {
+          scan(item);
+        }
+      }
+    }
+
+    scan(about ?? r);
+    return ChannelAbout(
+      description: description,
+      joinedText: joined,
+      videoCountText: videos,
+      viewCountText: views,
+      subscriberCountText: subs,
+      links: links,
+    );
+  }
+
   String? _videosTabParams(dynamic node) {
     if (node is Map<String, dynamic>) {
       final title = node['title'];

@@ -917,4 +917,25 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get codecAv1 => 'AV1';
+
+  @override
+  String get channelTabVideos => 'Видео';
+
+  @override
+  String get channelTabShorts => 'Shorts';
+
+  @override
+  String get channelTabPlaylists => 'Плейлисты';
+
+  @override
+  String get channelTabAbout => 'О канале';
+
+  @override
+  String get searchThisChannel => 'Поиск по каналу';
+
+  @override
+  String get noPlaylists => 'Нет плейлистов';
+
+  @override
+  String get noAboutInfo => 'Нет информации о канале';
 }
