@@ -9,6 +9,9 @@ import 'package:newtube/l10n/app_localizations_zh.dart';
 void touchAll(AppLocalizations l) {
   l.appTitle;
   l.navHome;
+  l.hideShorts;
+  l.hideShortsHint;
+  l.shortsBadge;
   l.navTrending;
   l.filterSort;
   l.filterType;

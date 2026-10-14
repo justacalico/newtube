@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/video_info.dart';
 import '../../state/app_state.dart';
+import '../../utils/feed_filter.dart';
 import '../widgets/video_grid.dart';
 import 'channel_page.dart';
 import 'watch_page.dart';
@@ -58,10 +59,10 @@ class _TrendingPageState extends State<TrendingPage> {
     return FeedStateView(
       loading: _loading,
       error: _error,
-      videos: _videos,
+      videos: visibleVideos(_videos, AppScope.read(context).settings),
       onRetry: _load,
       child: VideoGrid(
-        videos: _videos,
+        videos: visibleVideos(_videos, AppScope.read(context).settings),
         onVideoTap: _openVideo,
         onChannelTap: _openChannel,
       ),

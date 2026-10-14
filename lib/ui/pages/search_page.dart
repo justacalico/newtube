@@ -10,6 +10,7 @@ import '../../models/video_info.dart';
 import '../../services/youtube_api.dart';
 import '../../state/app_state.dart';
 import '../widgets/thumbnail.dart';
+import '../../utils/feed_filter.dart';
 import '../widgets/video_grid.dart';
 import 'channel_page.dart';
 import 'playlist_page.dart' show PlaylistPage, openPlaylistPage;
@@ -208,7 +209,10 @@ class _SearchPageState extends State<SearchPage> {
               : FeedStateView(
                   loading: _loading,
                   error: _error,
-                  videos: _results.videos,
+                  videos: visibleVideos(
+                    _results.videos,
+                    AppScope.read(context).settings,
+                  ),
                   onRetry: _load,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -326,7 +330,10 @@ class _SearchPageState extends State<SearchPage> {
                         ),
                       Expanded(
                         child: VideoGrid(
-                          videos: _results.videos,
+                          videos: visibleVideos(
+                            _results.videos,
+                            AppScope.read(context).settings,
+                          ),
                           onVideoTap: _openVideo,
                           onChannelTap: (v) => _openChannel(v.channelId),
                         ),

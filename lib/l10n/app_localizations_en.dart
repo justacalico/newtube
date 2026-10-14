@@ -707,6 +707,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get videoActions => 'More options';
+
+  @override
+  String get hideShorts => 'Hide Shorts';
+
+  @override
+  String get hideShortsHint => 'Filter Shorts out of feeds and search';
+
+  @override
+  String get shortsBadge => 'SHORTS';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1411,4 +1420,13 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get videoActions => 'More options';
+
+  @override
+  String get hideShorts => 'Hide Shorts';
+
+  @override
+  String get hideShortsHint => 'Filter Shorts out of feeds and search';
+
+  @override
+  String get shortsBadge => 'SHORTS';
 }

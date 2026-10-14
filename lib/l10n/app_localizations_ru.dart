@@ -714,4 +714,13 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get videoActions => 'Ещё';
+
+  @override
+  String get hideShorts => 'Скрыть Shorts';
+
+  @override
+  String get hideShortsHint => 'Убрать Shorts из лент и поиска';
+
+  @override
+  String get shortsBadge => 'SHORTS';
 }

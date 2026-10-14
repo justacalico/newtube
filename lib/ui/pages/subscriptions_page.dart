@@ -4,6 +4,7 @@ import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../state/app_state.dart';
 import '../widgets/thumbnail.dart';
+import '../../utils/feed_filter.dart';
 import '../widgets/video_grid.dart';
 import 'channel_page.dart';
 import 'watch_page.dart';
@@ -145,7 +146,10 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
             Expanded(
               child: _loading
                   ? const Center(child: CircularProgressIndicator())
-                  : VideoGrid(videos: _videos, onVideoTap: _openVideo),
+                  : VideoGrid(
+                      videos: visibleVideos(_videos, state.settings),
+                      onVideoTap: _openVideo,
+                    ),
             ),
           ],
         );

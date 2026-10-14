@@ -150,7 +150,9 @@ void main() {
       await pumpPage(tester, state, const SettingsPage());
       await tester.pumpAndSettle();
 
-      await tester.scrollUntilVisible(find.text('Import subscriptions'), 200);
+      await tester.drag(find.byType(ListView), const Offset(0, -400));
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(find.text('Import subscriptions'), -200);
       await tester.tap(find.text('Import subscriptions'));
       await tester.pumpAndSettle();
 
@@ -166,7 +168,9 @@ void main() {
       await pumpPage(tester, state, const SettingsPage());
       await tester.pumpAndSettle();
 
-      await tester.scrollUntilVisible(find.text('Import subscriptions'), 200);
+      await tester.drag(find.byType(ListView), const Offset(0, -400));
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(find.text('Import subscriptions'), -200);
       await tester.tap(find.text('Import subscriptions'));
       await tester.pumpAndSettle();
       expect(find.text('Could not read the OPML file'), findsOneWidget);
@@ -177,7 +181,9 @@ void main() {
       await pumpPage(tester, state, const SettingsPage());
       await tester.pumpAndSettle();
 
-      await tester.scrollUntilVisible(find.text('Import subscriptions'), 200);
+      await tester.drag(find.byType(ListView), const Offset(0, -400));
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(find.text('Import subscriptions'), -200);
       await tester.tap(find.text('Import subscriptions'));
       await tester.pumpAndSettle();
       expect(find.byType(SnackBar), findsNothing);
@@ -197,7 +203,9 @@ void main() {
       await pumpPage(tester, state, const SettingsPage());
       await tester.pumpAndSettle();
 
-      await tester.scrollUntilVisible(find.text('Export subscriptions'), 200);
+      await tester.drag(find.byType(ListView), const Offset(0, -400));
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(find.text('Export subscriptions'), -200);
       await tester.tap(find.text('Export subscriptions'));
       await tester.pumpAndSettle();
       expect(name, 'newtube_subscriptions.opml');
@@ -214,7 +222,9 @@ void main() {
       await pumpPage(tester, state, const SettingsPage());
       await tester.pumpAndSettle();
 
-      await tester.scrollUntilVisible(find.text('Export subscriptions'), 200);
+      await tester.drag(find.byType(ListView), const Offset(0, -400));
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(find.text('Export subscriptions'), -200);
       await tester.tap(find.text('Export subscriptions'));
       await tester.pumpAndSettle();
       expect(find.text('Export cancelled or failed'), findsOneWidget);

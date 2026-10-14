@@ -52,6 +52,29 @@ class VideoCard extends StatelessWidget {
                     top: 6,
                     child: WatchedBadge(videoId: video.id),
                   ),
+                  if (video.isShort)
+                    Positioned(
+                      left: 6,
+                      bottom: 6,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 1,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black87,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context).shortsBadge,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ),
                   if (video.isLive)
                     const Positioned(right: 6, bottom: 6, child: LiveBadge())
                   else if (video.isUpcoming)

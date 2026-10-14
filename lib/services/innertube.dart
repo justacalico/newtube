@@ -51,6 +51,11 @@ void collectVideos(dynamic node, List<VideoInfo> out) {
       final video = parseVideoRenderer(renderer);
       if (video != null) out.add(video);
     }
+    final shorts = node['shortsLockupViewModel'];
+    if (shorts is Map<String, dynamic>) {
+      final video = parseShortsLockup(shorts);
+      if (video != null) out.add(video);
+    }
     final lockup = node['lockupViewModel'];
     if (lockup is Map<String, dynamic>) {
       final video = parseLockup(lockup);
@@ -334,6 +339,23 @@ ChannelInfo? parseChannelRenderer(Map<String, dynamic> r) {
   );
 }
 
+bool _isShortRenderer(dynamic node) {
+  if (node is Map<String, dynamic>) {
+    if (node.containsKey('reelWatchEndpoint') ||
+        node.containsKey('shortsLockupViewModel')) {
+      return true;
+    }
+    for (final value in node.values) {
+      if (_isShortRenderer(value)) return true;
+    }
+  } else if (node is List) {
+    for (final item in node) {
+      if (_isShortRenderer(item)) return true;
+    }
+  }
+  return false;
+}
+
 VideoInfo? parseVideoRenderer(Map<String, dynamic> r) {
   final id = r['videoId'];
   if (id is! String) return null;
@@ -348,6 +370,7 @@ VideoInfo? parseVideoRenderer(Map<String, dynamic> r) {
     uploaded: runs(r['publishedTimeText']),
     isLive: _timeStatus(r) == 'LIVE',
     isUpcoming: _timeStatus(r) == 'UPCOMING',
+    isShort: _isShortRenderer(r['navigationEndpoint']),
   );
 }
 
@@ -440,4 +463,39 @@ Duration? duration(dynamic node) {
     seconds = seconds * 60 + n!;
   }
   return Duration(seconds: seconds);
+}
+
+VideoInfo? parseShortsLockup(Map<String, dynamic> s) {
+  final entityId = s['entityId'];
+  String? id;
+  if (entityId is String) {
+    final m = RegExp('shorts-shelf-item-([A-Za-z0-9_-]{11})')
+        .firstMatch(entityId);
+    id = m?.group(1);
+  }
+  id ??= _deepFind(s, 'reelWatchEndpoint') is Map<String, dynamic>
+      ? (_deepFind(s, 'reelWatchEndpoint') as Map<String, dynamic>)['videoId']
+            as String?
+      : null;
+  if (id == null) return null;
+  final meta = s['overlayMetadata'];
+  String title = '';
+  String views = '';
+  if (meta is Map<String, dynamic>) {
+    title = meta['primaryText'] is Map<String, dynamic>
+        ? (meta['primaryText']['content'] as String? ?? '')
+        : '';
+    views = meta['secondaryText'] is Map<String, dynamic>
+        ? (meta['secondaryText']['content'] as String? ?? '')
+        : '';
+  }
+  return VideoInfo(
+    id: id,
+    title: title,
+    author: '',
+    channelId: '',
+    thumbnailUrl: _lastSource(_deepFind(s['thumbnail'], 'sources')),
+    isShort: true,
+    viewCount: compactCount(views),
+  );
 }

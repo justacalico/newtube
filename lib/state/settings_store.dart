@@ -30,6 +30,7 @@ class SettingsStore extends ChangeNotifier {
   static const _captionsEnabledKey = 'captions_enabled';
   static const _captionLanguageKey = 'caption_language';
   static const _audioOnlyKey = 'audio_only';
+  static const _hideShortsKey = 'hide_shorts';
   static const _preferredQualityKey = 'preferred_quality';
   static const _defaultSpeedKey = 'default_speed';
   static const defaultSponsorBlockCategories = {'sponsor', 'selfpromo'};
@@ -51,6 +52,7 @@ class SettingsStore extends ChangeNotifier {
   bool _captionsEnabled;
   String _captionLanguage;
   bool _audioOnly;
+  bool _hideShorts;
   int _preferredQuality;
   double _defaultSpeed;
 
@@ -72,6 +74,7 @@ class SettingsStore extends ChangeNotifier {
     this._captionsEnabled = false,
     this._captionLanguage = '',
     this._audioOnly = false,
+    this._hideShorts = false,
     this._preferredQuality = 0,
     this._defaultSpeed = 1.0,
   }) : _sponsorBlockCategories =
@@ -105,6 +108,7 @@ class SettingsStore extends ChangeNotifier {
       captionsEnabled: prefs.getBool(_captionsEnabledKey) ?? false,
       captionLanguage: prefs.getString(_captionLanguageKey) ?? '',
       audioOnly: prefs.getBool(_audioOnlyKey) ?? false,
+      hideShorts: prefs.getBool(_hideShortsKey) ?? false,
       preferredQuality: prefs.getInt(_preferredQualityKey) ?? 0,
       defaultSpeed: prefs.getDouble(_defaultSpeedKey) ?? 1.0,
     );
@@ -146,6 +150,7 @@ class SettingsStore extends ChangeNotifier {
   bool get captionsEnabled => _captionsEnabled;
   String get captionLanguage => _captionLanguage;
   bool get audioOnly => _audioOnly;
+  bool get hideShorts => _hideShorts;
   int get preferredQuality => _preferredQuality;
   double get defaultSpeed => _defaultSpeed;
 
@@ -278,6 +283,12 @@ class SettingsStore extends ChangeNotifier {
   Future<void> setAudioOnly(bool value, SharedPreferences prefs) async {
     _audioOnly = value;
     await prefs.setBool(_audioOnlyKey, value);
+    notifyListeners();
+  }
+
+  Future<void> setHideShorts(bool value, SharedPreferences prefs) async {
+    _hideShorts = value;
+    await prefs.setBool(_hideShortsKey, value);
     notifyListeners();
   }
 

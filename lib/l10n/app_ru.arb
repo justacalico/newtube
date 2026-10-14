@@ -282,5 +282,8 @@
   "playlistEmpty": "Этот плейлист пуст",
   "savePlaylist": "Сохранить плейлист",
   "playlistSaved": "Сохранено в ваших плейлистах",
-  "videoActions": "Ещё"
+  "videoActions": "Ещё",
+  "hideShorts": "Скрыть Shorts",
+  "hideShortsHint": "Убрать Shorts из лент и поиска",
+  "shortsBadge": "SHORTS"
 }

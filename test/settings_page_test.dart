@@ -259,6 +259,8 @@ void main() {
     );
     expect(find.text('Export server file'), findsNothing);
 
+    await tester.drag(find.byType(ListView).first, const Offset(0, -120));
+    await tester.pumpAndSettle();
     await tester.tap(tile);
     await tester.pumpAndSettle();
     expect(state.settings.mcpEnabled, isTrue);
@@ -272,7 +274,11 @@ void main() {
     await tester.tap(find.text('Export server file'));
     await tester.pumpAndSettle();
 
-    await tester.drag(find.byType(ListView).first, const Offset(0, 600));
+    await tester.dragUntilVisible(
+      find.widgetWithText(SwitchListTile, 'MCP server'),
+      find.byType(ListView).first,
+      const Offset(0, 200),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(SwitchListTile, 'MCP server'));
     await tester.pumpAndSettle();
@@ -404,10 +410,25 @@ void main() {
     await pumpPage(tester, state, const SettingsPage());
     await tester.pumpAndSettle();
 
+    await tester.drag(find.byType(ListView), const Offset(0, -400));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('DeArrow'), -200);
     await tester.tap(find.byType(DropdownButton<DeArrowMode>));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Titles and thumbnails'));
     await tester.pumpAndSettle();
     expect(state.settings.deArrowMode, DeArrowMode.both);
+  });
+
+  testWidgets('toggles hide shorts', (tester) async {
+    final state = await testState();
+    await pumpPage(tester, state, const SettingsPage());
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(find.text('Hide Shorts'), 200);
+    await tester.ensureVisible(find.text('Hide Shorts'));
+    await tester.tap(find.text('Hide Shorts'));
+    await tester.pumpAndSettle();
+    expect(state.settings.hideShorts, isTrue);
   });
 }

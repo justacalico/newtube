@@ -282,5 +282,8 @@
   "playlistEmpty": "This playlist is empty",
   "savePlaylist": "Save playlist",
   "playlistSaved": "Saved to your playlists",
-  "videoActions": "More options"
+  "videoActions": "More options",
+  "hideShorts": "Hide Shorts",
+  "hideShortsHint": "Filter Shorts out of feeds and search",
+  "shortsBadge": "SHORTS"
 }

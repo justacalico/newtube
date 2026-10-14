@@ -1411,6 +1411,24 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'More options'**
   String get videoActions;
+
+  /// No description provided for @hideShorts.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Hide Shorts'**
+  String get hideShorts;
+
+  /// No description provided for @hideShortsHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Filter Shorts out of feeds and search'**
+  String get hideShortsHint;
+
+  /// No description provided for @shortsBadge.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'SHORTS'**
+  String get shortsBadge;
 }
 
 class _AppLocalizationsDelegate
