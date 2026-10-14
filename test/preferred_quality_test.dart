@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/state/settings_store.dart';
 import 'package:newtube/ui/pages/settings_page.dart';
@@ -44,6 +43,25 @@ void main() {
       preferredQuality: -1,
     )!;
     expect(choice.stream, m180);
+  });
+
+  test('lowest pairs a video-only stream with audio', () {
+    final choice = pickDefaultStream(
+      const [v720, v360v, a128],
+      desktop: true,
+      preferredQuality: -1,
+    )!;
+    expect(choice.stream, v360v);
+    expect(choice.audio, a128);
+  });
+
+  test('desktop preference falls back to a muxed stream', () {
+    final choice = pickDefaultStream(
+      const [m360, m180, a128],
+      desktop: true,
+      preferredQuality: 360,
+    )!;
+    expect(choice.stream, m360);
   });
 
   test('preferred quality above everything uses the default pick', () {
