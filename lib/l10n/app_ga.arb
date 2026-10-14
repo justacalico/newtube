@@ -416,5 +416,8 @@
   "feedCompact": "Greille dlúth",
   "dataSaver": "Sábháil sonraí",
   "dataSaverHint": "Folaigh mionsamhlacha agus teorainn 480p",
-  "navMore": "Tuilleadh"
+  "navMore": "Tuilleadh",
+  "sortAdded": "Ord breise",
+  "sortNewest": "Is nuaí",
+  "sortLongest": "Is faide"
 }

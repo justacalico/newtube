@@ -218,6 +218,9 @@ void touchAll(AppLocalizations l) {
   l.dataSaver;
   l.dataSaverHint;
   l.navMore;
+  l.sortAdded;
+  l.sortNewest;
+  l.sortLongest;
   l.playNow;
   l.showReplies;
   l.hideReplies;

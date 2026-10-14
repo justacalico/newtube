@@ -1020,4 +1020,13 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get navMore => 'Tuilleadh';
+
+  @override
+  String get sortAdded => 'Ord breise';
+
+  @override
+  String get sortNewest => 'Is nuaí';
+
+  @override
+  String get sortLongest => 'Is faide';
 }

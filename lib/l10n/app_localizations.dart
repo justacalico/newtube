@@ -2005,6 +2005,24 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'More'**
   String get navMore;
+
+  /// No description provided for @sortAdded.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Added order'**
+  String get sortAdded;
+
+  /// No description provided for @sortNewest.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Newest'**
+  String get sortNewest;
+
+  /// No description provided for @sortLongest.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Longest'**
+  String get sortLongest;
 }
 
 class _AppLocalizationsDelegate

@@ -1001,6 +1001,15 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get navMore => '更多';
+
+  @override
+  String get sortAdded => '添加顺序';
+
+  @override
+  String get sortNewest => '最新';
+
+  @override
+  String get sortLongest => '最长';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1999,4 +2008,13 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get navMore => '更多';
+
+  @override
+  String get sortAdded => '添加顺序';
+
+  @override
+  String get sortNewest => '最新';
+
+  @override
+  String get sortLongest => '最长';
 }

@@ -1015,6 +1015,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get navMore => 'More';
+
+  @override
+  String get sortAdded => 'Added order';
+
+  @override
+  String get sortNewest => 'Newest';
+
+  @override
+  String get sortLongest => 'Longest';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -2027,4 +2036,13 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get navMore => 'More';
+
+  @override
+  String get sortAdded => 'Added order';
+
+  @override
+  String get sortNewest => 'Newest';
+
+  @override
+  String get sortLongest => 'Longest';
 }

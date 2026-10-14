@@ -416,5 +416,8 @@
   "feedCompact": "Compact grid",
   "dataSaver": "Data saver",
   "dataSaverHint": "Hide thumbnails and cap quality at 480p",
-  "navMore": "More"
+  "navMore": "More",
+  "sortAdded": "Added order",
+  "sortNewest": "Newest",
+  "sortLongest": "Longest"
 }

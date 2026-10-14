@@ -416,5 +416,8 @@
   "feedCompact": "紧凑网格",
   "dataSaver": "省流模式",
   "dataSaverHint": "隐藏缩略图并将画质上限设为 480p",
-  "navMore": "更多"
+  "navMore": "更多",
+  "sortAdded": "添加顺序",
+  "sortNewest": "最新",
+  "sortLongest": "最长"
 }
