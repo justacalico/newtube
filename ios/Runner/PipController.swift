@@ -98,25 +98,25 @@ final class PipController: NSObject {
       if let videoTrack = try await videoAsset.loadTracks(withMediaType: .video).first,
          let track = composition.addMutableTrack(
            withMediaType: .video,
-           preferredTrackID: kCMPersistentTrackId_Invalid
+           preferredTrackID: CMPersistentTrackId(0)
          ) {
         let duration = try await videoAsset.load(.duration)
         try track.insertTimeRange(
-          CMTimeRange(start: .zero, duration: duration),
+          CMTimeRange(start: CMTime.zero, duration: duration),
           of: videoTrack,
-          at: .zero
+          at: CMTime.zero
         )
       }
       if let audioTrack = try await audioAsset.loadTracks(withMediaType: .audio).first,
          let track = composition.addMutableTrack(
            withMediaType: .audio,
-           preferredTrackID: kCMPersistentTrackId_Invalid
+           preferredTrackID: CMPersistentTrackId(0)
          ) {
         let duration = try await audioAsset.load(.duration)
         try track.insertTimeRange(
-          CMTimeRange(start: .zero, duration: duration),
+          CMTimeRange(start: CMTime.zero, duration: duration),
           of: audioTrack,
-          at: .zero
+          at: CMTime.zero
         )
       }
       return AVPlayerItem(asset: composition)

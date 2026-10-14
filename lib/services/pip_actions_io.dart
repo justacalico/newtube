@@ -100,7 +100,10 @@ class _IosPipActions implements PipActions {
   Future<void> _handle(MethodCall call) async {
     if (call.method != 'pipModeChanged') return;
     final args = call.arguments;
-    await _pipChanged(args is Map ? args['active'] == true : args == true, args);
+    await _pipChanged(
+      args is Map ? args['active'] == true : args == true,
+      args,
+    );
   }
 
   Future<void> _pipChanged(bool active, Object? args) async {
