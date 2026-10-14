@@ -92,7 +92,7 @@ class FeedStateView extends StatelessWidget {
     }
     final refresh = onRefresh;
     Widget scrollable(Widget inner) => RefreshIndicator(
-      onRefresh: refresh ?? () async {},
+      onRefresh: () => refresh!(),
       child: inner is ScrollView
           ? inner
           : ListView(

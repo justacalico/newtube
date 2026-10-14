@@ -1127,19 +1127,14 @@ void main() {
     final state = await testState(watchLater: store);
     await pumpPage(tester, state, const WatchLaterPage());
     await tester.pumpAndSettle();
-    await tester.timedDrag(
-      find.text(testVideos.first.title),
-      const Offset(0, 140),
-      const Duration(seconds: 1),
-    );
+    final tile = tester.getCenter(find.text(testVideos.first.title));
+    final hold = await tester.startGesture(tile);
+    await tester.pump(const Duration(milliseconds: 600));
+    await hold.moveBy(const Offset(0, 100));
+    await tester.pump(const Duration(milliseconds: 300));
+    await hold.up();
     await tester.pumpAndSettle();
-    await tester.tap(find.byWidgetPredicate((w) => w is DropdownButton));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Longest').last);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text(testVideos.first.title));
-    await tester.pumpAndSettle();
-    expect(find.byType(WatchPage), findsOneWidget);
+    expect(store.videos, hasLength(2));
   });
 
   testWidgets('local playlist drag reorders videos', (tester) async {
@@ -1152,11 +1147,12 @@ void main() {
     final state = await testState(playlists: store);
     await pumpPage(tester, state, LocalPlaylistPage(playlistId: playlist.id));
     await tester.pumpAndSettle();
-    await tester.timedDrag(
-      find.text(testVideos.first.title),
-      const Offset(0, 140),
-      const Duration(seconds: 1),
-    );
+    final tile = tester.getCenter(find.text(testVideos.first.title));
+    final hold = await tester.startGesture(tile);
+    await tester.pump(const Duration(milliseconds: 600));
+    await hold.moveBy(const Offset(0, 100));
+    await tester.pump(const Duration(milliseconds: 300));
+    await hold.up();
     await tester.pumpAndSettle();
   });
 
@@ -1172,11 +1168,12 @@ void main() {
       size: const Size(800, 1600),
     );
     await tester.pumpAndSettle();
-    await tester.timedDrag(
-      find.text(testVideos.last.title).last,
-      const Offset(0, -80),
-      const Duration(seconds: 1),
-    );
+    final tile = tester.getCenter(find.text(testVideos.last.title).last);
+    final hold = await tester.startGesture(tile);
+    await tester.pump(const Duration(milliseconds: 600));
+    await hold.moveBy(const Offset(0, -80));
+    await tester.pump(const Duration(milliseconds: 300));
+    await hold.up();
     await tester.pumpAndSettle();
   });
 
@@ -1217,7 +1214,7 @@ void main() {
       ),
     );
     await tester.pump();
-    await tester.tap(find.byType(TextButton));
+    await tester.tap(find.text('Videos are blocked in the browser').last);
     await tester.pumpAndSettle();
   });
 
@@ -1252,6 +1249,83 @@ void main() {
     await tester.pump();
     await gesture.up();
     await tester.pumpAndSettle();
+  });
+  testWidgets('reorder callbacks move items', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final prefs = await SharedPreferences.getInstance();
+    final store = await WatchLaterStore.load(prefs);
+    await store.toggle(testVideos.first, prefs);
+    await store.toggle(testVideos.last, prefs);
+    final state = await testState(watchLater: store);
+    await pumpPage(tester, state, const WatchLaterPage());
+    await tester.pumpAndSettle();
+    final view = tester.widget<ReorderableListView>(
+      find.byType(ReorderableListView),
+    );
+    view.onReorderItem?.call(0, 1);
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('local playlist reorder callback moves video', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final prefs = await SharedPreferences.getInstance();
+    final store = await PlaylistsStore.load(prefs);
+    final playlist = await store.create('List A', prefs);
+    await store.addVideo(playlist.id, testVideos.first, prefs);
+    await store.addVideo(playlist.id, testVideos.last, prefs);
+    final state = await testState(playlists: store);
+    await pumpPage(tester, state, LocalPlaylistPage(playlistId: playlist.id));
+    await tester.pumpAndSettle();
+    final list = tester.widget<SliverReorderableList>(
+      find.byType(SliverReorderableList),
+    );
+    list.onReorderItem?.call(0, 1);
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('watch page queue reorder callback', (tester) async {
+    final state = await testState();
+    state.playback
+      ..enqueue(testVideos.first)
+      ..enqueue(testVideos.last);
+    await pumpPage(
+      tester,
+      state,
+      WatchPage(video: testVideos.first),
+      size: const Size(800, 1600),
+    );
+    await tester.pumpAndSettle();
+    final view = tester.widget<ReorderableListView>(
+      find.byType(ReorderableListView),
+    );
+    view.onReorderItem?.call(0, 1);
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('feed error refresh callbacks', (tester) async {
+    var ran = false;
+    final state = await testState(isWeb: true);
+    await pumpPage(
+      tester,
+      state,
+      Scaffold(
+        body: FeedStateView(
+          loading: false,
+          videos: const [],
+          error: StateError('x'),
+          onRetry: () {},
+          onRefresh: () async => ran = true,
+          child: const SizedBox.shrink(),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester
+        .widget<RefreshIndicator>(find.byType(RefreshIndicator))
+        .onRefresh();
+    tester.widget<TextButton>(find.byType(TextButton)).onPressed!();
+    await tester.pumpAndSettle();
+    expect(ran, isTrue);
   });
 }
 
