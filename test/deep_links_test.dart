@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:newtube/models/video_info.dart';
 import 'package:newtube/models/youtube_route.dart';
 import 'package:newtube/ui/pages/channel_page.dart';
 import 'package:newtube/ui/pages/playlist_page.dart';
