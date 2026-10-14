@@ -10,18 +10,24 @@ class SubscriptionsStore extends ChangeNotifier {
 
   static const _groupsKey = 'subscription_groups';
 
+  static const _mutedKey = 'subscription_muted';
+
   final Map<String, ChannelInfo> _channels;
   final Map<String, String> _groups;
+  final Set<String> _muted;
 
   SubscriptionsStore([
     Map<String, ChannelInfo>? channels,
     Map<String, String>? groups,
+    Set<String>? muted,
   ]) : _channels = Map.of(channels ?? const {}),
-       _groups = Map.of(groups ?? const {});
+       _groups = Map.of(groups ?? const {}),
+       _muted = Set.of(muted ?? const {});
 
   static Future<SubscriptionsStore> load(SharedPreferences prefs) async {
     final raw = prefs.getString(_key);
     final groups = <String, String>{};
+    final muted = (prefs.getStringList(_mutedKey) ?? const []).toSet();
     final rawGroups = prefs.getString(_groupsKey);
     if (rawGroups != null) {
       try {
@@ -33,19 +39,23 @@ class SubscriptionsStore extends ChangeNotifier {
         }
       } catch (_) {}
     }
-    if (raw == null) return SubscriptionsStore(null, groups);
+    if (raw == null) return SubscriptionsStore(null, groups, muted);
     try {
       final decoded = jsonDecode(raw);
       if (decoded is! Map<String, dynamic>) {
-        return SubscriptionsStore(null, groups);
+        return SubscriptionsStore(null, groups, muted);
       }
-      return SubscriptionsStore({
-        for (final e in decoded.entries)
-          if (e.value is Map<String, dynamic>)
-            e.key: _decodeChannel(e.value as Map<String, dynamic>),
-      }, groups);
+      return SubscriptionsStore(
+        {
+          for (final e in decoded.entries)
+            if (e.value is Map<String, dynamic>)
+              e.key: _decodeChannel(e.value as Map<String, dynamic>),
+        },
+        groups,
+        muted,
+      );
     } catch (_) {
-      return SubscriptionsStore(null, groups);
+      return SubscriptionsStore(null, groups, muted);
     }
   }
 
@@ -64,6 +74,9 @@ class SubscriptionsStore extends ChangeNotifier {
     _groups
       ..clear()
       ..addAll(fresh._groups);
+    _muted
+      ..clear()
+      ..addAll(fresh._muted);
     notifyListeners();
   }
 
@@ -80,6 +93,22 @@ class SubscriptionsStore extends ChangeNotifier {
   Future<void> unsubscribe(String channelId, SharedPreferences prefs) async {
     _channels.remove(channelId);
     await _save(prefs);
+    notifyListeners();
+  }
+
+  bool isMuted(String channelId) => _muted.contains(channelId);
+
+  Future<void> setMuted(
+    String channelId,
+    bool muted,
+    SharedPreferences prefs,
+  ) async {
+    if (muted) {
+      _muted.add(channelId);
+    } else {
+      _muted.remove(channelId);
+    }
+    await prefs.setStringList(_mutedKey, _muted.toList());
     notifyListeners();
   }
 

@@ -867,6 +867,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get renameGroup => 'Rename group';
+
+  @override
+  String get channelNotify => 'Upload notifications';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1731,4 +1734,7 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get renameGroup => 'Rename group';
+
+  @override
+  String get channelNotify => 'Upload notifications';
 }

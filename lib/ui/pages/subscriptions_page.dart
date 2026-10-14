@@ -188,19 +188,34 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                                   overflow: TextOverflow.ellipsis,
                                   style: Theme.of(context).textTheme.bodySmall,
                                 ),
-                                TextButton(
-                                  style: TextButton.styleFrom(
-                                    minimumSize: Size.zero,
-                                    padding: EdgeInsets.zero,
-                                    tapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                  ),
-                                  onPressed: () => state.subscriptions
-                                      .unsubscribe(channel.id, state.prefs),
-                                  child: Text(
-                                    l10n.unsubscribe,
-                                    style: const TextStyle(fontSize: 11),
-                                  ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    InkWell(
+                                      onTap: () => state.subscriptions.setMuted(
+                                        channel.id,
+                                        !state.subscriptions.isMuted(
+                                          channel.id,
+                                        ),
+                                        state.prefs,
+                                      ),
+                                      child: Icon(
+                                        state.subscriptions.isMuted(channel.id)
+                                            ? Icons.notifications_off_outlined
+                                            : Icons.notifications_active,
+                                        size: 14,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    InkWell(
+                                      onTap: () => state.subscriptions
+                                          .unsubscribe(channel.id, state.prefs),
+                                      child: Text(
+                                        l10n.unsubscribe,
+                                        style: const TextStyle(fontSize: 10),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),

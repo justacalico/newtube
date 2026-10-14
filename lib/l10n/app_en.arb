@@ -367,5 +367,6 @@
   "channelGroup": "Group",
   "noGroup": "No group",
   "deleteGroup": "Delete group",
-  "renameGroup": "Rename group"
+  "renameGroup": "Rename group",
+  "channelNotify": "Upload notifications"
 }

@@ -367,5 +367,6 @@
   "channelGroup": "Группа",
   "noGroup": "Без группы",
   "deleteGroup": "Удалить группу",
-  "renameGroup": "Переименовать группу"
+  "renameGroup": "Переименовать группу",
+  "channelNotify": "Уведомления о видео"
 }

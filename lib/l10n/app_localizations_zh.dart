@@ -854,6 +854,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get renameGroup => '重命名分组';
+
+  @override
+  String get channelNotify => '上传提醒';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1705,4 +1708,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get renameGroup => '重命名分组';
+
+  @override
+  String get channelNotify => '上传提醒';
 }
