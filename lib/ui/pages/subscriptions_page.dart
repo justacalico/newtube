@@ -31,21 +31,43 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
     final state = AppScope.read(context);
     final channels = state.subscriptions.channels;
     if (channels.isEmpty) return;
-    setState(() => _loading = true);
-    final videos = <VideoInfo>[];
-    for (final channel in channels) {
-      try {
-        videos.addAll([
-          for (final v in await state.api.channelVideos(channel.id))
-            if (v.author.isEmpty) v.copyWith(author: channel.name) else v,
-        ]);
-      } catch (_) {}
+    setState(() {
+      _loading = true;
+      _videos = const [];
+    });
+    const limit = 4;
+    final queue = [...channels];
+    final running = <Future<void>>[];
+    while (queue.isNotEmpty || running.isNotEmpty) {
+      while (queue.isNotEmpty && running.length < limit) {
+        final channel = queue.removeAt(0);
+        running.add(
+          state.api
+              .channelVideos(channel.id)
+              .then((list) {
+                if (!mounted) return;
+                setState(
+                  () => _videos = [
+                    ..._videos,
+                    for (final v in list)
+                      if (v.author.isEmpty)
+                        v.copyWith(author: channel.name)
+                      else
+                        v,
+                  ],
+                );
+              })
+              .catchError((_) {}),
+        );
+      }
+      if (running.isEmpty) break;
+      await Future.wait(running, eagerError: false);
+      running.clear();
+      if (!mounted) return;
+      if (queue.isEmpty) setState(() => _loading = false);
     }
     if (!mounted) return;
-    setState(() {
-      _videos = videos;
-      _loading = false;
-    });
+    setState(() => _loading = false);
   }
 
   void _openVideo(VideoInfo video) => openWatchPage(context, video);

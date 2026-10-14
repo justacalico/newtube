@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/models/video_info.dart';
@@ -70,6 +72,20 @@ void main() {
     await tester.tap(find.text('Save'));
     await tester.pumpAndSettle();
     expect(store.groupOf('UC1'), 'Favs');
+  });
+
+  testWidgets('feed loads channels concurrently', (tester) async {
+    final store = SubscriptionsStore({
+      for (var i = 0; i < 8; i++) 'UC$i': ChannelInfo(id: 'UC$i', name: 'Ch$i'),
+    });
+    final api = FakeYouTubeApi()..channelVideosGate = Completer<void>();
+    final state = await testState(subscriptions: store, api: api);
+    await pumpPage(tester, state, const SubscriptionsPage());
+    await tester.pump();
+    api.channelVideosGate!.complete();
+    await tester.pumpAndSettle();
+    expect(api.peakConcurrent, greaterThan(1));
+    expect(api.peakConcurrent, lessThanOrEqualTo(4));
   });
 
   testWidgets('manage groups dialog deletes groups', (tester) async {

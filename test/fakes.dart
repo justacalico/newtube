@@ -199,8 +199,21 @@ class FakeYouTubeApi implements YouTubeApi {
       error != null ? _fail() : channelInfo;
 
   @override
-  Future<List<VideoInfo>> channelVideos(String channelId) async =>
-      error != null ? _fail() : uploads;
+  Future<List<VideoInfo>> channelVideos(String channelId) async {
+    if (channelVideosGate != null) {
+      concurrent++;
+      peakConcurrent = concurrent > peakConcurrent
+          ? concurrent
+          : peakConcurrent;
+      await channelVideosGate!.future;
+      concurrent--;
+    }
+    return error != null ? _fail() : uploads;
+  }
+
+  Completer<void>? channelVideosGate;
+  int concurrent = 0;
+  int peakConcurrent = 0;
 
   List<VideoInfo> channelShortsList = const [];
   List<PlaylistInfo> channelPlaylistList = const [];
