@@ -576,7 +576,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get importSubscriptions => '导入订阅';
 
   @override
-  String get importSubscriptionsHint => '从 OPML 文件导入(NewPipe、FreeTube、Takeout)';
+  String get importSubscriptionsHint => '从 OPML 或 YouTube Takeout CSV 导入订阅';
 
   @override
   String get exportSubscriptions => '导出订阅';
@@ -1400,7 +1400,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get importSubscriptions => '导入订阅';
 
   @override
-  String get importSubscriptionsHint => '从 OPML 文件导入(NewPipe、FreeTube、Takeout)';
+  String get importSubscriptionsHint => '从 OPML 或 YouTube Takeout CSV 导入订阅';
 
   @override
   String get exportSubscriptions => '导出订阅';

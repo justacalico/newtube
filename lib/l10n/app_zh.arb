@@ -204,7 +204,7 @@
     }
   },
   "importSubscriptions": "导入订阅",
-  "importSubscriptionsHint": "从 OPML 文件导入(NewPipe、FreeTube、Takeout)",
+  "importSubscriptionsHint": "从 OPML 或 YouTube Takeout CSV 导入订阅",
   "exportSubscriptions": "导出订阅",
   "exportSubscriptionsHint": "将订阅列表保存为 OPML",
   "subscriptionsImported": "已导入 {imported} 个频道,{failed} 个失败",

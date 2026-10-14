@@ -586,7 +586,7 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get importSubscriptionsHint =>
-      'Ó chomhad OPML (NewPipe, FreeTube, Takeout)';
+      'Iompórtáil síntiúsí ó OPML nó CSV Takeout';
 
   @override
   String get exportSubscriptions => 'Easpórtáil síntiúis';

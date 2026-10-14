@@ -204,7 +204,7 @@
     }
   },
   "importSubscriptions": "Импорт подписок",
-  "importSubscriptionsHint": "Из файла OPML (NewPipe, FreeTube, Takeout)",
+  "importSubscriptionsHint": "Импорт подписок из OPML или CSV из YouTube Takeout",
   "exportSubscriptions": "Экспорт подписок",
   "exportSubscriptionsHint": "Сохранить подписки в файл OPML",
   "subscriptionsImported": "Импортировано каналов: {imported}, ошибок: {failed}",

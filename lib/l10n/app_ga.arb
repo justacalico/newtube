@@ -204,7 +204,7 @@
     }
   },
   "importSubscriptions": "Iompórtáil síntiúis",
-  "importSubscriptionsHint": "Ó chomhad OPML (NewPipe, FreeTube, Takeout)",
+  "importSubscriptionsHint": "Iompórtáil síntiúsí ó OPML nó CSV Takeout",
   "exportSubscriptions": "Easpórtáil síntiúis",
   "exportSubscriptionsHint": "Sábháil an liosta síntiús mar OPML",
   "subscriptionsImported": "Iompórtáladh {imported} cainéal, theip ar {failed}",
