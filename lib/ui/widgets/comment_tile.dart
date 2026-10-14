@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
+import '../../state/app_state.dart';
 import '../pages/channel_page.dart';
 import 'thumbnail.dart';
 
 class CommentTile extends StatelessWidget {
   final CommentInfo comment;
+  final String? videoId;
 
-  const CommentTile({super.key, required this.comment});
+  const CommentTile({super.key, required this.comment, this.videoId});
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +66,21 @@ class CommentTile extends StatelessWidget {
                         size: 14,
                         color: theme.colorScheme.primary,
                       ),
+                    if (comment.isOwner)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 1,
+                        ),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          l10n.creator,
+                          style: theme.textTheme.labelSmall,
+                        ),
+                      ),
                   ],
                 ),
                 const SizedBox(height: 2),
@@ -88,11 +105,98 @@ class CommentTile extends StatelessWidget {
                     ],
                   ],
                 ),
+                if (comment.replyContinuation != null)
+                  _Replies(comment: comment, videoId: videoId),
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class _Replies extends StatefulWidget {
+  final CommentInfo comment;
+  final String? videoId;
+
+  const _Replies({required this.comment, this.videoId});
+
+  @override
+  State<_Replies> createState() => _RepliesState();
+}
+
+class _RepliesState extends State<_Replies> {
+  List<CommentInfo>? _replies;
+  var _loading = false;
+  var _expanded = false;
+
+  Future<void> _toggle() async {
+    if (_expanded) {
+      setState(() => _expanded = false);
+      return;
+    }
+    if (_replies != null) {
+      setState(() => _expanded = true);
+      return;
+    }
+    final videoId = widget.videoId;
+    final token = widget.comment.replyContinuation;
+    if (videoId == null || token == null) return;
+    setState(() => _loading = true);
+    try {
+      final result = await AppScope.read(context).api
+          .comments(videoId, continuation: token);
+      if (!mounted) return;
+      setState(() {
+        _replies = result.comments;
+        _loading = false;
+        _expanded = true;
+      });
+    } catch (_) {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextButton.icon(
+          icon: _loading
+              ? const SizedBox(
+                  width: 14,
+                  height: 14,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : Icon(
+                  _expanded ? Icons.expand_less : Icons.expand_more,
+                  size: 16,
+                ),
+          label: Text(
+            _expanded ? l10n.hideReplies : l10n.showReplies,
+            style: Theme.of(context).textTheme.labelMedium,
+          ),
+          onPressed: _toggle,
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.zero,
+            minimumSize: const Size(0, 28),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+        ),
+        if (_expanded)
+          Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: Column(
+              children: [
+                for (final reply in _replies ?? const <CommentInfo>[])
+                  CommentTile(comment: reply),
+              ],
+            ),
+          ),
+      ],
     );
   }
 }

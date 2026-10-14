@@ -229,6 +229,24 @@ class AppLocalizationsZh extends AppLocalizations {
   String get copiedToClipboard => '链接已复制';
 
   @override
+  String get showReplies => '显示回复';
+
+  @override
+  String get hideReplies => '隐藏回复';
+
+  @override
+  String get creator => '作者';
+
+  @override
+  String get commentsSort => '评论排序';
+
+  @override
+  String get commentsTop => '热门';
+
+  @override
+  String get commentsNewest => '最新';
+
+  @override
   String get videoFit => '画面缩放';
 
   @override
@@ -822,6 +840,24 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get copiedToClipboard => '链接已复制';
+
+  @override
+  String get showReplies => '显示回复';
+
+  @override
+  String get hideReplies => '隐藏回复';
+
+  @override
+  String get creator => '作者';
+
+  @override
+  String get commentsSort => '评论排序';
+
+  @override
+  String get commentsTop => '热门';
+
+  @override
+  String get commentsNewest => '最新';
 
   @override
   String get videoFit => '画面缩放';

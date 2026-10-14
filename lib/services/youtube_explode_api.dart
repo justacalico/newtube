@@ -251,8 +251,11 @@ class YouTubeExplodeApi implements YouTubeApi {
   }
 
   @override
-  Future<CommentsResult> comments(String videoId, {String? continuation}) =>
-      _innertube.comments(videoId, continuation: continuation);
+  Future<CommentsResult> comments(
+    String videoId, {
+    String? continuation,
+    CommentSort? sort,
+  }) => _innertube.comments(videoId, continuation: continuation, sort: sort);
 
   @override
   Future<List<CaptionCue>> captions(CaptionTrack track) =>

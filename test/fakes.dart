@@ -86,6 +86,7 @@ class FakeYouTubeApi implements YouTubeApi {
   List<VideoInfo> uploads;
   CommentsResult commentsResult;
   Map<String, CommentsResult> commentPages;
+  final commentSortCalls = <CommentSort?>[];
 
   FakeYouTubeApi({
     this.feed = const [],
@@ -142,11 +143,15 @@ class FakeYouTubeApi implements YouTubeApi {
   Future<CommentsResult> comments(
     String videoId, {
     String? continuation,
-  }) async => error != null
-      ? _fail()
-      : continuation == null
-      ? commentsResult
-      : commentPages[continuation] ?? const CommentsResult();
+    CommentSort? sort,
+  }) async {
+    commentSortCalls.add(sort);
+    return error != null
+        ? _fail()
+        : continuation == null
+        ? commentsResult
+        : commentPages[continuation] ?? const CommentsResult();
+  }
 
   @override
   Future<ChannelInfo> channel(String channelId) async =>

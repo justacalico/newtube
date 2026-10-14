@@ -65,8 +65,11 @@ class _FeedApi implements YouTubeApi {
       throw UnimplementedError();
 
   @override
-  Future<CommentsResult> comments(String videoId, {String? continuation}) =>
-      throw UnimplementedError();
+  Future<CommentsResult> comments(
+    String videoId, {
+    String? continuation,
+    CommentSort? sort,
+  }) => throw UnimplementedError();
 
   @override
   Future<ChannelInfo> channel(String channelId) => throw UnimplementedError();

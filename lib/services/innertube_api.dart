@@ -378,11 +378,15 @@ class InnertubeApi implements YouTubeApi {
   Future<CommentsResult> comments(
     String videoId, {
     String? continuation,
+    CommentSort? sort,
   }) async {
     var token = continuation;
     if (token == null) {
       final r = await _post('next', {'videoId': videoId});
       token = _commentsContinuation(r);
+      if (sort != null) {
+        token = _sortContinuation(r, sort.index) ?? token;
+      }
       if (token == null) {
         debugLog('[api] $videoId: no comments section');
         return const CommentsResult();
@@ -390,6 +394,31 @@ class InnertubeApi implements YouTubeApi {
     }
     final r = await _post('next', {'continuation': token});
     return _parseComments(r);
+  }
+
+  String? _sortContinuation(dynamic node, int index) {
+    if (node is Map<String, dynamic>) {
+      final menu = node['sortMenu']?['sortMenuRenderer'];
+      if (menu is Map<String, dynamic>) {
+        final items = menu['sortItems'];
+        if (items is List && index < items.length) {
+          final item = items[index];
+          if (item is Map<String, dynamic>) {
+            return continuationToken(item);
+          }
+        }
+      }
+      for (final value in node.values) {
+        final found = _sortContinuation(value, index);
+        if (found != null) return found;
+      }
+    } else if (node is List) {
+      for (final item in node) {
+        final found = _sortContinuation(item, index);
+        if (found != null) return found;
+      }
+    }
+    return null;
   }
 
   String? _commentsContinuation(dynamic node) {
@@ -451,6 +480,10 @@ class InnertubeApi implements YouTubeApi {
             comments.add(_parseComment(renderer, thread));
           }
         }
+        final reply = item['commentRenderer'];
+        if (reply is Map<String, dynamic>) {
+          comments.add(_parseComment(reply, const {}));
+        }
         final more = item['continuationItemRenderer'];
         if (more is Map<String, dynamic>) {
           next ??= continuationToken(more);
@@ -481,7 +514,24 @@ class InnertubeApi implements YouTubeApi {
       replyCount: _replyCount(thread),
       pinned: r['pinnedCommentBadge'] is Map<String, dynamic>,
       hearted: _iconType(badge) == 'HEART',
+      isOwner: r['authorIsChannelOwner'] == true,
+      replyContinuation: _replyContinuation(thread),
     );
+  }
+
+  String? _replyContinuation(Map<String, dynamic> thread) {
+    final replies = thread['replies'];
+    if (replies is! Map<String, dynamic>) return null;
+    final renderer = replies['commentRepliesRenderer'];
+    if (renderer is! Map<String, dynamic>) return null;
+    final contents = renderer['contents'];
+    if (contents is! List) return null;
+    for (final item in contents) {
+      if (item is! Map<String, dynamic>) continue;
+      final more = item['continuationItemRenderer'];
+      if (more is Map<String, dynamic>) return continuationToken(more);
+    }
+    return null;
   }
 
   String? _iconType(dynamic node) {

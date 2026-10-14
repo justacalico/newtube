@@ -234,6 +234,24 @@ class AppLocalizationsRu extends AppLocalizations {
   String get copiedToClipboard => 'Ссылка скопирована';
 
   @override
+  String get showReplies => 'Показать ответы';
+
+  @override
+  String get hideReplies => 'Скрыть ответы';
+
+  @override
+  String get creator => 'Автор канала';
+
+  @override
+  String get commentsSort => 'Сортировка комментариев';
+
+  @override
+  String get commentsTop => 'Популярные';
+
+  @override
+  String get commentsNewest => 'Сначала новые';
+
+  @override
   String get videoFit => 'Масштаб видео';
 
   @override
