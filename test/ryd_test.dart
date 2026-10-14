@@ -71,4 +71,8 @@ void main() {
     expect(ryd.calls, 1);
     expect(find.textContaining('dislikes'), findsNothing);
   });
+
+  test('RydException formats its message', () {
+    expect(RydException('rate limited').toString(), 'RydException: rate limited');
+  });
 }
