@@ -12,6 +12,15 @@ void touchAll(AppLocalizations l) {
   l.hideShorts;
   l.hideWatched;
   l.hideWatchedHint;
+  l.markUnwatched;
+  l.playNext;
+  l.addToQueue;
+  l.queued;
+  l.queuedNext;
+  l.refreshFeed;
+  l.sortLongest;
+  l.fallbackBackend;
+  l.fallbackBackendHint;
   l.hideShortsHint;
   l.shortsBadge;
   l.resumedFrom('1:23');
@@ -152,7 +161,6 @@ void touchAll(AppLocalizations l) {
   l.removeFromHistory;
   l.noResults;
   l.markWatched;
-  l.markUnwatched;
   l.exportBackup;
   l.exportBackupHint;
   l.importBackup;
@@ -220,7 +228,6 @@ void touchAll(AppLocalizations l) {
   l.navMore;
   l.sortAdded;
   l.sortNewest;
-  l.sortLongest;
   l.playNow;
   l.showReplies;
   l.hideReplies;
@@ -313,7 +320,6 @@ void touchAll(AppLocalizations l) {
   l.playlistNameHint;
   l.create;
   l.rename;
-  l.renamePlaylist;
   l.delete;
   l.deletePlaylist;
   l.deletePlaylistConfirm;

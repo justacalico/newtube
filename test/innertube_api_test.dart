@@ -1079,5 +1079,296 @@ void main() {
       expect(duration({'simpleText': 'x:y'}), isNull);
       expect(duration({'simpleText': '2:05'}), const Duration(seconds: 125));
     });
+    group('channel tabs and playlists', () {
+      test('playlist paginates with continuation', () async {
+        final router = _BrowseRouter()
+          ..byBrowseId['VLpl1'] = {
+            'header': {
+              'playlistHeaderRenderer': {
+                'title': {'simpleText': 'Mix'},
+                'numVideosText': {
+                  'runs': [
+                    {'text': '2'},
+                  ],
+                },
+                'ownerText': {
+                  'runs': [
+                    {
+                      'text': 'Chan',
+                      'navigationEndpoint': {
+                        'browseEndpoint': {'browseId': 'UC1'},
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+            'contents': {
+              'twoColumnBrowseResultsRenderer': {
+                'tabs': [
+                  {
+                    'tabRenderer': {
+                      'content': {
+                        'sectionListRenderer': {
+                          'contents': [
+                            {
+                              'itemSectionRenderer': {
+                                'contents': [
+                                  {
+                                    'playlistVideoListRenderer': {
+                                      'contents': [
+                                        {
+                                          'playlistVideoRenderer': {
+                                            'videoId': 'a1',
+                                            'title': {
+                                              'runs': [
+                                                {'text': 'A1'},
+                                              ],
+                                            },
+                                          },
+                                        },
+                                        {
+                                          'continuationItemRenderer': {
+                                            'continuationEndpoint': {
+                                              'continuationCommand': {
+                                                'token': 'NEXT',
+                                              },
+                                            },
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          }
+          ..byContinuation = {
+            'contents': {
+              'twoColumnBrowseResultsRenderer': {
+                'tabs': [
+                  {
+                    'tabRenderer': {
+                      'content': {
+                        'sectionListRenderer': {
+                          'contents': [
+                            {
+                              'itemSectionRenderer': {
+                                'contents': [
+                                  {
+                                    'playlistVideoListRenderer': {
+                                      'contents': [
+                                        {
+                                          'playlistVideoRenderer': {
+                                            'videoId': 'a2',
+                                            'title': {
+                                              'runs': [
+                                                {'text': 'A2'},
+                                              ],
+                                            },
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          };
+        final api = _browseApi(router);
+        final first = await api.playlist('pl1');
+        expect(first.videos.single.id, 'a1');
+        expect(first.continuation, 'NEXT');
+        final second = await api.playlist(
+          'pl1',
+          continuation: first.continuation,
+        );
+        expect(second.videos.single.id, 'a2');
+        expect(second.continuation, isNull);
+      });
+
+      test('channelShorts follows the Shorts tab', () async {
+        final router = _BrowseRouter()
+          ..byBrowseId['UC1'] = {
+            'contents': {
+              'twoColumnBrowseResultsRenderer': {
+                'tabs': [
+                  {
+                    'tabRenderer': {
+                      'title': 'Shorts',
+                      'endpoint': {
+                        'browseEndpoint': {'params': 'SHORTS_PARAMS'},
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          }
+          ..byParams['SHORTS_PARAMS'] = {'x': _videoRenderer('s1')};
+        final api = _browseApi(router);
+        final shorts = await api.channelShorts('UC1');
+        expect(shorts.single.id, 's1');
+      });
+
+      test('channelShorts returns empty without a Shorts tab', () async {
+        final api = _browseApi(_BrowseRouter()..byBrowseId['UC1'] = {});
+        expect(await api.channelShorts('UC1'), isEmpty);
+      });
+
+      test('channelPlaylists follows the Playlists tab or root list', () async {
+        final router = _BrowseRouter()
+          ..byBrowseId['UC1'] = {
+            'contents': {
+              'twoColumnBrowseResultsRenderer': {
+                'tabs': [
+                  {
+                    'tabRenderer': {
+                      'title': 'Playlists',
+                      'endpoint': {
+                        'browseEndpoint': {'params': 'PL_PARAMS'},
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          }
+          ..byParams['PL_PARAMS'] = {
+            'gridRenderer': {
+              'items': [
+                {
+                  'playlistRenderer': {
+                    'playlistId': 'PL9',
+                    'title': {'simpleText': 'P9'},
+                  },
+                },
+              ],
+            },
+          };
+        final api = _browseApi(router);
+        final playlists = await api.channelPlaylists('UC1');
+        expect(playlists.single.id, 'PL9');
+      });
+
+      test('channelPlaylists reads root when no tab', () async {
+        final router = _BrowseRouter()
+          ..byBrowseId['UC1'] = {
+            'gridRenderer': {
+              'items': [
+                {
+                  'playlistRenderer': {
+                    'playlistId': 'PL2',
+                    'title': {'simpleText': 'P2'},
+                  },
+                },
+              ],
+            },
+          };
+        final api = _browseApi(router);
+        expect((await api.channelPlaylists('UC1')).single.id, 'PL2');
+      });
+
+      test('channelAbout parses metadata renderer', () async {
+        final api = _browseApi(
+          _BrowseRouter()
+            ..byParams['EgVhYm91dA%3D%3D'] = {
+              'metadata': {
+                'channelMetadataRenderer': {'description': 'about chan'},
+              },
+              'contents': {
+                'x': {
+                  'channelAboutFullMetadataRenderer': {
+                    'joinedDateText': {
+                      'runs': [
+                        {'text': 'Joined 2020'},
+                      ],
+                    },
+                    'videoCountText': {
+                      'runs': [
+                        {'text': '5 videos'},
+                      ],
+                    },
+                    'viewCountText': {
+                      'runs': [
+                        {'text': '99 views'},
+                      ],
+                    },
+                    'subscriberCountText': {
+                      'runs': [
+                        {'text': '12 subs'},
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+        );
+        final about = await api.channelAbout('UC1');
+        expect(about.description, 'about chan');
+        expect(about.joinedText, 'Joined 2020');
+        expect(about.videoCountText, '5 videos');
+        expect(about.subscriberCountText, '12 subs');
+      });
+
+      test('channelSearch filters videos by channel id', () async {
+        final api = _api((endpoint, _) {
+          if (endpoint == 'search') {
+            return {
+              'contents': {
+                'twoColumnSearchResultsRenderer': {
+                  'primaryContents': {
+                    'sectionListRenderer': {
+                      'contents': [
+                        {
+                          'itemSectionRenderer': {
+                            'contents': [_videoRenderer('x9')],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              },
+            };
+          }
+          return {};
+        });
+        final hits = await api.channelSearch('UCabc', 'q');
+        expect(hits.single.id, 'x9');
+        expect(await api.channelSearch('UCzzz', 'q'), isEmpty);
+      });
+    });
   });
 }
+
+class _BrowseRouter {
+  final Map<String, Map<String, dynamic>> byBrowseId = {};
+  final Map<String, Map<String, dynamic>> byParams = {};
+  Map<String, dynamic>? byContinuation;
+}
+
+InnertubeApi _browseApi(_BrowseRouter router) => _api((endpoint, body) {
+  if (endpoint != 'browse') return {};
+  if (body['continuation'] != null) return router.byContinuation ?? {};
+  if (body['params'] != null) {
+    return router.byParams[body['params']] ?? {};
+  }
+  return router.byBrowseId[body['browseId']] ?? {};
+});

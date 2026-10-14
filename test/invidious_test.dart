@@ -36,23 +36,32 @@ Map<String, String> _routes() => {
         "lengthSeconds":300,"viewCount":99,"likeCount":5,
         "description":"desc","publishedText":"2 days ago",
         "formatStreams":[{"url":"https://v1","type":"video/mp4; codecs=\\"avc1\\"","qualityLabel":"720p"}],
-        "adaptiveFormats":[{"url":"https://a1","type":"audio/mp4; codecs=\\"mp4a\\"","bitrate":"128000"}],
+        "adaptiveFormats":[{"url":"https://a1","type":"audio/mp4; codecs=\\"mp4a\\"","bitrate":"128000","size":"1280x720"}],
         "captions":[{"label":"English","languageCode":"en"}],
         "recommendedVideos":[{"videoId":"r1","title":"Rel","author":"B","authorId":"UC2"}]
       }''',
   '/api/v1/comments/v1': '''{
-        "comments":[{"commentId":"c1","author":"u","content":"nice","likeCount":3,"publishedText":"1 day ago"}],
+        "comments":[{"commentId":"c1","author":"u","content":"nice","likeCount":3,"publishedText":"1 day ago","replies":{"replyCount":2}}],
         "continuation":"next"
       }''',
   '/api/v1/channels/UC1': '''{
         "author":"Chan","authorThumbnails":[{"url":"https://t/1.png"}],
-        "subCount":55,"description":"about","totalViews":9000
+        "subCount":55,"description":"about","totalViews":9000,"joined":1600000000
       }''',
   '/api/v1/channels/UC1/videos':
       '''[{"videoId":"x1","title":"Up1","author":"Chan","authorId":"UC1"}]''',
-  '/api/v1/channels/UC1/shorts': '[]',
+  '/api/v1/channels/UC1/shorts': '''[{"type":"shortVideo","videoId":"sh1","title":"#short clip","author":"Chan","authorId":"UC1","lengthSeconds":30}]''',
+  '/caps': '''WEBVTT
+
+00:00:00.000 --> 00:00:02.000
+hello
+''',
   '/api/v1/channels/UC1/playlists': '''{"playlists":[{"playlistId":"PL9","title":"P","author":"Chan","videoCount":2}]}''',
   '/api/v1/playlists/PL1': '''{"title":"P","author":"Chan","videoCount":120,"videos":[{"videoId":"v9","title":"a","author":"x","authorId":"UC3"}]}''',
+  '/api/v1/channels/UC9/videos': '''[{
+        "type":"video","videoId":"sh9","title":"#mini clip","author":"A","authorId":"UC9","lengthSeconds":45,
+        "videoThumbnails":[{"quality":"high","url":"//i.ytimg.com/vi/sh9/hq.jpg"}]
+      }]''',
   '/api/v1/search/suggestions': '{"suggestions":["cats","cats and dogs"]}',
 };
 
@@ -206,6 +215,72 @@ void main() {
     final route = await api.resolveUrl('https://youtu.be/abc');
     expect(route?.videoId, 'abc');
     expect(await api.resolveChannel('https://youtube.com/channel/UC5'), 'UC5');
+  });
+  test('homeFeed delegates to trending', () async {
+    final bare = InvidiousApi(instance: 'https://inv.test');
+    expect(bare, isNotNull);
+    final feed = await api.homeFeed();
+    expect(feed.single.id, 'abc');
+  });
+
+  test('comments supports continuation and sort', () async {
+    final c = await api.comments(
+      'v1',
+      continuation: 'tok',
+      sort: CommentSort.newest,
+    );
+    expect(c.comments.single.replyCount, 2);
+    expect(c.continuation, 'next');
+  });
+
+  test('channel shorts, search and errors', () async {
+    expect((await api.channelShorts('UC1')).single.id, 'sh1');
+    final short = (await api.channelVideos('UC9')).single;
+    expect(short.isShort, isTrue);
+    expect(short.thumbnailUrl, contains('hq.jpg'));
+    expect(await api.playlist('PL1', continuation: '2'), isNotNull);
+    expect(await api.playlist('PL1', continuation: 'x'), isNotNull);
+    final hits = await api.channelSearch('UC1', 'up');
+    expect(hits.single.id, 'x1');
+    expect(await api.channelSearch('UC1', 'zzz'), isEmpty);
+    expect(() => api.channel('missing'), throwsA(isA<InvidiousException>()));
+    expect(
+      () => api.videoDetails('missing'),
+      throwsA(isA<InvidiousException>()),
+    );
+    expect(() => api.playlist('missing'), throwsA(isA<InvidiousException>()));
+    expect(const InvidiousException('x').toString(), 'InvidiousException: x');
+  });
+
+  test('channelAbout formats joined date', () async {
+    final about = await api.channelAbout('UC1');
+    expect(about.joinedText, startsWith('2020'));
+    expect(about.subscriberCountText, '55 subscribers');
+  });
+
+  test('captions fetch and parse', () async {
+    final cues = await api.captions(
+      const CaptionTrack(
+        languageCode: 'en',
+        name: 'English',
+        url: 'https://inv.test/caps',
+      ),
+    );
+    expect(cues.single.text, contains('hello'));
+    final bad = InvidiousApi(
+      instance: 'https://inv.test',
+      client: MockClient((_) async => http.Response('x', 500)),
+    );
+    expect(
+      () => bad.captions(
+        const CaptionTrack(
+          languageCode: 'en',
+          name: 'x',
+          url: 'https://inv.test/none',
+        ),
+      ),
+      throwsA(isA<InvidiousException>()),
+    );
   });
 }
 
