@@ -893,4 +893,11 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get jumpToHighlight => 'Léim go dtí an bhuaicpointe';
+
+  @override
+  String get networkProxy => 'Seachfhreastalaí líonra';
+
+  @override
+  String get networkProxyHint =>
+      'SOCKS5 nó HTTP, curtha i bhfeidhm ar an athtús';
 }

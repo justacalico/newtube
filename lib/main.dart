@@ -15,6 +15,7 @@ import 'services/mcp_server.dart';
 import 'services/dearrow.dart';
 import 'services/dearrow_api.dart';
 import 'services/downloads.dart';
+import 'services/network_proxy.dart';
 import 'services/file_opener.dart';
 import 'services/media_controls.dart';
 import 'services/pip_actions.dart';
@@ -64,9 +65,13 @@ Future<AppState> createAppState(SharedPreferences prefs) async {
       client: DeArrowClient(),
       inner:
           kIsWeb // coverage:ignore-start
-          ? InnertubeApi(proxyPrefix: () => settings.proxyPrefix)
+          ? InnertubeApi(
+              proxyPrefix: () => settings.proxyPrefix,
+              httpClient: proxyHttpClient(settings.networkProxy),
+            )
           : YouTubeExplodeApi(
               proxyPrefix: () => settings.proxyPrefix,
+              httpClient: proxyHttpClient(settings.networkProxy),
             ), // coverage:ignore-end
     ),
     isWeb: kIsWeb,

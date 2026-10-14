@@ -176,6 +176,8 @@ void touchAll(AppLocalizations l) {
   l.sponsorCategoryExclusiveAccess;
   l.sponsorCategoryChapter;
   l.jumpToHighlight;
+  l.networkProxy;
+  l.networkProxyHint;
   l.playNow;
   l.showReplies;
   l.hideReplies;

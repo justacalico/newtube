@@ -17,6 +17,7 @@ class SettingsStore extends ChangeNotifier {
   static const _localeKey = 'locale';
   static const _autoplayKey = 'autoplay';
   static const _proxyPrefixKey = 'proxy_prefix';
+  static const _networkProxyKey = 'network_proxy';
   static const _searchHistoryKey = 'search_history_enabled';
   static const _mcpEnabledKey = 'mcp_enabled';
   static const _sidebarCollapsedKey = 'sidebar_collapsed';
@@ -40,6 +41,7 @@ class SettingsStore extends ChangeNotifier {
   Locale? _locale;
   bool _autoplay;
   String _proxyPrefix;
+  String _networkProxy;
   bool _searchHistoryEnabled;
   bool _mcpEnabled;
   bool _sidebarCollapsed;
@@ -63,6 +65,7 @@ class SettingsStore extends ChangeNotifier {
     this._locale,
     this._autoplay = true,
     this._proxyPrefix = '',
+    this._networkProxy = '',
     this._searchHistoryEnabled = true,
     this._mcpEnabled = false,
     this._sidebarCollapsed = false,
@@ -91,6 +94,7 @@ class SettingsStore extends ChangeNotifier {
       locale: _parseLocale(prefs.getString(_localeKey)),
       autoplay: prefs.getBool(_autoplayKey) ?? true,
       proxyPrefix: prefs.getString(_proxyPrefixKey) ?? '',
+      networkProxy: prefs.getString(_networkProxyKey) ?? '',
       searchHistoryEnabled: prefs.getBool(_searchHistoryKey) ?? true,
       mcpEnabled: prefs.getBool(_mcpEnabledKey) ?? false,
       sidebarCollapsed: prefs.getBool(_sidebarCollapsedKey) ?? false,
@@ -124,6 +128,7 @@ class SettingsStore extends ChangeNotifier {
     _locale = fresh._locale;
     _autoplay = fresh._autoplay;
     _proxyPrefix = fresh._proxyPrefix;
+    _networkProxy = fresh._networkProxy;
     _searchHistoryEnabled = fresh._searchHistoryEnabled;
     _mcpEnabled = fresh._mcpEnabled;
     _sidebarCollapsed = fresh._sidebarCollapsed;
@@ -162,6 +167,7 @@ class SettingsStore extends ChangeNotifier {
   Locale? get locale => _locale;
   bool get autoplay => _autoplay;
   String get proxyPrefix => _proxyPrefix;
+  String get networkProxy => _networkProxy;
   bool get searchHistoryEnabled => _searchHistoryEnabled;
   bool get mcpEnabled => _mcpEnabled;
   bool get sidebarCollapsed => _sidebarCollapsed;
@@ -200,6 +206,12 @@ class SettingsStore extends ChangeNotifier {
   Future<void> setProxyPrefix(String value, SharedPreferences prefs) async {
     _proxyPrefix = value.trim();
     await prefs.setString(_proxyPrefixKey, _proxyPrefix);
+    notifyListeners();
+  }
+
+  Future<void> setNetworkProxy(String value, SharedPreferences prefs) async {
+    _networkProxy = value.trim();
+    await prefs.setString(_networkProxyKey, _networkProxy);
     notifyListeners();
   }
 

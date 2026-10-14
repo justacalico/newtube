@@ -889,6 +889,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get jumpToHighlight => 'Jump to highlight';
+
+  @override
+  String get networkProxy => 'Network proxy';
+
+  @override
+  String get networkProxyHint => 'SOCKS5 or HTTP proxy, applied on restart';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1775,4 +1781,10 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get jumpToHighlight => 'Jump to highlight';
+
+  @override
+  String get networkProxy => 'Network proxy';
+
+  @override
+  String get networkProxyHint => 'SOCKS5 or HTTP proxy, applied on restart';
 }

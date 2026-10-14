@@ -374,5 +374,7 @@
   "sponsorCategoryPoiHighlight": "精彩点（跳转）",
   "sponsorCategoryExclusiveAccess": "独家内容/自推横幅",
   "sponsorCategoryChapter": "章节（社区标记）",
-  "jumpToHighlight": "跳到精彩点"
+  "jumpToHighlight": "跳到精彩点",
+  "networkProxy": "网络代理",
+  "networkProxyHint": "SOCKS5 或 HTTP 代理，重启后生效"
 }
