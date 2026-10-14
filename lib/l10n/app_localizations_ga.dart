@@ -945,4 +945,40 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get errorUnavailable => 'Níl an físeán ar fáil';
+
+  @override
+  String get keyboardShortcuts => 'Aicearraí méarchláir';
+
+  @override
+  String get shortcutPlayPause => 'Seinn / sos';
+
+  @override
+  String get shortcutSeek => 'Lorg';
+
+  @override
+  String get shortcutVolume => 'Toirt';
+
+  @override
+  String get shortcutMute => 'Balbhaigh';
+
+  @override
+  String get shortcutFullscreen => 'Lánscáileán';
+
+  @override
+  String get shortcutNextPrev => 'Físeán roimhe / ina dhiaidh';
+
+  @override
+  String get shortcutPercent => 'Léim go céatadán';
+
+  @override
+  String get shortcutStartEnd => 'Tús / deireadh';
+
+  @override
+  String get shortcutCaptions => 'Fotheidil';
+
+  @override
+  String get shortcutPip => 'Mion-réamhamharc';
+
+  @override
+  String get shortcutSpeed => 'Luas athsheinm';
 }

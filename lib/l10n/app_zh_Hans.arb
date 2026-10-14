@@ -391,5 +391,17 @@
   "noAboutInfo": "没有频道信息",
   "accentColor": "强调色",
   "errorAgeRestricted": "该视频有年龄限制",
-  "errorUnavailable": "该视频不可用"
+  "errorUnavailable": "该视频不可用",
+  "keyboardShortcuts": "键盘快捷键",
+  "shortcutPlayPause": "播放 / 暂停",
+  "shortcutSeek": "快进 / 快退",
+  "shortcutVolume": "音量",
+  "shortcutMute": "静音",
+  "shortcutFullscreen": "全屏",
+  "shortcutNextPrev": "上一个 / 下一个视频",
+  "shortcutPercent": "跳到百分比",
+  "shortcutStartEnd": "跳到开头 / 结尾",
+  "shortcutCaptions": "切换字幕",
+  "shortcutPip": "迷你播放器",
+  "shortcutSpeed": "播放速度"
 }

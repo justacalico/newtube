@@ -926,6 +926,42 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get errorUnavailable => '该视频不可用';
+
+  @override
+  String get keyboardShortcuts => '键盘快捷键';
+
+  @override
+  String get shortcutPlayPause => '播放 / 暂停';
+
+  @override
+  String get shortcutSeek => '快进 / 快退';
+
+  @override
+  String get shortcutVolume => '音量';
+
+  @override
+  String get shortcutMute => '静音';
+
+  @override
+  String get shortcutFullscreen => '全屏';
+
+  @override
+  String get shortcutNextPrev => '上一个 / 下一个视频';
+
+  @override
+  String get shortcutPercent => '跳到百分比';
+
+  @override
+  String get shortcutStartEnd => '跳到开头 / 结尾';
+
+  @override
+  String get shortcutCaptions => '切换字幕';
+
+  @override
+  String get shortcutPip => '迷你播放器';
+
+  @override
+  String get shortcutSpeed => '播放速度';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1849,4 +1885,40 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get errorUnavailable => '该视频不可用';
+
+  @override
+  String get keyboardShortcuts => '键盘快捷键';
+
+  @override
+  String get shortcutPlayPause => '播放 / 暂停';
+
+  @override
+  String get shortcutSeek => '快进 / 快退';
+
+  @override
+  String get shortcutVolume => '音量';
+
+  @override
+  String get shortcutMute => '静音';
+
+  @override
+  String get shortcutFullscreen => '全屏';
+
+  @override
+  String get shortcutNextPrev => '上一个 / 下一个视频';
+
+  @override
+  String get shortcutPercent => '跳到百分比';
+
+  @override
+  String get shortcutStartEnd => '跳到开头 / 结尾';
+
+  @override
+  String get shortcutCaptions => '切换字幕';
+
+  @override
+  String get shortcutPip => '迷你播放器';
+
+  @override
+  String get shortcutSpeed => '播放速度';
 }

@@ -940,6 +940,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorUnavailable => 'This video is unavailable';
+
+  @override
+  String get keyboardShortcuts => 'Keyboard shortcuts';
+
+  @override
+  String get shortcutPlayPause => 'Play / pause';
+
+  @override
+  String get shortcutSeek => 'Seek';
+
+  @override
+  String get shortcutVolume => 'Volume';
+
+  @override
+  String get shortcutMute => 'Mute';
+
+  @override
+  String get shortcutFullscreen => 'Fullscreen';
+
+  @override
+  String get shortcutNextPrev => 'Next / previous video';
+
+  @override
+  String get shortcutPercent => 'Jump to percentage';
+
+  @override
+  String get shortcutStartEnd => 'Jump to start / end';
+
+  @override
+  String get shortcutCaptions => 'Cycle captions';
+
+  @override
+  String get shortcutPip => 'Mini player';
+
+  @override
+  String get shortcutSpeed => 'Playback speed';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1877,4 +1913,40 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get errorUnavailable => 'This video is unavailable';
+
+  @override
+  String get keyboardShortcuts => 'Keyboard shortcuts';
+
+  @override
+  String get shortcutPlayPause => 'Play / pause';
+
+  @override
+  String get shortcutSeek => 'Seek';
+
+  @override
+  String get shortcutVolume => 'Volume';
+
+  @override
+  String get shortcutMute => 'Mute';
+
+  @override
+  String get shortcutFullscreen => 'Fullscreen';
+
+  @override
+  String get shortcutNextPrev => 'Next / previous video';
+
+  @override
+  String get shortcutPercent => 'Jump to percentage';
+
+  @override
+  String get shortcutStartEnd => 'Jump to start / end';
+
+  @override
+  String get shortcutCaptions => 'Cycle captions';
+
+  @override
+  String get shortcutPip => 'Mini player';
+
+  @override
+  String get shortcutSpeed => 'Playback speed';
 }
