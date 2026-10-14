@@ -245,7 +245,7 @@ void main() {
       expect(find.byIcon(Icons.favorite), findsOneWidget);
       expect(find.text('2 replies'), findsOneWidget);
 
-      await tester.scrollUntilVisible(find.text('Load more comments'), 200);
+      await tester.ensureVisible(find.text('Load more comments'));
       await tester.ensureVisible(find.text('Load more comments'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Load more comments'));
@@ -263,7 +263,7 @@ void main() {
       await pumpPage(tester, state, WatchPage(video: testVideos.first));
       await tester.pumpAndSettle();
 
-      await tester.scrollUntilVisible(find.text('Alice'), 200);
+      await tester.ensureVisible(find.text('Alice'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Alice'));
       await tester.pumpAndSettle();
@@ -276,7 +276,7 @@ void main() {
       await pumpPage(tester, state, WatchPage(video: testVideos.first));
       await tester.pumpAndSettle();
 
-      await tester.scrollUntilVisible(find.text('Load more comments'), 200);
+      await tester.ensureVisible(find.text('Load more comments'));
       await tester.ensureVisible(find.text('Load more comments'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Load more comments'));
@@ -309,6 +309,7 @@ class _PagingFailApi extends FakeYouTubeApi {
   Future<CommentsResult> comments(
     String videoId, {
     String? continuation,
+    CommentSort? sort,
   }) async =>
       continuation == null ? commentsResult : throw StateError('paging fail');
 }
@@ -318,5 +319,6 @@ class _CommentsFailApi extends FakeYouTubeApi {
   Future<CommentsResult> comments(
     String videoId, {
     String? continuation,
+    CommentSort? sort,
   }) async => throw StateError('nope');
 }

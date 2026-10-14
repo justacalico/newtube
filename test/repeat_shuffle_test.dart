@@ -51,6 +51,8 @@ void main() {
 
     player.emitCompleted();
     await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 7));
+    await tester.pumpAndSettle();
     expect(find.text('Test playlist · 1/2'), findsOneWidget);
     expect(player.opened, hasLength(2));
   });
@@ -70,6 +72,8 @@ void main() {
 
     player.emitCompleted();
     await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 7));
+    await tester.pumpAndSettle();
     expect(player.lastSeek, Duration.zero);
     expect(player.paused, isFalse);
     expect(player.opened, hasLength(1));
@@ -88,6 +92,8 @@ void main() {
 
     player.emitCompleted();
     await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 7));
+    await tester.pumpAndSettle();
     expect(find.text('Test playlist · 2/2'), findsOneWidget);
     expect(player.opened, hasLength(2));
   });
@@ -104,11 +110,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(
-      find.byIcon(Icons.repeat),
-      200,
-      scrollable: find.byType(Scrollable).first,
-    );
+    await tester.ensureVisible(find.byIcon(Icons.repeat));
     await tester.tap(find.byIcon(Icons.repeat));
     await tester.pump();
     expect(state.playback.repeatMode, RepeatMode.all);
