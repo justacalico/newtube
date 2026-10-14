@@ -597,6 +597,25 @@ class _SettingsPageState extends State<SettingsPage> {
                 onTap: _editSponsorBlockCategories,
               ),
             ],
+            if (!state.isWeb) ...[
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.vpn_lock_outlined),
+                title: Text(l10n.networkProxy),
+                subtitle: Text(l10n.networkProxyHint),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: TextFormField(
+                  initialValue: settings.networkProxy,
+                  decoration: const InputDecoration(
+                    hintText: 'socks5://127.0.0.1:9050',
+                  ),
+                  onChanged: (value) =>
+                      settings.setNetworkProxy(value, state.prefs),
+                ),
+              ),
+            ],
             if (state.isWeb) ...[
               const Divider(),
               ListTile(

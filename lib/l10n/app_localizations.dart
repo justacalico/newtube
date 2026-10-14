@@ -1753,6 +1753,18 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Jump to highlight'**
   String get jumpToHighlight;
+
+  /// No description provided for @networkProxy.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Network proxy'**
+  String get networkProxy;
+
+  /// No description provided for @networkProxyHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'SOCKS5 or HTTP proxy, applied on restart'**
+  String get networkProxyHint;
 }
 
 class _AppLocalizationsDelegate

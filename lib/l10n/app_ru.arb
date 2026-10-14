@@ -374,5 +374,7 @@
   "sponsorCategoryPoiHighlight": "Интересный момент (переход)",
   "sponsorCategoryExclusiveAccess": "Эксклюзив / баннер самопиара",
   "sponsorCategoryChapter": "Глава (отмечена сообществом)",
-  "jumpToHighlight": "Перейти к яркому моменту"
+  "jumpToHighlight": "Перейти к яркому моменту",
+  "networkProxy": "Сетевой прокси",
+  "networkProxyHint": "SOCKS5 или HTTP прокси, применяется после перезапуска"
 }

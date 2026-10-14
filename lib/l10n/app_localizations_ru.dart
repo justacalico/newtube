@@ -895,4 +895,11 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get jumpToHighlight => 'Перейти к яркому моменту';
+
+  @override
+  String get networkProxy => 'Сетевой прокси';
+
+  @override
+  String get networkProxyHint =>
+      'SOCKS5 или HTTP прокси, применяется после перезапуска';
 }

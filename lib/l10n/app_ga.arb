@@ -374,5 +374,7 @@
   "sponsorCategoryPoiHighlight": "Pointe spéise (léim)",
   "sponsorCategoryExclusiveAccess": "Rochtain eisiach / brat féinbhromhartha",
   "sponsorCategoryChapter": "Caibidil (lipéadaithe ag an bpobal)",
-  "jumpToHighlight": "Léim go dtí an bhuaicpointe"
+  "jumpToHighlight": "Léim go dtí an bhuaicpointe",
+  "networkProxy": "Seachfhreastalaí líonra",
+  "networkProxyHint": "SOCKS5 nó HTTP, curtha i bhfeidhm ar an athtús"
 }

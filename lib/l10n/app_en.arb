@@ -374,5 +374,7 @@
   "sponsorCategoryPoiHighlight": "Point of interest (jump)",
   "sponsorCategoryExclusiveAccess": "Exclusive access / self-promo banner",
   "sponsorCategoryChapter": "Chapter (community-labelled)",
-  "jumpToHighlight": "Jump to highlight"
+  "jumpToHighlight": "Jump to highlight",
+  "networkProxy": "Network proxy",
+  "networkProxyHint": "SOCKS5 or HTTP proxy, applied on restart"
 }

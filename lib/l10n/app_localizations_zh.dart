@@ -875,6 +875,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get jumpToHighlight => '跳到精彩点';
+
+  @override
+  String get networkProxy => '网络代理';
+
+  @override
+  String get networkProxyHint => 'SOCKS5 或 HTTP 代理，重启后生效';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1747,4 +1753,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get jumpToHighlight => '跳到精彩点';
+
+  @override
+  String get networkProxy => '网络代理';
+
+  @override
+  String get networkProxyHint => 'SOCKS5 或 HTTP 代理，重启后生效';
 }
