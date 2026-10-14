@@ -368,5 +368,11 @@
   "noGroup": "No group",
   "deleteGroup": "Delete group",
   "renameGroup": "Rename group",
-  "channelNotify": "Upload notifications"
+  "channelNotify": "Upload notifications",
+  "sponsorCategoryPreview": "Preview / recap",
+  "sponsorCategoryFiller": "Filler",
+  "sponsorCategoryPoiHighlight": "Point of interest (jump)",
+  "sponsorCategoryExclusiveAccess": "Exclusive access / self-promo banner",
+  "sponsorCategoryChapter": "Chapter (community-labelled)",
+  "jumpToHighlight": "Jump to highlight"
 }

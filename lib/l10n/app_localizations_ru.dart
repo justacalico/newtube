@@ -877,4 +877,22 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get channelNotify => 'Уведомления о видео';
+
+  @override
+  String get sponsorCategoryPreview => 'Превью / повтор';
+
+  @override
+  String get sponsorCategoryFiller => 'Заполнитель';
+
+  @override
+  String get sponsorCategoryPoiHighlight => 'Интересный момент (переход)';
+
+  @override
+  String get sponsorCategoryExclusiveAccess => 'Эксклюзив / баннер самопиара';
+
+  @override
+  String get sponsorCategoryChapter => 'Глава (отмечена сообществом)';
+
+  @override
+  String get jumpToHighlight => 'Перейти к яркому моменту';
 }

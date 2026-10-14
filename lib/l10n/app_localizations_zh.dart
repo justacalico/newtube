@@ -857,6 +857,24 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get channelNotify => '上传提醒';
+
+  @override
+  String get sponsorCategoryPreview => '预览/回顾';
+
+  @override
+  String get sponsorCategoryFiller => '填充片段';
+
+  @override
+  String get sponsorCategoryPoiHighlight => '精彩点（跳转）';
+
+  @override
+  String get sponsorCategoryExclusiveAccess => '独家内容/自推横幅';
+
+  @override
+  String get sponsorCategoryChapter => '章节（社区标记）';
+
+  @override
+  String get jumpToHighlight => '跳到精彩点';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1711,4 +1729,22 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get channelNotify => '上传提醒';
+
+  @override
+  String get sponsorCategoryPreview => '预览/回顾';
+
+  @override
+  String get sponsorCategoryFiller => '填充片段';
+
+  @override
+  String get sponsorCategoryPoiHighlight => '精彩点（跳转）';
+
+  @override
+  String get sponsorCategoryExclusiveAccess => '独家内容/自推横幅';
+
+  @override
+  String get sponsorCategoryChapter => '章节（社区标记）';
+
+  @override
+  String get jumpToHighlight => '跳到精彩点';
 }

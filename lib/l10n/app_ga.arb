@@ -368,5 +368,11 @@
   "noGroup": "Gan ghrúpa",
   "deleteGroup": "Scrios grúpa",
   "renameGroup": "Athainmnigh grúpa",
-  "channelNotify": "Fógraí uaslódála"
+  "channelNotify": "Fógraí uaslódála",
+  "sponsorCategoryPreview": "Réamhamharc / achomair",
+  "sponsorCategoryFiller": "Líonadh",
+  "sponsorCategoryPoiHighlight": "Pointe spéise (léim)",
+  "sponsorCategoryExclusiveAccess": "Rochtain eisiach / brat féinbhromhartha",
+  "sponsorCategoryChapter": "Caibidil (lipéadaithe ag an bpobal)",
+  "jumpToHighlight": "Léim go dtí an bhuaicpointe"
 }

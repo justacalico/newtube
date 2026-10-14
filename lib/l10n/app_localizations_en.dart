@@ -870,6 +870,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get channelNotify => 'Upload notifications';
+
+  @override
+  String get sponsorCategoryPreview => 'Preview / recap';
+
+  @override
+  String get sponsorCategoryFiller => 'Filler';
+
+  @override
+  String get sponsorCategoryPoiHighlight => 'Point of interest (jump)';
+
+  @override
+  String get sponsorCategoryExclusiveAccess =>
+      'Exclusive access / self-promo banner';
+
+  @override
+  String get sponsorCategoryChapter => 'Chapter (community-labelled)';
+
+  @override
+  String get jumpToHighlight => 'Jump to highlight';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1737,4 +1756,23 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get channelNotify => 'Upload notifications';
+
+  @override
+  String get sponsorCategoryPreview => 'Preview / recap';
+
+  @override
+  String get sponsorCategoryFiller => 'Filler';
+
+  @override
+  String get sponsorCategoryPoiHighlight => 'Point of interest (jump)';
+
+  @override
+  String get sponsorCategoryExclusiveAccess =>
+      'Exclusive access / self-promo banner';
+
+  @override
+  String get sponsorCategoryChapter => 'Chapter (community-labelled)';
+
+  @override
+  String get jumpToHighlight => 'Jump to highlight';
 }
