@@ -772,4 +772,36 @@ class AppLocalizationsGa extends AppLocalizations {
   String exportedTo(String path) {
     return 'Easpórtáilte go $path';
   }
+
+  @override
+  String get hideWatched => 'Folaigh feicthe';
+
+  @override
+  String get hideWatchedHint => 'Scag físeáin feicthe as fothaí agus cuardaigh';
+
+  @override
+  String get refreshFeed => 'Athnuaigh';
+
+  @override
+  String resumedFrom(String position) {
+    return 'Lean ar aghaidh ó $position';
+  }
+
+  @override
+  String get startOver => 'Tosaigh arís';
+
+  @override
+  String get continueWatching => 'Lean ort ag féachaint';
+
+  @override
+  String get playNext => 'Seinm ina dhiaidh';
+
+  @override
+  String get addToQueue => 'Cuir leis an scuaine';
+
+  @override
+  String get queued => 'Curtha leis an scuaine';
+
+  @override
+  String get queuedNext => 'Seinnfear ina dhiaidh';
 }

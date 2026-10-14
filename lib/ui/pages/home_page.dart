@@ -68,8 +68,13 @@ class _HomePageState extends State<HomePage> {
     return FeedStateView(
       loading: _loading,
       error: _error,
-      videos: visibleVideos(_videos, AppScope.read(context).settings),
+      videos: visibleVideos(
+        _videos,
+        AppScope.read(context).settings,
+        AppScope.read(context),
+      ),
       onRetry: _load,
+      onRefresh: _load,
       child: ListenableBuilder(
         listenable: AppScope.read(context).history,
         builder: (context, _) {
@@ -112,7 +117,7 @@ class _HomePageState extends State<HomePage> {
               ],
               Expanded(
                 child: VideoGrid(
-                  videos: visibleVideos(_videos, state.settings),
+                  videos: visibleVideos(_videos, state.settings, state),
                   onVideoTap: _openVideo,
                   onChannelTap: _openChannel,
                 ),

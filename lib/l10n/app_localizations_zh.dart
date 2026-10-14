@@ -755,6 +755,38 @@ class AppLocalizationsZh extends AppLocalizations {
   String exportedTo(String path) {
     return '已导出到 $path';
   }
+
+  @override
+  String get hideWatched => '隐藏已看';
+
+  @override
+  String get hideWatchedHint => '在推荐、订阅和搜索中过滤已看过的视频';
+
+  @override
+  String get refreshFeed => '刷新';
+
+  @override
+  String resumedFrom(String position) {
+    return '从 $position 继续播放';
+  }
+
+  @override
+  String get startOver => '从头开始';
+
+  @override
+  String get continueWatching => '继续观看';
+
+  @override
+  String get playNext => '下一个播放';
+
+  @override
+  String get addToQueue => '添加到队列';
+
+  @override
+  String get queued => '已加入队列';
+
+  @override
+  String get queuedNext => '将接着播放';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1507,4 +1539,36 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String exportedTo(String path) {
     return '已导出到 $path';
   }
+
+  @override
+  String get hideWatched => '隐藏已看';
+
+  @override
+  String get hideWatchedHint => '在推荐、订阅和搜索中过滤已看过的视频';
+
+  @override
+  String get refreshFeed => '刷新';
+
+  @override
+  String resumedFrom(String position) {
+    return '从 $position 继续播放';
+  }
+
+  @override
+  String get startOver => '从头开始';
+
+  @override
+  String get continueWatching => '继续观看';
+
+  @override
+  String get playNext => '下一个播放';
+
+  @override
+  String get addToQueue => '添加到队列';
+
+  @override
+  String get queued => '已加入队列';
+
+  @override
+  String get queuedNext => '将接着播放';
 }

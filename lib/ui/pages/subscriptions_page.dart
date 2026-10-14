@@ -149,7 +149,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                   : RefreshIndicator(
                       onRefresh: _loadVideos,
                       child: VideoGrid(
-                        videos: visibleVideos(_videos, state.settings),
+                        videos: visibleVideos(_videos, state.settings, state),
                         onVideoTap: _openVideo,
                       ),
                     ),

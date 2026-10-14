@@ -768,6 +768,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String exportedTo(String path) {
     return 'Exported to $path';
   }
+
+  @override
+  String get hideWatched => 'Hide watched';
+
+  @override
+  String get hideWatchedHint => 'Filter watched videos out of feeds and search';
+
+  @override
+  String get refreshFeed => 'Refresh';
+
+  @override
+  String resumedFrom(String position) {
+    return 'Resumed from $position';
+  }
+
+  @override
+  String get startOver => 'Start over';
+
+  @override
+  String get continueWatching => 'Continue watching';
+
+  @override
+  String get playNext => 'Play next';
+
+  @override
+  String get addToQueue => 'Add to queue';
+
+  @override
+  String get queued => 'Added to queue';
+
+  @override
+  String get queuedNext => 'Will play next';
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1533,4 +1565,36 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   String exportedTo(String path) {
     return 'Exported to $path';
   }
+
+  @override
+  String get hideWatched => 'Hide watched';
+
+  @override
+  String get hideWatchedHint => 'Filter watched videos out of feeds and search';
+
+  @override
+  String get refreshFeed => 'Refresh';
+
+  @override
+  String resumedFrom(String position) {
+    return 'Resumed from $position';
+  }
+
+  @override
+  String get startOver => 'Start over';
+
+  @override
+  String get continueWatching => 'Continue watching';
+
+  @override
+  String get playNext => 'Play next';
+
+  @override
+  String get addToQueue => 'Add to queue';
+
+  @override
+  String get queued => 'Added to queue';
+
+  @override
+  String get queuedNext => 'Will play next';
 }

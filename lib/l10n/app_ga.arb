@@ -315,5 +315,22 @@
         "type": "String"
       }
     }
-  }
+  },
+  "hideWatched": "Folaigh feicthe",
+  "hideWatchedHint": "Scag físeáin feicthe as fothaí agus cuardaigh",
+  "refreshFeed": "Athnuaigh",
+  "resumedFrom": "Lean ar aghaidh ó {position}",
+  "startOver": "Tosaigh arís",
+  "continueWatching": "Lean ort ag féachaint",
+  "@resumedFrom": {
+    "placeholders": {
+      "position": {
+        "type": "String"
+      }
+    }
+  },
+  "playNext": "Seinm ina dhiaidh",
+  "addToQueue": "Cuir leis an scuaine",
+  "queued": "Curtha leis an scuaine",
+  "queuedNext": "Seinnfear ina dhiaidh"
 }

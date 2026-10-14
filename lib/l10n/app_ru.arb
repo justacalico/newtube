@@ -315,5 +315,22 @@
         "type": "String"
       }
     }
-  }
+  },
+  "hideWatched": "Скрыть просмотренные",
+  "hideWatchedHint": "Убрать просмотренные видео из лент и поиска",
+  "refreshFeed": "Обновить",
+  "resumedFrom": "Продолжено с {position}",
+  "startOver": "Сначала",
+  "continueWatching": "Продолжить просмотр",
+  "@resumedFrom": {
+    "placeholders": {
+      "position": {
+        "type": "String"
+      }
+    }
+  },
+  "playNext": "Следующим",
+  "addToQueue": "В очередь",
+  "queued": "Добавлено в очередь",
+  "queuedNext": "Будет следующим"
 }

@@ -775,4 +775,36 @@ class AppLocalizationsRu extends AppLocalizations {
   String exportedTo(String path) {
     return 'Экспортировано в $path';
   }
+
+  @override
+  String get hideWatched => 'Скрыть просмотренные';
+
+  @override
+  String get hideWatchedHint => 'Убрать просмотренные видео из лент и поиска';
+
+  @override
+  String get refreshFeed => 'Обновить';
+
+  @override
+  String resumedFrom(String position) {
+    return 'Продолжено с $position';
+  }
+
+  @override
+  String get startOver => 'Сначала';
+
+  @override
+  String get continueWatching => 'Продолжить просмотр';
+
+  @override
+  String get playNext => 'Следующим';
+
+  @override
+  String get addToQueue => 'В очередь';
+
+  @override
+  String get queued => 'Добавлено в очередь';
+
+  @override
+  String get queuedNext => 'Будет следующим';
 }

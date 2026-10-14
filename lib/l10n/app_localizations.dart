@@ -1525,6 +1525,66 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Exported to {path}'**
   String exportedTo(String path);
+
+  /// No description provided for @hideWatched.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Hide watched'**
+  String get hideWatched;
+
+  /// No description provided for @hideWatchedHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Filter watched videos out of feeds and search'**
+  String get hideWatchedHint;
+
+  /// No description provided for @refreshFeed.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Refresh'**
+  String get refreshFeed;
+
+  /// No description provided for @resumedFrom.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Resumed from {position}'**
+  String resumedFrom(String position);
+
+  /// No description provided for @startOver.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Start over'**
+  String get startOver;
+
+  /// No description provided for @continueWatching.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Continue watching'**
+  String get continueWatching;
+
+  /// No description provided for @playNext.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Play next'**
+  String get playNext;
+
+  /// No description provided for @addToQueue.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Add to queue'**
+  String get addToQueue;
+
+  /// No description provided for @queued.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Added to queue'**
+  String get queued;
+
+  /// No description provided for @queuedNext.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Will play next'**
+  String get queuedNext;
 }
 
 class _AppLocalizationsDelegate

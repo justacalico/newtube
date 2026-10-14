@@ -315,5 +315,22 @@
         "type": "String"
       }
     }
-  }
+  },
+  "hideWatched": "Hide watched",
+  "hideWatchedHint": "Filter watched videos out of feeds and search",
+  "refreshFeed": "Refresh",
+  "resumedFrom": "Resumed from {position}",
+  "startOver": "Start over",
+  "continueWatching": "Continue watching",
+  "@resumedFrom": {
+    "placeholders": {
+      "position": {
+        "type": "String"
+      }
+    }
+  },
+  "playNext": "Play next",
+  "addToQueue": "Add to queue",
+  "queued": "Added to queue",
+  "queuedNext": "Will play next"
 }
