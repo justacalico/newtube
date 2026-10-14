@@ -142,6 +142,32 @@ class PlaylistsStore extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> moveVideo(
+    String id,
+    int from,
+    int to,
+    SharedPreferences prefs,
+  ) async {
+    final index = _playlists.indexWhere((p) => p.id == id);
+    if (index < 0) return;
+    final current = _playlists[index];
+    if (from < 0 || from >= current.videos.length) return;
+    if (to < 0 || to >= current.videos.length) return;
+    final videos = List<VideoInfo>.of(current.videos);
+    final moved = videos.removeAt(from);
+    videos.insert(to, moved);
+    _playlists[index] = PlaylistInfo(
+      id: current.id,
+      title: current.title,
+      author: current.author,
+      thumbnailUrl: current.thumbnailUrl,
+      videoCount: videos.length,
+      videos: videos,
+    );
+    await _save(prefs);
+    notifyListeners();
+  }
+
   Future<void> removeVideo(
     String id,
     String videoId,

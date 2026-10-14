@@ -683,7 +683,7 @@ class AppLocalizationsGa extends AppLocalizations {
   String get rename => 'Athainmnigh';
 
   @override
-  String get renamePlaylist => 'Athainmnigh an seinmliosta';
+  String get renamePlaylist => 'Athainmnigh an seinnliosta';
 
   @override
   String get delete => 'Scrios';
@@ -752,4 +752,24 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get downloadsNav => 'Íoslódálaí';
+
+  @override
+  String get playlistName => 'Ainm an tseinnliosta';
+
+  @override
+  String get save => 'Sábháil';
+
+  @override
+  String get shufflePlay => 'Seinn go randamach';
+
+  @override
+  String get exportPlaylist => 'Easpórtáil seinnliosta';
+
+  @override
+  String get exportCancelled => 'Cealaíodh an easpórtáil';
+
+  @override
+  String exportedTo(String path) {
+    return 'Easpórtáilte go $path';
+  }
 }

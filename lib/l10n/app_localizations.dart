@@ -1489,6 +1489,42 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Downloads'**
   String get downloadsNav;
+
+  /// No description provided for @playlistName.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Playlist name'**
+  String get playlistName;
+
+  /// No description provided for @save.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @shufflePlay.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Shuffle play'**
+  String get shufflePlay;
+
+  /// No description provided for @exportPlaylist.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Export playlist'**
+  String get exportPlaylist;
+
+  /// No description provided for @exportCancelled.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Export cancelled'**
+  String get exportCancelled;
+
+  /// No description provided for @exportedTo.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Exported to {path}'**
+  String exportedTo(String path);
 }
 
 class _AppLocalizationsDelegate

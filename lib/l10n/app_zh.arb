@@ -302,5 +302,18 @@
         "type": "String"
       }
     }
+  },
+  "playlistName": "播放列表名称",
+  "save": "保存",
+  "shufflePlay": "随机播放",
+  "exportPlaylist": "导出播放列表",
+  "exportCancelled": "导出已取消",
+  "exportedTo": "已导出到 {path}",
+  "@exportedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -755,4 +755,24 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get downloadsNav => 'Загрузки';
+
+  @override
+  String get playlistName => 'Название плейлиста';
+
+  @override
+  String get save => 'Сохранить';
+
+  @override
+  String get shufflePlay => 'Воспроизвести вперемешку';
+
+  @override
+  String get exportPlaylist => 'Экспорт плейлиста';
+
+  @override
+  String get exportCancelled => 'Экспорт отменён';
+
+  @override
+  String exportedTo(String path) {
+    return 'Экспортировано в $path';
+  }
 }
