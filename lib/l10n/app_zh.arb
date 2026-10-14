@@ -358,5 +358,14 @@
         "type": "String"
       }
     }
-  }
+  },
+  "allChannels": "全部频道",
+  "subscriptionGroups": "订阅分组",
+  "manageGroups": "管理分组",
+  "newGroup": "新建分组",
+  "groupName": "分组名称",
+  "channelGroup": "分组",
+  "noGroup": "无分组",
+  "deleteGroup": "删除分组",
+  "renameGroup": "重命名分组"
 }

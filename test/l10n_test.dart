@@ -160,6 +160,15 @@ void touchAll(AppLocalizations l) {
   l.backupRestored(3);
   l.backupImportFailed;
   l.backupExportedTo('/tmp/x');
+  l.allChannels;
+  l.subscriptionGroups;
+  l.manageGroups;
+  l.newGroup;
+  l.groupName;
+  l.channelGroup;
+  l.noGroup;
+  l.deleteGroup;
+  l.renameGroup;
   l.playNow;
   l.showReplies;
   l.hideReplies;

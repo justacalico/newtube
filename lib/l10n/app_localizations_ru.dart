@@ -847,4 +847,31 @@ class AppLocalizationsRu extends AppLocalizations {
   String backupExportedTo(String path) {
     return 'Резервная копия сохранена в $path';
   }
+
+  @override
+  String get allChannels => 'Все каналы';
+
+  @override
+  String get subscriptionGroups => 'Группы подписок';
+
+  @override
+  String get manageGroups => 'Управление группами';
+
+  @override
+  String get newGroup => 'Новая группа';
+
+  @override
+  String get groupName => 'Название группы';
+
+  @override
+  String get channelGroup => 'Группа';
+
+  @override
+  String get noGroup => 'Без группы';
+
+  @override
+  String get deleteGroup => 'Удалить группу';
+
+  @override
+  String get renameGroup => 'Переименовать группу';
 }

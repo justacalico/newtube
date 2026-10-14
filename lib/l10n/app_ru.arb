@@ -358,5 +358,14 @@
         "type": "String"
       }
     }
-  }
+  },
+  "allChannels": "Все каналы",
+  "subscriptionGroups": "Группы подписок",
+  "manageGroups": "Управление группами",
+  "newGroup": "Новая группа",
+  "groupName": "Название группы",
+  "channelGroup": "Группа",
+  "noGroup": "Без группы",
+  "deleteGroup": "Удалить группу",
+  "renameGroup": "Переименовать группу"
 }

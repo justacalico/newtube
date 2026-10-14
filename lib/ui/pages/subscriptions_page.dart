@@ -18,6 +18,7 @@ class SubscriptionsPage extends StatefulWidget {
 
 class _SubscriptionsPageState extends State<SubscriptionsPage> {
   List<VideoInfo> _videos = const [];
+  String? _group;
   bool _loading = false;
 
   @override
@@ -51,6 +52,45 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
 
   void _openChannel(String channelId) => openChannelPage(context, channelId);
 
+  void _assignGroup(BuildContext context, ChannelInfo channel) {
+    final state = AppScope.read(context);
+    final l10n = AppLocalizations.of(context);
+    final controller = TextEditingController(
+      text: state.subscriptions.groupOf(channel.id) ?? '',
+    );
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('${l10n.channelGroup}: ${channel.name}'),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: InputDecoration(
+            labelText: l10n.groupName,
+            helperText: l10n.noGroup,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () {
+              state.subscriptions.setGroup(
+                channel.id,
+                controller.text.trim().isEmpty ? null : controller.text.trim(),
+                state.prefs,
+              );
+              Navigator.of(context).pop();
+            },
+            child: Text(l10n.save),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = AppScope.of(context);
@@ -59,7 +99,8 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
     return ListenableBuilder(
       listenable: state.subscriptions,
       builder: (context, _) {
-        final channels = state.subscriptions.channels;
+        final channels = state.subscriptions.channelsInGroup(_group);
+        final groups = state.subscriptions.groups;
         if (channels.isEmpty) {
           return Center(
             child: Column(
@@ -79,6 +120,39 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (groups.isNotEmpty)
+              SizedBox(
+                height: 44,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 6),
+                      child: ChoiceChip(
+                        label: Text(l10n.allChannels),
+                        selected: _group == null,
+                        onSelected: (_) => setState(() {
+                          _group = null;
+                          _loadVideos();
+                        }),
+                      ),
+                    ),
+                    for (final g in groups)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 6),
+                        child: ChoiceChip(
+                          label: Text(g),
+                          selected: _group == g,
+                          onSelected: (sel) => setState(() {
+                            _group = sel ? g : null;
+                            _loadVideos();
+                          }),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
             SizedBox(
               height: 104,
               child: ListView(
@@ -96,6 +170,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                         child: InkWell(
                           borderRadius: BorderRadius.circular(8),
                           onTap: () => _openChannel(channel.id),
+                          onLongPress: () => _assignGroup(context, channel),
                           child: SizedBox(
                             width: 88,
                             child: Column(

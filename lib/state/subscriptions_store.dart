@@ -8,24 +8,44 @@ import '../models/video_info.dart';
 class SubscriptionsStore extends ChangeNotifier {
   static const _key = 'subscriptions';
 
-  final Map<String, ChannelInfo> _channels;
+  static const _groupsKey = 'subscription_groups';
 
-  SubscriptionsStore([Map<String, ChannelInfo>? channels])
-    : _channels = Map.of(channels ?? const {});
+  final Map<String, ChannelInfo> _channels;
+  final Map<String, String> _groups;
+
+  SubscriptionsStore([
+    Map<String, ChannelInfo>? channels,
+    Map<String, String>? groups,
+  ]) : _channels = Map.of(channels ?? const {}),
+       _groups = Map.of(groups ?? const {});
 
   static Future<SubscriptionsStore> load(SharedPreferences prefs) async {
     final raw = prefs.getString(_key);
-    if (raw == null) return SubscriptionsStore();
+    final groups = <String, String>{};
+    final rawGroups = prefs.getString(_groupsKey);
+    if (rawGroups != null) {
+      try {
+        final decoded = jsonDecode(rawGroups);
+        if (decoded is Map) {
+          decoded.forEach((k, v) {
+            if (k is String && v is String) groups[k] = v;
+          });
+        }
+      } catch (_) {}
+    }
+    if (raw == null) return SubscriptionsStore(null, groups);
     try {
       final decoded = jsonDecode(raw);
-      if (decoded is! Map<String, dynamic>) return SubscriptionsStore();
+      if (decoded is! Map<String, dynamic>) {
+        return SubscriptionsStore(null, groups);
+      }
       return SubscriptionsStore({
         for (final e in decoded.entries)
           if (e.value is Map<String, dynamic>)
             e.key: _decodeChannel(e.value as Map<String, dynamic>),
-      });
+      }, groups);
     } catch (_) {
-      return SubscriptionsStore();
+      return SubscriptionsStore(null, groups);
     }
   }
 
@@ -41,6 +61,9 @@ class SubscriptionsStore extends ChangeNotifier {
     _channels
       ..clear()
       ..addAll(fresh._channels);
+    _groups
+      ..clear()
+      ..addAll(fresh._groups);
     notifyListeners();
   }
 
@@ -57,6 +80,48 @@ class SubscriptionsStore extends ChangeNotifier {
   Future<void> unsubscribe(String channelId, SharedPreferences prefs) async {
     _channels.remove(channelId);
     await _save(prefs);
+    notifyListeners();
+  }
+
+  List<String> get groups => _groups.values.toSet().toList();
+
+  String? groupOf(String channelId) => _groups[channelId];
+
+  List<ChannelInfo> channelsInGroup(String? group) => [
+    for (final c in _channels.values)
+      if (group == null ? true : _groups[c.id] == group) c,
+  ];
+
+  Future<void> setGroup(
+    String channelId,
+    String? group,
+    SharedPreferences prefs,
+  ) async {
+    if (group == null || group.isEmpty) {
+      _groups.remove(channelId);
+    } else {
+      _groups[channelId] = group;
+    }
+    await prefs.setString(_groupsKey, jsonEncode(_groups));
+    notifyListeners();
+  }
+
+  Future<void> renameGroup(
+    String oldName,
+    String newName,
+    SharedPreferences prefs,
+  ) async {
+    if (newName.isEmpty || oldName == newName) return;
+    for (final e in _groups.entries.toList()) {
+      if (e.value == oldName) _groups[e.key] = newName;
+    }
+    await prefs.setString(_groupsKey, jsonEncode(_groups));
+    notifyListeners();
+  }
+
+  Future<void> deleteGroup(String group, SharedPreferences prefs) async {
+    _groups.removeWhere((_, g) => g == group);
+    await prefs.setString(_groupsKey, jsonEncode(_groups));
     notifyListeners();
   }
 

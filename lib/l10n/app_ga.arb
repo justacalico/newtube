@@ -358,5 +358,14 @@
         "type": "String"
       }
     }
-  }
+  },
+  "allChannels": "Gach cainéal",
+  "subscriptionGroups": "Grúpaí síntiús",
+  "manageGroups": "Bainistigh grúpaí",
+  "newGroup": "Grúpa nua",
+  "groupName": "Ainm ghrúpa",
+  "channelGroup": "Grúpa",
+  "noGroup": "Gan ghrúpa",
+  "deleteGroup": "Scrios grúpa",
+  "renameGroup": "Athainmnigh grúpa"
 }

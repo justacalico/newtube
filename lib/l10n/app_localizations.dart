@@ -1657,6 +1657,60 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Backup saved to {path}'**
   String backupExportedTo(String path);
+
+  /// No description provided for @allChannels.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'All channels'**
+  String get allChannels;
+
+  /// No description provided for @subscriptionGroups.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Subscription groups'**
+  String get subscriptionGroups;
+
+  /// No description provided for @manageGroups.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Manage groups'**
+  String get manageGroups;
+
+  /// No description provided for @newGroup.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'New group'**
+  String get newGroup;
+
+  /// No description provided for @groupName.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Group name'**
+  String get groupName;
+
+  /// No description provided for @channelGroup.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Group'**
+  String get channelGroup;
+
+  /// No description provided for @noGroup.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'No group'**
+  String get noGroup;
+
+  /// No description provided for @deleteGroup.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Delete group'**
+  String get deleteGroup;
+
+  /// No description provided for @renameGroup.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Rename group'**
+  String get renameGroup;
 }
 
 class _AppLocalizationsDelegate
