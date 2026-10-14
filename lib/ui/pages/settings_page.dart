@@ -6,6 +6,7 @@ import '../../l10n/app_localizations.dart';
 import '../../models/app_update.dart';
 import '../../services/mcp_export.dart';
 import '../../services/mcp_server.dart';
+import '../../services/backup.dart';
 import '../../services/opml.dart';
 import '../../utils/debug_log.dart';
 import '../../services/version_checker.dart';
@@ -130,6 +131,47 @@ class _SettingsPageState extends State<SettingsPage> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(l10n.subscriptionsImportFailed)));
+    }
+  }
+
+  Future<void> _exportBackup() async {
+    final state = AppScope.read(context);
+    final save = state.saveFile;
+    if (save == null) return;
+    final l10n = AppLocalizations.of(context);
+    final path = await save(
+      'newtube_backup.json',
+      utf8.encode(exportBackup(state.prefs)),
+      extension: 'json',
+    );
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          path == null ? l10n.exportCancelled : l10n.backupExportedTo(path),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _importBackup() async {
+    final state = AppScope.read(context);
+    final open = state.openFile;
+    if (open == null) return;
+    final text = await open();
+    if (!mounted || text == null) return;
+    final l10n = AppLocalizations.of(context);
+    try {
+      final count = await importBackup(text, state.prefs);
+      await state.reloadStores();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l10n.backupRestored(count))));
+    } catch (e) {
+      debugLog('[settings] backup import failed: $e');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l10n.backupImportFailed)));
     }
   }
 
@@ -399,6 +441,20 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: Text(l10n.exportSubscriptions),
                 subtitle: Text(l10n.exportSubscriptionsHint),
                 onTap: _exportSubscriptions,
+              ),
+            if (state.saveFile != null)
+              ListTile(
+                leading: const Icon(Icons.backup_outlined),
+                title: Text(l10n.exportBackup),
+                subtitle: Text(l10n.exportBackupHint),
+                onTap: _exportBackup,
+              ),
+            if (state.openFile != null)
+              ListTile(
+                leading: const Icon(Icons.settings_backup_restore),
+                title: Text(l10n.importBackup),
+                subtitle: Text(l10n.importBackupHint),
+                onTap: _importBackup,
               ),
             ListTile(
               leading: const Icon(Icons.title_outlined),

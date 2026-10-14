@@ -153,6 +153,13 @@ void touchAll(AppLocalizations l) {
   l.noResults;
   l.markWatched;
   l.markUnwatched;
+  l.exportBackup;
+  l.exportBackupHint;
+  l.importBackup;
+  l.importBackupHint;
+  l.backupRestored(3);
+  l.backupImportFailed;
+  l.backupExportedTo('/tmp/x');
   l.playNow;
   l.showReplies;
   l.hideReplies;

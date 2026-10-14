@@ -337,5 +337,26 @@
   "playNext": "Play next",
   "addToQueue": "Add to queue",
   "queued": "Added to queue",
-  "queuedNext": "Will play next"
+  "queuedNext": "Will play next",
+  "exportBackup": "Export backup",
+  "exportBackupHint": "Save all app data to a file",
+  "importBackup": "Import backup",
+  "importBackupHint": "Restore app data from a file",
+  "backupRestored": "Restored {count} settings",
+  "backupImportFailed": "Could not import the backup",
+  "backupExportedTo": "Backup saved to {path}",
+  "@backupRestored": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@backupExportedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  }
 }

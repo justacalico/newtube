@@ -40,6 +40,14 @@ class WatchLaterStore extends ChangeNotifier {
     uploaded: json['uploaded'] as String?,
   );
 
+  Future<void> reload(SharedPreferences prefs) async {
+    final fresh = await WatchLaterStore.load(prefs);
+    _videos
+      ..clear()
+      ..addAll(fresh._videos);
+    notifyListeners();
+  }
+
   List<VideoInfo> get videos => _videos.values.toList();
 
   bool contains(String videoId) => _videos.containsKey(videoId);

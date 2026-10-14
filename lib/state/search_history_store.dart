@@ -27,6 +27,14 @@ class SearchHistoryStore extends ChangeNotifier {
     }
   }
 
+  Future<void> reload(SharedPreferences prefs) async {
+    final fresh = await SearchHistoryStore.load(prefs);
+    _entries
+      ..clear()
+      ..addAll(fresh._entries);
+    notifyListeners();
+  }
+
   List<String> get entries => List.unmodifiable(_entries);
 
   Future<void> record(String query, SharedPreferences prefs) async {

@@ -142,6 +142,16 @@ class AppState extends ChangeNotifier {
 
   void clearWatchRequest() => _watchRequest = null;
 
+  Future<void> reloadStores() async {
+    await settings.reload(prefs);
+    await subscriptions.reload(prefs);
+    await watchLater.reload(prefs);
+    await playlists.reload(prefs);
+    await history.reload(prefs);
+    await searchHistory.reload(prefs);
+    await downloadsStore.reload(prefs);
+  }
+
   int get tabIndex => _tabIndex;
 
   void selectTab(int index) {

@@ -802,6 +802,31 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get queuedNext => '将接着播放';
+
+  @override
+  String get exportBackup => '导出备份';
+
+  @override
+  String get exportBackupHint => '将所有应用数据保存到文件';
+
+  @override
+  String get importBackup => '导入备份';
+
+  @override
+  String get importBackupHint => '从文件恢复应用数据';
+
+  @override
+  String backupRestored(int count) {
+    return '已恢复 $count 项设置';
+  }
+
+  @override
+  String get backupImportFailed => '备份导入失败';
+
+  @override
+  String backupExportedTo(String path) {
+    return '备份已保存到 $path';
+  }
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1601,4 +1626,29 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get queuedNext => '将接着播放';
+
+  @override
+  String get exportBackup => '导出备份';
+
+  @override
+  String get exportBackupHint => '将所有应用数据保存到文件';
+
+  @override
+  String get importBackup => '导入备份';
+
+  @override
+  String get importBackupHint => '从文件恢复应用数据';
+
+  @override
+  String backupRestored(int count) {
+    return '已恢复 $count 项设置';
+  }
+
+  @override
+  String get backupImportFailed => '备份导入失败';
+
+  @override
+  String backupExportedTo(String path) {
+    return '备份已保存到 $path';
+  }
 }

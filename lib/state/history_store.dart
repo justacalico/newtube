@@ -84,6 +84,17 @@ class HistoryStore extends ChangeNotifier {
     uploaded: json['uploaded'] as String?,
   );
 
+  Future<void> reload(SharedPreferences prefs) async {
+    final fresh = await HistoryStore.load(prefs);
+    _entries
+      ..clear()
+      ..addAll(fresh._entries);
+    _positions
+      ..clear()
+      ..addAll(fresh._positions);
+    notifyListeners();
+  }
+
   List<VideoInfo> get entries => List.unmodifiable(_entries);
 
   bool contains(String videoId) => _entries.any((v) => v.id == videoId);

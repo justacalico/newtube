@@ -815,6 +815,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get queuedNext => 'Will play next';
+
+  @override
+  String get exportBackup => 'Export backup';
+
+  @override
+  String get exportBackupHint => 'Save all app data to a file';
+
+  @override
+  String get importBackup => 'Import backup';
+
+  @override
+  String get importBackupHint => 'Restore app data from a file';
+
+  @override
+  String backupRestored(int count) {
+    return 'Restored $count settings';
+  }
+
+  @override
+  String get backupImportFailed => 'Could not import the backup';
+
+  @override
+  String backupExportedTo(String path) {
+    return 'Backup saved to $path';
+  }
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -1627,4 +1652,29 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get queuedNext => 'Will play next';
+
+  @override
+  String get exportBackup => 'Export backup';
+
+  @override
+  String get exportBackupHint => 'Save all app data to a file';
+
+  @override
+  String get importBackup => 'Import backup';
+
+  @override
+  String get importBackupHint => 'Restore app data from a file';
+
+  @override
+  String backupRestored(int count) {
+    return 'Restored $count settings';
+  }
+
+  @override
+  String get backupImportFailed => 'Could not import the backup';
+
+  @override
+  String backupExportedTo(String path) {
+    return 'Backup saved to $path';
+  }
 }

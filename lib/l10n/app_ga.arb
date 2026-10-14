@@ -337,5 +337,26 @@
   "playNext": "Seinm ina dhiaidh",
   "addToQueue": "Cuir leis an scuaine",
   "queued": "Curtha leis an scuaine",
-  "queuedNext": "Seinnfear ina dhiaidh"
+  "queuedNext": "Seinnfear ina dhiaidh",
+  "exportBackup": "Easpórtáil cúltaca",
+  "exportBackupHint": "Sábháil gach sonraí aip chuig comhad",
+  "importBackup": "Iompórtáil cúltaca",
+  "importBackupHint": "Athchóirigh sonraí aip ó chomhad",
+  "backupRestored": "Athchóirithe {count} socruithe",
+  "backupImportFailed": "Theip ar iompórtáil an chúltaca",
+  "backupExportedTo": "Cúltaca sábháilte go {path}",
+  "@backupRestored": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@backupExportedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  }
 }

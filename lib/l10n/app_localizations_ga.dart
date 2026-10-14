@@ -819,4 +819,29 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get queuedNext => 'Seinnfear ina dhiaidh';
+
+  @override
+  String get exportBackup => 'Easpórtáil cúltaca';
+
+  @override
+  String get exportBackupHint => 'Sábháil gach sonraí aip chuig comhad';
+
+  @override
+  String get importBackup => 'Iompórtáil cúltaca';
+
+  @override
+  String get importBackupHint => 'Athchóirigh sonraí aip ó chomhad';
+
+  @override
+  String backupRestored(int count) {
+    return 'Athchóirithe $count socruithe';
+  }
+
+  @override
+  String get backupImportFailed => 'Theip ar iompórtáil an chúltaca';
+
+  @override
+  String backupExportedTo(String path) {
+    return 'Cúltaca sábháilte go $path';
+  }
 }

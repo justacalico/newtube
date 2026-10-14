@@ -36,6 +36,14 @@ class SubscriptionsStore extends ChangeNotifier {
     subscribers: json['subscribers'] as int?,
   );
 
+  Future<void> reload(SharedPreferences prefs) async {
+    final fresh = await SubscriptionsStore.load(prefs);
+    _channels
+      ..clear()
+      ..addAll(fresh._channels);
+    notifyListeners();
+  }
+
   List<ChannelInfo> get channels => _channels.values.toList();
 
   bool isSubscribed(String channelId) => _channels.containsKey(channelId);

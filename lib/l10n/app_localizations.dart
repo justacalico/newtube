@@ -1615,6 +1615,48 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Will play next'**
   String get queuedNext;
+
+  /// No description provided for @exportBackup.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Export backup'**
+  String get exportBackup;
+
+  /// No description provided for @exportBackupHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Save all app data to a file'**
+  String get exportBackupHint;
+
+  /// No description provided for @importBackup.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Import backup'**
+  String get importBackup;
+
+  /// No description provided for @importBackupHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Restore app data from a file'**
+  String get importBackupHint;
+
+  /// No description provided for @backupRestored.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Restored {count} settings'**
+  String backupRestored(int count);
+
+  /// No description provided for @backupImportFailed.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Could not import the backup'**
+  String get backupImportFailed;
+
+  /// No description provided for @backupExportedTo.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Backup saved to {path}'**
+  String backupExportedTo(String path);
 }
 
 class _AppLocalizationsDelegate

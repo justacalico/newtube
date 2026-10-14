@@ -118,6 +118,32 @@ class SettingsStore extends ChangeNotifier {
     );
   }
 
+  Future<void> reload(SharedPreferences prefs) async {
+    final fresh = await SettingsStore.load(prefs);
+    _theme = fresh._theme;
+    _locale = fresh._locale;
+    _autoplay = fresh._autoplay;
+    _proxyPrefix = fresh._proxyPrefix;
+    _searchHistoryEnabled = fresh._searchHistoryEnabled;
+    _mcpEnabled = fresh._mcpEnabled;
+    _sidebarCollapsed = fresh._sidebarCollapsed;
+    _sponsorBlockEnabled = fresh._sponsorBlockEnabled;
+    _rydEnabled = fresh._rydEnabled;
+    _sponsorBlockAutoSkip = fresh._sponsorBlockAutoSkip;
+    _sponsorBlockCategories = fresh._sponsorBlockCategories;
+    _deArrowMode = fresh._deArrowMode;
+    _uploadNotificationsEnabled = fresh._uploadNotificationsEnabled;
+    _uploadCheckIntervalMinutes = fresh._uploadCheckIntervalMinutes;
+    _captionsEnabled = fresh._captionsEnabled;
+    _captionLanguage = fresh._captionLanguage;
+    _audioOnly = fresh._audioOnly;
+    _hideShorts = fresh._hideShorts;
+    _hideWatched = fresh._hideWatched;
+    _preferredQuality = fresh._preferredQuality;
+    _defaultSpeed = fresh._defaultSpeed;
+    notifyListeners();
+  }
+
   static Locale? _parseLocale(String? value) {
     if (value == null || value == 'system') return null;
     for (final locale in supportedLocales) {
