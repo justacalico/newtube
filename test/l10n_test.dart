@@ -10,6 +10,8 @@ void touchAll(AppLocalizations l) {
   l.appTitle;
   l.navHome;
   l.hideShorts;
+  l.hideWatched;
+  l.hideWatchedHint;
   l.hideShortsHint;
   l.shortsBadge;
   l.navTrending;

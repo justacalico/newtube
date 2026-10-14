@@ -318,6 +318,13 @@ class _SettingsPageState extends State<SettingsPage> {
               value: settings.hideShorts,
               onChanged: (value) => settings.setHideShorts(value, state.prefs),
             ),
+            SwitchListTile(
+              secondary: const Icon(Icons.visibility_off_outlined),
+              title: Text(l10n.hideWatched),
+              subtitle: Text(l10n.hideWatchedHint),
+              value: settings.hideWatched,
+              onChanged: (value) => settings.setHideWatched(value, state.prefs),
+            ),
             ListTile(
               leading: const Icon(Icons.high_quality_outlined),
               title: Text(l10n.defaultQuality),

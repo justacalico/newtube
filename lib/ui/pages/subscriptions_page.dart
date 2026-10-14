@@ -147,7 +147,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
               child: _loading
                   ? const Center(child: CircularProgressIndicator())
                   : VideoGrid(
-                      videos: visibleVideos(_videos, state.settings),
+                      videos: visibleVideos(_videos, state.settings, state),
                       onVideoTap: _openVideo,
                     ),
             ),

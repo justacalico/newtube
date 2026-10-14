@@ -1429,6 +1429,18 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'SHORTS'**
   String get shortsBadge;
+
+  /// No description provided for @hideWatched.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Hide watched'**
+  String get hideWatched;
+
+  /// No description provided for @hideWatchedHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Filter watched videos out of feeds and search'**
+  String get hideWatchedHint;
 }
 
 class _AppLocalizationsDelegate

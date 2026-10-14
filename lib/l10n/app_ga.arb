@@ -285,5 +285,7 @@
   "videoActions": "Tuilleadh roghanna",
   "hideShorts": "Folaigh Shorts",
   "hideShortsHint": "Scag Shorts as fothaí agus cuardaigh",
-  "shortsBadge": "SHORTS"
+  "shortsBadge": "SHORTS",
+  "hideWatched": "Folaigh feicthe",
+  "hideWatchedHint": "Scag físeáin feicthe as fothaí agus cuardaigh"
 }
