@@ -252,6 +252,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get commentsNewest => 'Сначала новые';
 
   @override
+  String get upNext => 'Следующее';
+
+  @override
+  String get playNow => 'Играть сейчас';
+
+  @override
   String get videoFit => 'Масштаб видео';
 
   @override

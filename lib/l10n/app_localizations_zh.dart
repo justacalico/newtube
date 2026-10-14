@@ -247,6 +247,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get commentsNewest => '最新';
 
   @override
+  String get upNext => '即将播放';
+
+  @override
+  String get playNow => '立即播放';
+
+  @override
   String get videoFit => '画面缩放';
 
   @override
@@ -858,6 +864,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get commentsNewest => '最新';
+
+  @override
+  String get upNext => '即将播放';
+
+  @override
+  String get playNow => '立即播放';
 
   @override
   String get videoFit => '画面缩放';

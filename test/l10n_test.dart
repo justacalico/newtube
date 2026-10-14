@@ -100,6 +100,7 @@ void touchAll(AppLocalizations l) {
   l.openVideo;
   l.replay;
   l.upNext;
+  l.playNow;
   l.showReplies;
   l.hideReplies;
   l.creator;

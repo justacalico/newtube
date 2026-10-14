@@ -299,8 +299,10 @@ class _WatchPageState extends State<WatchPage>
         if (!done) return;
         if (state.playback.repeatMode == RepeatMode.one) {
           _replay(player);
-        } else if (state.settings.autoplay) {
-          _openNext();
+        } else if (state.settings.autoplay &&
+            _nextVideo != null &&
+            !widget.video.isLive) {
+          _startAutoplayCountdown();
         }
       });
     } catch (e) {
@@ -371,6 +373,14 @@ class _WatchPageState extends State<WatchPage>
   }
 
   Widget _endScreen(BuildContext context, PlayerController player) {
+    if (_autoplayPending) {
+      return _AutoplayCountdown(
+        thumbnailUrl: _nextVideo?.thumbnailUrl,
+        title: _nextVideo?.title ?? '',
+        onCancel: _cancelAutoplay,
+        onPlayNow: _openNext,
+      );
+    }
     return _EndScreen(
       thumbnailUrl: widget.video.thumbnailUrl,
       onReplay: () => _replay(player),
@@ -413,6 +423,19 @@ class _WatchPageState extends State<WatchPage>
   }
 
   CommentSort _commentSort = CommentSort.top;
+  Timer? _autoplayTimer;
+  bool _autoplayPending = false;
+
+  void _startAutoplayCountdown() {
+    setState(() => _autoplayPending = true);
+    _autoplayTimer = Timer(const Duration(seconds: 6), _openNext);
+  }
+
+  void _cancelAutoplay() {
+    _autoplayTimer?.cancel();
+    _autoplayTimer = null;
+    if (mounted) setState(() => _autoplayPending = false);
+  }
 
   void _setCommentSort(CommentSort sort) {
     if (sort == _commentSort) return;
@@ -599,6 +622,7 @@ class _WatchPageState extends State<WatchPage>
     watchRouteObserver.unsubscribe(this);
     _state.playback.removeListener(_onSessionChanged);
     _completedSub?.cancel();
+    _autoplayTimer?.cancel();
     _skipper?.dispose();
     final player = _player;
     if (player != null) _state.playback.release(player);
@@ -1229,6 +1253,67 @@ class _ShareMenu extends StatelessWidget {
           leadingIcon: const Icon(Icons.open_in_new),
           onPressed: () => state.launch(Uri.parse(url)),
           child: Text(l10n.watchOnYouTube),
+        ),
+      ],
+    );
+  }
+}
+
+class _AutoplayCountdown extends StatelessWidget {
+  final String? thumbnailUrl;
+  final String title;
+  final VoidCallback onCancel;
+  final VoidCallback onPlayNow;
+
+  const _AutoplayCountdown({
+    this.thumbnailUrl,
+    required this.title,
+    required this.onCancel,
+    required this.onPlayNow,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        VideoThumbnail(url: thumbnailUrl),
+        Container(color: Colors.black54),
+        Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                l10n.upNext,
+                style: const TextStyle(color: Colors.white, fontSize: 12),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.white, fontSize: 16),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  OutlinedButton(
+                    onPressed: onCancel,
+                    child: Text(l10n.cancel),
+                  ),
+                  const SizedBox(width: 12),
+                  FilledButton.icon(
+                    onPressed: onPlayNow,
+                    icon: const Icon(Icons.play_arrow, size: 18),
+                    label: Text(l10n.playNow),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ],
     );
