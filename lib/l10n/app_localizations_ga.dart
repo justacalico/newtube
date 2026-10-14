@@ -1017,4 +1017,7 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get dataSaverHint => 'Folaigh mionsamhlacha agus teorainn 480p';
+
+  @override
+  String get navMore => 'Tuilleadh';
 }

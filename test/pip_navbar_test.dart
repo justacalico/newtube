@@ -22,4 +22,28 @@ void main() {
     expect(find.byType(NavigationBar), findsOneWidget);
     debugDefaultTargetPlatformOverride = null;
   });
+
+  testWidgets('mobile navbar shows 4 + more and opens drawer', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
+    final state = await testState();
+    await pumpPage(tester, state, const AppShell(), size: const Size(400, 800));
+    await tester.pumpAndSettle();
+    final bar = find.byType(NavigationBar);
+    expect(bar, findsOneWidget);
+    expect(
+      find.descendant(of: bar, matching: find.byType(NavigationDestination)),
+      findsNWidgets(5),
+    );
+    await tester.tap(find.text('More'));
+    await tester.pumpAndSettle();
+    expect(find.byType(Drawer), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(Drawer),
+        matching: find.text('Downloads'),
+      ),
+      findsOneWidget,
+    );
+    debugDefaultTargetPlatformOverride = null;
+  });
 }

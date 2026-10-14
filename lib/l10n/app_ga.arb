@@ -415,5 +415,6 @@
   "feedList": "Liosta",
   "feedCompact": "Greille dlúth",
   "dataSaver": "Sábháil sonraí",
-  "dataSaverHint": "Folaigh mionsamhlacha agus teorainn 480p"
+  "dataSaverHint": "Folaigh mionsamhlacha agus teorainn 480p",
+  "navMore": "Tuilleadh"
 }

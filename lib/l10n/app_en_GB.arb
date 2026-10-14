@@ -415,5 +415,6 @@
   "feedList": "List",
   "feedCompact": "Compact grid",
   "dataSaver": "Data saver",
-  "dataSaverHint": "Hide thumbnails and cap quality at 480p"
+  "dataSaverHint": "Hide thumbnails and cap quality at 480p",
+  "navMore": "More"
 }
