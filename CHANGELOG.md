@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.25.0 - 2026-10-14
+#### Features
+- (**player**) 进度条缓冲区间与缩略图预览 - (d9fc8d8) - HttpAnimations
+
+- - -
+
 ## v0.24.0 - 2026-10-14
 #### Features
 - (**player**) 默认播放速度 - (bc7ec8e) - HttpAnimations
