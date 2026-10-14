@@ -11,6 +11,13 @@ class VideoActionsMenu extends StatelessWidget {
 
   const VideoActionsMenu({super.key, required this.video});
 
+  static void open(BuildContext context, VideoInfo video) {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (context) => _VideoActionsSheet(video: video),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -112,6 +119,82 @@ class VideoActionsMenu extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+class _VideoActionsSheet extends StatelessWidget {
+  final VideoInfo video;
+
+  const _VideoActionsSheet({required this.video});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final state = AppScope.read(context);
+    void close() => Navigator.of(context).pop();
+    return SafeArea(
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.bookmark_border),
+            title: Text(l10n.watchLaterAdd),
+            onTap: () {
+              state.watchLater.toggle(video, state.prefs);
+              close();
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.playlist_play),
+            title: Text(l10n.playNext),
+            onTap: () {
+              state.playback.playNext(video);
+              close();
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.queue),
+            title: Text(l10n.addToQueue),
+            onTap: () {
+              state.playback.enqueue(video);
+              close();
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.playlist_add),
+            title: Text(l10n.addToPlaylist),
+            onTap: () {
+              close();
+              showPlaylistPicker(context, video);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.visibility_off_outlined),
+            title: Text(l10n.notInterested),
+            onTap: () {
+              state.hidden.hideVideo(video.id, state.prefs);
+              close();
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.person_off_outlined),
+            title: Text(l10n.dontRecommendChannel),
+            onTap: () {
+              state.hidden.hideChannel(video.channelId, state.prefs);
+              close();
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.share),
+            title: Text(l10n.share),
+            onTap: () {
+              state.share?.share('https://www.youtube.com/watch?v=${video.id}');
+              close();
+            },
+          ),
+        ],
+      ),
     );
   }
 }

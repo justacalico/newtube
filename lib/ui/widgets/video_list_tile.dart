@@ -60,6 +60,7 @@ class VideoListTile extends StatelessWidget {
         ],
       ),
       onTap: onTap,
+      onLongPress: () => VideoActionsMenu.open(context, video),
     );
   }
 }
