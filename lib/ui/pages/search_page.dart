@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
@@ -17,16 +19,85 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  final _controller = TextEditingController();
+  final _controller = SearchController();
   String _query = '';
   SearchResults _results = const SearchResults();
   bool _loading = false;
   Object? _error;
+  List<String> _suggestions = const [];
+  Timer? _suggestionDebounce;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(_onQueryChanged);
+  }
 
   @override
   void dispose() {
+    _suggestionDebounce?.cancel();
     _controller.dispose();
     super.dispose();
+  }
+
+  void _onQueryChanged() {
+    _suggestionDebounce?.cancel();
+    _suggestionDebounce = Timer(const Duration(milliseconds: 250), _suggest);
+  }
+
+  Future<void> _suggest() async {
+    final q = _controller.text.trim();
+    if (q.isEmpty) {
+      if (mounted && _suggestions.isNotEmpty) {
+        setState(() => _suggestions = const []);
+      }
+      return;
+    }
+    final state = AppScope.read(context);
+    try {
+      final suggestions = await state.api.searchSuggestions(q);
+      if (!mounted || _controller.text.trim() != q) return;
+      setState(() => _suggestions = suggestions);
+    } catch (_) {}
+  }
+
+  Iterable<Widget> _suggestionTiles(
+    BuildContext context,
+    SearchController controller,
+  ) {
+    final q = controller.text.trim();
+    final history = _searchHistoryMatches(q);
+    return [
+      for (final entry in history)
+        ListTile(
+          leading: const Icon(Icons.history, size: 18),
+          title: Text(entry),
+          onTap: () => _searchFromHistory(entry),
+        ),
+      for (final suggestion in _suggestions)
+        if (!history.contains(suggestion))
+          ListTile(
+            leading: const Icon(Icons.search, size: 18),
+            title: Text(suggestion),
+            onTap: () {
+              controller.text = suggestion;
+              controller.selection = TextSelection.collapsed(
+                offset: suggestion.length,
+              );
+              _search(suggestion);
+            },
+          ),
+    ];
+  }
+
+  List<String> _searchHistoryMatches(String q) {
+    if (q.isEmpty) return const [];
+    final state = AppScope.read(context);
+    if (!state.settings.searchHistoryEnabled) return const [];
+    return [
+      for (final e in state.searchHistory.entries)
+        if (e.toLowerCase().contains(q.toLowerCase()) && e != q) e,
+    ];
   }
 
   void _search(String query) {
@@ -78,10 +149,11 @@ class _SearchPageState extends State<SearchPage> {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: SearchBar(
-            controller: _controller,
-            hintText: l10n.searchHint,
-            leading: const Icon(Icons.search),
+          child: SearchAnchor.bar(
+            searchController: _controller,
+            barHintText: l10n.searchHint,
+            suggestionsBuilder: _suggestionTiles,
+            barLeading: const Icon(Icons.search),
             onSubmitted: _search,
           ),
         ),

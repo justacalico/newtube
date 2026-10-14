@@ -149,6 +149,11 @@ class FakeYouTubeApi implements YouTubeApi {
   Completer<List<String>>? suggestionsGate;
 
   @override
+  Future<List<String>> searchSuggestions(String query) async =>
+      error != null ? _fail() : suggestions;
+  List<String> suggestions = const [];
+
+  @override
   Future<VideoDetails> videoDetails(String videoId) async {
     if (error != null) return _fail();
     final gate = detailsGate;
