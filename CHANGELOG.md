@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.29.0 - 2026-10-15
+#### Features
+- 隐藏频道会员专享视频 - (79d1c07) - HttpAnimations
+
+- - -
+
 ## v0.28.1 - 2026-10-15
 #### Bug Fixes
 - 更多菜单抽屉从右侧打开 - (27f4636) - HttpAnimations
