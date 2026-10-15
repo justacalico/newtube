@@ -3,6 +3,7 @@ import AVKit
 import Flutter
 import UIKit
 
+@MainActor
 final class PipController: NSObject {
   private static var shared: PipController?
 
@@ -12,7 +13,11 @@ final class PipController: NSObject {
       binaryMessenger: registrar.messenger()
     )
     let controller = PipController(channel: channel)
-    channel.setMethodCallHandler(controller.handle)
+    channel.setMethodCallHandler { call, result in
+      Task { @MainActor in
+        controller.handle(call, result: result)
+      }
+    }
     shared = controller
   }
 
