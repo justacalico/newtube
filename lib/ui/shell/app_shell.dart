@@ -302,7 +302,7 @@ class _AppShellState extends State<AppShell> {
         }
 
         return Scaffold(
-          drawer: mobileBar.length < destinations.length
+          endDrawer: mobileBar.length < destinations.length
               ? Drawer(
                   child: SafeArea(
                     child: ListView(
@@ -335,7 +335,7 @@ class _AppShellState extends State<AppShell> {
                           ? index
                           : mobileBar.length,
                       onDestinationSelected: (i) => i >= mobileBar.length
-                          ? Scaffold.of(context).openDrawer()
+                          ? Scaffold.of(context).openEndDrawer()
                           : onSelected(i),
                       destinations: [
                         for (final d in mobileBar)
