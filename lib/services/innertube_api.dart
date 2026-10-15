@@ -75,7 +75,12 @@ class InnertubeApi implements YouTubeApi {
 
   @override
   Future<List<VideoInfo>> trending() async {
-    final r = await _post('browse', {'browseId': 'FEtrending'});
+    // YouTube removed the aggregated trending feed (FEtrending now 400s);
+    // the live destination's trending tab is the closest replacement.
+    final r = await _post('browse', {
+      'browseId': 'UC4R8DWoMoI7CAwX8_LjQHig',
+      'params': 'EgdsaXZldGFikgEDCKEK',
+    });
     final videos = <VideoInfo>[];
     collectVideos(r, videos);
     return _proxiedThumbs(videos);

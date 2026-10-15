@@ -13,16 +13,17 @@ import 'package:newtube/ui/shell/app_shell.dart';
 import 'fakes.dart';
 
 void main() {
-  test('trending fetches the FEtrending browse feed', () async {
+  test('trending browses the livestreams trending tab', () async {
     final browsed = <String>[];
     final api = InnertubeApi(
       httpClient: MockClient((request) async {
         final body = jsonDecode(request.body) as Map<String, dynamic>;
         final browse = body['browseId'] as String? ?? '';
         browsed.add(browse);
-        if (browse != 'FEtrending') {
+        if (browse != 'UC4R8DWoMoI7CAwX8_LjQHig') {
           return http.Response.bytes(utf8.encode('{}'), 200);
         }
+        expect(body['params'], 'EgdsaXZldGFikgEDCKEK');
         return http.Response.bytes(
           utf8.encode(
             jsonEncode({
@@ -64,7 +65,7 @@ void main() {
       }),
     );
     final videos = await api.trending();
-    expect(browsed, contains('FEtrending'));
+    expect(browsed, contains('UC4R8DWoMoI7CAwX8_LjQHig'));
     expect(videos.single.id, 'tr1');
   });
 
