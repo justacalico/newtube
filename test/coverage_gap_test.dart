@@ -463,10 +463,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(WatchPage), findsNothing);
     expect(find.byType(SnackBar), findsOneWidget);
-    expect(
-      find.text('This video is for channel members only'),
-      findsOneWidget,
-    );
+    expect(find.text('This video is for channel members only'), findsOneWidget);
   });
 
   testWidgets('members-only error stays inline on root route', (tester) async {
@@ -479,10 +476,7 @@ void main() {
     await pumpPage(tester, state, WatchPage(video: testVideos.first));
     await tester.pumpAndSettle();
     expect(find.byType(WatchPage), findsOneWidget);
-    expect(
-      find.text('This video is for channel members only'),
-      findsOneWidget,
-    );
+    expect(find.text('This video is for channel members only'), findsOneWidget);
   });
 
   testWidgets('player keyboard shortcuts', (tester) async {
@@ -642,7 +636,7 @@ void main() {
     const members = PlayabilityException(
       'LOGIN_REQUIRED',
       'Join this channel to get access to members-only content like this '
-      'video, and other exclusive perks.',
+          'video, and other exclusive perks.',
     );
     expect(members.isMembersOnly, isTrue);
     expect(members.isAgeGate, isFalse);
