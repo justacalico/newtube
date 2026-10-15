@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.28.1 - 2026-10-15
+#### Bug Fixes
+- 更多菜单抽屉从右侧打开 - (27f4636) - HttpAnimations
+
+- - -
+
 ## v0.28.0 - 2026-10-15
 #### Features
 - (**api**) Invidious 备用后端 - (aef2dbc) - HttpAnimations
