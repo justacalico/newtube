@@ -15,7 +15,7 @@ final class PipController: NSObject {
     let controller = PipController(channel: channel)
     channel.setMethodCallHandler { call, result in
       Task { @MainActor in
-        controller.handle(call, result: result)
+        await controller.handle(call, result: result)
       }
     }
     shared = controller
@@ -47,7 +47,7 @@ final class PipController: NSObject {
     self.channel = channel
   }
 
-  private func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+  private func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) async {
     switch call.method {
     case "enterPip":
       guard
@@ -57,7 +57,7 @@ final class PipController: NSObject {
         result(false)
         return
       }
-      enterPip(
+      await enterPip(
         url: url,
         audioUrl: (args["audioUrl"] as? String).flatMap(URL.init(string:)),
         position: args["position"] as? Double ?? 0,
@@ -73,7 +73,7 @@ final class PipController: NSObject {
         result(false)
         return
       }
-      prepare(
+      await prepare(
         url: url,
         audioUrl: (args["audioUrl"] as? String).flatMap(URL.init(string:))
       )
@@ -103,7 +103,7 @@ final class PipController: NSObject {
     rate: Float,
     playing: Bool,
     result: @escaping FlutterResult
-  ) {
+  ) async {
     guard AVPictureInPictureController.isPictureInPictureSupported(),
           pipController != nil || hostView() != nil else {
       result(false)
@@ -116,7 +116,7 @@ final class PipController: NSObject {
     pendingRate = rate
     pendingPlaying = playing
     startPending = true
-    prepare(url: url, audioUrl: audioUrl)
+    await prepare(url: url, audioUrl: audioUrl)
     if let pip = pipController, player?.currentItem != nil {
       player?.seek(to: CMTime(seconds: position, preferredTimescale: 600))
       startIfPossible(pip)
@@ -124,26 +124,21 @@ final class PipController: NSObject {
     result(true)
   }
 
-  private func prepare(url: URL, audioUrl: URL?) {
+  private func prepare(url: URL, audioUrl: URL?) async {
     let key = "\(url.absoluteString)|\(audioUrl?.absoluteString ?? "")"
     if preparedKey == key && pipController != nil { return }
     guard let host = hostView() else { return }
     preparedKey = key
     ensurePipeline(host: host)
-    Task { @MainActor in
-      let item = await Self.makeItem(url: url, audioUrl: audioUrl)
-      guard self.preparedKey == key else { return }
-      self.player?.replaceCurrentItem(with: item)
-      if self.startPending {
-        self.player?.seek(
-          to: CMTime(seconds: self.pendingPosition, preferredTimescale: 600)
-        )
-        if let pip = self.pipController { self.startIfPossible(pip) }
-      }
+    let item = await Self.makeItem(url: url, audioUrl: audioUrl)
+    guard preparedKey == key else { return }
+    player?.replaceCurrentItem(with: item)
+    if startPending {
+      player?.seek(to: CMTime(seconds: pendingPosition, preferredTimescale: 600))
+      if let pip = pipController { startIfPossible(pip) }
     }
   }
 
-  @MainActor
   private func ensurePipeline(host: UIView) {
     guard pipController == nil else { return }
     let holder = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
@@ -165,7 +160,9 @@ final class PipController: NSObject {
     pipController = pip
     possibleObservation = pip?.observe(\.isPictureInPicturePossible) {
       [weak self] controller, _ in
-      self?.startIfPossible(controller)
+      Task { @MainActor in
+        self?.startIfPossible(controller)
+      }
     }
   }
 
@@ -234,7 +231,9 @@ final class PipController: NSObject {
   private func beginBackgroundTask() {
     guard backgroundTask == .invalid else { return }
     backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
-      self?.endBackgroundTask()
+      Task { @MainActor in
+        self?.endBackgroundTask()
+      }
     }
   }
 
