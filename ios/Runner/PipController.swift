@@ -3,7 +3,6 @@ import AVKit
 import Flutter
 import UIKit
 
-@MainActor
 final class PipController: NSObject {
   private static var shared: PipController?
 
@@ -35,10 +34,12 @@ final class PipController: NSObject {
   private var lastPosition: Double = 0
   private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
 
+  @MainActor
   static func startPendingIfPossible() {
     shared?.startPendingIfPossible()
   }
 
+  @MainActor
   static func stopActivePip() {
     shared?.stopActivePip()
   }
@@ -47,6 +48,7 @@ final class PipController: NSObject {
     self.channel = channel
   }
 
+  @MainActor
   private func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) async {
     switch call.method {
     case "enterPip":
@@ -96,6 +98,7 @@ final class PipController: NSObject {
     }
   }
 
+  @MainActor
   private func enterPip(
     url: URL,
     audioUrl: URL?,
@@ -124,6 +127,7 @@ final class PipController: NSObject {
     result(true)
   }
 
+  @MainActor
   private func prepare(url: URL, audioUrl: URL?) async {
     let key = "\(url.absoluteString)|\(audioUrl?.absoluteString ?? "")"
     if preparedKey == key && pipController != nil { return }
@@ -139,6 +143,7 @@ final class PipController: NSObject {
     }
   }
 
+  @MainActor
   private func ensurePipeline(host: UIView) {
     guard pipController == nil else { return }
     let holder = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
@@ -166,16 +171,19 @@ final class PipController: NSObject {
     }
   }
 
+  @MainActor
   private func startPendingIfPossible() {
     guard let pip = pipController else { return }
     startIfPossible(pip)
   }
 
+  @MainActor
   private func stopActivePip() {
     guard let pip = pipController, pip.isPictureInPictureActive else { return }
     pip.stopPictureInPicture()
   }
 
+  @MainActor
   private static func makeItem(url: URL, audioUrl: URL?) async -> AVPlayerItem {
     guard let audioUrl else { return AVPlayerItem(url: url) }
     do {
@@ -256,6 +264,7 @@ final class PipController: NSObject {
   }
 }
 
+@MainActor
 extension PipController: AVPictureInPictureControllerDelegate {
   func pictureInPictureControllerDidStartPictureInPicture(
     _ controller: AVPictureInPictureController
