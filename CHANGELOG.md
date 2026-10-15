@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.30.0 - 2026-10-15
+#### Features
+- 播放器控件改为独立圆角方框 - (0445eec) - HttpAnimations
+- 重新设计播放器屏幕控制 - (4a2683e) - HttpAnimations
+#### Bug Fixes
+- 缩小视频卡片菜单按钮，修复继续观看溢出 - (b5a212a) - HttpAnimations
+- 改用直播趋势标签页替代已下线的热门页 - (5994212) - HttpAnimations
+- 会员专享视频直接退出并弹出错误提示 - (1ae27e7) - HttpAnimations
+
+- - -
+
 ## v0.29.0 - 2026-10-15
 #### Features
 - 隐藏频道会员专享视频 - (79d1c07) - HttpAnimations
