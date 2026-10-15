@@ -102,6 +102,29 @@ void main() {
     expect(find.text('Watched'), findsOneWidget);
   });
 
+  testWidgets('VideoCard fits the continue watching strip', (tester) async {
+    final state = await testState();
+    const video = VideoInfo(
+      id: 'x',
+      title: 'This Upgrade Proved I am Weak and Other Long Words',
+      author: 'Channel One',
+      channelId: 'c',
+      viewCount: 685000,
+      uploaded: '3 days ago',
+      duration: Duration(minutes: 12),
+    );
+    await pumpPage(
+      tester,
+      state,
+      const SizedBox(
+        width: 160,
+        height: 112,
+        child: VideoCard(video: video, onTap: _noop),
+      ),
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('VideoGrid lays out cards', (tester) async {
     final state = await testState();
     var tapped = 0;

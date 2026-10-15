@@ -34,8 +34,12 @@ class VideoActionsMenu extends StatelessWidget {
         return MenuAnchor(
           builder: (context, controller, child) => IconButton(
             tooltip: l10n.videoActions,
-            icon: const Icon(Icons.more_vert),
-            visualDensity: VisualDensity.compact,
+            icon: const Icon(Icons.more_vert, size: 20),
+            padding: EdgeInsets.zero,
+            style: IconButton.styleFrom(
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              minimumSize: const Size(32, 24),
+            ),
             onPressed: () =>
                 controller.isOpen ? controller.close() : controller.open(),
           ),
