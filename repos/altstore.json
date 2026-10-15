@@ -18,11 +18,11 @@
       "screenshots": [],
       "versions": [
         {
-          "version": "0.28.1",
+          "version": "0.29.0",
           "date": "2026-10-15",
           "localizedDescription": "See the release notes for changes.",
-          "downloadURL": "https://gitlab.com/HttpAnimations/newtube/-/releases/v0.28.1/downloads/newtube-0.28.1-ios.ipa",
-          "size": 16423285,
+          "downloadURL": "https://gitlab.com/HttpAnimations/newtube/-/releases/v0.29.0/downloads/newtube-0.29.0-ios.ipa",
+          "size": 16423761,
           "minOSVersion": "14.0"
         }
       ],
