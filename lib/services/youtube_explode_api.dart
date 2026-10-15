@@ -7,6 +7,7 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart' as yt;
 import '../models/search_filter.dart';
 import '../models/youtube_route.dart';
 import '../models/video_info.dart';
+import 'innertube.dart';
 import 'innertube_api.dart';
 import 'proxy_client.dart';
 import 'youtube_api.dart';
@@ -97,6 +98,7 @@ class YouTubeExplodeApi implements YouTubeApi {
   VideoInfo? _parseVideoRenderer(Map<String, dynamic> r) {
     final id = r['videoId'];
     if (id is! String) return null;
+    if (membersOnlyBadges(r['badges'])) return null;
     return VideoInfo(
       id: id,
       title: _runs(r['title']) ?? '',

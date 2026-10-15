@@ -109,6 +109,18 @@ String? continuationToken(dynamic node) {
   return null;
 }
 
+bool membersOnlyBadges(dynamic badges) {
+  if (badges is! List) return false;
+  for (final b in badges) {
+    if (b is! Map<String, dynamic>) continue;
+    final renderer = b['metadataBadgeRenderer'] ?? b['badgeViewModel'];
+    if (renderer is! Map<String, dynamic>) continue;
+    final style = renderer['style'] ?? renderer['badgeStyle'];
+    if (style is String && style.contains('MEMBERS_ONLY')) return true;
+  }
+  return false;
+}
+
 VideoInfo? parseLockup(Map<String, dynamic> l) {
   if (l['contentType'] != 'LOCKUP_CONTENT_TYPE_VIDEO') return null;
   final id = l['contentId'];
@@ -132,6 +144,7 @@ VideoInfo? parseLockup(Map<String, dynamic> l) {
     if (rows is List) {
       for (final row in rows) {
         if (row is! Map<String, dynamic>) continue;
+        if (membersOnlyBadges(row['badges'])) return null;
         final parts = row['metadataParts'];
         if (parts is! List) continue;
         for (final part in parts) {
@@ -275,6 +288,7 @@ void collectPlaylistVideos(dynamic node, List<VideoInfo> out) {
 VideoInfo? parsePlaylistVideo(Map<String, dynamic> r) {
   final id = r['videoId'];
   if (id is! String) return null;
+  if (membersOnlyBadges(r['badges'])) return null;
   return VideoInfo(
     id: id,
     title: runs(r['title']) ?? '',
@@ -359,6 +373,7 @@ bool _isShortRenderer(dynamic node) {
 VideoInfo? parseVideoRenderer(Map<String, dynamic> r) {
   final id = r['videoId'];
   if (id is! String) return null;
+  if (membersOnlyBadges(r['badges'])) return null;
   return VideoInfo(
     id: id,
     title: runs(r['title']) ?? '',

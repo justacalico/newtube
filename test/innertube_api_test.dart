@@ -949,6 +949,100 @@ void main() {
       expect(out.map((v) => v.id), ['c1', 'l1', 'v1']);
     });
 
+    test('members-only videos are dropped', () {
+      expect(membersOnlyBadges('x'), isFalse);
+      expect(
+        membersOnlyBadges([
+          'junk',
+          {'badges': 1},
+          {'metadataBadgeRenderer': 'junk'},
+          {
+            'metadataBadgeRenderer': {'style': 7},
+          },
+          {
+            'metadataBadgeRenderer': {'style': 'BADGE_STYLE_TYPE_LIVE_NOW'},
+          },
+        ]),
+        isFalse,
+      );
+      expect(
+        membersOnlyBadges([
+          {
+            'metadataBadgeRenderer': {'style': 'BADGE_STYLE_TYPE_MEMBERS_ONLY'},
+          },
+        ]),
+        isTrue,
+      );
+      expect(
+        membersOnlyBadges([
+          {
+            'badgeViewModel': {'badgeStyle': 'BADGE_MEMBERS_ONLY'},
+          },
+        ]),
+        isTrue,
+      );
+
+      final out = <VideoInfo>[];
+      collectVideos({
+        'a': {
+          'videoRenderer': {
+            'videoId': 'mo',
+            'badges': [
+              {
+                'metadataBadgeRenderer': {
+                  'style': 'BADGE_STYLE_TYPE_MEMBERS_ONLY',
+                },
+              },
+            ],
+          },
+        },
+        'b': _lockup('ok'),
+        'c': {
+          'lockupViewModel': {
+            'contentId': 'ml',
+            'contentType': 'LOCKUP_CONTENT_TYPE_VIDEO',
+            'metadata': {
+              'lockupMetadataViewModel': {
+                'metadata': {
+                  'contentMetadataViewModel': {
+                    'metadataRows': [
+                      {
+                        'badges': [
+                          {
+                            'badgeViewModel': {
+                              'badgeStyle': 'BADGE_MEMBERS_ONLY',
+                            },
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          },
+        },
+      }, out);
+      expect(out.map((v) => v.id), ['ok']);
+
+      final pl = <VideoInfo>[];
+      collectPlaylistVideos({
+        'x': {
+          'playlistVideoRenderer': {
+            'videoId': 'pm',
+            'badges': [
+              {
+                'metadataBadgeRenderer': {
+                  'style': 'BADGE_STYLE_TYPE_MEMBERS_ONLY',
+                },
+              },
+            ],
+          },
+        },
+      }, pl);
+      expect(pl, isEmpty);
+    });
+
     test('collectChannels recursion and misses', () {
       final out = <ChannelInfo>[];
       collectChannels([
