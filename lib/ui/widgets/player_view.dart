@@ -223,6 +223,13 @@ class _PlayerViewState extends State<PlayerView> {
     _showControls();
   }
 
+  Widget _controlBox(Widget child) => Material(
+    color: Colors.black54,
+    borderRadius: BorderRadius.circular(8),
+    clipBehavior: Clip.antiAlias,
+    child: child,
+  );
+
   void _toggleControls() {
     if (_controlsVisible) {
       _hideControls();
@@ -708,7 +715,10 @@ class _PlayerViewState extends State<PlayerView> {
 
   Widget _volumeSliderPopup() {
     return Container(
-      color: Colors.black87,
+      decoration: BoxDecoration(
+        color: Colors.black87,
+        borderRadius: BorderRadius.circular(8),
+      ),
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: SizedBox(
         height: 120,
@@ -983,7 +993,7 @@ class _PlayerViewState extends State<PlayerView> {
                   if (widget.segmentSkipper != null)
                     Positioned(
                       right: 8,
-                      bottom: 88,
+                      bottom: 104,
                       child: ListenableBuilder(
                         listenable: widget.segmentSkipper!,
                         builder: (context, _) {
@@ -1023,7 +1033,7 @@ class _PlayerViewState extends State<PlayerView> {
                   Positioned(
                     left: 16,
                     right: 16,
-                    bottom: 88,
+                    bottom: 100,
                     child: IgnorePointer(
                       child: StreamBuilder<Duration>(
                         stream: _player.positionStream,
@@ -1069,57 +1079,70 @@ class _PlayerViewState extends State<PlayerView> {
                                 left: 0,
                                 right: 0,
                                 top: 0,
-                                child: Container(
-                                  color: Colors.black54,
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                  ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
                                   child: Row(
                                     children: [
                                       if (widget.avatarUrl != null) ...[
                                         VideoThumbnail(
                                           url: widget.avatarUrl,
-                                          width: 32,
-                                          height: 32,
+                                          width: 36,
+                                          height: 36,
                                           borderRadius: BorderRadius.circular(
-                                            4,
+                                            18,
                                           ),
                                         ),
                                         const SizedBox(width: 8),
                                       ],
                                       if (widget.title != null)
                                         Expanded(
-                                          child: Text(
-                                            widget.title!,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                              color: Colors.white,
+                                          child: _controlBox(
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 10,
+                                                    vertical: 10,
+                                                  ),
+                                              child: Text(
+                                                widget.title!,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         )
                                       else
                                         const Spacer(),
-                                      if (widget.pipActions != null)
-                                        IconButton(
-                                          icon: const Icon(
-                                            Icons
-                                                .picture_in_picture_alt_outlined,
-                                            color: Colors.white,
+                                      if (widget.pipActions != null) ...[
+                                        const SizedBox(width: 8),
+                                        _controlBox(
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons
+                                                  .picture_in_picture_alt_outlined,
+                                              color: Colors.white,
+                                            ),
+                                            tooltip: l10n.pictureInPicture,
+                                            onPressed: () =>
+                                                widget.pipActions!.enterPip(),
                                           ),
-                                          tooltip: l10n.pictureInPicture,
-                                          onPressed: () =>
-                                              widget.pipActions!.enterPip(),
                                         ),
-                                      IconButton(
-                                        icon: Icon(
-                                          widget.isFullscreen
-                                              ? Icons.fullscreen_exit
-                                              : Icons.fullscreen,
+                                      ],
+                                      const SizedBox(width: 8),
+                                      _controlBox(
+                                        IconButton(
+                                          icon: Icon(
+                                            widget.isFullscreen
+                                                ? Icons.fullscreen_exit
+                                                : Icons.fullscreen,
+                                          ),
+                                          color: Colors.white,
+                                          tooltip: l10n.fullscreen,
+                                          onPressed: widget.onToggleFullscreen,
                                         ),
-                                        color: Colors.white,
-                                        tooltip: l10n.fullscreen,
-                                        onPressed: widget.onToggleFullscreen,
                                       ),
                                     ],
                                   ),
@@ -1129,8 +1152,8 @@ class _PlayerViewState extends State<PlayerView> {
                                 left: 0,
                                 right: 0,
                                 bottom: 0,
-                                child: Container(
-                                  color: Colors.black54,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
                                   child: StreamBuilder<Duration>(
                                     stream: _player.durationStream,
                                     initialData: _player.duration,
@@ -1153,28 +1176,15 @@ class _PlayerViewState extends State<PlayerView> {
                                           return Column(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                      horizontal: 8,
-                                                    ),
-                                                child: Row(
-                                                  children: [
-                                                    Container(
+                                              Row(
+                                                children: [
+                                                  _controlBox(
+                                                    Padding(
                                                       padding:
                                                           const EdgeInsets.symmetric(
-                                                            horizontal: 6,
-                                                            vertical: 4,
+                                                            horizontal: 8,
+                                                            vertical: 6,
                                                           ),
-                                                      decoration: BoxDecoration(
-                                                        border: Border.all(
-                                                          color: Colors.white24,
-                                                        ),
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              4,
-                                                            ),
-                                                      ),
                                                       child: widget.live
                                                           ? const LiveBadge()
                                                           : Column(
@@ -1245,16 +1255,19 @@ class _PlayerViewState extends State<PlayerView> {
                                                               ],
                                                             ),
                                                     ),
-                                                    StreamBuilder<bool>(
-                                                      stream:
-                                                          _player.playingStream,
-                                                      initialData:
-                                                          _player.playing,
-                                                      builder:
-                                                          (
-                                                            context,
-                                                            snapshot,
-                                                          ) => IconButton(
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  StreamBuilder<bool>(
+                                                    stream:
+                                                        _player.playingStream,
+                                                    initialData:
+                                                        _player.playing,
+                                                    builder:
+                                                        (
+                                                          context,
+                                                          snapshot,
+                                                        ) => _controlBox(
+                                                          IconButton(
                                                             icon: Icon(
                                                               snapshot.data ==
                                                                       true
@@ -1271,42 +1284,40 @@ class _PlayerViewState extends State<PlayerView> {
                                                                 : _player
                                                                       .play(),
                                                           ),
-                                                    ),
-                                                    const Spacer(),
-                                                    if (widget.sleepTimer !=
-                                                        null)
-                                                      ListenableBuilder(
-                                                        listenable:
-                                                            widget.sleepTimer!,
-                                                        builder: (context, _) {
-                                                          final remaining =
-                                                              widget
-                                                                  .sleepTimer!
-                                                                  .remaining;
-                                                          if (remaining ==
-                                                              null) {
-                                                            return const SizedBox.shrink();
-                                                          }
-                                                          return Padding(
-                                                            padding:
-                                                                const EdgeInsets.only(
-                                                                  right: 4,
-                                                                ),
-                                                            child: Text(
-                                                              formatDuration(
-                                                                remaining,
+                                                        ),
+                                                  ),
+                                                  const Spacer(),
+                                                  if (widget.sleepTimer != null)
+                                                    ListenableBuilder(
+                                                      listenable:
+                                                          widget.sleepTimer!,
+                                                      builder: (context, _) {
+                                                        final remaining = widget
+                                                            .sleepTimer!
+                                                            .remaining;
+                                                        if (remaining == null) {
+                                                          return const SizedBox.shrink();
+                                                        }
+                                                        return Padding(
+                                                          padding:
+                                                              const EdgeInsets.only(
+                                                                right: 4,
                                                               ),
-                                                              style:
-                                                                  const TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontSize:
-                                                                        12,
-                                                                  ),
+                                                          child: Text(
+                                                            formatDuration(
+                                                              remaining,
                                                             ),
-                                                          );
-                                                        },
-                                                      ),
+                                                            style:
+                                                                const TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 12,
+                                                                ),
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                  _controlBox(
                                                     IconButton(
                                                       icon: const Icon(
                                                         Icons.settings,
@@ -1316,191 +1327,185 @@ class _PlayerViewState extends State<PlayerView> {
                                                       onPressed:
                                                           _toggleSettings,
                                                     ),
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  _controlBox(
                                                     _volumeButton(l10n),
-                                                  ],
-                                                ),
+                                                  ),
+                                                ],
                                               ),
+                                              const SizedBox(height: 8),
                                               if (!widget.live)
-                                                SizedBox(
-                                                  height: 32,
-                                                  child: LayoutBuilder(
-                                                    builder: (context, sliderCons) {
-                                                      return MouseRegion(
-                                                        onHover: (e) => setState(
-                                                          () => _previewFraction =
-                                                              (e.localPosition.dx /
-                                                                      sliderCons
-                                                                          .maxWidth)
-                                                                  .clamp(
-                                                                    0.0,
-                                                                    1.0,
-                                                                  ),
-                                                        ),
-                                                        onExit: (_) => setState(
-                                                          () =>
-                                                              _previewFraction =
-                                                                  null,
-                                                        ),
-                                                        child: Stack(
-                                                          alignment:
-                                                              Alignment.center,
-                                                          children: [
-                                                            StreamBuilder<
-                                                              Duration
-                                                            >(
-                                                              stream: _player
-                                                                  .bufferedStream,
-                                                              initialData:
-                                                                  _player
-                                                                      .buffered,
-                                                              builder: (context, bufSnap) {
-                                                                final buffered =
-                                                                    bufSnap
-                                                                        .data ??
-                                                                    Duration
-                                                                        .zero;
-                                                                return Semantics(
-                                                                  label: l10n
-                                                                      .shortcutSeek,
-                                                                  child: SliderTheme(
-                                                                    data: SliderTheme.of(context).copyWith(
-                                                                      thumbShape: RoundSliderThumbShape(
-                                                                        enabledThumbRadius:
-                                                                            wide
-                                                                            ? 5
-                                                                            : 10,
-                                                                      ),
-                                                                      trackHeight:
-                                                                          wide
-                                                                          ? 2
-                                                                          : 6,
-                                                                      overlayShape: const RoundSliderOverlayShape(
-                                                                        overlayRadius:
-                                                                            16,
-                                                                      ),
+                                                _controlBox(
+                                                  SizedBox(
+                                                    height: 32,
+                                                    child: LayoutBuilder(
+                                                      builder: (context, sliderCons) {
+                                                        return MouseRegion(
+                                                          onHover: (e) => setState(
+                                                            () => _previewFraction =
+                                                                (e.localPosition.dx /
+                                                                        sliderCons
+                                                                            .maxWidth)
+                                                                    .clamp(
+                                                                      0.0,
+                                                                      1.0,
                                                                     ),
-                                                                    child: Slider(
-                                                                      key:
-                                                                          const ValueKey(
-                                                                            'seekSlider',
-                                                                          ),
-                                                                      value: clamped
-                                                                          .inMilliseconds
-                                                                          .toDouble()
-                                                                          .clamp(
-                                                                            0,
-                                                                            (total.inMilliseconds).toDouble(),
-                                                                          ),
-                                                                      max: total
-                                                                          .inMilliseconds
-                                                                          .toDouble()
-                                                                          .clamp(
-                                                                            1,
-                                                                            double.infinity,
-                                                                          ),
-                                                                      secondaryTrackValue:
-                                                                          total >
-                                                                              Duration.zero
-                                                                          ? (buffered.inMilliseconds / total.inMilliseconds).clamp(
-                                                                              0.0,
-                                                                              1.0,
-                                                                            )
-                                                                          : null,
-                                                                      onChanged:
-                                                                          total ==
-                                                                              Duration.zero
-                                                                          ? null
-                                                                          : (
-                                                                              v,
-                                                                            ) {
-                                                                              setState(
-                                                                                () => _previewFraction = (v / total.inMilliseconds).clamp(0.0, 1.0),
-                                                                              );
-                                                                              _player.seek(
-                                                                                Duration(milliseconds: v.round()),
-                                                                              );
-                                                                            },
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                              },
-                                                            ),
-                                                            if (total >
-                                                                Duration.zero)
-                                                              Positioned.fill(
-                                                                child: IgnorePointer(
-                                                                  child: LayoutBuilder(
-                                                                    builder: (context, cons) => Stack(
-                                                                      children: [
-                                                                        for (final marker
-                                                                            in widget.chapters)
-                                                                          if (marker.start > Duration.zero &&
-                                                                              marker.start < total)
-                                                                            Positioned(
-                                                                              left: 12 + (cons.maxWidth - 24) * (marker.start.inMilliseconds / total.inMilliseconds),
-                                                                              top: (cons.maxHeight - 10) / 2,
-                                                                              child: Container(
-                                                                                width: 2,
-                                                                                height: 10,
-                                                                                color: Colors.white38,
-                                                                              ),
-                                                                            ),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            if (total >
-                                                                    Duration
-                                                                        .zero &&
-                                                                widget
-                                                                    .heatmap
-                                                                    .isNotEmpty)
-                                                              Positioned.fill(
-                                                                child: IgnorePointer(
-                                                                  child: CustomPaint(
-                                                                    painter:
-                                                                        _HeatMapPainter(
-                                                                          widget
-                                                                              .heatmap,
-                                                                          total,
+                                                          ),
+                                                          onExit: (_) => setState(
+                                                            () =>
+                                                                _previewFraction =
+                                                                    null,
+                                                          ),
+                                                          child: Stack(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            children: [
+                                                              StreamBuilder<
+                                                                Duration
+                                                              >(
+                                                                stream: _player
+                                                                    .bufferedStream,
+                                                                initialData:
+                                                                    _player
+                                                                        .buffered,
+                                                                builder: (context, bufSnap) {
+                                                                  final buffered =
+                                                                      bufSnap
+                                                                          .data ??
+                                                                      Duration
+                                                                          .zero;
+                                                                  return Semantics(
+                                                                    label: l10n
+                                                                        .shortcutSeek,
+                                                                    child: SliderTheme(
+                                                                      data: SliderTheme.of(context).copyWith(
+                                                                        thumbShape: RoundSliderThumbShape(
+                                                                          enabledThumbRadius:
+                                                                              wide
+                                                                              ? 5
+                                                                              : 10,
                                                                         ),
-                                                                  ),
-                                                                ),
+                                                                        trackHeight:
+                                                                            wide
+                                                                            ? 2
+                                                                            : 6,
+                                                                        overlayShape: const RoundSliderOverlayShape(
+                                                                          overlayRadius:
+                                                                              16,
+                                                                        ),
+                                                                      ),
+                                                                      child: Slider(
+                                                                        key:
+                                                                            const ValueKey(
+                                                                              'seekSlider',
+                                                                            ),
+                                                                        value: clamped
+                                                                            .inMilliseconds
+                                                                            .toDouble()
+                                                                            .clamp(
+                                                                              0,
+                                                                              (total.inMilliseconds).toDouble(),
+                                                                            ),
+                                                                        max: total
+                                                                            .inMilliseconds
+                                                                            .toDouble()
+                                                                            .clamp(
+                                                                              1,
+                                                                              double.infinity,
+                                                                            ),
+                                                                        secondaryTrackValue:
+                                                                            total >
+                                                                                Duration.zero
+                                                                            ? (buffered.inMilliseconds / total.inMilliseconds).clamp(
+                                                                                0.0,
+                                                                                1.0,
+                                                                              )
+                                                                            : null,
+                                                                        onChanged:
+                                                                            total ==
+                                                                                Duration.zero
+                                                                            ? null
+                                                                            : (v) {
+                                                                                setState(() => _previewFraction = (v / total.inMilliseconds).clamp(0.0, 1.0));
+                                                                                _player.seek(Duration(milliseconds: v.round()));
+                                                                              },
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                },
                                                               ),
-                                                            if (_previewFraction !=
-                                                                    null &&
-                                                                widget.storyboard !=
-                                                                    null &&
-                                                                total >
-                                                                    Duration
-                                                                        .zero)
-                                                              Positioned(
-                                                                left: ((_previewFraction! * sliderCons.maxWidth) - widget.storyboard!.tileWidth / 2).clamp(
-                                                                  0.0,
-                                                                  sliderCons
-                                                                          .maxWidth -
-                                                                      widget
-                                                                          .storyboard!
-                                                                          .tileWidth,
-                                                                ),
-                                                                bottom: 24,
-                                                                child: IgnorePointer(
-                                                                  child: _SeekPreview(
-                                                                    board: widget
-                                                                        .storyboard!,
-                                                                    time: Duration(
-                                                                      milliseconds:
-                                                                          (_previewFraction! * total.inMilliseconds)
-                                                                              .round(),
+                                                              if (total >
+                                                                  Duration.zero)
+                                                                Positioned.fill(
+                                                                  child: IgnorePointer(
+                                                                    child: LayoutBuilder(
+                                                                      builder: (context, cons) => Stack(
+                                                                        children: [
+                                                                          for (final marker
+                                                                              in widget.chapters)
+                                                                            if (marker.start > Duration.zero &&
+                                                                                marker.start < total)
+                                                                              Positioned(
+                                                                                left: 12 + (cons.maxWidth - 24) * (marker.start.inMilliseconds / total.inMilliseconds),
+                                                                                top: (cons.maxHeight - 10) / 2,
+                                                                                child: Container(width: 2, height: 10, color: Colors.white38),
+                                                                              ),
+                                                                        ],
+                                                                      ),
                                                                     ),
                                                                   ),
                                                                 ),
-                                                              ),
-                                                          ],
-                                                        ),
-                                                      );
-                                                    },
+                                                              if (total >
+                                                                      Duration
+                                                                          .zero &&
+                                                                  widget
+                                                                      .heatmap
+                                                                      .isNotEmpty)
+                                                                Positioned.fill(
+                                                                  child: IgnorePointer(
+                                                                    child: CustomPaint(
+                                                                      painter: _HeatMapPainter(
+                                                                        widget
+                                                                            .heatmap,
+                                                                        total,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              if (_previewFraction !=
+                                                                      null &&
+                                                                  widget.storyboard !=
+                                                                      null &&
+                                                                  total >
+                                                                      Duration
+                                                                          .zero)
+                                                                Positioned(
+                                                                  left: ((_previewFraction! * sliderCons.maxWidth) - widget.storyboard!.tileWidth / 2).clamp(
+                                                                    0.0,
+                                                                    sliderCons
+                                                                            .maxWidth -
+                                                                        widget
+                                                                            .storyboard!
+                                                                            .tileWidth,
+                                                                  ),
+                                                                  bottom: 24,
+                                                                  child: IgnorePointer(
+                                                                    child: _SeekPreview(
+                                                                      board: widget
+                                                                          .storyboard!,
+                                                                      time: Duration(
+                                                                        milliseconds:
+                                                                            (_previewFraction! * total.inMilliseconds).round(),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
                                                   ),
                                                 ),
                                             ],
@@ -1514,7 +1519,7 @@ class _PlayerViewState extends State<PlayerView> {
                               if (_volumePopup)
                                 Positioned(
                                   right: 8,
-                                  bottom: 88,
+                                  bottom: 104,
                                   child: _volumeSliderPopup(),
                                 ),
                               if (_settingsOpen)
