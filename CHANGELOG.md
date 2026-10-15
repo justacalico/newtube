@@ -2,6 +2,50 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.28.0 - 2026-10-15
+#### Features
+- (**api**) Invidious 备用后端 - (aef2dbc) - HttpAnimations
+- (**api**) 视频详情缓存 - (505d66b) - HttpAnimations
+- (**channel**) 频道页标签页 - (54e9ac2) - HttpAnimations
+- (**feed**) 信息流密度 - (43f4b53) - HttpAnimations
+- (**feed**) 隐藏频道与视频 - (816ed1f) - HttpAnimations
+- (**history**) 管理筛选删除 - (83742b7) - HttpAnimations
+- (**player**) 迷你播放器显示视频 - (f4a4f29) - HttpAnimations
+- (**player**) 迷你播放器导航与关闭 - (efa0805) - HttpAnimations
+- (**player**) 下拉收缩动画 - (65a709b) - HttpAnimations
+- (**player**) 更多快捷键 - (2b56e8e) - HttpAnimations
+- (**player**) 可播放性错误处理 - (ec5982b) - HttpAnimations
+- (**player**) 编解码器偏好 - (e50b8f6) - HttpAnimations
+- (**playlist**) 翻页加载 - (8b85c51) - HttpAnimations
+- (**settings**) 省流模式 - (b6b6f07) - HttpAnimations
+- (**settings**) 强调色 - (e29c77f) - HttpAnimations
+- (**settings**) 网络代理 - (a930441) - HttpAnimations
+- (**settings**) 备份与恢复 - (76c8e62) - HttpAnimations
+- (**sponsorblock**) 补齐分类 - (b708ed6) - HttpAnimations
+- (**subscriptions**) 并行加载订阅流 - (786dd1b) - HttpAnimations
+- (**subscriptions**) 频道上传提醒开关 - (3bf77f1) - HttpAnimations
+- (**subscriptions**) 订阅分组 - (350bc3c) - HttpAnimations
+- (**subscriptions**) takeout csv 导入 - (c0420b8) - HttpAnimations
+- (**ui**) 无障碍语义标注 - (5fd5379) - HttpAnimations
+- (**ui**) 长按视频卡片菜单 - (34ef35c) - HttpAnimations
+- (**watch**) 免打扰开关 - (9b4eebe) - HttpAnimations
+- (**watchlater**) 排序与进度 - (2966c03) - HttpAnimations
+- (**web**) Docker 镜像 - (b254046) - HttpAnimations
+#### Bug Fixes
+- (**docs**) flatpak 无 GPG 签名 - (f6d07a4) - HttpAnimations
+- (**ios**) 移除 Swift 并发注解，改用同步 API 编译 PiP 控制器 - (831eb8a) - HttpAnimations
+- (**ios**) 显式标注 PiP 方法的主线程隔离 - (98cc43d) - HttpAnimations
+- (**ios**) 将 PiP 方法改为异步以消除 Swift 并发警告 - (33e0395) - HttpAnimations
+- (**ios**) 修复 PiP 控制器的 Swift 并发隔离错误 - (b31da38) - HttpAnimations
+- (**ios**) 画中画三重故障 - (e34470e) - HttpAnimations
+- (**player**) 小屏进度条触控 - (35e4192) - HttpAnimations
+- (**settings**) 嵌套 SponsorBlock 选项 - (df65463) - HttpAnimations
+- (**shell**) 移动端导航栏精简 - (87215a8) - HttpAnimations
+- (**shell**) 画中画隐藏导航栏 - (56a404b) - HttpAnimations
+- (**theme**) OLED 黑色界面元素 - (7456438) - HttpAnimations
+
+- - -
+
 ## v0.27.0 - 2026-10-14
 #### Features
 - (**comments**) 回复、排序与徽章 - (d03c269) - HttpAnimations
