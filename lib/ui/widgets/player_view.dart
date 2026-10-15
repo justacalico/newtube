@@ -18,6 +18,9 @@ import '../../utils/storyboard.dart';
 import '../../utils/debug_log.dart';
 import '../../utils/format.dart';
 import 'live_badge.dart';
+import 'thumbnail.dart';
+
+enum _SettingsSection { quality, audio, captions, speed, fit, repeat, sleep }
 
 class PlayerView extends StatefulWidget {
   final PlayerController player;
@@ -40,6 +43,8 @@ class PlayerView extends StatefulWidget {
   final VoidCallback? onNext;
   final VoidCallback? onPrevious;
   final VoidCallback? onPip;
+  final String? title;
+  final String? avatarUrl;
   final bool audioOnly;
   final String? artworkUrl;
   final ValueChanged<bool>? onAudioOnlyChanged;
@@ -69,6 +74,8 @@ class PlayerView extends StatefulWidget {
     this.onNext,
     this.onPrevious,
     this.onPip,
+    this.title,
+    this.avatarUrl,
     this.audioOnly = false,
     this.storyboard,
     this.heatmap = const [],
@@ -108,6 +115,8 @@ class _PlayerViewState extends State<PlayerView> {
   double? _hudValue;
   bool _hudVolume = true;
   bool _volumePopup = false;
+  bool _settingsOpen = false;
+  _SettingsSection? _settingsSection;
 
   @override
   void initState() {
@@ -177,7 +186,7 @@ class _PlayerViewState extends State<PlayerView> {
   void _scheduleHide() {
     _hideTimer?.cancel();
     _hideTimer = Timer(_hideDelay, () {
-      if (mounted && _player.playing && _controlsVisible) {
+      if (mounted && _player.playing && _controlsVisible && !_settingsOpen) {
         setState(() {
           _controlsVisible = false;
           _volumePopup = false;
@@ -196,8 +205,22 @@ class _PlayerViewState extends State<PlayerView> {
       setState(() {
         _controlsVisible = false;
         _volumePopup = false;
+        _settingsOpen = false;
       });
     }
+  }
+
+  void _toggleSettings() {
+    setState(() {
+      _settingsOpen = !_settingsOpen;
+      if (_settingsOpen) _volumePopup = false;
+    });
+    _showControls();
+  }
+
+  void _closeSettings() {
+    setState(() => _settingsOpen = false);
+    _showControls();
   }
 
   void _toggleControls() {
@@ -208,175 +231,256 @@ class _PlayerViewState extends State<PlayerView> {
     }
   }
 
-  List<Widget> _streamItems(
+  Widget _settingsRow(
+    IconData icon,
+    String label, {
+    bool checked = false,
+    bool selected = false,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        color: selected ? Colors.white12 : null,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+        child: Row(
+          children: [
+            Icon(icon, size: 18, color: Colors.white),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+            if (checked) const Icon(Icons.check, size: 18, color: Colors.white),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _settingsOption(String label, bool selected, VoidCallback onTap) {
+    return InkWell(
+      onTap: () {
+        onTap();
+        _closeSettings();
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 18,
+              child: selected
+                  ? const Icon(Icons.check, size: 18, color: Colors.white)
+                  : null,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _streamOptions(
     Iterable<PlayableStream> list,
     PlayableStream? selected,
     String Function(PlayableStream) label,
     ValueChanged<PlayableStream> onSelected,
   ) => [
     for (final s in list)
-      MenuItemButton(
-        onPressed: () => onSelected(s),
-        leadingIcon: s == selected
-            ? const Icon(Icons.check, size: 18)
-            : const SizedBox(width: 18),
-        child: Text(label(s)),
-      ),
+      _settingsOption(label(s), s == selected, () => onSelected(s)),
   ];
 
-  Widget _settingsMenu(AppLocalizations l10n, double rate) {
+  Widget _settingsPanel(AppLocalizations l10n, double rate) {
     final timer = widget.sleepTimer;
     final session = AppScope.read(context).playback;
     final audioStreams = widget.streams.where((s) => !s.hasVideo);
-    return MenuAnchor(
-      builder: (context, controller, child) => IconButton(
-        icon: const Icon(Icons.settings, color: Colors.white),
-        tooltip: l10n.navSettings,
-        onPressed: () =>
-            controller.isOpen ? controller.close() : controller.open(),
+    final sections = <_SettingsSection>[
+      if (widget.streams.any((s) => s.hasVideo)) _SettingsSection.quality,
+      if (audioStreams.isNotEmpty) _SettingsSection.audio,
+      if (widget.captions.isNotEmpty && widget.onCaptionSelected != null)
+        _SettingsSection.captions,
+      _SettingsSection.speed,
+      _SettingsSection.fit,
+      _SettingsSection.repeat,
+      if (timer != null) _SettingsSection.sleep,
+    ];
+    final section = sections.contains(_settingsSection)
+        ? _settingsSection!
+        : sections.first;
+
+    Widget tab(_SettingsSection s, IconData icon, String label) => _settingsRow(
+      icon,
+      label,
+      selected: s == section,
+      onTap: () => setState(() => _settingsSection = s),
+    );
+
+    Widget toggle(
+      IconData icon,
+      String label,
+      bool active,
+      VoidCallback onTap,
+    ) => _settingsRow(
+      icon,
+      label,
+      checked: active,
+      onTap: () {
+        onTap();
+        _closeSettings();
+      },
+    );
+
+    final options = switch (section) {
+      _SettingsSection.quality => _streamOptions(
+        widget.streams.where((s) => s.hasVideo),
+        widget.current,
+        (s) => s.quality,
+        widget.onQualitySelected,
       ),
-      menuChildren: [
-        SubmenuButton(
-          leadingIcon: const Icon(Icons.video_settings),
-          menuChildren: _streamItems(
-            widget.streams.where((s) => s.hasVideo),
-            widget.current,
-            (s) => s.quality,
-            widget.onQualitySelected,
-          ),
-          child: Text(l10n.quality),
+      _SettingsSection.audio => _streamOptions(
+        audioStreams,
+        widget.currentAudio ??
+            (widget.current?.hasVideo == false ? widget.current : null),
+        (s) => s.audioTrackName ?? s.audioLanguage ?? s.quality,
+        widget.onAudioSelected,
+      ),
+      _SettingsSection.captions => [
+        _settingsOption(
+          l10n.captionsOff,
+          widget.selectedCaption == null,
+          () => widget.onCaptionSelected!(null),
         ),
-        if (audioStreams.isNotEmpty)
-          SubmenuButton(
-            leadingIcon: const Icon(Icons.audiotrack),
-            menuChildren: _streamItems(
-              audioStreams,
-              widget.currentAudio ??
-                  (widget.current?.hasVideo == false ? widget.current : null),
-              (s) => s.audioTrackName ?? s.audioLanguage ?? s.quality,
-              widget.onAudioSelected,
-            ),
-            child: Text(l10n.audio),
-          ),
-        if (widget.captions.isNotEmpty && widget.onCaptionSelected != null)
-          SubmenuButton(
-            leadingIcon: const Icon(Icons.closed_caption),
-            menuChildren: [
-              MenuItemButton(
-                onPressed: () => widget.onCaptionSelected!(null),
-                leadingIcon: widget.selectedCaption == null
-                    ? const Icon(Icons.check, size: 18)
-                    : const SizedBox(width: 18),
-                child: Text(l10n.captionsOff),
-              ),
-              for (final t in widget.captions)
-                MenuItemButton(
-                  onPressed: () => widget.onCaptionSelected!(t),
-                  leadingIcon: t == widget.selectedCaption
-                      ? const Icon(Icons.check, size: 18)
-                      : const SizedBox(width: 18),
-                  child: Text(t.name.isEmpty ? t.languageCode : t.name),
-                ),
-            ],
-            child: Text(l10n.captions),
-          ),
-        SubmenuButton(
-          leadingIcon: const Icon(Icons.speed),
-          menuChildren: [
-            for (final r in _rates)
-              MenuItemButton(
-                onPressed: () => _setRate(r),
-                leadingIcon: r == rate
-                    ? const Icon(Icons.check, size: 18)
-                    : const SizedBox(width: 18),
-                child: Text(r == 1.0 ? l10n.speedNormal : '${r}x'),
-              ),
-          ],
-          child: Text(l10n.playbackSpeed),
-        ),
-        SubmenuButton(
-          leadingIcon: const Icon(Icons.aspect_ratio),
-          menuChildren: [
-            for (final entry in [
-              (BoxFit.contain, l10n.fitContain),
-              (BoxFit.cover, l10n.fitCover),
-              (BoxFit.fill, l10n.fitFill),
-            ])
-              MenuItemButton(
-                onPressed: () => _player.videoFit.value = entry.$1,
-                leadingIcon: entry.$1 == _player.videoFit.value
-                    ? const Icon(Icons.check, size: 18)
-                    : const SizedBox(width: 18),
-                child: Text(entry.$2),
-              ),
-          ],
-          child: Text(l10n.videoFit),
-        ),
-        MenuItemButton(
-          onPressed: () => setState(() => _statsVisible = !_statsVisible),
-          leadingIcon: _statsVisible
-              ? const Icon(Icons.check, size: 18)
-              : const SizedBox(width: 18),
-          child: Text(l10n.statsForNerds),
-        ),
-        SubmenuButton(
-          leadingIcon: const Icon(Icons.repeat),
-          menuChildren: [
-            for (final entry in [
-              (RepeatMode.off, l10n.repeatOff),
-              (RepeatMode.all, l10n.repeatAll),
-              (RepeatMode.one, l10n.repeatOne),
-            ])
-              MenuItemButton(
-                onPressed: () => session.repeatMode = entry.$1,
-                leadingIcon: entry.$1 == session.repeatMode
-                    ? const Icon(Icons.check, size: 18)
-                    : const SizedBox(width: 18),
-                child: Text(entry.$2),
-              ),
-          ],
-          child: Text(l10n.repeat),
-        ),
-        if (widget.onAudioOnlyChanged != null)
-          MenuItemButton(
-            onPressed: () => widget.onAudioOnlyChanged!(!widget.audioOnly),
-            leadingIcon: widget.audioOnly
-                ? const Icon(Icons.check, size: 18)
-                : const SizedBox(width: 18),
-            child: Text(l10n.audioOnly),
-          ),
-        MenuItemButton(
-          onPressed: () => session.shuffle = !session.shuffle,
-          leadingIcon: session.shuffle
-              ? const Icon(Icons.check, size: 18)
-              : const SizedBox(width: 18),
-          child: Text(l10n.shuffle),
-        ),
-        if (timer != null)
-          SubmenuButton(
-            leadingIcon: Icon(
-              Icons.bedtime_outlined,
-              color: timer.active ? Colors.amber : null,
-            ),
-            menuChildren: [
-              for (final m in const [15, 30, 45, 60])
-                MenuItemButton(
-                  onPressed: () => timer.startAfter(Duration(minutes: m)),
-                  child: Text(l10n.sleepTimerMinutes(m)),
-                ),
-              MenuItemButton(
-                onPressed: timer.startAtEndOfVideo,
-                child: Text(l10n.sleepTimerEndOfVideo),
-              ),
-              if (timer.active)
-                MenuItemButton(
-                  onPressed: timer.cancel,
-                  child: Text(l10n.sleepTimerOff),
-                ),
-            ],
-            child: Text(l10n.sleepTimer),
+        for (final t in widget.captions)
+          _settingsOption(
+            t.name.isEmpty ? t.languageCode : t.name,
+            t == widget.selectedCaption,
+            () => widget.onCaptionSelected!(t),
           ),
       ],
+      _SettingsSection.speed => [
+        for (final r in _rates)
+          _settingsOption(
+            r == 1.0 ? l10n.speedNormal : '${r}x',
+            r == rate,
+            () => _setRate(r),
+          ),
+      ],
+      _SettingsSection.fit => [
+        for (final entry in [
+          (BoxFit.contain, l10n.fitContain),
+          (BoxFit.cover, l10n.fitCover),
+          (BoxFit.fill, l10n.fitFill),
+        ])
+          _settingsOption(
+            entry.$2,
+            entry.$1 == _player.videoFit.value,
+            () => _player.videoFit.value = entry.$1,
+          ),
+      ],
+      _SettingsSection.repeat => [
+        for (final entry in [
+          (RepeatMode.off, l10n.repeatOff),
+          (RepeatMode.all, l10n.repeatAll),
+          (RepeatMode.one, l10n.repeatOne),
+        ])
+          _settingsOption(
+            entry.$2,
+            entry.$1 == session.repeatMode,
+            () => session.repeatMode = entry.$1,
+          ),
+      ],
+      _SettingsSection.sleep => [
+        for (final m in const [15, 30, 45, 60])
+          _settingsOption(
+            l10n.sleepTimerMinutes(m),
+            false,
+            () => timer?.startAfter(Duration(minutes: m)),
+          ),
+        _settingsOption(
+          l10n.sleepTimerEndOfVideo,
+          false,
+          () => timer?.startAtEndOfVideo(),
+        ),
+        if (timer?.active == true)
+          _settingsOption(l10n.sleepTimerOff, false, () => timer?.cancel()),
+      ],
+    };
+
+    return Material(
+      color: Colors.black.withValues(alpha: 0.92),
+      borderRadius: BorderRadius.circular(8),
+      clipBehavior: Clip.antiAlias,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxHeight: 420),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 150,
+              child: ListView(
+                children: [
+                  if (sections.contains(_SettingsSection.quality))
+                    tab(
+                      _SettingsSection.quality,
+                      Icons.video_settings,
+                      l10n.quality,
+                    ),
+                  if (sections.contains(_SettingsSection.audio))
+                    tab(_SettingsSection.audio, Icons.audiotrack, l10n.audio),
+                  if (sections.contains(_SettingsSection.captions))
+                    tab(
+                      _SettingsSection.captions,
+                      Icons.closed_caption,
+                      l10n.captions,
+                    ),
+                  tab(_SettingsSection.speed, Icons.speed, l10n.playbackSpeed),
+                  tab(_SettingsSection.fit, Icons.aspect_ratio, l10n.videoFit),
+                  toggle(
+                    Icons.query_stats,
+                    l10n.statsForNerds,
+                    _statsVisible,
+                    () => _statsVisible = !_statsVisible,
+                  ),
+                  tab(_SettingsSection.repeat, Icons.repeat, l10n.repeat),
+                  if (widget.onAudioOnlyChanged != null)
+                    toggle(
+                      Icons.music_note,
+                      l10n.audioOnly,
+                      widget.audioOnly,
+                      () => widget.onAudioOnlyChanged!(!widget.audioOnly),
+                    ),
+                  toggle(
+                    Icons.shuffle,
+                    l10n.shuffle,
+                    session.shuffle,
+                    () => session.shuffle = !session.shuffle,
+                  ),
+                  if (sections.contains(_SettingsSection.sleep))
+                    tab(
+                      _SettingsSection.sleep,
+                      Icons.bedtime_outlined,
+                      l10n.sleepTimer,
+                    ),
+                ],
+              ),
+            ),
+            const VerticalDivider(width: 1, color: Colors.white24),
+            Expanded(child: ListView(children: options)),
+          ],
+        ),
+      ),
     );
   }
 
@@ -561,7 +665,7 @@ class _PlayerViewState extends State<PlayerView> {
     _player.setVolume(value.clamp(0.0, 1.0));
   }
 
-  Widget _volumeControls(bool wide, AppLocalizations l10n) {
+  Widget _withVolume(Widget Function(bool muted, double volume) builder) {
     return StreamBuilder<bool>(
       stream: _player.mutedStream,
       initialData: _player.muted,
@@ -570,41 +674,56 @@ class _PlayerViewState extends State<PlayerView> {
         return StreamBuilder<double>(
           stream: _player.volumeStream,
           initialData: _player.volume,
-          builder: (context, volumeSnap) {
-            final volume = volumeSnap.data ?? _player.volume;
-            final icon = muted || volume <= 0
-                ? Icons.volume_off
-                : volume < 0.5
-                ? Icons.volume_down
-                : Icons.volume_up;
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: Icon(icon),
-                  color: Colors.white,
-                  visualDensity: VisualDensity.compact,
-                  tooltip: wide
-                      ? (muted ? l10n.unmute : l10n.mute)
-                      : l10n.volume,
-                  onPressed: wide
-                      ? _toggleMute
-                      : () => setState(() => _volumePopup = !_volumePopup),
-                ),
-                if (wide)
-                  SizedBox(
-                    width: 80,
-                    child: Slider(
-                      key: const ValueKey('volumeSlider'),
-                      value: muted ? 0.0 : volume.clamp(0.0, 1.0),
-                      onChanged: _changeVolume,
-                    ),
-                  ),
-              ],
-            );
-          },
+          builder: (context, volumeSnap) =>
+              builder(muted, volumeSnap.data ?? _player.volume),
         );
       },
+    );
+  }
+
+  Widget _volumeButton(AppLocalizations l10n) {
+    return _withVolume((muted, volume) {
+      final icon = muted || volume <= 0
+          ? Icons.volume_off
+          : volume < 0.5
+          ? Icons.volume_down
+          : Icons.volume_up;
+      return Tooltip(
+        message: l10n.volume,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            _showControls();
+            setState(() => _volumePopup = !_volumePopup);
+          },
+          onLongPress: _toggleMute,
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Icon(icon, color: Colors.white),
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget _volumeSliderPopup() {
+    return Container(
+      color: Colors.black87,
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: SizedBox(
+        height: 120,
+        width: 32,
+        child: _withVolume(
+          (muted, volume) => RotatedBox(
+            quarterTurns: 3,
+            child: Slider(
+              key: const ValueKey('volumeSlider'),
+              value: (muted ? 0.0 : volume).clamp(0.0, 1.0),
+              onChanged: _changeVolume,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -861,23 +980,10 @@ class _PlayerViewState extends State<PlayerView> {
                         ),
                       ),
                     ),
-                  if (_volumePopup && !wide)
-                    Positioned(
-                      right: 8,
-                      bottom: 56,
-                      child: Container(
-                        color: Colors.black54,
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [_volumeControls(true, l10n)],
-                        ),
-                      ),
-                    ),
                   if (widget.segmentSkipper != null)
                     Positioned(
                       right: 8,
-                      bottom: 56,
+                      bottom: 88,
                       child: ListenableBuilder(
                         listenable: widget.segmentSkipper!,
                         builder: (context, _) {
@@ -915,21 +1021,9 @@ class _PlayerViewState extends State<PlayerView> {
                       ),
                     ),
                   Positioned(
-                    left: 0,
-                    right: 0,
-                    top: 0,
-                    child: StreamBuilder<bool>(
-                      stream: _player.bufferingStream,
-                      initialData: _player.buffering,
-                      builder: (context, snapshot) => snapshot.data == true
-                          ? const LinearProgressIndicator(minHeight: 3)
-                          : const SizedBox(height: 3),
-                    ),
-                  ),
-                  Positioned(
                     left: 16,
                     right: 16,
-                    bottom: 52,
+                    bottom: 88,
                     child: IgnorePointer(
                       child: StreamBuilder<Duration>(
                         stream: _player.positionStream,
@@ -961,10 +1055,7 @@ class _PlayerViewState extends State<PlayerView> {
                       ),
                     ),
                   ),
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
+                  Positioned.fill(
                     child: AnimatedOpacity(
                       opacity: _controlsVisible ? 1.0 : 0.0,
                       duration: const Duration(milliseconds: 200),
@@ -972,332 +1063,511 @@ class _PlayerViewState extends State<PlayerView> {
                         ignoring: !_controlsVisible,
                         child: Listener(
                           onPointerDown: (_) => _showControls(),
-                          child: Container(
-                            color: Colors.black54,
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: Row(
-                              children: [
-                                StreamBuilder<bool>(
-                                  stream: _player.playingStream,
-                                  initialData: _player.playing,
-                                  builder: (context, snapshot) => IconButton(
-                                    icon: Icon(
-                                      snapshot.data == true
-                                          ? Icons.pause
-                                          : Icons.play_arrow,
-                                    ),
-                                    color: Colors.white,
-                                    onPressed: () => snapshot.data == true
-                                        ? _player.pause()
-                                        : _player.play(),
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                left: 0,
+                                right: 0,
+                                top: 0,
+                                child: Container(
+                                  color: Colors.black54,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      if (widget.avatarUrl != null) ...[
+                                        VideoThumbnail(
+                                          url: widget.avatarUrl,
+                                          width: 32,
+                                          height: 32,
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                      ],
+                                      if (widget.title != null)
+                                        Expanded(
+                                          child: Text(
+                                            widget.title!,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        )
+                                      else
+                                        const Spacer(),
+                                      if (widget.pipActions != null)
+                                        IconButton(
+                                          icon: const Icon(
+                                            Icons
+                                                .picture_in_picture_alt_outlined,
+                                            color: Colors.white,
+                                          ),
+                                          tooltip: l10n.pictureInPicture,
+                                          onPressed: () =>
+                                              widget.pipActions!.enterPip(),
+                                        ),
+                                      IconButton(
+                                        icon: Icon(
+                                          widget.isFullscreen
+                                              ? Icons.fullscreen_exit
+                                              : Icons.fullscreen,
+                                        ),
+                                        color: Colors.white,
+                                        tooltip: l10n.fullscreen,
+                                        onPressed: widget.onToggleFullscreen,
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                _volumeControls(wide, l10n),
-                                StreamBuilder<Duration>(
-                                  stream: _player.durationStream,
-                                  initialData: _player.duration,
-                                  builder: (context, durationSnap) {
-                                    final total =
-                                        durationSnap.data ?? Duration.zero;
-                                    return StreamBuilder<Duration>(
-                                      stream: _player.positionStream,
-                                      initialData: _player.position,
-                                      builder: (context, posSnap) {
-                                        final pos =
-                                            posSnap.data ?? Duration.zero;
-                                        final clamped = pos > total
-                                            ? total
-                                            : pos;
-                                        final chapter = chapterAt(
-                                          widget.chapters,
-                                          clamped,
-                                        );
-                                        return Expanded(
-                                          child: widget.live
-                                              ? const Row(
-                                                  children: [
-                                                    LiveBadge(),
-                                                    Spacer(),
-                                                  ],
-                                                )
-                                              : Row(
-                                                  children: [
-                                                    Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          formatDuration(
-                                                            clamped,
-                                                          ),
-                                                          style:
-                                                              const TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 12,
-                                                              ),
-                                                        ),
-                                                        if (chapter != null)
-                                                          ConstrainedBox(
-                                                            constraints:
-                                                                const BoxConstraints(
-                                                                  maxWidth: 120,
-                                                                ),
-                                                            child: Text(
-                                                              chapter.title,
-                                                              maxLines: 1,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              style:
-                                                                  const TextStyle(
-                                                                    color: Colors
-                                                                        .white70,
-                                                                    fontSize:
-                                                                        10,
-                                                                  ),
-                                                            ),
-                                                          ),
-                                                      ],
+                              ),
+                              Positioned(
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                child: Container(
+                                  color: Colors.black54,
+                                  child: StreamBuilder<Duration>(
+                                    stream: _player.durationStream,
+                                    initialData: _player.duration,
+                                    builder: (context, durationSnap) {
+                                      final total =
+                                          durationSnap.data ?? Duration.zero;
+                                      return StreamBuilder<Duration>(
+                                        stream: _player.positionStream,
+                                        initialData: _player.position,
+                                        builder: (context, posSnap) {
+                                          final pos =
+                                              posSnap.data ?? Duration.zero;
+                                          final clamped = pos > total
+                                              ? total
+                                              : pos;
+                                          final chapter = chapterAt(
+                                            widget.chapters,
+                                            clamped,
+                                          );
+                                          return Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 8,
                                                     ),
-                                                    Expanded(
-                                                      child: LayoutBuilder(
-                                                        builder: (context, sliderCons) {
-                                                          return MouseRegion(
-                                                            onHover: (e) => setState(
-                                                              () => _previewFraction =
-                                                                  (e.localPosition.dx /
-                                                                          sliderCons
-                                                                              .maxWidth)
-                                                                      .clamp(
-                                                                        0.0,
-                                                                        1.0,
-                                                                      ),
+                                                child: Row(
+                                                  children: [
+                                                    Container(
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            horizontal: 6,
+                                                            vertical: 4,
+                                                          ),
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                          color: Colors.white24,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              4,
                                                             ),
-                                                            onExit: (_) => setState(
-                                                              () =>
-                                                                  _previewFraction =
-                                                                      null,
-                                                            ),
-                                                            child: Stack(
-                                                              alignment:
-                                                                  Alignment
-                                                                      .center,
+                                                      ),
+                                                      child: widget.live
+                                                          ? const LiveBadge()
+                                                          : Column(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .min,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
                                                               children: [
-                                                                StreamBuilder<
-                                                                  Duration
-                                                                >(
-                                                                  stream: _player
-                                                                      .bufferedStream,
-                                                                  initialData:
-                                                                      _player
-                                                                          .buffered,
-                                                                  builder: (context, bufSnap) {
-                                                                    final buffered =
-                                                                        bufSnap
-                                                                            .data ??
-                                                                        Duration
-                                                                            .zero;
-                                                                    return Semantics(
-                                                                      label: l10n
-                                                                          .shortcutSeek,
-                                                                      child: SliderTheme(
-                                                                        data: SliderTheme.of(context).copyWith(
-                                                                          thumbShape: RoundSliderThumbShape(
-                                                                            enabledThumbRadius:
-                                                                                wide
-                                                                                ? 5
-                                                                                : 10,
-                                                                          ),
-                                                                          trackHeight:
-                                                                              wide
-                                                                              ? 2
-                                                                              : 6,
-                                                                          overlayShape: const RoundSliderOverlayShape(
-                                                                            overlayRadius:
-                                                                                16,
-                                                                          ),
-                                                                        ),
-                                                                        child: Slider(
-                                                                          key:
-                                                                              const ValueKey(
-                                                                                'seekSlider',
-                                                                              ),
-                                                                          value: clamped.inMilliseconds.toDouble().clamp(
-                                                                            0,
-                                                                            (total.inMilliseconds).toDouble(),
-                                                                          ),
-                                                                          max: total.inMilliseconds.toDouble().clamp(
-                                                                            1,
-                                                                            double.infinity,
-                                                                          ),
-                                                                          secondaryTrackValue:
-                                                                              total > Duration.zero
-                                                                              ? (buffered.inMilliseconds / total.inMilliseconds).clamp(0.0, 1.0)
-                                                                              : null,
-                                                                          onChanged:
-                                                                              total == Duration.zero
-                                                                              ? null
-                                                                              : (v) {
-                                                                                  setState(() => _previewFraction = (v / total.inMilliseconds).clamp(0.0, 1.0));
-                                                                                  _player.seek(Duration(milliseconds: v.round()));
-                                                                                },
-                                                                        ),
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .min,
+                                                                  children: [
+                                                                    Text(
+                                                                      formatDuration(
+                                                                        clamped,
                                                                       ),
-                                                                    );
-                                                                  },
+                                                                      style: const TextStyle(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontSize:
+                                                                            12,
+                                                                      ),
+                                                                    ),
+                                                                    const SizedBox(
+                                                                      width: 4,
+                                                                    ),
+                                                                    Text(
+                                                                      formatDuration(
+                                                                        total -
+                                                                            clamped,
+                                                                      ),
+                                                                      style: const TextStyle(
+                                                                        color: Colors
+                                                                            .white70,
+                                                                        fontSize:
+                                                                            12,
+                                                                      ),
+                                                                    ),
+                                                                  ],
                                                                 ),
-                                                                if (total >
-                                                                    Duration
-                                                                        .zero)
-                                                                  Positioned.fill(
-                                                                    child: IgnorePointer(
-                                                                      child: LayoutBuilder(
-                                                                        builder: (context, cons) => Stack(
-                                                                          children: [
-                                                                            for (final marker
-                                                                                in widget.chapters)
-                                                                              if (marker.start > Duration.zero && marker.start < total)
-                                                                                Positioned(
-                                                                                  left: 12 + (cons.maxWidth - 24) * (marker.start.inMilliseconds / total.inMilliseconds),
-                                                                                  top: (cons.maxHeight - 10) / 2,
-                                                                                  child: Container(width: 2, height: 10, color: Colors.white38),
-                                                                                ),
-                                                                          ],
+                                                                if (chapter !=
+                                                                    null)
+                                                                  ConstrainedBox(
+                                                                    constraints:
+                                                                        const BoxConstraints(
+                                                                          maxWidth:
+                                                                              120,
                                                                         ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                if (total >
-                                                                        Duration
-                                                                            .zero &&
-                                                                    widget
-                                                                        .heatmap
-                                                                        .isNotEmpty)
-                                                                  Positioned.fill(
-                                                                    child: IgnorePointer(
-                                                                      child: CustomPaint(
-                                                                        painter: _HeatMapPainter(
-                                                                          widget
-                                                                              .heatmap,
-                                                                          total,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                if (_previewFraction !=
-                                                                        null &&
-                                                                    widget.storyboard !=
-                                                                        null &&
-                                                                    total >
-                                                                        Duration
-                                                                            .zero)
-                                                                  Positioned(
-                                                                    left: ((_previewFraction! * sliderCons.maxWidth) - widget.storyboard!.tileWidth / 2).clamp(
-                                                                      0.0,
-                                                                      sliderCons
-                                                                              .maxWidth -
-                                                                          widget
-                                                                              .storyboard!
-                                                                              .tileWidth,
-                                                                    ),
-                                                                    bottom: 24,
-                                                                    child: IgnorePointer(
-                                                                      child: _SeekPreview(
-                                                                        board: widget
-                                                                            .storyboard!,
-                                                                        time: Duration(
-                                                                          milliseconds:
-                                                                              (_previewFraction! * total.inMilliseconds).round(),
-                                                                        ),
+                                                                    child: Text(
+                                                                      chapter
+                                                                          .title,
+                                                                      maxLines:
+                                                                          1,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      style: const TextStyle(
+                                                                        color: Colors
+                                                                            .white70,
+                                                                        fontSize:
+                                                                            10,
                                                                       ),
                                                                     ),
                                                                   ),
                                                               ],
                                                             ),
+                                                    ),
+                                                    StreamBuilder<bool>(
+                                                      stream:
+                                                          _player.playingStream,
+                                                      initialData:
+                                                          _player.playing,
+                                                      builder:
+                                                          (
+                                                            context,
+                                                            snapshot,
+                                                          ) => IconButton(
+                                                            icon: Icon(
+                                                              snapshot.data ==
+                                                                      true
+                                                                  ? Icons.pause
+                                                                  : Icons
+                                                                        .play_arrow,
+                                                            ),
+                                                            color: Colors.white,
+                                                            onPressed: () =>
+                                                                snapshot.data ==
+                                                                    true
+                                                                ? _player
+                                                                      .pause()
+                                                                : _player
+                                                                      .play(),
+                                                          ),
+                                                    ),
+                                                    const Spacer(),
+                                                    if (widget.sleepTimer !=
+                                                        null)
+                                                      ListenableBuilder(
+                                                        listenable:
+                                                            widget.sleepTimer!,
+                                                        builder: (context, _) {
+                                                          final remaining =
+                                                              widget
+                                                                  .sleepTimer!
+                                                                  .remaining;
+                                                          if (remaining ==
+                                                              null) {
+                                                            return const SizedBox.shrink();
+                                                          }
+                                                          return Padding(
+                                                            padding:
+                                                                const EdgeInsets.only(
+                                                                  right: 4,
+                                                                ),
+                                                            child: Text(
+                                                              formatDuration(
+                                                                remaining,
+                                                              ),
+                                                              style:
+                                                                  const TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize:
+                                                                        12,
+                                                                  ),
+                                                            ),
                                                           );
                                                         },
                                                       ),
-                                                    ),
-                                                    Text(
-                                                      formatDuration(total),
-                                                      style: const TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 12,
+                                                    IconButton(
+                                                      icon: const Icon(
+                                                        Icons.settings,
                                                       ),
+                                                      color: Colors.white,
+                                                      tooltip: l10n.navSettings,
+                                                      onPressed:
+                                                          _toggleSettings,
                                                     ),
+                                                    _volumeButton(l10n),
                                                   ],
                                                 ),
-                                        );
-                                      },
-                                    );
-                                  },
-                                ),
-                                if (widget.pipActions != null)
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.picture_in_picture_alt_outlined,
-                                      color: Colors.white,
-                                    ),
-                                    tooltip: l10n.pictureInPicture,
-                                    onPressed: () =>
-                                        widget.pipActions!.enterPip(),
-                                  ),
-                                StreamBuilder<double>(
-                                  stream: _player.rateStream,
-                                  initialData: _player.rate,
-                                  builder: (context, snapshot) {
-                                    final timer = widget.sleepTimer;
-                                    if (timer == null) {
-                                      return _settingsMenu(
-                                        l10n,
-                                        snapshot.data ?? _player.rate,
-                                      );
-                                    }
-                                    return ListenableBuilder(
-                                      listenable: timer,
-                                      builder: (context, _) => Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          if (timer.remaining != null)
-                                            Text(
-                                              formatDuration(timer.remaining!),
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 12,
                                               ),
-                                            ),
-                                          _settingsMenu(
-                                            l10n,
-                                            snapshot.data ?? _player.rate,
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                                IconButton(
-                                  icon: Icon(
-                                    widget.isFullscreen
-                                        ? Icons.fullscreen_exit
-                                        : Icons.fullscreen,
+                                              if (!widget.live)
+                                                SizedBox(
+                                                  height: 32,
+                                                  child: LayoutBuilder(
+                                                    builder: (context, sliderCons) {
+                                                      return MouseRegion(
+                                                        onHover: (e) => setState(
+                                                          () => _previewFraction =
+                                                              (e.localPosition.dx /
+                                                                      sliderCons
+                                                                          .maxWidth)
+                                                                  .clamp(
+                                                                    0.0,
+                                                                    1.0,
+                                                                  ),
+                                                        ),
+                                                        onExit: (_) => setState(
+                                                          () =>
+                                                              _previewFraction =
+                                                                  null,
+                                                        ),
+                                                        child: Stack(
+                                                          alignment:
+                                                              Alignment.center,
+                                                          children: [
+                                                            StreamBuilder<
+                                                              Duration
+                                                            >(
+                                                              stream: _player
+                                                                  .bufferedStream,
+                                                              initialData:
+                                                                  _player
+                                                                      .buffered,
+                                                              builder: (context, bufSnap) {
+                                                                final buffered =
+                                                                    bufSnap
+                                                                        .data ??
+                                                                    Duration
+                                                                        .zero;
+                                                                return Semantics(
+                                                                  label: l10n
+                                                                      .shortcutSeek,
+                                                                  child: SliderTheme(
+                                                                    data: SliderTheme.of(context).copyWith(
+                                                                      thumbShape: RoundSliderThumbShape(
+                                                                        enabledThumbRadius:
+                                                                            wide
+                                                                            ? 5
+                                                                            : 10,
+                                                                      ),
+                                                                      trackHeight:
+                                                                          wide
+                                                                          ? 2
+                                                                          : 6,
+                                                                      overlayShape: const RoundSliderOverlayShape(
+                                                                        overlayRadius:
+                                                                            16,
+                                                                      ),
+                                                                    ),
+                                                                    child: Slider(
+                                                                      key:
+                                                                          const ValueKey(
+                                                                            'seekSlider',
+                                                                          ),
+                                                                      value: clamped
+                                                                          .inMilliseconds
+                                                                          .toDouble()
+                                                                          .clamp(
+                                                                            0,
+                                                                            (total.inMilliseconds).toDouble(),
+                                                                          ),
+                                                                      max: total
+                                                                          .inMilliseconds
+                                                                          .toDouble()
+                                                                          .clamp(
+                                                                            1,
+                                                                            double.infinity,
+                                                                          ),
+                                                                      secondaryTrackValue:
+                                                                          total >
+                                                                              Duration.zero
+                                                                          ? (buffered.inMilliseconds / total.inMilliseconds).clamp(
+                                                                              0.0,
+                                                                              1.0,
+                                                                            )
+                                                                          : null,
+                                                                      onChanged:
+                                                                          total ==
+                                                                              Duration.zero
+                                                                          ? null
+                                                                          : (
+                                                                              v,
+                                                                            ) {
+                                                                              setState(
+                                                                                () => _previewFraction = (v / total.inMilliseconds).clamp(0.0, 1.0),
+                                                                              );
+                                                                              _player.seek(
+                                                                                Duration(milliseconds: v.round()),
+                                                                              );
+                                                                            },
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              },
+                                                            ),
+                                                            if (total >
+                                                                Duration.zero)
+                                                              Positioned.fill(
+                                                                child: IgnorePointer(
+                                                                  child: LayoutBuilder(
+                                                                    builder: (context, cons) => Stack(
+                                                                      children: [
+                                                                        for (final marker
+                                                                            in widget.chapters)
+                                                                          if (marker.start > Duration.zero &&
+                                                                              marker.start < total)
+                                                                            Positioned(
+                                                                              left: 12 + (cons.maxWidth - 24) * (marker.start.inMilliseconds / total.inMilliseconds),
+                                                                              top: (cons.maxHeight - 10) / 2,
+                                                                              child: Container(
+                                                                                width: 2,
+                                                                                height: 10,
+                                                                                color: Colors.white38,
+                                                                              ),
+                                                                            ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            if (total >
+                                                                    Duration
+                                                                        .zero &&
+                                                                widget
+                                                                    .heatmap
+                                                                    .isNotEmpty)
+                                                              Positioned.fill(
+                                                                child: IgnorePointer(
+                                                                  child: CustomPaint(
+                                                                    painter:
+                                                                        _HeatMapPainter(
+                                                                          widget
+                                                                              .heatmap,
+                                                                          total,
+                                                                        ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            if (_previewFraction !=
+                                                                    null &&
+                                                                widget.storyboard !=
+                                                                    null &&
+                                                                total >
+                                                                    Duration
+                                                                        .zero)
+                                                              Positioned(
+                                                                left: ((_previewFraction! * sliderCons.maxWidth) - widget.storyboard!.tileWidth / 2).clamp(
+                                                                  0.0,
+                                                                  sliderCons
+                                                                          .maxWidth -
+                                                                      widget
+                                                                          .storyboard!
+                                                                          .tileWidth,
+                                                                ),
+                                                                bottom: 24,
+                                                                child: IgnorePointer(
+                                                                  child: _SeekPreview(
+                                                                    board: widget
+                                                                        .storyboard!,
+                                                                    time: Duration(
+                                                                      milliseconds:
+                                                                          (_previewFraction! * total.inMilliseconds)
+                                                                              .round(),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                          ],
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
                                   ),
-                                  color: Colors.white,
-                                  tooltip: l10n.fullscreen,
-                                  onPressed: widget.onToggleFullscreen,
                                 ),
-                              ],
-                            ),
+                              ),
+                              if (_volumePopup)
+                                Positioned(
+                                  right: 8,
+                                  bottom: 88,
+                                  child: _volumeSliderPopup(),
+                                ),
+                              if (_settingsOpen)
+                                Positioned.fill(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 24,
+                                      vertical: 52,
+                                    ),
+                                    child: Center(
+                                      child: ConstrainedBox(
+                                        constraints: const BoxConstraints(
+                                          maxWidth: 460,
+                                        ),
+                                        child: StreamBuilder<double>(
+                                          stream: _player.rateStream,
+                                          initialData: _player.rate,
+                                          builder: (context, snap) =>
+                                              ListenableBuilder(
+                                                listenable: AppScope.read(
+                                                  context,
+                                                ).playback,
+                                                builder: (context, _) =>
+                                                    _settingsPanel(
+                                                      l10n,
+                                                      snap.data ?? _player.rate,
+                                                    ),
+                                              ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
                           ),
                         ),
                       ),
                     ),
                   ),
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    child: StreamBuilder<bool>(
+                      stream: _player.bufferingStream,
+                      initialData: _player.buffering,
+                      builder: (context, snapshot) => snapshot.data == true
+                          ? const LinearProgressIndicator(minHeight: 3)
+                          : const SizedBox(height: 3),
+                    ),
+                  ),
                   if (_statsVisible)
-                    Positioned(top: 8, left: 8, child: _statsOverlay()),
+                    Positioned(top: 52, left: 8, child: _statsOverlay()),
                   if (_ended && widget.endScreenBuilder != null && !widget.live)
                     Positioned.fill(child: widget.endScreenBuilder!(context)),
                 ],

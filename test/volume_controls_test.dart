@@ -34,19 +34,30 @@ void main() {
     );
   }
 
-  testWidgets('wide layout shows a mute button and inline volume slider', (
-    tester,
-  ) async {
+  testWidgets('volume button toggles a vertical slider', (tester) async {
     final player = FakePlayerController()..volume = 0.6;
     await pumpPlayer(tester, player);
 
     expect(find.byIcon(Icons.volume_up), findsOneWidget);
+    expect(find.byKey(const ValueKey('volumeSlider')), findsNothing);
+    expect(find.byType(Slider), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.volume_up));
+    await tester.pump();
+    expect(find.byKey(const ValueKey('volumeSlider')), findsOneWidget);
     expect(find.byType(Slider), findsNWidgets(2));
+
+    await tester.tap(find.byIcon(Icons.volume_up));
+    await tester.pump();
+    expect(find.byKey(const ValueKey('volumeSlider')), findsNothing);
   });
 
   testWidgets('volume slider drives the player volume', (tester) async {
     final player = FakePlayerController()..volume = 0.5;
     await pumpPlayer(tester, player);
+
+    await tester.tap(find.byIcon(Icons.volume_up));
+    await tester.pump();
 
     final slider = tester.widget<Slider>(
       find.byKey(const ValueKey('volumeSlider')),
@@ -56,18 +67,18 @@ void main() {
     expect(player.muted, isFalse);
   });
 
-  testWidgets('mute button toggles muted and swaps the icon', (tester) async {
+  testWidgets('long press on the volume button toggles muted', (tester) async {
     final player = FakePlayerController()
       ..volume = 0.6
       ..muted = false;
     await pumpPlayer(tester, player);
 
-    await tester.tap(find.byIcon(Icons.volume_up));
+    await tester.longPress(find.byIcon(Icons.volume_up));
     await tester.pump();
     expect(player.muted, isTrue);
     expect(find.byIcon(Icons.volume_off), findsOneWidget);
 
-    await tester.tap(find.byIcon(Icons.volume_off));
+    await tester.longPress(find.byIcon(Icons.volume_off));
     await tester.pump();
     expect(player.muted, isFalse);
   });
@@ -78,13 +89,16 @@ void main() {
       ..muted = true;
     await pumpPlayer(tester, player);
 
+    await tester.tap(find.byIcon(Icons.volume_off));
+    await tester.pump();
+
     final slider = tester.widget<Slider>(
       find.byKey(const ValueKey('volumeSlider')),
     );
     expect(slider.value, 0.0);
   });
 
-  testWidgets('narrow layout opens a popup volume slider', (tester) async {
+  testWidgets('narrow layout toggles the same popup slider', (tester) async {
     tester.view.physicalSize = const Size(360, 740);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
@@ -105,7 +119,7 @@ void main() {
     slider.onChanged!(0.2);
     expect(player.volume, 0.2);
 
-    await tester.tap(find.byIcon(Icons.volume_up).last);
+    await tester.tap(find.byIcon(Icons.volume_up));
     await tester.pump();
     expect(find.byKey(const ValueKey('volumeSlider')), findsNothing);
   });

@@ -52,6 +52,7 @@ class _DownloadPlayerPageState extends State<DownloadPlayerPage> {
                     onQualitySelected: (_) {},
                     onAudioSelected: (_) {},
                     onToggleFullscreen: () {},
+                    title: widget.entry.video.title,
                   ),
                 ),
                 Padding(
