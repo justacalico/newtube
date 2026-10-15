@@ -939,6 +939,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorAgeRestricted => 'This video is age-restricted';
 
   @override
+  String get errorMembersOnly => 'This video is for channel members only';
+
+  @override
   String get errorUnavailable => 'This video is unavailable';
 
   @override
@@ -1965,6 +1968,9 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get errorAgeRestricted => 'This video is age-restricted';
+
+  @override
+  String get errorMembersOnly => 'This video is for channel members only';
 
   @override
   String get errorUnavailable => 'This video is unavailable';

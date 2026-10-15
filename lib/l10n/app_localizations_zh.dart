@@ -925,6 +925,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get errorAgeRestricted => '该视频有年龄限制';
 
   @override
+  String get errorMembersOnly => '该视频仅限频道会员观看';
+
+  @override
   String get errorUnavailable => '该视频不可用';
 
   @override
@@ -1936,6 +1939,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get errorAgeRestricted => '该视频有年龄限制';
+
+  @override
+  String get errorMembersOnly => '该视频仅限频道会员观看';
 
   @override
   String get errorUnavailable => '该视频不可用';

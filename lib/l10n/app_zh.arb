@@ -391,6 +391,7 @@
   "noAboutInfo": "没有频道信息",
   "accentColor": "强调色",
   "errorAgeRestricted": "该视频有年龄限制",
+  "errorMembersOnly": "该视频仅限频道会员观看",
   "errorUnavailable": "该视频不可用",
   "keyboardShortcuts": "键盘快捷键",
   "shortcutPlayPause": "播放 / 暂停",

@@ -944,6 +944,9 @@ class AppLocalizationsGa extends AppLocalizations {
   String get errorAgeRestricted => 'Físeán faoi theorainn aoise';
 
   @override
+  String get errorMembersOnly => 'Físeán do bhaill an chainéil amháin';
+
+  @override
   String get errorUnavailable => 'Níl an físeán ar fáil';
 
   @override

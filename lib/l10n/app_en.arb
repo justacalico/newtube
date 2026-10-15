@@ -391,6 +391,7 @@
   "noAboutInfo": "No channel info",
   "accentColor": "Accent color",
   "errorAgeRestricted": "This video is age-restricted",
+  "errorMembersOnly": "This video is for channel members only",
   "errorUnavailable": "This video is unavailable",
   "keyboardShortcuts": "Keyboard shortcuts",
   "shortcutPlayPause": "Play / pause",

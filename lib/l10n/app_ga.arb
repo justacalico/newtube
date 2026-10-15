@@ -391,6 +391,7 @@
   "noAboutInfo": "Gan eolas cainéal",
   "accentColor": "Dath béime",
   "errorAgeRestricted": "Físeán faoi theorainn aoise",
+  "errorMembersOnly": "Físeán do bhaill an chainéil amháin",
   "errorUnavailable": "Níl an físeán ar fáil",
   "keyboardShortcuts": "Aicearraí méarchláir",
   "shortcutPlayPause": "Seinn / sos",
