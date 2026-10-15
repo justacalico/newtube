@@ -8,6 +8,7 @@ import 'package:newtube/services/sleep_timer.dart';
 import 'package:newtube/state/app_state.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:newtube/ui/widgets/player_view.dart';
+import 'package:newtube/ui/widgets/thumbnail.dart';
 
 import 'fakes.dart';
 
@@ -101,12 +102,15 @@ void main() {
 
     player.emitPosition(const Duration(minutes: 5));
     await tester.pump();
+    await tester.pump();
     expect(find.text('2:00'), findsWidgets);
 
     player.emitBuffering(true);
     await tester.pump();
+    await tester.pump();
     expect(find.byType(LinearProgressIndicator), findsOneWidget);
     player.emitBuffering(false);
+    await tester.pump();
     await tester.pump();
     expect(find.byType(LinearProgressIndicator), findsNothing);
 
@@ -767,5 +771,218 @@ void main() {
     second.emitPlaying(false);
     await tester.pump();
     expect(controlsOpacity(tester), 1.0);
+  });
+
+  testWidgets('top bar shows title, avatar and pip button', (tester) async {
+    final player = FakePlayerController();
+    final state = await testState();
+    final pip = FakePipActions();
+    var toggled = false;
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
+          onToggleFullscreen: () => toggled = true,
+          pipActions: pip,
+          title: 'Test video title',
+          avatarUrl: 'https://img.example.com/c1.jpg',
+        ),
+      ),
+    );
+
+    expect(find.text('Test video title'), findsOneWidget);
+    expect(find.byType(VideoThumbnail), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.picture_in_picture_alt_outlined));
+    expect(pip.enters, 1);
+
+    await tester.tap(find.byIcon(Icons.fullscreen));
+    expect(toggled, isTrue);
+  });
+
+  testWidgets('top bar omits avatar and pip when not provided', (tester) async {
+    final player = FakePlayerController();
+    final state = await testState();
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
+          onToggleFullscreen: () {},
+          title: 'No avatar video',
+        ),
+      ),
+    );
+
+    expect(find.text('No avatar video'), findsOneWidget);
+    expect(find.byType(VideoThumbnail), findsNothing);
+    expect(find.byIcon(Icons.picture_in_picture_alt_outlined), findsNothing);
+  });
+
+  testWidgets('settings panel shows topics sidebar and option pane', (
+    tester,
+  ) async {
+    final player = FakePlayerController();
+    final state = await testState();
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
+          onToggleFullscreen: () {},
+        ),
+      ),
+    );
+
+    await tester.tap(find.byTooltip('Settings'));
+    await tester.pump();
+    expect(find.text('Quality'), findsOneWidget);
+    expect(find.text('Playback speed'), findsOneWidget);
+    expect(find.text('720p'), findsOneWidget);
+
+    await tester.tap(find.text('Playback speed'));
+    await tester.pump();
+    expect(find.text('Normal'), findsOneWidget);
+    expect(find.text('720p'), findsNothing);
+
+    await tester.tap(find.text('1.5x'));
+    await tester.pump();
+    expect(player.rate, 1.5);
+    expect(find.text('Playback speed'), findsNothing);
+  });
+
+  testWidgets('settings toggle closes the panel again', (tester) async {
+    final player = FakePlayerController();
+    final state = await testState();
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
+          onToggleFullscreen: () {},
+        ),
+      ),
+    );
+
+    await tester.tap(find.byTooltip('Settings'));
+    await tester.pump();
+    expect(find.text('Playback speed'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Settings'));
+    await tester.pump();
+    expect(find.text('Playback speed'), findsNothing);
+  });
+
+  testWidgets('controls stay visible while the settings panel is open', (
+    tester,
+  ) async {
+    final player = FakePlayerController()..playing = true;
+    final state = await testState();
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
+          onToggleFullscreen: () {},
+        ),
+      ),
+    );
+
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pump();
+    expect(controlsOpacity(tester), 0.0);
+
+    await tester.tapAt(tester.getCenter(find.byType(PlayerView)));
+    await tester.pump();
+    expect(controlsOpacity(tester), 1.0);
+
+    await tester.tap(find.byTooltip('Settings'));
+    await tester.pump();
+    expect(find.text('Quality'), findsOneWidget);
+
+    await tester.pump(const Duration(seconds: 4));
+    await tester.pump();
+    expect(controlsOpacity(tester), 1.0);
+    expect(find.text('Quality'), findsOneWidget);
+
+    await tester.tap(find.text('720p'));
+    await tester.pump();
+    expect(find.text('Quality'), findsNothing);
+
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pump();
+    expect(controlsOpacity(tester), 0.0);
+  });
+
+  testWidgets('hiding the controls closes the settings panel', (tester) async {
+    final player = FakePlayerController()..playing = true;
+    final state = await testState();
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
+          onToggleFullscreen: () {},
+        ),
+      ),
+    );
+
+    await tester.tap(find.byTooltip('Settings'));
+    await tester.pump();
+    expect(find.text('Quality'), findsOneWidget);
+
+    final rect = tester.getRect(find.byType(PlayerView));
+    await tester.tapAt(Offset(rect.left + 8, rect.center.dy));
+    await tester.pump();
+    expect(controlsOpacity(tester), 0.0);
+    expect(find.text('Quality'), findsNothing);
+  });
+
+  testWidgets('indicator shows position and remaining time', (tester) async {
+    final player = FakePlayerController()
+      ..duration = const Duration(minutes: 20)
+      ..position = const Duration(minutes: 1);
+    final state = await testState();
+    await tester.pumpWidget(
+      _wrap(
+        state,
+        PlayerView(
+          player: player,
+          streams: testStreams,
+          current: testStreams[1],
+          onQualitySelected: (_) {},
+          onAudioSelected: (_) {},
+          onToggleFullscreen: () {},
+        ),
+      ),
+    );
+
+    expect(find.text('1:00'), findsOneWidget);
+    expect(find.text('19:00'), findsOneWidget);
   });
 }

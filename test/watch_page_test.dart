@@ -64,7 +64,7 @@ void main() {
             w.image is NetworkImage &&
             (w.image as NetworkImage).url == testChannel.thumbnailUrl,
       ),
-      findsOneWidget,
+      findsNWidgets(2),
     );
     expect(find.text('Related videos'), findsOneWidget);
     expect(find.text('Second video'), findsOneWidget);

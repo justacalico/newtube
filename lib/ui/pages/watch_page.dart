@@ -741,6 +741,8 @@ class _WatchPageState extends State<WatchPage>
               audioOnly: _audioOnly,
               artworkUrl: widget.video.thumbnailUrl,
               onAudioOnlyChanged: _setAudioOnly,
+              title: widget.video.title,
+              avatarUrl: _channel?.thumbnailUrl,
               storyboard: bestStoryboard(_details?.storyboards ?? const []),
               heatmap: _details?.heatmap ?? const [],
               live: _details?.info.isLive ?? widget.video.isLive,
@@ -853,6 +855,8 @@ class _WatchPageState extends State<WatchPage>
                             onNext: () => _openNext(),
                             onPrevious: () => Navigator.of(context).pop(),
                             onPip: () => _pipActions?.enterPip(),
+                            title: widget.video.title,
+                            avatarUrl: _channel?.thumbnailUrl,
                             storyboard: bestStoryboard(_details!.storyboards),
                           ),
                   ),
@@ -1220,6 +1224,8 @@ class _FullscreenPlayer extends StatefulWidget {
   final bool audioOnly;
   final String? artworkUrl;
   final ValueChanged<bool>? onAudioOnlyChanged;
+  final String? title;
+  final String? avatarUrl;
   final Storyboard? storyboard;
   final List<HeatMarker> heatmap;
   final bool live;
@@ -1243,6 +1249,8 @@ class _FullscreenPlayer extends StatefulWidget {
     this.audioOnly = false,
     this.artworkUrl,
     this.onAudioOnlyChanged,
+    this.title,
+    this.avatarUrl,
     this.storyboard,
     this.heatmap = const [],
     this.live = false,
@@ -1325,6 +1333,8 @@ class _FullscreenPlayerState extends State<_FullscreenPlayer> {
           audioOnly: widget.audioOnly,
           artworkUrl: widget.artworkUrl,
           onAudioOnlyChanged: widget.onAudioOnlyChanged,
+          title: widget.title,
+          avatarUrl: widget.avatarUrl,
           storyboard: widget.storyboard,
           heatmap: widget.heatmap,
           live: widget.live,
