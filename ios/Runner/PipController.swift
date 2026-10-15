@@ -12,12 +12,16 @@ final class PipController: NSObject {
       binaryMessenger: registrar.messenger()
     )
     let controller = PipController(channel: channel)
-    channel.setMethodCallHandler { call, result in
-      Task { @MainActor in
-        await controller.handle(call, result: result)
-      }
-    }
+    channel.setMethodCallHandler(controller.handle)
     shared = controller
+  }
+
+  static func startPendingIfPossible() {
+    shared?.startPendingIfPossible()
+  }
+
+  static func stopActivePip() {
+    shared?.stopActivePip()
   }
 
   private let channel: FlutterMethodChannel
@@ -34,22 +38,11 @@ final class PipController: NSObject {
   private var lastPosition: Double = 0
   private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
 
-  @MainActor
-  static func startPendingIfPossible() {
-    shared?.startPendingIfPossible()
-  }
-
-  @MainActor
-  static func stopActivePip() {
-    shared?.stopActivePip()
-  }
-
   init(channel: FlutterMethodChannel) {
     self.channel = channel
   }
 
-  @MainActor
-  private func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) async {
+  private func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
     case "enterPip":
       guard
@@ -59,7 +52,7 @@ final class PipController: NSObject {
         result(false)
         return
       }
-      await enterPip(
+      enterPip(
         url: url,
         audioUrl: (args["audioUrl"] as? String).flatMap(URL.init(string:)),
         position: args["position"] as? Double ?? 0,
@@ -75,7 +68,7 @@ final class PipController: NSObject {
         result(false)
         return
       }
-      await prepare(
+      prepare(
         url: url,
         audioUrl: (args["audioUrl"] as? String).flatMap(URL.init(string:))
       )
@@ -98,7 +91,6 @@ final class PipController: NSObject {
     }
   }
 
-  @MainActor
   private func enterPip(
     url: URL,
     audioUrl: URL?,
@@ -106,7 +98,7 @@ final class PipController: NSObject {
     rate: Float,
     playing: Bool,
     result: @escaping FlutterResult
-  ) async {
+  ) {
     guard AVPictureInPictureController.isPictureInPictureSupported(),
           pipController != nil || hostView() != nil else {
       result(false)
@@ -119,7 +111,7 @@ final class PipController: NSObject {
     pendingRate = rate
     pendingPlaying = playing
     startPending = true
-    await prepare(url: url, audioUrl: audioUrl)
+    prepare(url: url, audioUrl: audioUrl)
     if let pip = pipController, player?.currentItem != nil {
       player?.seek(to: CMTime(seconds: position, preferredTimescale: 600))
       startIfPossible(pip)
@@ -127,14 +119,13 @@ final class PipController: NSObject {
     result(true)
   }
 
-  @MainActor
-  private func prepare(url: URL, audioUrl: URL?) async {
+  private func prepare(url: URL, audioUrl: URL?) {
     let key = "\(url.absoluteString)|\(audioUrl?.absoluteString ?? "")"
     if preparedKey == key && pipController != nil { return }
     guard let host = hostView() else { return }
     preparedKey = key
     ensurePipeline(host: host)
-    let item = await Self.makeItem(url: url, audioUrl: audioUrl)
+    let item = Self.makeItem(url: url, audioUrl: audioUrl)
     guard preparedKey == key else { return }
     player?.replaceCurrentItem(with: item)
     if startPending {
@@ -143,7 +134,6 @@ final class PipController: NSObject {
     }
   }
 
-  @MainActor
   private func ensurePipeline(host: UIView) {
     guard pipController == nil else { return }
     let holder = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
@@ -165,49 +155,46 @@ final class PipController: NSObject {
     pipController = pip
     possibleObservation = pip?.observe(\.isPictureInPicturePossible) {
       [weak self] controller, _ in
-      Task { @MainActor in
+      DispatchQueue.main.async {
         self?.startIfPossible(controller)
       }
     }
   }
 
-  @MainActor
   private func startPendingIfPossible() {
     guard let pip = pipController else { return }
     startIfPossible(pip)
   }
 
-  @MainActor
   private func stopActivePip() {
     guard let pip = pipController, pip.isPictureInPictureActive else { return }
     pip.stopPictureInPicture()
   }
 
-  @MainActor
-  private static func makeItem(url: URL, audioUrl: URL?) async -> AVPlayerItem {
+  private static func makeItem(url: URL, audioUrl: URL?) -> AVPlayerItem {
     guard let audioUrl else { return AVPlayerItem(url: url) }
     do {
       let videoAsset = AVURLAsset(url: url)
       let audioAsset = AVURLAsset(url: audioUrl)
       let composition = AVMutableComposition()
-      if let videoTrack = try await videoAsset.loadTracks(withMediaType: .video).first,
+      if let videoTrack = videoAsset.tracks(withMediaType: .video).first,
          let track = composition.addMutableTrack(
            withMediaType: .video,
            preferredTrackID: 0
          ) {
-        let duration = try await videoAsset.load(.duration)
+        let duration = videoAsset.duration
         try track.insertTimeRange(
           CMTimeRange(start: CMTime.zero, duration: duration),
           of: videoTrack,
           at: CMTime.zero
         )
       }
-      if let audioTrack = try await audioAsset.loadTracks(withMediaType: .audio).first,
+      if let audioTrack = audioAsset.tracks(withMediaType: .audio).first,
          let track = composition.addMutableTrack(
            withMediaType: .audio,
            preferredTrackID: 0
          ) {
-        let duration = try await audioAsset.load(.duration)
+        let duration = audioAsset.duration
         try track.insertTimeRange(
           CMTimeRange(start: CMTime.zero, duration: duration),
           of: audioTrack,
@@ -239,7 +226,7 @@ final class PipController: NSObject {
   private func beginBackgroundTask() {
     guard backgroundTask == .invalid else { return }
     backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
-      Task { @MainActor in
+      DispatchQueue.main.async {
         self?.endBackgroundTask()
       }
     }
@@ -264,7 +251,6 @@ final class PipController: NSObject {
   }
 }
 
-@MainActor
 extension PipController: AVPictureInPictureControllerDelegate {
   func pictureInPictureControllerDidStartPictureInPicture(
     _ controller: AVPictureInPictureController
