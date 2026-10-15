@@ -1850,6 +1850,12 @@ abstract class AppLocalizations {
   /// **'This video is age-restricted'**
   String get errorAgeRestricted;
 
+  /// No description provided for @errorMembersOnly.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'This video is for channel members only'**
+  String get errorMembersOnly;
+
   /// No description provided for @errorUnavailable.
   ///
   /// In en_GB, this message translates to:

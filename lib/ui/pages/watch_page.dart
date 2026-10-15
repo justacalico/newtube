@@ -359,6 +359,15 @@ class _WatchPageState extends State<WatchPage>
     } catch (e) {
       debugLog('[watch] ${widget.video.id}: load failed: $e');
       if (!mounted) return;
+      if (e is PlayabilityException &&
+          e.isMembersOnly &&
+          Navigator.of(context).canPop()) {
+        final messenger = ScaffoldMessenger.of(context);
+        final message = AppLocalizations.of(context).errorMembersOnly;
+        Navigator.of(context).pop();
+        messenger.showSnackBar(SnackBar(content: Text(message)));
+        return;
+      }
       setState(() => _error = e);
     }
   }
@@ -784,6 +793,7 @@ class _WatchPageState extends State<WatchPage>
   String _errorMessage(AppLocalizations l10n) {
     final e = _error;
     if (e is PlayabilityException) {
+      if (e.isMembersOnly) return l10n.errorMembersOnly;
       if (e.isAgeGate) return l10n.errorAgeRestricted;
       if (e.isUnavailable) return l10n.errorUnavailable;
       return e.reason.isEmpty ? l10n.errorLoading : e.reason;

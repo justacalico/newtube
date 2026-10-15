@@ -391,6 +391,7 @@
   "noAboutInfo": "Нет информации о канале",
   "accentColor": "Акцентный цвет",
   "errorAgeRestricted": "Видео с возрастным ограничением",
+  "errorMembersOnly": "Видео только для спонсоров канала",
   "errorUnavailable": "Видео недоступно",
   "keyboardShortcuts": "Горячие клавиши",
   "shortcutPlayPause": "Воспроизведение / пауза",

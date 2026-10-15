@@ -946,6 +946,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get errorAgeRestricted => 'Видео с возрастным ограничением';
 
   @override
+  String get errorMembersOnly => 'Видео только для спонсоров канала';
+
+  @override
   String get errorUnavailable => 'Видео недоступно';
 
   @override

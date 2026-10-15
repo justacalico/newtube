@@ -938,7 +938,8 @@ class PlayabilityException implements Exception {
   final String reason;
   const PlayabilityException(this.status, this.reason);
 
-  bool get isAgeGate => status == 'LOGIN_REQUIRED';
+  bool get isAgeGate => status == 'LOGIN_REQUIRED' && !isMembersOnly;
+  bool get isMembersOnly => reason.contains('members');
   bool get isPrivate => status == 'LOGIN_REQUIRED' || status == 'ERROR';
   bool get isUnavailable =>
       status == 'ERROR' ||

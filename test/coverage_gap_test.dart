@@ -441,6 +441,50 @@ void main() {
     expect(find.text('This video is age-restricted'), findsOneWidget);
   });
 
+  testWidgets('members-only video pops with a snackbar', (tester) async {
+    final api = FakeYouTubeApi()
+      ..error = const PlayabilityException(
+        'LOGIN_REQUIRED',
+        'Join this channel to get access to members-only content like this '
+            'video, and other exclusive perks.',
+      );
+    final state = await testState(api: api);
+    await pumpPage(
+      tester,
+      state,
+      Builder(
+        builder: (context) => FilledButton(
+          onPressed: () => openWatchPage(context, testVideos.first),
+          child: const Text('open'),
+        ),
+      ),
+    );
+    await tester.tap(find.text('open'));
+    await tester.pumpAndSettle();
+    expect(find.byType(WatchPage), findsNothing);
+    expect(find.byType(SnackBar), findsOneWidget);
+    expect(
+      find.text('This video is for channel members only'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('members-only error stays inline on root route', (tester) async {
+    final api = FakeYouTubeApi()
+      ..error = const PlayabilityException(
+        'UNPLAYABLE',
+        'This video is available to this channel\'s members',
+      );
+    final state = await testState(api: api);
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+    expect(find.byType(WatchPage), findsOneWidget);
+    expect(
+      find.text('This video is for channel members only'),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('player keyboard shortcuts', (tester) async {
     final player = FakePlayerController()
       ..duration = const Duration(minutes: 10);
@@ -594,6 +638,14 @@ void main() {
     expect(e.isPrivate, isTrue);
     expect(e.isUnavailable, isTrue);
     expect(e.isAgeGate, isFalse);
+    expect(e.isMembersOnly, isFalse);
+    const members = PlayabilityException(
+      'LOGIN_REQUIRED',
+      'Join this channel to get access to members-only content like this '
+      'video, and other exclusive perks.',
+    );
+    expect(members.isMembersOnly, isTrue);
+    expect(members.isAgeGate, isFalse);
     expect(const PlayabilityException('UNPLAYABLE', 'x').isUnavailable, isTrue);
     expect(
       const PlayabilityException('LIVE_STREAM_OFFLINE', 'x').isUnavailable,

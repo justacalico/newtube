@@ -200,6 +200,7 @@ void touchAll(AppLocalizations l) {
   l.noAboutInfo;
   l.accentColor;
   l.errorAgeRestricted;
+  l.errorMembersOnly;
   l.errorUnavailable;
   l.keyboardShortcuts;
   l.shortcutPlayPause;
