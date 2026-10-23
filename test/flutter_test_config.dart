@@ -25,5 +25,14 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
     await iconLoader.load();
   }
 
+  final cjkFont = File(
+    '/usr/share/fonts/google-noto-sans-cjk-vf-fonts/NotoSansCJK-VF.ttc',
+  );
+  if (cjkFont.existsSync()) {
+    final cjkLoader = FontLoader('Noto Sans CJK SC')
+      ..addFont(Future.value(ByteData.view(cjkFont.readAsBytesSync().buffer)));
+    await cjkLoader.load();
+  }
+
   await testMain();
 }

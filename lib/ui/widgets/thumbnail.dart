@@ -7,6 +7,7 @@ class VideoThumbnail extends StatelessWidget {
   final double? width;
   final double? height;
   final BorderRadius borderRadius;
+  final IconData placeholderIcon;
 
   const VideoThumbnail({
     super.key,
@@ -14,6 +15,7 @@ class VideoThumbnail extends StatelessWidget {
     this.width,
     this.height,
     this.borderRadius = const BorderRadius.all(Radius.circular(8)),
+    this.placeholderIcon = Icons.play_circle_outline,
   });
 
   @override
@@ -22,7 +24,7 @@ class VideoThumbnail extends StatelessWidget {
       width: width,
       height: height,
       color: Theme.of(context).colorScheme.surfaceContainerHighest,
-      child: const Icon(Icons.play_circle_outline, size: 32),
+      child: Icon(placeholderIcon, size: 32),
     );
 
     final scope =

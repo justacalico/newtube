@@ -25,6 +25,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get navSubscriptions => 'Подписки';
 
   @override
+  String get navSubs => 'Подписки';
+
+  @override
   String get navHistory => 'История';
 
   @override
@@ -729,6 +732,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get noDownloads => 'Нет загрузок';
+
+  @override
+  String get noDownloadsHint => 'Скачанные видео появятся здесь';
 
   @override
   String get deleteDownload => 'Удалить загрузку';

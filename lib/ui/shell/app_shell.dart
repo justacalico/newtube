@@ -234,7 +234,7 @@ class _AppShellState extends State<AppShell> {
           children: [
             if (isDesktopPlatform)
               AppTitleBar(
-                title: l10n.appTitle,
+                title: wide ? '' : l10n.appTitle,
                 windowActions: state.windowActions,
                 showControls: !wide,
               ),
@@ -258,7 +258,9 @@ class _AppShellState extends State<AppShell> {
         );
 
         if (wide) {
-          final collapsed = state.settings.sidebarCollapsed;
+          final collapsed =
+              state.settings.sidebarCollapsed ||
+              MediaQuery.sizeOf(context).width < 1150;
           return Scaffold(
             body: Row(
               children: [
@@ -330,7 +332,7 @@ class _AppShellState extends State<AppShell> {
                 : Builder(
                     builder: (context) => NavigationBar(
                       labelBehavior:
-                          NavigationDestinationLabelBehavior.onlyShowSelected,
+                          NavigationDestinationLabelBehavior.alwaysShow,
                       selectedIndex: index < mobileBar.length
                           ? index
                           : mobileBar.length,
@@ -342,7 +344,9 @@ class _AppShellState extends State<AppShell> {
                           NavigationDestination(
                             icon: Icon(d.destination.icon),
                             selectedIcon: Icon(d.destination.selectedIcon),
-                            label: d.destination.label,
+                            label: d.page == 3
+                                ? l10n.navSubs
+                                : d.destination.label,
                           ),
                         if (mobileBar.length < destinations.length)
                           NavigationDestination(

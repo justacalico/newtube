@@ -85,7 +85,7 @@ void main() {
 
     await tester.scrollUntilVisible(
       find.text('Normal'),
-      300,
+      200,
       scrollable: find
           .descendant(
             of: find
@@ -97,6 +97,8 @@ void main() {
           )
           .first,
     );
+    await tester.ensureVisible(find.text('Normal'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Normal'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('1.25x'));

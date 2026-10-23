@@ -134,6 +134,12 @@ abstract class AppLocalizations {
   /// **'Subscriptions'**
   String get navSubscriptions;
 
+  /// No description provided for @navSubs.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Subs'**
+  String get navSubs;
+
   /// No description provided for @navHistory.
   ///
   /// In en_GB, this message translates to:
@@ -1441,6 +1447,12 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'No downloads yet'**
   String get noDownloads;
+
+  /// No description provided for @noDownloadsHint.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Videos you download show up here'**
+  String get noDownloadsHint;
 
   /// No description provided for @deleteDownload.
   ///

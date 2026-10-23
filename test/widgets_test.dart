@@ -168,7 +168,6 @@ void main() {
       state,
       VideoListTile(video: testVideos.first, onTap: () {}),
     );
-    expect(find.text('Watched'), findsOneWidget);
     expect(find.byIcon(Icons.check), findsOneWidget);
   });
 

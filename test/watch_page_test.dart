@@ -64,7 +64,7 @@ void main() {
             w.image is NetworkImage &&
             (w.image as NetworkImage).url == testChannel.thumbnailUrl,
       ),
-      findsNWidgets(2),
+      findsOneWidget,
     );
     expect(find.text('Related videos'), findsOneWidget);
     expect(find.text('Second video'), findsOneWidget);
@@ -160,11 +160,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.descendant(
-        of: find.byType(AppBar),
-        matching: find.text('Second video'),
-      ),
-      findsOneWidget,
+      tester.widget<WatchPage>(find.byType(WatchPage)).video.title,
+      'Second video',
     );
     expect(player.opened, hasLength(2));
     expect(find.text('Replay'), findsNothing);
@@ -211,11 +208,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.descendant(
-        of: find.byType(AppBar),
-        matching: find.text('Second video'),
-      ),
-      findsOneWidget,
+      tester.widget<WatchPage>(find.byType(WatchPage)).video.title,
+      'Second video',
     );
     expect(player.opened, hasLength(2));
   });
@@ -286,11 +280,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.descendant(
-        of: find.byType(AppBar),
-        matching: find.text('Second video'),
-      ),
-      findsOneWidget,
+      tester.widget<WatchPage>(find.byType(WatchPage)).video.title,
+      'Second video',
     );
   });
 

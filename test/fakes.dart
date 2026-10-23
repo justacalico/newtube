@@ -37,6 +37,7 @@ import 'package:newtube/state/settings_store.dart';
 import 'package:newtube/state/subscriptions_store.dart';
 import 'package:newtube/state/hidden_store.dart';
 import 'package:newtube/state/watch_later_store.dart';
+import 'package:newtube/ui/theme.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -720,12 +721,15 @@ Future<void> pumpPage(
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
   }
+  final settings = state.settings;
+  final oled = settings.theme == AppTheme.oled;
+  final dark = oled || settings.theme == AppTheme.dark;
   await tester.pumpWidget(
     AppScope(
       state: state,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        locale: locale,
+        locale: locale ?? settings.locale,
         supportedLocales: AppLocalizations.supportedLocales,
         localizationsDelegates: const [
           AppLocalizations.delegate,
@@ -733,7 +737,18 @@ Future<void> pumpPage(
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        theme: ThemeData(fontFamily: 'Inter'),
+        theme: dark
+            ? newtubeTheme(
+                Brightness.dark,
+                oled: oled,
+                seedColor: settings.accentColor,
+                fontFamilyFallback: const ['Noto Sans CJK SC'],
+              )
+            : newtubeTheme(
+                Brightness.light,
+                seedColor: settings.accentColor,
+                fontFamilyFallback: const ['Noto Sans CJK SC'],
+              ),
         home: Scaffold(body: child),
       ),
     ),

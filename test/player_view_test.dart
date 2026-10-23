@@ -94,7 +94,7 @@ void main() {
     );
 
     expect(find.text('0:00'), findsOneWidget);
-    expect(find.text('2:00'), findsOneWidget);
+    expect(find.text(' / 2:00'), findsOneWidget);
 
     player.emitPosition(const Duration(seconds: 30));
     await tester.pump();
@@ -789,6 +789,7 @@ void main() {
           onAudioSelected: (_) {},
           onToggleFullscreen: () => toggled = true,
           pipActions: pip,
+          isFullscreen: true,
           title: 'Test video title',
           avatarUrl: 'https://img.example.com/c1.jpg',
         ),
@@ -801,7 +802,7 @@ void main() {
     await tester.tap(find.byIcon(Icons.picture_in_picture_alt_outlined));
     expect(pip.enters, 1);
 
-    await tester.tap(find.byIcon(Icons.fullscreen));
+    await tester.tap(find.byIcon(Icons.fullscreen_exit));
     expect(toggled, isTrue);
   });
 
@@ -818,6 +819,7 @@ void main() {
           onQualitySelected: (_) {},
           onAudioSelected: (_) {},
           onToggleFullscreen: () {},
+          isFullscreen: true,
           title: 'No avatar video',
         ),
       ),
@@ -963,7 +965,7 @@ void main() {
     expect(find.text('Quality'), findsNothing);
   });
 
-  testWidgets('indicator shows position and remaining time', (tester) async {
+  testWidgets('indicator shows position and total duration', (tester) async {
     final player = FakePlayerController()
       ..duration = const Duration(minutes: 20)
       ..position = const Duration(minutes: 1);
@@ -983,6 +985,6 @@ void main() {
     );
 
     expect(find.text('1:00'), findsOneWidget);
-    expect(find.text('19:00'), findsOneWidget);
+    expect(find.text(' / 20:00'), findsOneWidget);
   });
 }

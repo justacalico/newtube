@@ -38,7 +38,7 @@ class VideoActionsMenu extends StatelessWidget {
             padding: EdgeInsets.zero,
             style: IconButton.styleFrom(
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              minimumSize: const Size(32, 24),
+              minimumSize: const Size(36, 32),
             ),
             onPressed: () =>
                 controller.isOpen ? controller.close() : controller.open(),

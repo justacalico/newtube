@@ -150,7 +150,7 @@ void main() {
     );
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
-    expect(find.textContaining('Results:'), findsOneWidget);
+    expect(find.text('First video'), findsWidgets);
   });
 
   testWidgets('handle urls resolve via the api', (tester) async {

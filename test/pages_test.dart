@@ -120,7 +120,7 @@ void main() {
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pumpAndSettle();
 
-      expect(find.text('Results: cats'), findsOneWidget);
+      expect(find.text('First video'), findsWidgets);
       expect(find.text('Channel One'), findsWidgets);
       expect(state.searchHistory.entries, ['cats']);
       await tester.tap(find.text('Channel One').first);
@@ -155,7 +155,7 @@ void main() {
       expect(find.text('dogs'), findsOneWidget);
       await tester.tap(find.text('dogs'));
       await tester.pumpAndSettle();
-      expect(find.text('Results: dogs'), findsOneWidget);
+      expect(find.text('First video'), findsWidgets);
       expect(state.searchHistory.entries, ['dogs', 'cats']);
     });
 
@@ -180,7 +180,7 @@ void main() {
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pumpAndSettle();
 
-      expect(find.text('Results: birds'), findsOneWidget);
+      expect(find.text('First video'), findsWidgets);
       expect(state.searchHistory.entries, ['cats', 'dogs']);
     });
 
@@ -243,7 +243,7 @@ void main() {
       final state = await testState(api: api);
       await pumpPage(tester, state, const ChannelPage(channelId: 'c1'));
       await tester.pumpAndSettle();
-      expect(find.text('Channel One'), findsNWidgets(3));
+      expect(find.text('Channel One'), findsNWidgets(2));
     });
   });
 

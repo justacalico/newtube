@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../state/app_state.dart';
+import '../widgets/content_width.dart';
+import '../widgets/empty_state.dart';
+import '../widgets/page_header.dart';
 import '../widgets/thumbnail.dart';
 import '../../utils/feed_filter.dart';
 import '../widgets/video_grid.dart';
@@ -118,157 +121,181 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
     final state = AppScope.of(context);
     final l10n = AppLocalizations.of(context);
 
-    return ListenableBuilder(
-      listenable: state.subscriptions,
-      builder: (context, _) {
-        final channels = state.subscriptions.channelsInGroup(_group);
-        final groups = state.subscriptions.groups;
-        if (channels.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  l10n.noSubscriptions,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 8),
-                Text(l10n.noSubscriptionsHint),
-              ],
-            ),
-          );
-        }
+    return ContentWidth(
+      maxWidth: 1280,
+      child: Column(
+        children: [
+          PageHeader(title: l10n.navSubscriptions),
+          Expanded(
+            child: ListenableBuilder(
+              listenable: state.subscriptions,
+              builder: (context, _) {
+                final channels = state.subscriptions.channelsInGroup(_group);
+                final groups = state.subscriptions.groups;
+                if (channels.isEmpty) {
+                  return EmptyState(
+                    icon: Icons.subscriptions_outlined,
+                    title: l10n.noSubscriptions,
+                    hint: l10n.noSubscriptionsHint,
+                  );
+                }
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (groups.isNotEmpty)
-              SizedBox(
-                height: 44,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 6),
-                      child: ChoiceChip(
-                        label: Text(l10n.allChannels),
-                        selected: _group == null,
-                        onSelected: (_) => setState(() {
-                          _group = null;
-                          _loadVideos();
-                        }),
-                      ),
-                    ),
-                    for (final g in groups)
-                      Padding(
-                        padding: const EdgeInsets.only(right: 6),
-                        child: ChoiceChip(
-                          label: Text(g),
-                          selected: _group == g,
-                          onSelected: (sel) => setState(() {
-                            _group = sel ? g : null;
-                            _loadVideos();
-                          }),
+                    if (groups.isNotEmpty)
+                      SizedBox(
+                        height: 44,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 6),
+                              child: ChoiceChip(
+                                label: Text(l10n.allChannels),
+                                selected: _group == null,
+                                onSelected: (_) => setState(() {
+                                  _group = null;
+                                  _loadVideos();
+                                }),
+                              ),
+                            ),
+                            for (final g in groups)
+                              Padding(
+                                padding: const EdgeInsets.only(right: 6),
+                                child: ChoiceChip(
+                                  label: Text(g),
+                                  selected: _group == g,
+                                  onSelected: (sel) => setState(() {
+                                    _group = sel ? g : null;
+                                    _loadVideos();
+                                  }),
+                                ),
+                              ),
+                          ],
                         ),
                       ),
-                  ],
-                ),
-              ),
-            SizedBox(
-              height: 104,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-                children: [
-                  for (final channel in channels)
+                    SizedBox(
+                      height: 112,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        children: [
+                          for (final channel in channels) _channelItem(channel),
+                        ],
+                      ),
+                    ),
                     Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(8),
-                          onTap: () => _openChannel(channel.id),
-                          onLongPress: () => _assignGroup(context, channel),
-                          child: SizedBox(
-                            width: 88,
-                            child: Column(
-                              children: [
-                                VideoThumbnail(
-                                  url: channel.thumbnailUrl,
-                                  width: 48,
-                                  height: 48,
-                                  borderRadius: BorderRadius.circular(24),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Text(
+                        l10n.latestFromSubscriptions,
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                    ),
+                    Expanded(
+                      child: _loading
+                          ? const Center(child: CircularProgressIndicator())
+                          : RefreshIndicator(
+                              onRefresh: _loadVideos,
+                              child: VideoGrid(
+                                videos: visibleVideos(
+                                  _videos,
+                                  state.settings,
+                                  state,
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  channel.name,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    InkWell(
-                                      onTap: () => state.subscriptions.setMuted(
-                                        channel.id,
-                                        !state.subscriptions.isMuted(
-                                          channel.id,
-                                        ),
-                                        state.prefs,
-                                      ),
-                                      child: Icon(
-                                        state.subscriptions.isMuted(channel.id)
-                                            ? Icons.notifications_off_outlined
-                                            : Icons.notifications_active,
-                                        size: 14,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 4),
-                                    InkWell(
-                                      onTap: () => state.subscriptions
-                                          .unsubscribe(channel.id, state.prefs),
-                                      child: Text(
-                                        l10n.unsubscribe,
-                                        style: const TextStyle(fontSize: 10),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                onVideoTap: _openVideo,
+                              ),
                             ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _channelItem(ChannelInfo channel) {
+    final state = AppScope.read(context);
+    final l10n = AppLocalizations.of(context);
+    final muted = state.subscriptions.isMuted(channel.id);
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onTap: () => _openChannel(channel.id),
+          onLongPress: () => _assignGroup(context, channel),
+          child: SizedBox(
+            width: 112,
+            child: Column(
+              children: [
+                VideoThumbnail(
+                  url: channel.thumbnailUrl,
+                  width: 48,
+                  height: 48,
+                  borderRadius: BorderRadius.circular(24),
+                  placeholderIcon: Icons.person_outline,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  channel.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: () => state.subscriptions.setMuted(
+                        channel.id,
+                        !muted,
+                        state.prefs,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: Icon(
+                          muted
+                              ? Icons.notifications_off_outlined
+                              : Icons.notifications_active,
+                          size: 18,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () => state.subscriptions.unsubscribe(
+                          channel.id,
+                          state.prefs,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 2,
+                            vertical: 4,
+                          ),
+                          child: Text(
+                            l10n.unsubscribe,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ),
                       ),
                     ),
-                ],
-              ),
+                  ],
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Text(
-                l10n.latestFromSubscriptions,
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-            ),
-            Expanded(
-              child: _loading
-                  ? const Center(child: CircularProgressIndicator())
-                  : RefreshIndicator(
-                      onRefresh: _loadVideos,
-                      child: VideoGrid(
-                        videos: visibleVideos(_videos, state.settings, state),
-                        onVideoTap: _openVideo,
-                      ),
-                    ),
-            ),
-          ],
-        );
-      },
+          ),
+        ),
+      ),
     );
   }
 }

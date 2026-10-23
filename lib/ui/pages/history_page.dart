@@ -4,6 +4,9 @@ import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../state/app_state.dart';
 import '../../utils/format.dart';
+import '../widgets/content_width.dart';
+import '../widgets/empty_state.dart';
+import '../widgets/page_header.dart';
 import '../widgets/video_list_tile.dart';
 import 'watch_page.dart';
 
@@ -22,81 +25,88 @@ class _HistoryPageState extends State<HistoryPage> {
     final state = AppScope.of(context);
     final l10n = AppLocalizations.of(context);
 
-    return ListenableBuilder(
-      listenable: state.history,
-      builder: (context, _) {
-        var entries = state.history.entries;
-        if (_filter.isNotEmpty) {
-          final q = _filter.toLowerCase();
-          entries = [
-            for (final v in entries)
-              if (v.title.toLowerCase().contains(q) ||
-                  v.author.toLowerCase().contains(q))
-                v,
-          ];
-        }
-        if (state.history.entries.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  l10n.noHistory,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 8),
-                Text(l10n.noHistoryHint),
-              ],
-            ),
-          );
-        }
+    return ContentWidth(
+      maxWidth: 720,
+      child: Column(
+        children: [
+          PageHeader(title: l10n.navHistory),
+          Expanded(
+            child: ListenableBuilder(
+              listenable: state.history,
+              builder: (context, _) {
+                var entries = state.history.entries;
+                if (_filter.isNotEmpty) {
+                  final q = _filter.toLowerCase();
+                  entries = [
+                    for (final v in entries)
+                      if (v.title.toLowerCase().contains(q) ||
+                          v.author.toLowerCase().contains(q))
+                        v,
+                  ];
+                }
+                if (state.history.entries.isEmpty) {
+                  return EmptyState(
+                    icon: Icons.history,
+                    title: l10n.noHistory,
+                    hint: l10n.noHistoryHint,
+                  );
+                }
 
-        return Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: l10n.filterHistory,
-                  prefixIcon: const Icon(Icons.search),
-                  isDense: true,
-                ),
-                onChanged: (value) => setState(() => _filter = value),
-              ),
-            ),
-            Expanded(
-              child: entries.isEmpty
-                  ? Center(child: Text(l10n.noResults))
-                  : ListView.builder(
-                      itemCount: entries.length,
-                      itemBuilder: (context, i) {
-                        final video = entries[i];
-                        return Dismissible(
-                          key: ValueKey('history-${video.id}'),
-                          direction: DismissDirection.endToStart,
-                          background: Container(
-                            color: Theme.of(context).colorScheme.error,
-                            alignment: Alignment.centerRight,
-                            padding: const EdgeInsets.only(right: 16),
-                            child: const Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                            ),
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+                      child: SearchBar(
+                        hintText: l10n.filterHistory,
+                        leading: const Icon(Icons.search),
+                        elevation: const WidgetStatePropertyAll(0.0),
+                        side: WidgetStatePropertyAll(
+                          BorderSide(
+                            color: Theme.of(context).colorScheme.outlineVariant,
                           ),
-                          onDismissed: (_) =>
-                              state.history.remove(video.id, state.prefs),
-                          child: _HistoryTile(
-                            video: video,
-                            state: state,
-                            onTap: () => openWatchPage(context, video),
-                          ),
-                        );
-                      },
+                        ),
+                        onChanged: (value) => setState(() => _filter = value),
+                      ),
                     ),
+                    Expanded(
+                      child: entries.isEmpty
+                          ? Center(child: Text(l10n.noResults))
+                          : ListView.builder(
+                              itemCount: entries.length,
+                              itemBuilder: (context, i) {
+                                final video = entries[i];
+                                return Dismissible(
+                                  key: ValueKey('history-${video.id}'),
+                                  direction: DismissDirection.endToStart,
+                                  background: Container(
+                                    color: Theme.of(context).colorScheme.error,
+                                    alignment: Alignment.centerRight,
+                                    padding: const EdgeInsets.only(right: 16),
+                                    child: const Icon(
+                                      Icons.delete,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  onDismissed: (_) => state.history.remove(
+                                    video.id,
+                                    state.prefs,
+                                  ),
+                                  child: _HistoryTile(
+                                    video: video,
+                                    state: state,
+                                    onTap: () => openWatchPage(context, video),
+                                  ),
+                                );
+                              },
+                            ),
+                    ),
+                  ],
+                );
+              },
             ),
-          ],
-        );
-      },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -123,6 +133,7 @@ class _HistoryTile extends StatelessWidget {
         VideoListTile(
           video: video,
           onTap: onTap,
+          showWatchedBadge: false,
           trailing: IconButton(
             tooltip: l10n.removeFromHistory,
             icon: const Icon(Icons.delete_outline),

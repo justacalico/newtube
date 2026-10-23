@@ -70,7 +70,7 @@ void main() {
     );
     await pumpPage(tester, state, const LocalPlaylistPage(playlistId: 'pl1'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byIcon(Icons.ios_share));
+    await tester.tap(find.byIcon(Icons.share_outlined));
     await tester.pumpAndSettle();
     expect(saved, contains('watch?v=a'));
     expect(find.textContaining('Exported to'), findsOneWidget);
@@ -82,7 +82,7 @@ void main() {
     final state = await testState(playlists: store, share: _Recorder(shared));
     await pumpPage(tester, state, const LocalPlaylistPage(playlistId: 'pl1'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byIcon(Icons.ios_share));
+    await tester.tap(find.byIcon(Icons.share_outlined));
     await tester.pumpAndSettle();
     expect(shared.single, contains('watch?v=b'));
   });

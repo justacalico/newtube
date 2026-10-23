@@ -4,6 +4,7 @@ import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../state/app_state.dart';
 import '../../utils/format.dart';
+import '../widgets/content_width.dart';
 import '../widgets/subscribe_button.dart';
 import '../widgets/thumbnail.dart';
 import '../widgets/video_grid.dart';
@@ -104,7 +105,7 @@ class _ChannelPageState extends State<ChannelPage> {
                 decoration: InputDecoration(hintText: l10n.searchThisChannel),
                 onSubmitted: _runSearch,
               )
-            : Text(channel?.name ?? ''),
+            : null,
         actions: [
           IconButton(
             tooltip: _searching ? l10n.close : l10n.searchThisChannel,
@@ -116,11 +117,8 @@ class _ChannelPageState extends State<ChannelPage> {
           ),
         ],
       ),
-      body: FeedStateView(
-        loading: _loading,
-        error: _error,
-        videos: _videos,
-        onRetry: _load,
+      body: ContentWidth(
+        maxWidth: 1280,
         child: Column(
           children: [
             if (channel != null)
@@ -130,9 +128,10 @@ class _ChannelPageState extends State<ChannelPage> {
                   children: [
                     VideoThumbnail(
                       url: channel.thumbnailUrl,
-                      width: 64,
-                      height: 64,
-                      borderRadius: BorderRadius.circular(32),
+                      width: 48,
+                      height: 48,
+                      borderRadius: BorderRadius.circular(24),
+                      placeholderIcon: Icons.person_outline,
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -141,6 +140,8 @@ class _ChannelPageState extends State<ChannelPage> {
                         children: [
                           Text(
                             channel.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                           if (channel.subscribers != null)
@@ -156,39 +157,47 @@ class _ChannelPageState extends State<ChannelPage> {
                 ),
               ),
             Expanded(
-              child: _searchResults != null
-                  ? VideoGrid(videos: _searchResults!, onVideoTap: _openVideo)
-                  : DefaultTabController(
-                      length: 4,
-                      child: Column(
-                        children: [
-                          TabBar(
-                            tabs: [
-                              Tab(text: l10n.channelTabVideos),
-                              Tab(text: l10n.channelTabShorts),
-                              Tab(text: l10n.channelTabPlaylists),
-                              Tab(text: l10n.channelTabAbout),
-                            ],
-                          ),
-                          Expanded(
-                            child: TabBarView(
-                              children: [
-                                VideoGrid(
-                                  videos: _videos,
-                                  onVideoTap: _openVideo,
-                                ),
-                                VideoGrid(
-                                  videos: _shorts,
-                                  onVideoTap: _openVideo,
-                                ),
-                                _PlaylistTab(playlists: _playlists),
-                                _AboutTab(about: _about),
+              child: FeedStateView(
+                loading: _loading,
+                error: _error,
+                videos: _videos,
+                onRetry: _load,
+                child: _searchResults != null
+                    ? VideoGrid(videos: _searchResults!, onVideoTap: _openVideo)
+                    : DefaultTabController(
+                        length: 4,
+                        child: Column(
+                          children: [
+                            TabBar(
+                              isScrollable: true,
+                              tabAlignment: TabAlignment.start,
+                              tabs: [
+                                Tab(text: l10n.channelTabVideos),
+                                Tab(text: l10n.channelTabShorts),
+                                Tab(text: l10n.channelTabPlaylists),
+                                Tab(text: l10n.channelTabAbout),
                               ],
                             ),
-                          ),
-                        ],
+                            Expanded(
+                              child: TabBarView(
+                                children: [
+                                  VideoGrid(
+                                    videos: _videos,
+                                    onVideoTap: _openVideo,
+                                  ),
+                                  VideoGrid(
+                                    videos: _shorts,
+                                    onVideoTap: _openVideo,
+                                  ),
+                                  _PlaylistTab(playlists: _playlists),
+                                  _AboutTab(about: _about),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+              ),
             ),
           ],
         ),

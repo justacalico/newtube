@@ -25,6 +25,9 @@ class AppLocalizationsGa extends AppLocalizations {
   String get navSubscriptions => 'Síntiúis';
 
   @override
+  String get navSubs => 'Síntiúis';
+
+  @override
   String get navHistory => 'Stair';
 
   @override
@@ -726,6 +729,9 @@ class AppLocalizationsGa extends AppLocalizations {
 
   @override
   String get noDownloads => 'Níl aon íoslódáil fós';
+
+  @override
+  String get noDownloadsHint => 'Taispeánfar físeáin a íoslódálann tú anseo';
 
   @override
   String get deleteDownload => 'Scrios íoslódáil';
