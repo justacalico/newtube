@@ -268,8 +268,8 @@ jobs:
           if [ "$LINUX_ARCH" = "x86_64" ]; then
             mkdir -p bundle
             cp -a "$BUNDLE/." bundle/
-            sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo || flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-            sudo flatpak install -y --noninteractive flathub org.freedesktop.Platform//24.08 org.freedesktop.Sdk//24.08 || true
+            flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+            flatpak install --user -y --noninteractive flathub org.freedesktop.Platform//24.08 org.freedesktop.Sdk//24.08 || true
             SIGN=()
             if [ -n "${FLATPAK_GPG_PRIVATE_KEY:-}" ]; then
               export GNUPGHOME="$PWD/flatpak-gnupg"
@@ -281,8 +281,7 @@ jobs:
             else
               echo "FLATPAK_GPG_PRIVATE_KEY is not set, the flatpak repo will be unsigned" >&2
             fi
-            sudo flatpak-builder --force-clean --repo=flatpak-repo "${SIGN[@]}" build-dir packaging/flatpak/gitlab.httpanimations.newtube.yml || flatpak-builder --force-clean --repo=flatpak-repo --user "${SIGN[@]}" build-dir packaging/flatpak/gitlab.httpanimations.newtube.yml
-            sudo chown -R "$(id -u):$(id -g)" flatpak-repo
+            flatpak-builder --user --force-clean --repo=flatpak-repo "${SIGN[@]}" build-dir packaging/flatpak/gitlab.httpanimations.newtube.yml
             if [ -n "${KEYID:-}" ]; then
               flatpak build-update-repo "${SIGN[@]}" flatpak-repo
               cat > flatpak-repo/newtube.flatpakref <<EOF
@@ -294,11 +293,11 @@ jobs:
           IsRuntime=false
           GPGKey=$(gpg --homedir "$GNUPGHOME" --batch --export "$KEYID" | base64 -w0)
           EOF
-              sudo rm -rf "$GNUPGHOME"
+              rm -rf "$GNUPGHOME"
             fi
             tar -czf "artifacts/newtube-${VERSION}-flatpak.tar.gz" -C flatpak-repo .
             rm -rf bundle
-            sudo rm -rf build-dir .flatpak-builder
+            rm -rf build-dir .flatpak-builder
           fi
           ls -la artifacts/
 
