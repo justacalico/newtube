@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.30.1 - 2026-10-23
+#### Bug Fixes
+- (**ci**) flatpak 改用用户级安装，修复 GPG 签名权限错误 - (851199d) - HttpAnimations
+- (**ui**) 全面重做界面布局与响应式适配 - (ddbe766) - HttpAnimations
+- 为 flatpak 仓库添加 GPG 签名，修复系统级安装失败 - (8121f38) - HttpAnimations
+
+- - -
+
 ## v0.30.0 - 2026-10-15
 #### Features
 - 播放器控件改为独立圆角方框 - (0445eec) - HttpAnimations
