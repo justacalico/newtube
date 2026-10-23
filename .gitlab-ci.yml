@@ -181,7 +181,7 @@ pages:
       fi
       mkdir -p public/flatpak
       if [ ! -f public/flatpak/index.html ]; then
-        printf '%s\n' '<!doctype html><meta charset="utf-8"><title>NewTube flatpak repo</title><p>Flatpak repository for NewTube. Add it with <code>flatpak remote-add newtube https://httpanimations.gitlab.io/newtube/flatpak</code> once a release is published.</p>' > public/flatpak/index.html
+        printf '%s\n' '<!doctype html><meta charset="utf-8"><title>NewTube flatpak repo</title><p>Flatpak repository for NewTube. Install with <code>flatpak install https://httpanimations.gitlab.io/newtube/flatpak/newtube.flatpakref</code> once a release is published.</p>' > public/flatpak/index.html
       fi
     - ls public public/app
   artifacts:
