@@ -107,6 +107,12 @@ jobs:
       - name: Analyze
         run: flutter analyze --no-fatal-infos
 
+      - name: Install CJK test font
+        run: |
+          curl -fsSL --retry 3 -o /tmp/NotoSansCJK-VF.otf.ttc "https://raw.githubusercontent.com/notofonts/noto-cjk/Sans2.004/Sans/Variable/OTC/NotoSansCJK-VF.otf.ttc"
+          echo "d3d8256cdec8dbcb3552284bc6b20c734dd60c2ee9df83b5758e34807c4bac32  /tmp/NotoSansCJK-VF.otf.ttc" | sha256sum -c -
+          sudo install -D -m 644 /tmp/NotoSansCJK-VF.otf.ttc /usr/local/share/fonts/NotoSansCJK-VF.otf.ttc
+
       - name: Test with coverage
         run: flutter test --coverage
 
