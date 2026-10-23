@@ -91,7 +91,12 @@ void main() {
     final state = await testState(api: api);
     await pumpPage(tester, state, const AppShell(), size: const Size(400, 800));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Trending'));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(NavigationBar),
+        matching: find.text('Trending'),
+      ),
+    );
     await tester.pumpAndSettle();
     expect(state.tabIndex, 1);
     debugDefaultTargetPlatformOverride = null;

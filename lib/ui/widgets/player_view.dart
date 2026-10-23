@@ -1083,7 +1083,8 @@ class _PlayerViewState extends State<PlayerView> {
                                   padding: const EdgeInsets.all(8),
                                   child: Row(
                                     children: [
-                                      if (widget.avatarUrl != null) ...[
+                                      if (widget.isFullscreen &&
+                                          widget.avatarUrl != null) ...[
                                         VideoThumbnail(
                                           url: widget.avatarUrl,
                                           width: 36,
@@ -1091,11 +1092,16 @@ class _PlayerViewState extends State<PlayerView> {
                                           borderRadius: BorderRadius.circular(
                                             18,
                                           ),
+                                          placeholderIcon: Icons.person_outline,
                                         ),
                                         const SizedBox(width: 8),
                                       ],
-                                      if (widget.title != null)
-                                        Expanded(
+                                      if (widget.isFullscreen &&
+                                          widget.title != null)
+                                        ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 420,
+                                          ),
                                           child: _controlBox(
                                             Padding(
                                               padding:
@@ -1113,9 +1119,8 @@ class _PlayerViewState extends State<PlayerView> {
                                               ),
                                             ),
                                           ),
-                                        )
-                                      else
-                                        const Spacer(),
+                                        ),
+                                      const Spacer(),
                                       if (widget.pipActions != null) ...[
                                         const SizedBox(width: 8),
                                         _controlBox(
@@ -1183,7 +1188,7 @@ class _PlayerViewState extends State<PlayerView> {
                                                       padding:
                                                           const EdgeInsets.symmetric(
                                                             horizontal: 8,
-                                                            vertical: 6,
+                                                            vertical: 12,
                                                           ),
                                                       child: widget.live
                                                           ? const LiveBadge()
@@ -1211,14 +1216,8 @@ class _PlayerViewState extends State<PlayerView> {
                                                                             12,
                                                                       ),
                                                                     ),
-                                                                    const SizedBox(
-                                                                      width: 4,
-                                                                    ),
                                                                     Text(
-                                                                      formatDuration(
-                                                                        total -
-                                                                            clamped,
-                                                                      ),
+                                                                      ' / ${formatDuration(total)}',
                                                                       style: const TextStyle(
                                                                         color: Colors
                                                                             .white70,
@@ -1383,13 +1382,13 @@ class _PlayerViewState extends State<PlayerView> {
                                                                         thumbShape: RoundSliderThumbShape(
                                                                           enabledThumbRadius:
                                                                               wide
-                                                                              ? 5
-                                                                              : 10,
+                                                                              ? 7
+                                                                              : 9,
                                                                         ),
                                                                         trackHeight:
                                                                             wide
-                                                                            ? 2
-                                                                            : 6,
+                                                                            ? 3
+                                                                            : 4,
                                                                         overlayShape: const RoundSliderOverlayShape(
                                                                           overlayRadius:
                                                                               16,

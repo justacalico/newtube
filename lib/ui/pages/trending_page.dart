@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../state/app_state.dart';
 import '../../utils/feed_filter.dart';
+import '../widgets/content_width.dart';
+import '../widgets/page_header.dart';
 import '../widgets/video_grid.dart';
 import 'channel_page.dart';
 import 'watch_page.dart';
@@ -56,24 +59,44 @@ class _TrendingPageState extends State<TrendingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FeedStateView(
-      loading: _loading,
-      error: _error,
-      videos: visibleVideos(
-        _videos,
-        AppScope.read(context).settings,
-        AppScope.read(context),
-      ),
-      onRetry: _load,
-      onRefresh: _load,
-      child: VideoGrid(
-        videos: visibleVideos(
-          _videos,
-          AppScope.read(context).settings,
-          AppScope.read(context),
-        ),
-        onVideoTap: _openVideo,
-        onChannelTap: _openChannel,
+    final l10n = AppLocalizations.of(context);
+    return ContentWidth(
+      maxWidth: 1280,
+      child: Column(
+        children: [
+          PageHeader(
+            title: l10n.navTrending,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.refresh),
+                tooltip: l10n.refreshFeed,
+                onPressed: _load,
+              ),
+            ],
+          ),
+          Expanded(
+            child: FeedStateView(
+              loading: _loading,
+              error: _error,
+              videos: visibleVideos(
+                _videos,
+                AppScope.read(context).settings,
+                AppScope.read(context),
+              ),
+              onRetry: _load,
+              onRefresh: _load,
+              child: VideoGrid(
+                videos: visibleVideos(
+                  _videos,
+                  AppScope.read(context).settings,
+                  AppScope.read(context),
+                ),
+                onVideoTap: _openVideo,
+                onChannelTap: _openChannel,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

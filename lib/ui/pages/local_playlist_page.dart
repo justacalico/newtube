@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../state/app_state.dart';
-import '../../utils/format.dart';
+import '../widgets/content_width.dart';
 import '../widgets/video_list_tile.dart';
 import 'watch_page.dart';
 
@@ -101,7 +101,6 @@ class LocalPlaylistPage extends StatelessWidget {
         final playlist = state.playlists.byId(playlistId);
         return Scaffold(
           appBar: AppBar(
-            title: Text(playlist?.title ?? ''),
             actions: [
               if (playlist != null) ...[
                 IconButton(
@@ -116,7 +115,7 @@ class LocalPlaylistPage extends StatelessWidget {
                 ),
                 IconButton(
                   tooltip: l10n.exportPlaylist,
-                  icon: const Icon(Icons.ios_share),
+                  icon: const Icon(Icons.share_outlined),
                   onPressed: () => _export(context, playlist),
                 ),
               ],
@@ -124,57 +123,59 @@ class LocalPlaylistPage extends StatelessWidget {
           ),
           body: playlist == null || playlist.videos.isEmpty
               ? Center(child: Text(l10n.playlistEmpty))
-              : CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              playlist.title,
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              '${l10n.videoCount(playlist.videos.length)} · ${formatDuration(Duration(seconds: playlist.videos.fold<int>(0, (sum, v) => sum + (v.duration?.inSeconds ?? 0))))}',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
+              : ContentWidth(
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                playlist.title,
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                l10n.videoCount(playlist.videos.length),
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    SliverReorderableList(
-                      itemCount: playlist.videos.length,
-                      onReorderItem: (from, to) => state.playlists.moveVideo(
-                        playlist.id,
-                        from,
-                        to,
-                        state.prefs,
-                      ),
-                      itemBuilder: (context, index) {
-                        final video = playlist.videos[index];
-                        return ReorderableDelayedDragStartListener(
-                          key: ValueKey('pl-$index-${video.id}'),
-                          index: index,
-                          child: VideoListTile(
-                            video: video,
-                            trailing: IconButton(
-                              tooltip: l10n.removeFromPlaylist,
-                              icon: const Icon(Icons.remove_circle_outline),
-                              onPressed: () => state.playlists.removeVideo(
-                                playlist.id,
-                                video.id,
-                                state.prefs,
+                      SliverReorderableList(
+                        itemCount: playlist.videos.length,
+                        onReorderItem: (from, to) => state.playlists.moveVideo(
+                          playlist.id,
+                          from,
+                          to,
+                          state.prefs,
+                        ),
+                        itemBuilder: (context, index) {
+                          final video = playlist.videos[index];
+                          return ReorderableDelayedDragStartListener(
+                            key: ValueKey('pl-$index-${video.id}'),
+                            index: index,
+                            child: VideoListTile(
+                              video: video,
+                              trailing: IconButton(
+                                tooltip: l10n.removeFromPlaylist,
+                                icon: const Icon(Icons.remove_circle_outline),
+                                onPressed: () => state.playlists.removeVideo(
+                                  playlist.id,
+                                  video.id,
+                                  state.prefs,
+                                ),
                               ),
+                              onTap: () => _openVideo(context, playlist, index),
                             ),
-                            onTap: () => _openVideo(context, playlist, index),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
         );
       },

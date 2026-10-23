@@ -110,7 +110,7 @@ void main() {
       expect(find.text('No playlists yet'), findsOneWidget);
       expect(find.text('New playlist'), findsOneWidget);
 
-      await tester.tap(find.text('New playlist'));
+      await tester.tap(find.text('New playlist').first);
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextField), 'Favourites');
       await tester.tap(find.text('Create'));
@@ -127,13 +127,13 @@ void main() {
       await pumpPage(tester, state, PlaylistsPage());
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('New playlist'));
+      await tester.tap(find.text('New playlist').first);
       await tester.pumpAndSettle();
       await tester.tap(find.text('Cancel'));
       await tester.pumpAndSettle();
       expect(store.playlists, isEmpty);
 
-      await tester.tap(find.text('New playlist'));
+      await tester.tap(find.text('New playlist').first);
       await tester.pumpAndSettle();
       await tester.tap(find.text('Create'));
       await tester.pumpAndSettle();

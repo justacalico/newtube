@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -13,6 +14,8 @@ import '../../services/version_checker.dart';
 import '../../state/app_state.dart';
 import '../../state/settings_store.dart';
 import '../shell/title_bar.dart' show isDesktopPlatform;
+import '../widgets/content_width.dart';
+import '../widgets/page_header.dart';
 
 const languageNames = {
   'en_GB': 'Traditional English',
@@ -53,8 +56,15 @@ class _SettingsDropdown<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 180,
+    final theme = Theme.of(context);
+    final width = min(160.0, MediaQuery.sizeOf(context).width * 0.45);
+    return Container(
+      width: width,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        border: Border.all(color: theme.colorScheme.outlineVariant),
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: DropdownButton<T>(
         value: value,
         isExpanded: true,
@@ -380,10 +390,10 @@ class _SettingsPageState extends State<SettingsPage> {
       builder: (context, _) {
         final settings = state.settings;
         final mcp = state.mcpServer;
-        return ListView(
+        final list = ListView(
           children: [
             ListTile(
-              leading: const Icon(Icons.format_color_fill_outlined),
+              leading: const Icon(Icons.color_lens_outlined),
               title: Text(l10n.accentColor),
               subtitle: SizedBox(
                 height: 40,
@@ -948,6 +958,14 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
           ],
+        );
+        return ContentWidth(
+          child: Column(
+            children: [
+              PageHeader(title: l10n.navSettings),
+              Expanded(child: list),
+            ],
+          ),
         );
       },
     );

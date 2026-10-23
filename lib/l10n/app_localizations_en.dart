@@ -25,6 +25,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navSubscriptions => 'Subscriptions';
 
   @override
+  String get navSubs => 'Subs';
+
+  @override
   String get navHistory => 'History';
 
   @override
@@ -722,6 +725,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noDownloads => 'No downloads yet';
+
+  @override
+  String get noDownloadsHint => 'Videos you download show up here';
 
   @override
   String get deleteDownload => 'Delete download';
@@ -1056,6 +1062,9 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   String get navSubscriptions => 'Subscriptions';
 
   @override
+  String get navSubs => 'Subs';
+
+  @override
   String get navHistory => 'History';
 
   @override
@@ -1753,6 +1762,9 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get noDownloads => 'No downloads yet';
+
+  @override
+  String get noDownloadsHint => 'Videos you download show up here';
 
   @override
   String get deleteDownload => 'Delete download';

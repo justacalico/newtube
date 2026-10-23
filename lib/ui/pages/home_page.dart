@@ -5,6 +5,8 @@ import '../../services/home_feed.dart';
 import '../../state/app_state.dart';
 import '../../l10n/app_localizations.dart';
 import '../../utils/feed_filter.dart';
+import '../widgets/content_width.dart';
+import '../widgets/page_header.dart';
 import '../widgets/video_card.dart';
 import '../widgets/video_grid.dart';
 import 'channel_page.dart';
@@ -65,66 +67,86 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return FeedStateView(
-      loading: _loading,
-      error: _error,
-      videos: visibleVideos(
-        _videos,
-        AppScope.read(context).settings,
-        AppScope.read(context),
-      ),
-      onRetry: _load,
-      onRefresh: _load,
-      child: ListenableBuilder(
-        listenable: AppScope.read(context).history,
-        builder: (context, _) {
-          final state = AppScope.read(context);
-          final inProgress = state.history.inProgress;
-          final l10n = AppLocalizations.of(context);
-          return Column(
-            children: [
-              if (inProgress.isNotEmpty) ...[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      l10n.continueWatching,
-                      style: Theme.of(context).textTheme.titleSmall,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 112,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
+    final l10n = AppLocalizations.of(context);
+    return ContentWidth(
+      maxWidth: 1280,
+      child: Column(
+        children: [
+          PageHeader(
+            title: l10n.navHome,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.refresh),
+                tooltip: l10n.refreshFeed,
+                onPressed: _load,
+              ),
+            ],
+          ),
+          Expanded(
+            child: FeedStateView(
+              loading: _loading,
+              error: _error,
+              videos: visibleVideos(
+                _videos,
+                AppScope.read(context).settings,
+                AppScope.read(context),
+              ),
+              onRetry: _load,
+              onRefresh: _load,
+              child: ListenableBuilder(
+                listenable: AppScope.read(context).history,
+                builder: (context, _) {
+                  final state = AppScope.read(context);
+                  final inProgress = state.history.inProgress;
+                  final l10n = AppLocalizations.of(context);
+                  return Column(
                     children: [
-                      for (final video in inProgress.take(10))
+                      if (inProgress.isNotEmpty) ...[
                         Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: SizedBox(
-                            width: 160,
-                            child: VideoCard(
-                              video: video,
-                              onTap: () => _openVideo(video),
+                          padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              l10n.continueWatching,
+                              style: Theme.of(context).textTheme.titleSmall,
                             ),
                           ),
                         ),
+                        SizedBox(
+                          height: 112,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            children: [
+                              for (final video in inProgress.take(10))
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 8),
+                                  child: SizedBox(
+                                    width: 160,
+                                    child: VideoCard(
+                                      video: video,
+                                      onTap: () => _openVideo(video),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ],
+                      Expanded(
+                        child: VideoGrid(
+                          videos: visibleVideos(_videos, state.settings, state),
+                          onVideoTap: _openVideo,
+                          onChannelTap: _openChannel,
+                        ),
+                      ),
                     ],
-                  ),
-                ),
-              ],
-              Expanded(
-                child: VideoGrid(
-                  videos: visibleVideos(_videos, state.settings, state),
-                  onVideoTap: _openVideo,
-                  onChannelTap: _openChannel,
-                ),
+                  );
+                },
               ),
-            ],
-          );
-        },
+            ),
+          ),
+        ],
       ),
     );
   }

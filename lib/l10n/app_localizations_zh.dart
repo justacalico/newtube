@@ -25,6 +25,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get navSubscriptions => '订阅';
 
   @override
+  String get navSubs => '訂閱';
+
+  @override
   String get navHistory => '历史记录';
 
   @override
@@ -709,6 +712,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get noDownloads => '暂无下载';
+
+  @override
+  String get noDownloadsHint => '已下載的影片會顯示在這裡';
 
   @override
   String get deleteDownload => '删除下载';
@@ -1041,6 +1047,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get navSubscriptions => '订阅';
 
   @override
+  String get navSubs => '订阅';
+
+  @override
   String get navHistory => '历史记录';
 
   @override
@@ -1725,6 +1734,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get noDownloads => '暂无下载';
+
+  @override
+  String get noDownloadsHint => '下载的视频会显示在这里';
 
   @override
   String get deleteDownload => '删除下载';

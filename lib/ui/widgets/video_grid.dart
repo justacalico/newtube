@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../shell/title_bar.dart' show isDesktopPlatform;
-
 import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../state/app_state.dart';
@@ -26,7 +24,7 @@ class VideoGrid extends StatelessWidget {
     final density = AppScope.read(context).settings.feedDensity;
     if (density == 1) {
       return ListView.builder(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
         itemCount: videos.length,
         itemBuilder: (context, i) {
           final video = videos[i];
@@ -41,13 +39,16 @@ class VideoGrid extends StatelessWidget {
           1,
           8,
         );
+        final cardWidth =
+            (constraints.maxWidth - 24 - (columns - 1) * 12) / columns;
+        final childAspectRatio = cardWidth / (cardWidth * 9 / 16 + 100);
         return GridView.builder(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: columns,
             mainAxisSpacing: 12,
             crossAxisSpacing: 12,
-            childAspectRatio: 16 / 13,
+            childAspectRatio: childAspectRatio,
           ),
           itemCount: videos.length,
           itemBuilder: (context, i) {
@@ -146,21 +147,6 @@ class FeedStateView extends StatelessWidget {
       return refresh != null ? scrollable(empty) : empty;
     }
     if (refresh == null) return child;
-    return Column(
-      children: [
-        if (isDesktopPlatform)
-          Align(
-            alignment: Alignment.centerRight,
-            child: IconButton(
-              icon: const Icon(Icons.refresh),
-              tooltip: l10n.refreshFeed,
-              onPressed: () => refresh(),
-            ),
-          ),
-        Expanded(
-          child: RefreshIndicator(onRefresh: refresh, child: child),
-        ),
-      ],
-    );
+    return RefreshIndicator(onRefresh: refresh, child: child);
   }
 }

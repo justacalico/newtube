@@ -24,6 +24,7 @@ import '../../utils/storyboard.dart';
 import '../../utils/stream_picker.dart';
 import '../shell/title_bar.dart';
 import '../widgets/comment_tile.dart';
+import '../widgets/content_width.dart';
 import '../widgets/player_view.dart';
 import '../widgets/playlist_dialogs.dart';
 import '../widgets/subscribe_button.dart';
@@ -809,7 +810,7 @@ class _WatchPageState extends State<WatchPage>
     final player = _player;
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.video.title)),
+      appBar: AppBar(),
       body: _error != null
           ? Center(
               child: Column(
@@ -824,382 +825,414 @@ class _WatchPageState extends State<WatchPage>
           : player == null || _details == null
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AspectRatio(
-                    aspectRatio: 16 / 9,
-                    child: _fullscreen
-                        ? const ColoredBox(color: Colors.black)
-                        : PlayerView(
-                            player: player,
-                            streams: _details!.streams,
-                            current: _currentStream,
-                            currentAudio: _currentAudio,
-                            onQualitySelected: _selectStream,
-                            onAudioSelected: _selectAudio,
-                            onToggleFullscreen: () => _openFullscreen(player),
-                            sleepTimer: _sleepTimer,
-                            chapters: _chapters,
-                            segmentSkipper: _skipper,
-                            pipActions: _pipActions,
-                            endScreenBuilder: (context) =>
-                                _endScreen(context, player),
-                            captions: _details!.captions,
-                            selectedCaption: _caption,
-                            onCaptionSelected: _selectCaption,
-                            audioOnly: _audioOnly,
-                            artworkUrl: widget.video.thumbnailUrl,
-                            onAudioOnlyChanged: _setAudioOnly,
-                            onDismiss: () => Navigator.of(context).pop(),
-                            onNext: () => _openNext(),
-                            onPrevious: () => Navigator.of(context).pop(),
-                            onPip: () => _pipActions?.enterPip(),
-                            title: widget.video.title,
-                            avatarUrl: _channel?.thumbnailUrl,
-                            storyboard: bestStoryboard(_details!.storyboards),
-                          ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.video.title,
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: InkWell(
-                                onTap: () => openChannelPage(
-                                  context,
-                                  _details!.info.channelId,
-                                ),
-                                child: Row(
-                                  children: [
-                                    VideoThumbnail(
-                                      url: _channel?.thumbnailUrl,
-                                      width: 40,
-                                      height: 40,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            _details!.info.author,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleMedium,
-                                          ),
-                                          Text(
-                                            '${formatViewCount(_details!.info.viewCount)} ${l10n.views}${_dislikes != null ? ' · ${formatViewCount(_dislikes!)} ${l10n.dislikes}' : ''}',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+              child: ContentWidth(
+                maxWidth: 1280,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: _fullscreen
+                          ? const ColoredBox(color: Colors.black)
+                          : PlayerView(
+                              player: player,
+                              streams: _details!.streams,
+                              current: _currentStream,
+                              currentAudio: _currentAudio,
+                              onQualitySelected: _selectStream,
+                              onAudioSelected: _selectAudio,
+                              onToggleFullscreen: () => _openFullscreen(player),
+                              sleepTimer: _sleepTimer,
+                              chapters: _chapters,
+                              segmentSkipper: _skipper,
+                              pipActions: _pipActions,
+                              endScreenBuilder: (context) =>
+                                  _endScreen(context, player),
+                              captions: _details!.captions,
+                              selectedCaption: _caption,
+                              onCaptionSelected: _selectCaption,
+                              audioOnly: _audioOnly,
+                              artworkUrl: widget.video.thumbnailUrl,
+                              onAudioOnlyChanged: _setAudioOnly,
+                              onDismiss: () => Navigator.of(context).pop(),
+                              onNext: () => _openNext(),
+                              onPrevious: () => Navigator.of(context).pop(),
+                              onPip: () => _pipActions?.enterPip(),
+                              title: widget.video.title,
+                              avatarUrl: _channel?.thumbnailUrl,
+                              storyboard: bestStoryboard(_details!.storyboards),
                             ),
-                            SubscribeButton(
-                              channel:
-                                  _channel ??
-                                  ChannelInfo(
-                                    id: _details!.info.channelId,
-                                    name: _details!.info.author,
-                                  ),
-                            ),
-                            ListenableBuilder(
-                              listenable: state.watchLater,
-                              builder: (context, _) {
-                                final saved = state.watchLater.contains(
-                                  widget.video.id,
-                                );
-                                return IconButton(
-                                  tooltip: saved
-                                      ? l10n.watchLaterRemove
-                                      : l10n.watchLaterAdd,
-                                  icon: Icon(
-                                    saved
-                                        ? Icons.bookmark
-                                        : Icons.bookmark_border,
-                                  ),
-                                  onPressed: () => state.watchLater.toggle(
-                                    widget.video,
-                                    state.prefs,
-                                  ),
-                                );
-                              },
-                            ),
-                            IconButton(
-                              tooltip: l10n.addToPlaylist,
-                              icon: const Icon(Icons.playlist_add),
-                              onPressed: () =>
-                                  showPlaylistPicker(context, widget.video),
-                            ),
-                            _ShareMenu(video: widget.video, player: _player),
-                            if (state.downloads != null)
-                              IconButton(
-                                tooltip: l10n.download,
-                                icon: const Icon(Icons.download_outlined),
-                                onPressed: _showDownloadPicker,
-                              ),
-                          ],
-                        ),
-                        if (_details!.description.isNotEmpty) ...[
-                          const SizedBox(height: 16),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Text(
-                            l10n.description,
-                            style: Theme.of(context).textTheme.titleSmall,
+                            widget.video.title,
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
-                          const SizedBox(height: 4),
-                          SelectableText.rich(
-                            TextSpan(
-                              children: descriptionSpans(
-                                _details!.description,
-                                linkStyle: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                                onLink: state.launch,
-                                onTimestamp: (time) => _player?.seek(time),
-                              ),
-                            ),
-                          ),
-                        ],
-                        if (_chapters.isNotEmpty) ...[
-                          const SizedBox(height: 16),
-                          ExpansionTile(
-                            tilePadding: EdgeInsets.zero,
-                            title: Text(
-                              l10n.chapters,
-                              style: Theme.of(context).textTheme.titleSmall,
-                            ),
-                            subtitle: Text(
-                              chapterAt(_chapters, player.position)?.title ??
-                                  '',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            children: [
-                              for (final chapter in _chapters)
-                                ListTile(
-                                  dense: true,
-                                  contentPadding: EdgeInsets.zero,
-                                  leading: Text(
-                                    formatDuration(chapter.start),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall,
+                          const SizedBox(height: 8),
+                          LayoutBuilder(
+                            builder: (context, cons) {
+                              final channelInfo = Expanded(
+                                child: InkWell(
+                                  onTap: () => openChannelPage(
+                                    context,
+                                    _details!.info.channelId,
                                   ),
-                                  title: Text(
-                                    chapter.title,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  onTap: () => player.seek(chapter.start),
-                                ),
-                            ],
-                          ),
-                        ],
-                        if (widget.playlist != null &&
-                            widget.index != null) ...[
-                          const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  l10n.playlistProgress(
-                                    widget.playlist!.title,
-                                    widget.index! + 1,
-                                    widget.playlist!.videos.length,
-                                  ),
-                                  style: Theme.of(context).textTheme.titleSmall,
-                                ),
-                              ),
-                              ListenableBuilder(
-                                listenable: _state.playback,
-                                builder: (context, _) {
-                                  final session = _state.playback;
-                                  return Row(
-                                    mainAxisSize: MainAxisSize.min,
+                                  child: Row(
                                     children: [
-                                      IconButton(
-                                        tooltip: switch (session.repeatMode) {
-                                          RepeatMode.off => l10n.repeatOff,
-                                          RepeatMode.all => l10n.repeatAll,
-                                          RepeatMode.one => l10n.repeatOne,
-                                        },
-                                        icon: Icon(switch (session.repeatMode) {
-                                          RepeatMode.off => Icons.repeat,
-                                          RepeatMode.all => Icons.repeat_on,
-                                          RepeatMode.one => Icons.repeat_one_on,
-                                        }),
-                                        onPressed: () => session.repeatMode =
-                                            RepeatMode.values[(session
-                                                        .repeatMode
-                                                        .index +
-                                                    1) %
-                                                RepeatMode.values.length],
+                                      VideoThumbnail(
+                                        url: _channel?.thumbnailUrl,
+                                        width: 40,
+                                        height: 40,
+                                        borderRadius: BorderRadius.circular(20),
+                                        placeholderIcon: Icons.person_outline,
                                       ),
-                                      IconButton(
-                                        tooltip: l10n.shuffle,
-                                        icon: Icon(
-                                          session.shuffle
-                                              ? Icons.shuffle_on
-                                              : Icons.shuffle,
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              _details!.info.author,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleMedium,
+                                            ),
+                                            Text(
+                                              '${formatViewCount(_details!.info.viewCount)} ${l10n.views}${_dislikes != null ? ' · ${formatViewCount(_dislikes!)} ${l10n.dislikes}' : ''}',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall,
+                                            ),
+                                          ],
                                         ),
-                                        onPressed: () =>
-                                            session.shuffle = !session.shuffle,
                                       ),
                                     ],
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          for (
-                            var i = 0;
-                            i < widget.playlist!.videos.length;
-                            i++
-                          )
-                            VideoListTile(
-                              video: widget.playlist!.videos[i],
-                              contentPadding: EdgeInsets.zero,
-                              selected: i == widget.index,
-                              onTap: () => _openPlaylistVideo(i),
-                            ),
-                        ],
-                        if (state.settings.showComments &&
-                            _comments.isNotEmpty) ...[
-                          const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Text(
-                                l10n.comments,
-                                style: Theme.of(context).textTheme.titleSmall,
-                              ),
-                              const Spacer(),
-                              MenuAnchor(
-                                builder: (context, controller, child) =>
-                                    TextButton.icon(
-                                      icon: const Icon(Icons.sort, size: 16),
-                                      label: Text(l10n.commentsSort),
-                                      onPressed: () => controller.isOpen
-                                          ? controller.close()
-                                          : controller.open(),
+                                  ),
+                                ),
+                              );
+                              final subscribe = SubscribeButton(
+                                channel:
+                                    _channel ??
+                                    ChannelInfo(
+                                      id: _details!.info.channelId,
+                                      name: _details!.info.author,
                                     ),
-                                menuChildren: [
-                                  for (final sort in CommentSort.values)
-                                    MenuItemButton(
-                                      onPressed: () => _setCommentSort(sort),
-                                      leadingIcon: sort == _commentSort
-                                          ? const Icon(Icons.check, size: 18)
-                                          : const SizedBox(width: 18),
-                                      child: Text(
-                                        sort == CommentSort.top
-                                            ? l10n.commentsTop
-                                            : l10n.commentsNewest,
+                              );
+                              final actions = <Widget>[
+                                ListenableBuilder(
+                                  listenable: state.watchLater,
+                                  builder: (context, _) {
+                                    final saved = state.watchLater.contains(
+                                      widget.video.id,
+                                    );
+                                    return IconButton(
+                                      tooltip: saved
+                                          ? l10n.watchLaterRemove
+                                          : l10n.watchLaterAdd,
+                                      icon: Icon(
+                                        saved
+                                            ? Icons.bookmark
+                                            : Icons.bookmark_border,
                                       ),
-                                    ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          for (final comment in _comments)
-                            CommentTile(
-                              comment: comment,
-                              videoId: widget.video.id,
-                            ),
-                          if (_commentsToken != null)
-                            Center(
-                              child: _loadingMoreComments
-                                  ? const Padding(
-                                      padding: EdgeInsets.all(8),
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
+                                      onPressed: () => state.watchLater.toggle(
+                                        widget.video,
+                                        state.prefs,
                                       ),
-                                    )
-                                  : TextButton(
-                                      onPressed: _loadMoreComments,
-                                      child: Text(l10n.loadMoreComments),
-                                    ),
-                            ),
-                        ],
-                        if (_state.playback.queue.isNotEmpty) ...[
-                          const SizedBox(height: 16),
-                          Text(
-                            l10n.upNext,
-                            style: Theme.of(context).textTheme.titleSmall,
-                          ),
-                          const SizedBox(height: 8),
-                          ReorderableListView(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            onReorderItem: (from, to) =>
-                                _state.playback.moveQueued(from, to),
-                            children: [
-                              for (
-                                var i = 0;
-                                i < _state.playback.queue.length;
-                                i++
-                              )
-                                ListTile(
-                                  key: ValueKey(
-                                    'queue-$i-${_state.playback.queue[i].id}',
-                                  ),
-                                  dense: true,
-                                  leading: const Icon(Icons.drag_handle),
-                                  title: Text(
-                                    _state.playback.queue[i].title,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  trailing: IconButton(
-                                    icon: const Icon(Icons.close, size: 18),
-                                    onPressed: () =>
-                                        _state.playback.removeQueued(i),
-                                  ),
-                                  onTap: () {
-                                    final v = _state.playback.takeNextFrom(i);
-                                    if (v != null) {
-                                      _replaceWith(WatchPage(video: v));
-                                    }
+                                    );
                                   },
                                 ),
-                            ],
+                                IconButton(
+                                  tooltip: l10n.addToPlaylist,
+                                  icon: const Icon(Icons.playlist_add),
+                                  onPressed: () =>
+                                      showPlaylistPicker(context, widget.video),
+                                ),
+                                _ShareMenu(
+                                  video: widget.video,
+                                  player: _player,
+                                ),
+                                if (state.downloads != null)
+                                  IconButton(
+                                    tooltip: l10n.download,
+                                    icon: const Icon(Icons.download_outlined),
+                                    onPressed: _showDownloadPicker,
+                                  ),
+                              ];
+                              if (cons.maxWidth < 560) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(children: [channelInfo, subscribe]),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: actions,
+                                    ),
+                                  ],
+                                );
+                              }
+                              return Row(
+                                children: [channelInfo, subscribe, ...actions],
+                              );
+                            },
                           ),
-                        ],
-                        if (state.settings.showRelated &&
-                            _related.isNotEmpty) ...[
-                          const SizedBox(height: 16),
-                          Text(
-                            l10n.relatedVideos,
-                            style: Theme.of(context).textTheme.titleSmall,
-                          ),
-                          const SizedBox(height: 8),
-                          for (final v in _related)
-                            VideoListTile(
-                              video: v,
-                              contentPadding: EdgeInsets.zero,
-                              onTap: () => _replaceWith(WatchPage(video: v)),
+                          if (_details!.description.isNotEmpty) ...[
+                            const SizedBox(height: 16),
+                            Text(
+                              l10n.description,
+                              style: Theme.of(context).textTheme.titleSmall,
                             ),
+                            const SizedBox(height: 4),
+                            SelectableText.rich(
+                              TextSpan(
+                                children: descriptionSpans(
+                                  _details!.description,
+                                  linkStyle: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primary,
+                                  ),
+                                  onLink: state.launch,
+                                  onTimestamp: (time) => _player?.seek(time),
+                                ),
+                              ),
+                            ),
+                          ],
+                          if (_chapters.isNotEmpty) ...[
+                            const SizedBox(height: 16),
+                            ExpansionTile(
+                              tilePadding: EdgeInsets.zero,
+                              title: Text(
+                                l10n.chapters,
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                              subtitle: Text(
+                                chapterAt(_chapters, player.position)?.title ??
+                                    '',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              children: [
+                                for (final chapter in _chapters)
+                                  ListTile(
+                                    dense: true,
+                                    contentPadding: EdgeInsets.zero,
+                                    leading: Text(
+                                      formatDuration(chapter.start),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall,
+                                    ),
+                                    title: Text(
+                                      chapter.title,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    onTap: () => player.seek(chapter.start),
+                                  ),
+                              ],
+                            ),
+                          ],
+                          if (widget.playlist != null &&
+                              widget.index != null) ...[
+                            const SizedBox(height: 16),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    l10n.playlistProgress(
+                                      widget.playlist!.title,
+                                      widget.index! + 1,
+                                      widget.playlist!.videos.length,
+                                    ),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall,
+                                  ),
+                                ),
+                                ListenableBuilder(
+                                  listenable: _state.playback,
+                                  builder: (context, _) {
+                                    final session = _state.playback;
+                                    return Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IconButton(
+                                          tooltip: switch (session.repeatMode) {
+                                            RepeatMode.off => l10n.repeatOff,
+                                            RepeatMode.all => l10n.repeatAll,
+                                            RepeatMode.one => l10n.repeatOne,
+                                          },
+                                          icon: Icon(
+                                            switch (session.repeatMode) {
+                                              RepeatMode.off => Icons.repeat,
+                                              RepeatMode.all => Icons.repeat_on,
+                                              RepeatMode.one =>
+                                                Icons.repeat_one_on,
+                                            },
+                                          ),
+                                          onPressed: () => session.repeatMode =
+                                              RepeatMode.values[(session
+                                                          .repeatMode
+                                                          .index +
+                                                      1) %
+                                                  RepeatMode.values.length],
+                                        ),
+                                        IconButton(
+                                          tooltip: l10n.shuffle,
+                                          icon: Icon(
+                                            session.shuffle
+                                                ? Icons.shuffle_on
+                                                : Icons.shuffle,
+                                          ),
+                                          onPressed: () => session.shuffle =
+                                              !session.shuffle,
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            for (
+                              var i = 0;
+                              i < widget.playlist!.videos.length;
+                              i++
+                            )
+                              VideoListTile(
+                                video: widget.playlist!.videos[i],
+                                contentPadding: EdgeInsets.zero,
+                                selected: i == widget.index,
+                                onTap: () => _openPlaylistVideo(i),
+                              ),
+                          ],
+                          if (state.settings.showComments &&
+                              _comments.isNotEmpty) ...[
+                            const SizedBox(height: 16),
+                            Row(
+                              children: [
+                                Text(
+                                  l10n.comments,
+                                  style: Theme.of(context).textTheme.titleSmall,
+                                ),
+                                const Spacer(),
+                                MenuAnchor(
+                                  builder: (context, controller, child) =>
+                                      TextButton.icon(
+                                        icon: const Icon(Icons.sort, size: 16),
+                                        label: Text(l10n.commentsSort),
+                                        onPressed: () => controller.isOpen
+                                            ? controller.close()
+                                            : controller.open(),
+                                      ),
+                                  menuChildren: [
+                                    for (final sort in CommentSort.values)
+                                      MenuItemButton(
+                                        onPressed: () => _setCommentSort(sort),
+                                        leadingIcon: sort == _commentSort
+                                            ? const Icon(Icons.check, size: 18)
+                                            : const SizedBox(width: 18),
+                                        child: Text(
+                                          sort == CommentSort.top
+                                              ? l10n.commentsTop
+                                              : l10n.commentsNewest,
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            for (final comment in _comments)
+                              CommentTile(
+                                comment: comment,
+                                videoId: widget.video.id,
+                              ),
+                            if (_commentsToken != null)
+                              Center(
+                                child: _loadingMoreComments
+                                    ? const Padding(
+                                        padding: EdgeInsets.all(8),
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                        ),
+                                      )
+                                    : TextButton(
+                                        onPressed: _loadMoreComments,
+                                        child: Text(l10n.loadMoreComments),
+                                      ),
+                              ),
+                          ],
+                          if (_state.playback.queue.isNotEmpty) ...[
+                            const SizedBox(height: 16),
+                            Text(
+                              l10n.upNext,
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                            const SizedBox(height: 8),
+                            ReorderableListView(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              onReorderItem: (from, to) =>
+                                  _state.playback.moveQueued(from, to),
+                              children: [
+                                for (
+                                  var i = 0;
+                                  i < _state.playback.queue.length;
+                                  i++
+                                )
+                                  ListTile(
+                                    key: ValueKey(
+                                      'queue-$i-${_state.playback.queue[i].id}',
+                                    ),
+                                    dense: true,
+                                    leading: const Icon(Icons.drag_handle),
+                                    title: Text(
+                                      _state.playback.queue[i].title,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    trailing: IconButton(
+                                      icon: const Icon(Icons.close, size: 18),
+                                      onPressed: () =>
+                                          _state.playback.removeQueued(i),
+                                    ),
+                                    onTap: () {
+                                      final v = _state.playback.takeNextFrom(i);
+                                      if (v != null) {
+                                        _replaceWith(WatchPage(video: v));
+                                      }
+                                    },
+                                  ),
+                              ],
+                            ),
+                          ],
+                          if (state.settings.showRelated &&
+                              _related.isNotEmpty) ...[
+                            const SizedBox(height: 16),
+                            Text(
+                              l10n.relatedVideos,
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                            const SizedBox(height: 8),
+                            for (final v in _related)
+                              VideoListTile(
+                                video: v,
+                                contentPadding: EdgeInsets.zero,
+                                onTap: () => _replaceWith(WatchPage(video: v)),
+                              ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
     );

@@ -26,14 +26,21 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(SideNav), findsOneWidget);
-    expect(find.text('NewTube'), findsOneWidget);
+    expect(find.text('NewTube'), findsNothing);
 
-    await tester.tap(find.text('History'));
+    await tester.tap(
+      find.descendant(of: find.byType(SideNav), matching: find.text('History')),
+    );
     await tester.pumpAndSettle();
     expect(state.tabIndex, 4);
     expect(find.text('Nothing watched yet'), findsOneWidget);
 
-    await tester.tap(find.text('Subscriptions'));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(SideNav),
+        matching: find.text('Subscriptions'),
+      ),
+    );
     await tester.pumpAndSettle();
     expect(state.tabIndex, 3);
     debugDefaultTargetPlatformOverride = null;
@@ -50,7 +57,9 @@ void main() {
 
     await tester.tap(find.byIcon(Icons.menu));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Settings'));
+    await tester.tap(
+      find.descendant(of: find.byType(Drawer), matching: find.text('Settings')),
+    );
     await tester.pumpAndSettle();
     expect(state.tabIndex, 8);
     expect(find.text('Theme'), findsOneWidget);
@@ -106,14 +115,17 @@ void main() {
 
     final nav = find.byType(SideNav);
     expect(tester.getSize(nav).width, 208);
-    expect(find.text('Home'), findsOneWidget);
+    expect(
+      find.descendant(of: nav, matching: find.text('Home')),
+      findsOneWidget,
+    );
 
     await tester.tap(find.text('Collapse sidebar'));
     await tester.pumpAndSettle();
 
     expect(state.settings.sidebarCollapsed, isTrue);
     expect(tester.getSize(nav).width, 72);
-    expect(find.text('Home'), findsNothing);
+    expect(find.descendant(of: nav, matching: find.text('Home')), findsNothing);
     expect(find.byIcon(Icons.home), findsOneWidget);
 
     await tester.tap(find.byIcon(Icons.keyboard_double_arrow_right));
@@ -121,7 +133,10 @@ void main() {
 
     expect(state.settings.sidebarCollapsed, isFalse);
     expect(tester.getSize(nav).width, 208);
-    expect(find.text('Home'), findsOneWidget);
+    expect(
+      find.descendant(of: nav, matching: find.text('Home')),
+      findsOneWidget,
+    );
     debugDefaultTargetPlatformOverride = null;
   });
 
@@ -345,7 +360,6 @@ void main() {
     await tester.enterText(find.byType(TextField).first, 'kittens');
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
-    expect(find.text('Results: kittens'), findsOneWidget);
     expect(find.text('First video'), findsOneWidget);
     debugDefaultTargetPlatformOverride = null;
   });

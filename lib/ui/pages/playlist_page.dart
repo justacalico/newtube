@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../state/app_state.dart';
+import '../widgets/content_width.dart';
 import '../widgets/video_grid.dart';
 import '../widgets/video_list_tile.dart';
 import 'watch_page.dart';
@@ -98,7 +99,6 @@ class _PlaylistPageState extends State<PlaylistPage> {
     final loaded = _playlist;
     return Scaffold(
       appBar: AppBar(
-        title: Text(playlist?.title ?? ''),
         actions: [
           if (loaded != null)
             ListenableBuilder(
@@ -117,61 +117,63 @@ class _PlaylistPageState extends State<PlaylistPage> {
             ),
         ],
       ),
-      body: FeedStateView(
-        loading: _loading && playlist == null,
-        error: _error,
-        videos: playlist?.videos ?? const [],
-        onRetry: _load,
-        child: CustomScrollView(
-          slivers: [
-            if (playlist != null)
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        playlist.title,
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        [
-                          if (playlist.author.isNotEmpty) playlist.author,
-                          l10n.videoCount(playlist.videoCount),
-                        ].join(' · '),
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
+      body: ContentWidth(
+        child: FeedStateView(
+          loading: _loading && playlist == null,
+          error: _error,
+          videos: playlist?.videos ?? const [],
+          onRetry: _load,
+          child: CustomScrollView(
+            slivers: [
+              if (playlist != null)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          playlist.title,
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          [
+                            if (playlist.author.isNotEmpty) playlist.author,
+                            l10n.videoCount(playlist.videoCount),
+                          ].join(' · '),
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            SliverList.builder(
-              itemCount: playlist == null
-                  ? 0
-                  : playlist.videos.length +
-                        (playlist.continuation != null ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index >= playlist!.videos.length) {
-                  if (!_loadingMore) {
-                    scheduleMicrotask(_loadMore);
+              SliverList.builder(
+                itemCount: playlist == null
+                    ? 0
+                    : playlist.videos.length +
+                          (playlist.continuation != null ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index >= playlist!.videos.length) {
+                    if (!_loadingMore) {
+                      scheduleMicrotask(_loadMore);
+                    }
+                    return _loadingMore
+                        ? const Padding(
+                            padding: EdgeInsets.all(12),
+                            child: Center(child: CircularProgressIndicator()),
+                          )
+                        : const SizedBox.shrink();
                   }
-                  return _loadingMore
-                      ? const Padding(
-                          padding: EdgeInsets.all(12),
-                          child: Center(child: CircularProgressIndicator()),
-                        )
-                      : const SizedBox.shrink();
-                }
-                final video = playlist.videos[index];
-                return VideoListTile(
-                  video: video,
-                  onTap: () => _openVideo(video),
-                );
-              },
-            ),
-          ],
+                  final video = playlist.videos[index];
+                  return VideoListTile(
+                    video: video,
+                    onTap: () => _openVideo(video),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

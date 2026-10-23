@@ -9,8 +9,10 @@ import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../services/youtube_api.dart';
 import '../../state/app_state.dart';
+import '../widgets/content_width.dart';
 import '../widgets/thumbnail.dart';
 import '../../utils/feed_filter.dart';
+import '../widgets/empty_state.dart';
 import '../widgets/video_grid.dart';
 import 'channel_page.dart';
 import 'playlist_page.dart' show PlaylistPage, openPlaylistPage;
@@ -186,165 +188,174 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: SearchBar(
-            controller: _controller,
-            hintText: l10n.searchHint,
-            leading: const Icon(Icons.search),
-            onSubmitted: _search,
+    return ContentWidth(
+      maxWidth: 1280,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
+            child: SearchBar(
+              controller: _controller,
+              hintText: l10n.searchHint,
+              leading: const Icon(Icons.search),
+              elevation: const WidgetStatePropertyAll(0.0),
+              side: WidgetStatePropertyAll(
+                BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
+              ),
+              onSubmitted: _search,
+            ),
           ),
-        ),
-        if (_query.isNotEmpty)
-          _FilterRow(filter: _filter, onChanged: _setFilter),
-        Expanded(
-          child: _query.isEmpty
-              ? (_controller.text.trim().isNotEmpty
-                    ? ListView(
-                        children: _suggestionTiles(_controller.text.trim()),
-                      )
-                    : _SearchHistory(onSelect: _searchFromHistory))
-              : FeedStateView(
-                  loading: _loading,
-                  error: _error,
-                  videos: visibleVideos(
-                    _results.videos,
-                    AppScope.read(context).settings,
-                    AppScope.read(context),
-                  ),
-                  onRetry: _load,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
-                        child: Text(
-                          '${l10n.searchResultsFor}: $_query',
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                      ),
-                      if (_results.channels.isNotEmpty)
-                        SizedBox(
-                          height: 96,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            children: [
-                              for (final channel in _results.channels)
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8),
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                      borderRadius: BorderRadius.circular(8),
-                                      onTap: () => _openChannel(channel.id),
-                                      child: SizedBox(
-                                        width: 180,
-                                        child: Row(
-                                          children: [
-                                            VideoThumbnail(
-                                              url: channel.thumbnailUrl,
-                                              width: 48,
-                                              height: 48,
-                                              borderRadius:
-                                                  BorderRadius.circular(24),
-                                            ),
-                                            const SizedBox(width: 8),
-                                            Expanded(
-                                              child: Text(
-                                                channel.name,
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
+          if (_query.isNotEmpty)
+            _FilterRow(filter: _filter, onChanged: _setFilter),
+          Expanded(
+            child: _query.isEmpty
+                ? (_controller.text.trim().isNotEmpty
+                      ? ListView(
+                          children: _suggestionTiles(_controller.text.trim()),
+                        )
+                      : _SearchHistory(onSelect: _searchFromHistory))
+                : FeedStateView(
+                    loading: _loading,
+                    error: _error,
+                    videos: visibleVideos(
+                      _results.videos,
+                      AppScope.read(context).settings,
+                      AppScope.read(context),
+                    ),
+                    onRetry: _load,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (_results.channels.isNotEmpty)
+                          SizedBox(
+                            height: 64,
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
+                              children: [
+                                for (final channel in _results.channels)
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        borderRadius: BorderRadius.circular(8),
+                                        onTap: () => _openChannel(channel.id),
+                                        child: SizedBox(
+                                          width: 180,
+                                          child: Row(
+                                            children: [
+                                              VideoThumbnail(
+                                                url: channel.thumbnailUrl,
+                                                width: 48,
+                                                height: 48,
+                                                borderRadius:
+                                                    BorderRadius.circular(24),
+                                                placeholderIcon:
+                                                    Icons.person_outline,
                                               ),
-                                            ),
-                                          ],
+                                              const SizedBox(width: 8),
+                                              Expanded(
+                                                child: Text(
+                                                  channel.name,
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      if (_results.playlists.isNotEmpty)
-                        SizedBox(
-                          height: 96,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            children: [
-                              for (final playlist in _results.playlists)
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8),
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                      borderRadius: BorderRadius.circular(8),
-                                      onTap: () =>
-                                          openPlaylistPage(context, playlist),
-                                      child: SizedBox(
-                                        width: 180,
-                                        child: Row(
-                                          children: [
-                                            VideoThumbnail(
-                                              url: playlist.thumbnailUrl,
-                                              width: 48,
-                                              height: 48,
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                            const SizedBox(width: 8),
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    playlist.title,
-                                                    maxLines: 2,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                  Text(
-                                                    l10n.videoCount(
-                                                      playlist.videoCount,
+                        if (_results.playlists.isNotEmpty)
+                          SizedBox(
+                            height: 72,
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
+                              children: [
+                                for (final playlist in _results.playlists)
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        borderRadius: BorderRadius.circular(8),
+                                        onTap: () =>
+                                            openPlaylistPage(context, playlist),
+                                        child: SizedBox(
+                                          width: 180,
+                                          child: Row(
+                                            children: [
+                                              VideoThumbnail(
+                                                url: playlist.thumbnailUrl,
+                                                width: 48,
+                                                height: 48,
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      playlist.title,
+                                                      maxLines: 2,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                     ),
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodySmall,
-                                                  ),
-                                                ],
+                                                    Text(
+                                                      l10n.videoCount(
+                                                        playlist.videoCount,
+                                                      ),
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodySmall,
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                            ],
+                              ],
+                            ),
+                          ),
+                        Expanded(
+                          child: VideoGrid(
+                            videos: visibleVideos(
+                              _results.videos,
+                              AppScope.read(context).settings,
+                              AppScope.read(context),
+                            ),
+                            onVideoTap: _openVideo,
+                            onChannelTap: (v) => _openChannel(v.channelId),
                           ),
                         ),
-                      Expanded(
-                        child: VideoGrid(
-                          videos: visibleVideos(
-                            _results.videos,
-                            AppScope.read(context).settings,
-                            AppScope.read(context),
-                          ),
-                          onVideoTap: _openVideo,
-                          onChannelTap: (v) => _openChannel(v.channelId),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -365,22 +376,12 @@ class _SearchHistory extends StatelessWidget {
         final enabled = state.settings.searchHistoryEnabled;
         final entries = state.searchHistory.entries;
         if (!enabled || entries.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  enabled ? l10n.noSearchHistory : l10n.searchHistoryOff,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  enabled
-                      ? l10n.noSearchHistoryHint
-                      : l10n.searchHistoryOffHint,
-                ),
-              ],
-            ),
+          return EmptyState(
+            icon: Icons.search,
+            title: enabled ? l10n.noSearchHistory : l10n.searchHistoryOff,
+            hint: enabled
+                ? l10n.noSearchHistoryHint
+                : l10n.searchHistoryOffHint,
           );
         }
 
@@ -415,90 +416,102 @@ class _FilterRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-      child: Row(
-        children: [
-          _FilterMenu<SearchSort>(
-            label: l10n.filterSort,
-            value: switch (filter.sort) {
-              SearchSort.relevance => l10n.sortRelevance,
-              SearchSort.date => l10n.sortDate,
-              SearchSort.views => l10n.sortViews,
-              SearchSort.rating => l10n.sortRating,
-            },
-            active: filter.sort != SearchSort.relevance,
-            items: {
-              SearchSort.relevance: l10n.sortRelevance,
-              SearchSort.date: l10n.sortDate,
-              SearchSort.views: l10n.sortViews,
-              SearchSort.rating: l10n.sortRating,
-            },
-            onChanged: (v) => onChanged(filter.copyWith(sort: v)),
-            theme: theme,
-          ),
-          _FilterMenu<SearchType>(
-            label: l10n.filterType,
-            value: switch (filter.type) {
-              SearchType.all => l10n.typeAll,
-              SearchType.video => l10n.typeVideo,
-              SearchType.channel => l10n.typeChannel,
-              SearchType.playlist => l10n.typePlaylist,
-              SearchType.live => l10n.typeLive,
-            },
-            active: filter.type != SearchType.all,
-            items: {
-              SearchType.all: l10n.typeAll,
-              SearchType.video: l10n.typeVideo,
-              SearchType.channel: l10n.typeChannel,
-              SearchType.playlist: l10n.typePlaylist,
-              SearchType.live: l10n.typeLive,
-            },
-            onChanged: (v) => onChanged(filter.copyWith(type: v)),
-            theme: theme,
-          ),
-          _FilterMenu<UploadDate>(
-            label: l10n.filterUploadDate,
-            value: switch (filter.uploadDate) {
-              UploadDate.any => l10n.uploadAny,
-              UploadDate.hour => l10n.uploadHour,
-              UploadDate.today => l10n.uploadToday,
-              UploadDate.week => l10n.uploadWeek,
-              UploadDate.month => l10n.uploadMonth,
-              UploadDate.year => l10n.uploadYear,
-            },
-            active: filter.uploadDate != UploadDate.any,
-            items: {
-              UploadDate.any: l10n.uploadAny,
-              UploadDate.hour: l10n.uploadHour,
-              UploadDate.today: l10n.uploadToday,
-              UploadDate.week: l10n.uploadWeek,
-              UploadDate.month: l10n.uploadMonth,
-              UploadDate.year: l10n.uploadYear,
-            },
-            onChanged: (v) => onChanged(filter.copyWith(uploadDate: v)),
-            theme: theme,
-          ),
-          _FilterMenu<VideoDuration>(
-            label: l10n.filterDuration,
-            value: switch (filter.duration) {
-              VideoDuration.any => l10n.durationAny,
-              VideoDuration.short => l10n.durationShort,
-              VideoDuration.medium => l10n.durationMedium,
-              VideoDuration.long => l10n.durationLong,
-            },
-            active: filter.duration != VideoDuration.any,
-            items: {
-              VideoDuration.any: l10n.durationAny,
-              VideoDuration.short: l10n.durationShort,
-              VideoDuration.medium: l10n.durationMedium,
-              VideoDuration.long: l10n.durationLong,
-            },
-            onChanged: (v) => onChanged(filter.copyWith(duration: v)),
-            theme: theme,
-          ),
-        ],
+    return ShaderMask(
+      shaderCallback: (bounds) {
+        final fade = (40 / bounds.width).clamp(0.0, 0.5);
+        return LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: const [Colors.white, Colors.transparent],
+          stops: [1 - fade, 1],
+        ).createShader(bounds);
+      },
+      blendMode: BlendMode.dstIn,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+        child: Row(
+          children: [
+            _FilterMenu<SearchSort>(
+              label: l10n.filterSort,
+              value: switch (filter.sort) {
+                SearchSort.relevance => l10n.sortRelevance,
+                SearchSort.date => l10n.sortDate,
+                SearchSort.views => l10n.sortViews,
+                SearchSort.rating => l10n.sortRating,
+              },
+              active: filter.sort != SearchSort.relevance,
+              items: {
+                SearchSort.relevance: l10n.sortRelevance,
+                SearchSort.date: l10n.sortDate,
+                SearchSort.views: l10n.sortViews,
+                SearchSort.rating: l10n.sortRating,
+              },
+              onChanged: (v) => onChanged(filter.copyWith(sort: v)),
+              theme: theme,
+            ),
+            _FilterMenu<SearchType>(
+              label: l10n.filterType,
+              value: switch (filter.type) {
+                SearchType.all => l10n.typeAll,
+                SearchType.video => l10n.typeVideo,
+                SearchType.channel => l10n.typeChannel,
+                SearchType.playlist => l10n.typePlaylist,
+                SearchType.live => l10n.typeLive,
+              },
+              active: filter.type != SearchType.all,
+              items: {
+                SearchType.all: l10n.typeAll,
+                SearchType.video: l10n.typeVideo,
+                SearchType.channel: l10n.typeChannel,
+                SearchType.playlist: l10n.typePlaylist,
+                SearchType.live: l10n.typeLive,
+              },
+              onChanged: (v) => onChanged(filter.copyWith(type: v)),
+              theme: theme,
+            ),
+            _FilterMenu<UploadDate>(
+              label: l10n.filterUploadDate,
+              value: switch (filter.uploadDate) {
+                UploadDate.any => l10n.uploadAny,
+                UploadDate.hour => l10n.uploadHour,
+                UploadDate.today => l10n.uploadToday,
+                UploadDate.week => l10n.uploadWeek,
+                UploadDate.month => l10n.uploadMonth,
+                UploadDate.year => l10n.uploadYear,
+              },
+              active: filter.uploadDate != UploadDate.any,
+              items: {
+                UploadDate.any: l10n.uploadAny,
+                UploadDate.hour: l10n.uploadHour,
+                UploadDate.today: l10n.uploadToday,
+                UploadDate.week: l10n.uploadWeek,
+                UploadDate.month: l10n.uploadMonth,
+                UploadDate.year: l10n.uploadYear,
+              },
+              onChanged: (v) => onChanged(filter.copyWith(uploadDate: v)),
+              theme: theme,
+            ),
+            _FilterMenu<VideoDuration>(
+              label: l10n.filterDuration,
+              value: switch (filter.duration) {
+                VideoDuration.any => l10n.durationAny,
+                VideoDuration.short => l10n.durationShort,
+                VideoDuration.medium => l10n.durationMedium,
+                VideoDuration.long => l10n.durationLong,
+              },
+              active: filter.duration != VideoDuration.any,
+              items: {
+                VideoDuration.any: l10n.durationAny,
+                VideoDuration.short: l10n.durationShort,
+                VideoDuration.medium: l10n.durationMedium,
+                VideoDuration.long: l10n.durationLong,
+              },
+              onChanged: (v) => onChanged(filter.copyWith(duration: v)),
+              theme: theme,
+            ),
+          ],
+        ),
       ),
     );
   }

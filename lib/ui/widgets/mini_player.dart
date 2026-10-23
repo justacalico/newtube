@@ -22,6 +22,7 @@ class MiniPlayer extends StatelessWidget {
           return const SizedBox.shrink();
         }
         final l10n = AppLocalizations.of(context);
+        final theme = Theme.of(context);
         return Dismissible(
           key: const Key('mini_player'),
           direction: DismissDirection.horizontal,
@@ -29,100 +30,112 @@ class MiniPlayer extends StatelessWidget {
           child: Semantics(
             label: video.title,
             child: Material(
-              color: Theme.of(context).colorScheme.surfaceContainerHigh,
+              color: theme.colorScheme.surfaceContainerHigh,
               child: InkWell(
                 onTap: onExpand,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    SizedBox(
-                      height: 62,
-                      child: Row(
-                        children: [
-                          AspectRatio(
-                            aspectRatio: 16 / 9,
-                            child: ClipRect(
-                              child: session.audioOnly
-                                  ? VideoThumbnail(
-                                      url: video.thumbnailUrl,
-                                      borderRadius: BorderRadius.zero,
-                                    )
-                                  : FittedBox(
-                                      fit: BoxFit.cover,
-                                      child: SizedBox(
-                                        width: 320,
-                                        height: 180,
-                                        child: player.buildView(context),
-                                      ),
-                                    ),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  video.title,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.bodyMedium,
+                    Divider(
+                      height: 1,
+                      thickness: 1,
+                      color: theme.colorScheme.outlineVariant,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: SizedBox(
+                        height: 62,
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 6),
+                              child: AspectRatio(
+                                aspectRatio: 16 / 9,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: session.audioOnly
+                                      ? VideoThumbnail(
+                                          url: video.thumbnailUrl,
+                                          borderRadius: BorderRadius.zero,
+                                        )
+                                      : FittedBox(
+                                          fit: BoxFit.cover,
+                                          child: SizedBox(
+                                            width: 320,
+                                            height: 180,
+                                            child: player.buildView(context),
+                                          ),
+                                        ),
                                 ),
-                                Text(
-                                  video.author,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                              ],
-                            ),
-                          ),
-                          if (session.hasPrevious)
-                            IconButton(
-                              tooltip: l10n.previousVideo,
-                              icon: const Icon(Icons.skip_previous),
-                              onPressed: () {
-                                final prev = session.takePrevious();
-                                if (prev != null) {
-                                  AppScope.read(context).requestWatch(prev);
-                                }
-                              },
-                            ),
-                          if (session.queue.isNotEmpty)
-                            IconButton(
-                              tooltip: l10n.playNext,
-                              icon: const Icon(Icons.skip_next),
-                              onPressed: () {
-                                final next = session.takeNext();
-                                if (next != null) {
-                                  AppScope.read(context).requestWatch(next);
-                                }
-                              },
-                            ),
-                          StreamBuilder<bool>(
-                            stream: player.playingStream,
-                            initialData: player.playing,
-                            builder: (context, snapshot) => IconButton(
-                              tooltip: snapshot.data == true
-                                  ? l10n.pause
-                                  : l10n.play,
-                              icon: Icon(
-                                snapshot.data == true
-                                    ? Icons.pause
-                                    : Icons.play_arrow,
                               ),
-                              onPressed: () => snapshot.data == true
-                                  ? player.pause()
-                                  : player.play(),
                             ),
-                          ),
-                          IconButton(
-                            tooltip: l10n.close,
-                            icon: const Icon(Icons.close),
-                            onPressed: session.stop,
-                          ),
-                        ],
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    video.title,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: theme.textTheme.bodyMedium,
+                                  ),
+                                  Text(
+                                    video.author,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: theme.textTheme.bodySmall,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            if (session.hasPrevious)
+                              IconButton(
+                                tooltip: l10n.previousVideo,
+                                icon: const Icon(Icons.skip_previous),
+                                onPressed: () {
+                                  final prev = session.takePrevious();
+                                  if (prev != null) {
+                                    AppScope.read(context).requestWatch(prev);
+                                  }
+                                },
+                              ),
+                            if (session.queue.isNotEmpty)
+                              IconButton(
+                                tooltip: l10n.playNext,
+                                icon: const Icon(Icons.skip_next),
+                                onPressed: () {
+                                  final next = session.takeNext();
+                                  if (next != null) {
+                                    AppScope.read(context).requestWatch(next);
+                                  }
+                                },
+                              ),
+                            StreamBuilder<bool>(
+                              stream: player.playingStream,
+                              initialData: player.playing,
+                              builder: (context, snapshot) => IconButton(
+                                tooltip: snapshot.data == true
+                                    ? l10n.pause
+                                    : l10n.play,
+                                icon: Icon(
+                                  snapshot.data == true
+                                      ? Icons.pause
+                                      : Icons.play_arrow,
+                                ),
+                                onPressed: () => snapshot.data == true
+                                    ? player.pause()
+                                    : player.play(),
+                              ),
+                            ),
+                            IconButton(
+                              tooltip: l10n.close,
+                              icon: const Icon(Icons.close),
+                              onPressed: session.stop,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     StreamBuilder<Duration>(
@@ -148,10 +161,8 @@ class MiniPlayer extends StatelessWidget {
                                                     total.inMilliseconds)
                                                 .clamp(0.0, 1.0)
                                           : 0,
-                                      minHeight: 2,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .outline,
+                                      minHeight: 3,
+                                      color: theme.colorScheme.outline,
                                       backgroundColor: Colors.transparent,
                                     );
                                   },
@@ -162,7 +173,7 @@ class MiniPlayer extends StatelessWidget {
                                                 total.inMilliseconds)
                                             .clamp(0.0, 1.0)
                                       : 0,
-                                  minHeight: 2,
+                                  minHeight: 3,
                                   backgroundColor: Colors.transparent,
                                 ),
                               ],
