@@ -791,9 +791,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get startOver => 'Сначала';
 
   @override
-  String get continueWatching => 'Продолжить просмотр';
-
-  @override
   String get filterHistory => 'Фильтр истории';
 
   @override

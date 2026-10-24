@@ -771,9 +771,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get startOver => '从头开始';
 
   @override
-  String get continueWatching => '继续观看';
-
-  @override
   String get filterHistory => '筛选历史';
 
   @override
@@ -1791,9 +1788,6 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get startOver => '从头开始';
-
-  @override
-  String get continueWatching => '继续观看';
 
   @override
   String get filterHistory => '筛选历史';
