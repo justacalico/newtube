@@ -320,7 +320,6 @@
   },
   "resumedFrom": "从 {position} 继续播放",
   "startOver": "从头开始",
-  "continueWatching": "继续观看",
   "filterHistory": "筛选历史",
   "removeFromHistory": "从历史删除",
   "noResults": "无结果",

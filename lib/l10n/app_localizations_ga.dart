@@ -788,9 +788,6 @@ class AppLocalizationsGa extends AppLocalizations {
   String get startOver => 'Tosaigh arís';
 
   @override
-  String get continueWatching => 'Lean ort ag féachaint';
-
-  @override
   String get filterHistory => 'Scag stair';
 
   @override

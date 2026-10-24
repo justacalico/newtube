@@ -1550,12 +1550,6 @@ abstract class AppLocalizations {
   /// **'Start over'**
   String get startOver;
 
-  /// No description provided for @continueWatching.
-  ///
-  /// In en_GB, this message translates to:
-  /// **'Continue watching'**
-  String get continueWatching;
-
   /// No description provided for @filterHistory.
   ///
   /// In en_GB, this message translates to:

@@ -320,7 +320,6 @@
   },
   "resumedFrom": "Resumed from {position}",
   "startOver": "Start over",
-  "continueWatching": "Continue watching",
   "filterHistory": "Filter history",
   "removeFromHistory": "Remove from history",
   "noResults": "No results",

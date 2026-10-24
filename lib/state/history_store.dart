@@ -66,11 +66,6 @@ class HistoryStore extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<VideoInfo> get inProgress => [
-    for (final v in _entries)
-      if ((_positions[v.id] ?? 0) > 0) v,
-  ];
-
   static VideoInfo _decodeVideo(Map<String, dynamic> json) => VideoInfo(
     id: json['id'] as String? ?? '',
     title: json['title'] as String? ?? '',

@@ -320,7 +320,6 @@
   },
   "resumedFrom": "Продолжено с {position}",
   "startOver": "Сначала",
-  "continueWatching": "Продолжить просмотр",
   "filterHistory": "Фильтр истории",
   "removeFromHistory": "Удалить из истории",
   "noResults": "Нет результатов",

@@ -784,9 +784,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get startOver => 'Start over';
 
   @override
-  String get continueWatching => 'Continue watching';
-
-  @override
   String get filterHistory => 'Filter history';
 
   @override
@@ -1819,9 +1816,6 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get startOver => 'Start over';
-
-  @override
-  String get continueWatching => 'Continue watching';
 
   @override
   String get filterHistory => 'Filter history';
