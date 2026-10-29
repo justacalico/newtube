@@ -22,23 +22,12 @@ class WatchLaterStore extends ChangeNotifier {
       return WatchLaterStore({
         for (final item in decoded)
           if (item is Map<String, dynamic> && item['id'] is String)
-            item['id'] as String: _decode(item),
+            item['id'] as String: VideoInfo.fromJson(item),
       });
     } catch (_) {
       return WatchLaterStore();
     }
   }
-
-  static VideoInfo _decode(Map<String, dynamic> json) => VideoInfo(
-    id: json['id'] as String? ?? '',
-    title: json['title'] as String? ?? '',
-    author: json['author'] as String? ?? '',
-    channelId: json['channelId'] as String? ?? '',
-    thumbnailUrl: json['thumbnail'] as String?,
-    duration: Duration(seconds: json['duration'] as int? ?? 0),
-    viewCount: json['viewCount'] as int? ?? 0,
-    uploaded: json['uploaded'] as String?,
-  );
 
   Future<void> reload(SharedPreferences prefs) async {
     final fresh = await WatchLaterStore.load(prefs);
@@ -83,18 +72,6 @@ class WatchLaterStore extends ChangeNotifier {
 
   Future<void> _save(SharedPreferences prefs) => prefs.setString(
     _key,
-    jsonEncode([
-      for (final v in _videos.values)
-        {
-          'id': v.id,
-          'title': v.title,
-          'author': v.author,
-          'channelId': v.channelId,
-          'thumbnail': v.thumbnailUrl,
-          'duration': v.duration?.inSeconds ?? 0,
-          'viewCount': v.viewCount,
-          'uploaded': v.uploaded,
-        },
-    ]),
+    jsonEncode([for (final v in _videos.values) v.toJson()]),
   );
 }

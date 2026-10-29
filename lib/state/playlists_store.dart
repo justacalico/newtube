@@ -33,7 +33,7 @@ class PlaylistsStore extends ChangeNotifier {
     final videos = <VideoInfo>[
       for (final item in json['videos'] as List? ?? const [])
         if (item is Map<String, dynamic> && item['id'] is String)
-          _decodeVideo(item),
+          VideoInfo.fromJson(item),
     ];
     return PlaylistInfo(
       id: json['id'] as String,
@@ -44,17 +44,6 @@ class PlaylistsStore extends ChangeNotifier {
       videos: videos,
     );
   }
-
-  static VideoInfo _decodeVideo(Map<String, dynamic> json) => VideoInfo(
-    id: json['id'] as String? ?? '',
-    title: json['title'] as String? ?? '',
-    author: json['author'] as String? ?? '',
-    channelId: json['channelId'] as String? ?? '',
-    thumbnailUrl: json['thumbnail'] as String?,
-    duration: Duration(seconds: json['duration'] as int? ?? 0),
-    viewCount: json['viewCount'] as int? ?? 0,
-    uploaded: json['uploaded'] as String?,
-  );
 
   Future<void> reload(SharedPreferences prefs) async {
     final fresh = await PlaylistsStore.load(prefs);
@@ -209,17 +198,7 @@ class PlaylistsStore extends ChangeNotifier {
           'author': p.author,
           'thumbnail': p.thumbnailUrl,
           'videos': [
-            for (final v in p.videos)
-              {
-                'id': v.id,
-                'title': v.title,
-                'author': v.author,
-                'channelId': v.channelId,
-                'thumbnail': v.thumbnailUrl,
-                'duration': v.duration?.inSeconds ?? 0,
-                'viewCount': v.viewCount,
-                'uploaded': v.uploaded,
-              },
+            for (final v in p.videos) v.toJson(),
           ],
         },
     ]),
