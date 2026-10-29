@@ -42,6 +42,7 @@ class SettingsStore extends ChangeNotifier {
   static const _preferredQualityKey = 'preferred_quality';
   static const _preferredCodecKey = 'preferred_codec';
   static const _defaultSpeedKey = 'default_speed';
+  static const _theaterModeKey = 'theater_mode';
   static const defaultSponsorBlockCategories = {'sponsor', 'selfpromo'};
 
   AppTheme _theme;
@@ -73,6 +74,7 @@ class SettingsStore extends ChangeNotifier {
   int _preferredQuality;
   int _preferredCodec;
   double _defaultSpeed;
+  bool _theaterMode;
 
   SettingsStore({
     this._theme = AppTheme.system,
@@ -104,6 +106,7 @@ class SettingsStore extends ChangeNotifier {
     this._preferredQuality = 0,
     this._preferredCodec = 0,
     this._defaultSpeed = 1.0,
+    this._theaterMode = false,
   }) : _sponsorBlockCategories =
            sponsorBlockCategories ?? Set.of(defaultSponsorBlockCategories);
 
@@ -147,6 +150,7 @@ class SettingsStore extends ChangeNotifier {
       preferredQuality: prefs.getInt(_preferredQualityKey) ?? 0,
       preferredCodec: prefs.getInt(_preferredCodecKey) ?? 0,
       defaultSpeed: prefs.getDouble(_defaultSpeedKey) ?? 1.0,
+      theaterMode: prefs.getBool(_theaterModeKey) ?? false,
     );
   }
 
@@ -181,6 +185,7 @@ class SettingsStore extends ChangeNotifier {
     _preferredQuality = fresh._preferredQuality;
     _preferredCodec = fresh._preferredCodec;
     _defaultSpeed = fresh._defaultSpeed;
+    _theaterMode = fresh._theaterMode;
     notifyListeners();
   }
 
@@ -232,6 +237,7 @@ class SettingsStore extends ChangeNotifier {
   int get preferredQuality => _preferredQuality;
   int get preferredCodec => _preferredCodec;
   double get defaultSpeed => _defaultSpeed;
+  bool get theaterMode => _theaterMode;
 
   Future<void> setTheme(AppTheme theme, SharedPreferences prefs) async {
     _theme = theme;
@@ -422,6 +428,12 @@ class SettingsStore extends ChangeNotifier {
   Future<void> setHideWatched(bool value, SharedPreferences prefs) async {
     _hideWatched = value;
     await prefs.setBool(_hideWatchedKey, value);
+    notifyListeners();
+  }
+
+  Future<void> setTheaterMode(bool value, SharedPreferences prefs) async {
+    _theaterMode = value;
+    await prefs.setBool(_theaterModeKey, value);
     notifyListeners();
   }
 

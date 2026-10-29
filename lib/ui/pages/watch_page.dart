@@ -93,6 +93,7 @@ class _WatchPageState extends State<WatchPage>
   bool _loadingMoreComments = false;
   Object? _error;
   bool _fullscreen = false;
+  bool _theaterMode = false;
   bool _recorded = false;
   bool _sharedPlayer = false;
   int _switches = 0;
@@ -106,6 +107,7 @@ class _WatchPageState extends State<WatchPage>
     WidgetsBinding.instance.addObserver(this);
     _state = AppScope.read(context);
     _state.playback.addListener(_onSessionChanged);
+    _theaterMode = _state.settings.theaterMode;
     _load();
   }
 
@@ -806,7 +808,6 @@ class _WatchPageState extends State<WatchPage>
 
   Widget _buildPage() {
     final l10n = AppLocalizations.of(context);
-    final state = AppScope.read(context);
     final player = _player;
 
     return Scaffold(
@@ -824,417 +825,485 @@ class _WatchPageState extends State<WatchPage>
             )
           : player == null || _details == null
           ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: ContentWidth(
-                maxWidth: 1280,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: _fullscreen
-                          ? const ColoredBox(color: Colors.black)
-                          : PlayerView(
-                              player: player,
-                              streams: _details!.streams,
-                              current: _currentStream,
-                              currentAudio: _currentAudio,
-                              onQualitySelected: _selectStream,
-                              onAudioSelected: _selectAudio,
-                              onToggleFullscreen: () => _openFullscreen(player),
-                              sleepTimer: _sleepTimer,
-                              chapters: _chapters,
-                              segmentSkipper: _skipper,
-                              pipActions: _pipActions,
-                              endScreenBuilder: (context) =>
-                                  _endScreen(context, player),
-                              captions: _details!.captions,
-                              selectedCaption: _caption,
-                              onCaptionSelected: _selectCaption,
-                              audioOnly: _audioOnly,
-                              artworkUrl: widget.video.thumbnailUrl,
-                              onAudioOnlyChanged: _setAudioOnly,
-                              onDismiss: () => Navigator.of(context).pop(),
-                              onNext: () => _openNext(),
-                              onPrevious: () => Navigator.of(context).pop(),
-                              onPip: () => _pipActions?.enterPip(),
-                              title: widget.video.title,
-                              avatarUrl: _channel?.thumbnailUrl,
-                              storyboard: bestStoryboard(_details!.storyboards),
-                            ),
+          : LayoutBuilder(
+              builder: (context, cons) => cons.maxWidth >= 1000
+                  ? _buildWideBody(player)
+                  : _buildNarrowBody(player),
+            ),
+    );
+  }
+
+  void _toggleTheater() {
+    final next = !_theaterMode;
+    setState(() => _theaterMode = next);
+    unawaited(_state.settings.setTheaterMode(next, _state.prefs));
+  }
+
+  Widget _buildNarrowBody(PlayerController player) {
+    return SingleChildScrollView(
+      child: ContentWidth(
+        maxWidth: 1280,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _playerSurface(player, wide: false),
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _titleSection(),
+                  _descriptionSection(),
+                  _chaptersSection(player),
+                  _playlistSection(),
+                  _commentsSection(),
+                  _queueSection(),
+                  _relatedSection(),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWideBody(PlayerController player) {
+    final theater = _theaterMode;
+    return SingleChildScrollView(
+      child: ContentWidth(
+        maxWidth: theater ? 1920 : 1440,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (theater) _playerSurface(player, wide: true),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (!theater) _playerSurface(player, wide: true),
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _titleSection(),
+                            _descriptionSection(),
+                            _chaptersSection(player),
+                            _commentsSection(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: 420,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _playlistSection(),
+                        _queueSection(),
+                        _relatedSection(),
+                      ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(12),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _playerSurface(PlayerController player, {required bool wide}) {
+    return AspectRatio(
+      aspectRatio: 16 / 9,
+      child: _fullscreen
+          ? const ColoredBox(color: Colors.black)
+          : PlayerView(
+              player: player,
+              streams: _details!.streams,
+              current: _currentStream,
+              currentAudio: _currentAudio,
+              onQualitySelected: _selectStream,
+              onAudioSelected: _selectAudio,
+              onToggleFullscreen: () => _openFullscreen(player),
+              onToggleTheater: wide ? _toggleTheater : null,
+              sleepTimer: _sleepTimer,
+              chapters: _chapters,
+              segmentSkipper: _skipper,
+              pipActions: _pipActions,
+              endScreenBuilder: (context) => _endScreen(context, player),
+              captions: _details!.captions,
+              selectedCaption: _caption,
+              onCaptionSelected: _selectCaption,
+              audioOnly: _audioOnly,
+              artworkUrl: widget.video.thumbnailUrl,
+              onAudioOnlyChanged: _setAudioOnly,
+              onDismiss: () => Navigator.of(context).pop(),
+              onNext: () => _openNext(),
+              onPrevious: () => Navigator.of(context).pop(),
+              onPip: () => _pipActions?.enterPip(),
+              title: widget.video.title,
+              avatarUrl: _channel?.thumbnailUrl,
+              storyboard: bestStoryboard(_details!.storyboards),
+            ),
+    );
+  }
+
+  Widget _titleSection() {
+    final l10n = AppLocalizations.of(context);
+    final state = AppScope.read(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(widget.video.title, style: Theme.of(context).textTheme.titleLarge),
+        const SizedBox(height: 8),
+        LayoutBuilder(
+          builder: (context, cons) {
+            final channelInfo = Expanded(
+              child: InkWell(
+                onTap: () => openChannelPage(context, _details!.info.channelId),
+                child: Row(
+                  children: [
+                    VideoThumbnail(
+                      url: _channel?.thumbnailUrl,
+                      width: 40,
+                      height: 40,
+                      borderRadius: BorderRadius.circular(20),
+                      placeholderIcon: Icons.person_outline,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.video.title,
-                            style: Theme.of(context).textTheme.titleLarge,
+                            _details!.info.author,
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
-                          const SizedBox(height: 8),
-                          LayoutBuilder(
-                            builder: (context, cons) {
-                              final channelInfo = Expanded(
-                                child: InkWell(
-                                  onTap: () => openChannelPage(
-                                    context,
-                                    _details!.info.channelId,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      VideoThumbnail(
-                                        url: _channel?.thumbnailUrl,
-                                        width: 40,
-                                        height: 40,
-                                        borderRadius: BorderRadius.circular(20),
-                                        placeholderIcon: Icons.person_outline,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              _details!.info.author,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleMedium,
-                                            ),
-                                            Text(
-                                              '${formatViewCount(_details!.info.viewCount)} ${l10n.views}${_dislikes != null ? ' · ${formatViewCount(_dislikes!)} ${l10n.dislikes}' : ''}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                              final subscribe = SubscribeButton(
-                                channel:
-                                    _channel ??
-                                    ChannelInfo(
-                                      id: _details!.info.channelId,
-                                      name: _details!.info.author,
-                                    ),
-                              );
-                              final actions = <Widget>[
-                                ListenableBuilder(
-                                  listenable: state.watchLater,
-                                  builder: (context, _) {
-                                    final saved = state.watchLater.contains(
-                                      widget.video.id,
-                                    );
-                                    return IconButton(
-                                      tooltip: saved
-                                          ? l10n.watchLaterRemove
-                                          : l10n.watchLaterAdd,
-                                      icon: Icon(
-                                        saved
-                                            ? Icons.bookmark
-                                            : Icons.bookmark_border,
-                                      ),
-                                      onPressed: () => state.watchLater.toggle(
-                                        widget.video,
-                                        state.prefs,
-                                      ),
-                                    );
-                                  },
-                                ),
-                                IconButton(
-                                  tooltip: l10n.addToPlaylist,
-                                  icon: const Icon(Icons.playlist_add),
-                                  onPressed: () =>
-                                      showPlaylistPicker(context, widget.video),
-                                ),
-                                _ShareMenu(
-                                  video: widget.video,
-                                  player: _player,
-                                ),
-                                if (state.downloads != null)
-                                  IconButton(
-                                    tooltip: l10n.download,
-                                    icon: const Icon(Icons.download_outlined),
-                                    onPressed: _showDownloadPicker,
-                                  ),
-                              ];
-                              if (cons.maxWidth < 560) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(children: [channelInfo, subscribe]),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: actions,
-                                    ),
-                                  ],
-                                );
-                              }
-                              return Row(
-                                children: [channelInfo, subscribe, ...actions],
-                              );
-                            },
+                          Text(
+                            '${formatViewCount(_details!.info.viewCount)} ${l10n.views}${_dislikes != null ? ' · ${formatViewCount(_dislikes!)} ${l10n.dislikes}' : ''}',
+                            style: Theme.of(context).textTheme.bodySmall,
                           ),
-                          if (_details!.description.isNotEmpty) ...[
-                            const SizedBox(height: 16),
-                            Text(
-                              l10n.description,
-                              style: Theme.of(context).textTheme.titleSmall,
-                            ),
-                            const SizedBox(height: 4),
-                            SelectableText.rich(
-                              TextSpan(
-                                children: descriptionSpans(
-                                  _details!.description,
-                                  linkStyle: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primary,
-                                  ),
-                                  onLink: state.launch,
-                                  onTimestamp: (time) => _player?.seek(time),
-                                ),
-                              ),
-                            ),
-                          ],
-                          if (_chapters.isNotEmpty) ...[
-                            const SizedBox(height: 16),
-                            ExpansionTile(
-                              tilePadding: EdgeInsets.zero,
-                              title: Text(
-                                l10n.chapters,
-                                style: Theme.of(context).textTheme.titleSmall,
-                              ),
-                              subtitle: Text(
-                                chapterAt(_chapters, player.position)?.title ??
-                                    '',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              children: [
-                                for (final chapter in _chapters)
-                                  ListTile(
-                                    dense: true,
-                                    contentPadding: EdgeInsets.zero,
-                                    leading: Text(
-                                      formatDuration(chapter.start),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall,
-                                    ),
-                                    title: Text(
-                                      chapter.title,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    onTap: () => player.seek(chapter.start),
-                                  ),
-                              ],
-                            ),
-                          ],
-                          if (widget.playlist != null &&
-                              widget.index != null) ...[
-                            const SizedBox(height: 16),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    l10n.playlistProgress(
-                                      widget.playlist!.title,
-                                      widget.index! + 1,
-                                      widget.playlist!.videos.length,
-                                    ),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleSmall,
-                                  ),
-                                ),
-                                ListenableBuilder(
-                                  listenable: _state.playback,
-                                  builder: (context, _) {
-                                    final session = _state.playback;
-                                    return Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        IconButton(
-                                          tooltip: switch (session.repeatMode) {
-                                            RepeatMode.off => l10n.repeatOff,
-                                            RepeatMode.all => l10n.repeatAll,
-                                            RepeatMode.one => l10n.repeatOne,
-                                          },
-                                          icon: Icon(
-                                            switch (session.repeatMode) {
-                                              RepeatMode.off => Icons.repeat,
-                                              RepeatMode.all => Icons.repeat_on,
-                                              RepeatMode.one =>
-                                                Icons.repeat_one_on,
-                                            },
-                                          ),
-                                          onPressed: () => session.repeatMode =
-                                              RepeatMode.values[(session
-                                                          .repeatMode
-                                                          .index +
-                                                      1) %
-                                                  RepeatMode.values.length],
-                                        ),
-                                        IconButton(
-                                          tooltip: l10n.shuffle,
-                                          icon: Icon(
-                                            session.shuffle
-                                                ? Icons.shuffle_on
-                                                : Icons.shuffle,
-                                          ),
-                                          onPressed: () => session.shuffle =
-                                              !session.shuffle,
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            for (
-                              var i = 0;
-                              i < widget.playlist!.videos.length;
-                              i++
-                            )
-                              VideoListTile(
-                                video: widget.playlist!.videos[i],
-                                contentPadding: EdgeInsets.zero,
-                                selected: i == widget.index,
-                                onTap: () => _openPlaylistVideo(i),
-                              ),
-                          ],
-                          if (state.settings.showComments &&
-                              _comments.isNotEmpty) ...[
-                            const SizedBox(height: 16),
-                            Row(
-                              children: [
-                                Text(
-                                  l10n.comments,
-                                  style: Theme.of(context).textTheme.titleSmall,
-                                ),
-                                const Spacer(),
-                                MenuAnchor(
-                                  builder: (context, controller, child) =>
-                                      TextButton.icon(
-                                        icon: const Icon(Icons.sort, size: 16),
-                                        label: Text(l10n.commentsSort),
-                                        onPressed: () => controller.isOpen
-                                            ? controller.close()
-                                            : controller.open(),
-                                      ),
-                                  menuChildren: [
-                                    for (final sort in CommentSort.values)
-                                      MenuItemButton(
-                                        onPressed: () => _setCommentSort(sort),
-                                        leadingIcon: sort == _commentSort
-                                            ? const Icon(Icons.check, size: 18)
-                                            : const SizedBox(width: 18),
-                                        child: Text(
-                                          sort == CommentSort.top
-                                              ? l10n.commentsTop
-                                              : l10n.commentsNewest,
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            for (final comment in _comments)
-                              CommentTile(
-                                comment: comment,
-                                videoId: widget.video.id,
-                              ),
-                            if (_commentsToken != null)
-                              Center(
-                                child: _loadingMoreComments
-                                    ? const Padding(
-                                        padding: EdgeInsets.all(8),
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                        ),
-                                      )
-                                    : TextButton(
-                                        onPressed: _loadMoreComments,
-                                        child: Text(l10n.loadMoreComments),
-                                      ),
-                              ),
-                          ],
-                          if (_state.playback.queue.isNotEmpty) ...[
-                            const SizedBox(height: 16),
-                            Text(
-                              l10n.upNext,
-                              style: Theme.of(context).textTheme.titleSmall,
-                            ),
-                            const SizedBox(height: 8),
-                            ReorderableListView(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              onReorderItem: (from, to) =>
-                                  _state.playback.moveQueued(from, to),
-                              children: [
-                                for (
-                                  var i = 0;
-                                  i < _state.playback.queue.length;
-                                  i++
-                                )
-                                  ListTile(
-                                    key: ValueKey(
-                                      'queue-$i-${_state.playback.queue[i].id}',
-                                    ),
-                                    dense: true,
-                                    leading: const Icon(Icons.drag_handle),
-                                    title: Text(
-                                      _state.playback.queue[i].title,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    trailing: IconButton(
-                                      icon: const Icon(Icons.close, size: 18),
-                                      onPressed: () =>
-                                          _state.playback.removeQueued(i),
-                                    ),
-                                    onTap: () {
-                                      final v = _state.playback.takeNextFrom(i);
-                                      if (v != null) {
-                                        _replaceWith(WatchPage(video: v));
-                                      }
-                                    },
-                                  ),
-                              ],
-                            ),
-                          ],
-                          if (state.settings.showRelated &&
-                              _related.isNotEmpty) ...[
-                            const SizedBox(height: 16),
-                            Text(
-                              l10n.relatedVideos,
-                              style: Theme.of(context).textTheme.titleSmall,
-                            ),
-                            const SizedBox(height: 8),
-                            for (final v in _related)
-                              VideoListTile(
-                                video: v,
-                                contentPadding: EdgeInsets.zero,
-                                onTap: () => _replaceWith(WatchPage(video: v)),
-                              ),
-                          ],
                         ],
                       ),
                     ),
                   ],
                 ),
               ),
+            );
+            final subscribe = SubscribeButton(
+              channel:
+                  _channel ??
+                  ChannelInfo(
+                    id: _details!.info.channelId,
+                    name: _details!.info.author,
+                  ),
+            );
+            final actions = <Widget>[
+              ListenableBuilder(
+                listenable: state.watchLater,
+                builder: (context, _) {
+                  final saved = state.watchLater.contains(widget.video.id);
+                  return IconButton(
+                    tooltip: saved ? l10n.watchLaterRemove : l10n.watchLaterAdd,
+                    icon: Icon(saved ? Icons.bookmark : Icons.bookmark_border),
+                    onPressed: () =>
+                        state.watchLater.toggle(widget.video, state.prefs),
+                  );
+                },
+              ),
+              IconButton(
+                tooltip: l10n.addToPlaylist,
+                icon: const Icon(Icons.playlist_add),
+                onPressed: () => showPlaylistPicker(context, widget.video),
+              ),
+              _ShareMenu(video: widget.video, player: _player),
+              if (state.downloads != null)
+                IconButton(
+                  tooltip: l10n.download,
+                  icon: const Icon(Icons.download_outlined),
+                  onPressed: _showDownloadPicker,
+                ),
+            ];
+            if (cons.maxWidth < 560) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(children: [channelInfo, subscribe]),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: actions,
+                  ),
+                ],
+              );
+            }
+            return Row(children: [channelInfo, subscribe, ...actions]);
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _descriptionSection() {
+    if (_details!.description.isEmpty) return const SizedBox.shrink();
+    final l10n = AppLocalizations.of(context);
+    final state = AppScope.read(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16),
+        Text(l10n.description, style: Theme.of(context).textTheme.titleSmall),
+        const SizedBox(height: 4),
+        SelectableText.rich(
+          TextSpan(
+            children: descriptionSpans(
+              _details!.description,
+              linkStyle: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              onLink: state.launch,
+              onTimestamp: (time) => _player?.seek(time),
             ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _chaptersSection(PlayerController player) {
+    if (_chapters.isEmpty) return const SizedBox.shrink();
+    final l10n = AppLocalizations.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16),
+        ExpansionTile(
+          tilePadding: EdgeInsets.zero,
+          title: Text(
+            l10n.chapters,
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+          subtitle: Text(
+            chapterAt(_chapters, player.position)?.title ?? '',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          children: [
+            for (final chapter in _chapters)
+              ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                leading: Text(
+                  formatDuration(chapter.start),
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                title: Text(
+                  chapter.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                onTap: () => player.seek(chapter.start),
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _playlistSection() {
+    if (widget.playlist == null || widget.index == null) {
+      return const SizedBox.shrink();
+    }
+    final l10n = AppLocalizations.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                l10n.playlistProgress(
+                  widget.playlist!.title,
+                  widget.index! + 1,
+                  widget.playlist!.videos.length,
+                ),
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+            ),
+            ListenableBuilder(
+              listenable: _state.playback,
+              builder: (context, _) {
+                final session = _state.playback;
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      tooltip: switch (session.repeatMode) {
+                        RepeatMode.off => l10n.repeatOff,
+                        RepeatMode.all => l10n.repeatAll,
+                        RepeatMode.one => l10n.repeatOne,
+                      },
+                      icon: Icon(switch (session.repeatMode) {
+                        RepeatMode.off => Icons.repeat,
+                        RepeatMode.all => Icons.repeat_on,
+                        RepeatMode.one => Icons.repeat_one_on,
+                      }),
+                      onPressed: () => session.repeatMode =
+                          RepeatMode.values[(session.repeatMode.index + 1) %
+                              RepeatMode.values.length],
+                    ),
+                    IconButton(
+                      tooltip: l10n.shuffle,
+                      icon: Icon(
+                        session.shuffle ? Icons.shuffle_on : Icons.shuffle,
+                      ),
+                      onPressed: () => session.shuffle = !session.shuffle,
+                    ),
+                  ],
+                );
+              },
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        for (var i = 0; i < widget.playlist!.videos.length; i++)
+          VideoListTile(
+            video: widget.playlist!.videos[i],
+            contentPadding: EdgeInsets.zero,
+            selected: i == widget.index,
+            onTap: () => _openPlaylistVideo(i),
+          ),
+      ],
+    );
+  }
+
+  Widget _commentsSection() {
+    final state = AppScope.read(context);
+    if (!state.settings.showComments || _comments.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    final l10n = AppLocalizations.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Text(l10n.comments, style: Theme.of(context).textTheme.titleSmall),
+            const Spacer(),
+            MenuAnchor(
+              builder: (context, controller, child) => TextButton.icon(
+                icon: const Icon(Icons.sort, size: 16),
+                label: Text(l10n.commentsSort),
+                onPressed: () =>
+                    controller.isOpen ? controller.close() : controller.open(),
+              ),
+              menuChildren: [
+                for (final sort in CommentSort.values)
+                  MenuItemButton(
+                    onPressed: () => _setCommentSort(sort),
+                    leadingIcon: sort == _commentSort
+                        ? const Icon(Icons.check, size: 18)
+                        : const SizedBox(width: 18),
+                    child: Text(
+                      sort == CommentSort.top
+                          ? l10n.commentsTop
+                          : l10n.commentsNewest,
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        for (final comment in _comments)
+          CommentTile(comment: comment, videoId: widget.video.id),
+        if (_commentsToken != null)
+          Center(
+            child: _loadingMoreComments
+                ? const Padding(
+                    padding: EdgeInsets.all(8),
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : TextButton(
+                    onPressed: _loadMoreComments,
+                    child: Text(l10n.loadMoreComments),
+                  ),
+          ),
+      ],
+    );
+  }
+
+  Widget _queueSection() {
+    if (_state.playback.queue.isEmpty) return const SizedBox.shrink();
+    final l10n = AppLocalizations.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16),
+        Text(l10n.upNext, style: Theme.of(context).textTheme.titleSmall),
+        const SizedBox(height: 8),
+        ReorderableListView(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          onReorderItem: (from, to) => _state.playback.moveQueued(from, to),
+          children: [
+            for (var i = 0; i < _state.playback.queue.length; i++)
+              ListTile(
+                key: ValueKey('queue-$i-${_state.playback.queue[i].id}'),
+                dense: true,
+                leading: const Icon(Icons.drag_handle),
+                title: Text(
+                  _state.playback.queue[i].title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                trailing: IconButton(
+                  icon: const Icon(Icons.close, size: 18),
+                  onPressed: () => _state.playback.removeQueued(i),
+                ),
+                onTap: () {
+                  final v = _state.playback.takeNextFrom(i);
+                  if (v != null) {
+                    _replaceWith(WatchPage(video: v));
+                  }
+                },
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _relatedSection() {
+    final state = AppScope.read(context);
+    if (!state.settings.showRelated || _related.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    final l10n = AppLocalizations.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16),
+        Text(l10n.relatedVideos, style: Theme.of(context).textTheme.titleSmall),
+        const SizedBox(height: 8),
+        for (final v in _related)
+          VideoListTile(
+            video: v,
+            contentPadding: EdgeInsets.zero,
+            onTap: () => _replaceWith(WatchPage(video: v)),
+          ),
+      ],
     );
   }
 }

@@ -130,6 +130,7 @@
   "close": "Close",
   "audio": "Audio",
   "fullscreen": "Fullscreen",
+  "theaterMode": "Theater mode",
   "quality": "Quality",
   "playbackSpeed": "Playback speed",
   "mute": "Mute",

@@ -16,6 +16,7 @@ Future<Widget> _wrapAsync({
   VoidCallback? onNext,
   VoidCallback? onPrevious,
   VoidCallback? onPip,
+  VoidCallback? onToggleTheater,
   List<CaptionTrack> captions = const [],
   ValueChanged<CaptionTrack?>? onCaption,
 }) async {
@@ -47,6 +48,7 @@ Future<Widget> _wrapAsync({
               onNext: onNext,
               onPrevious: onPrevious,
               onPip: onPip,
+              onToggleTheater: onToggleTheater,
             ),
           ),
         ),
@@ -107,6 +109,15 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.keyC);
     await tester.pump();
     expect(chosen, isNull);
+  });
+
+  testWidgets('T toggles theater mode', (tester) async {
+    var toggles = 0;
+    await tester.pumpWidget(await _wrapAsync(onToggleTheater: () => toggles++));
+    await tester.pump();
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyT);
+    await tester.pump();
+    expect(toggles, 1);
   });
 
   testWidgets('shift+? opens the shortcuts sheet', (tester) async {

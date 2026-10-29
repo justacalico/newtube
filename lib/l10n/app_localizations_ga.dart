@@ -405,6 +405,9 @@ class AppLocalizationsGa extends AppLocalizations {
   String get fullscreen => 'Lánscáileán';
 
   @override
+  String get theaterMode => 'Mód amharclainne';
+
+  @override
   String get quality => 'Cáilíocht';
 
   @override

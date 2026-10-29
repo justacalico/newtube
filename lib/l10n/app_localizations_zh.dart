@@ -400,6 +400,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fullscreen => '全屏';
 
   @override
+  String get theaterMode => '剧院模式';
+
+  @override
   String get quality => '画质';
 
   @override
@@ -1417,6 +1420,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get fullscreen => '全屏';
+
+  @override
+  String get theaterMode => '剧院模式';
 
   @override
   String get quality => '画质';

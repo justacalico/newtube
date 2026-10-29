@@ -405,6 +405,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get fullscreen => 'На весь экран';
 
   @override
+  String get theaterMode => 'Режим кинотеатра';
+
+  @override
   String get quality => 'Качество';
 
   @override

@@ -30,6 +30,7 @@ class PlayerView extends StatefulWidget {
   final ValueChanged<PlayableStream> onQualitySelected;
   final ValueChanged<PlayableStream> onAudioSelected;
   final VoidCallback onToggleFullscreen;
+  final VoidCallback? onToggleTheater;
   final bool isFullscreen;
   final SleepTimer? sleepTimer;
   final List<VideoChapter> chapters;
@@ -61,6 +62,7 @@ class PlayerView extends StatefulWidget {
     required this.onQualitySelected,
     required this.onAudioSelected,
     required this.onToggleFullscreen,
+    this.onToggleTheater,
     this.isFullscreen = false,
     this.sleepTimer,
     this.chapters = const [],
@@ -520,6 +522,7 @@ class _PlayerViewState extends State<PlayerView> {
               ('↑ / ↓', l10n.shortcutVolume),
               ('M', l10n.shortcutMute),
               ('F', l10n.shortcutFullscreen),
+              if (widget.onToggleTheater != null) ('T', l10n.theaterMode),
               ('N / P', l10n.shortcutNextPrev),
               ('0–9', l10n.shortcutPercent),
               ('Home / End', l10n.shortcutStartEnd),
@@ -835,6 +838,10 @@ class _PlayerViewState extends State<PlayerView> {
         const SingleActivator(LogicalKeyboardKey.keyF): () {
           _showControls();
           widget.onToggleFullscreen();
+        },
+        const SingleActivator(LogicalKeyboardKey.keyT): () {
+          _showControls();
+          widget.onToggleTheater?.call();
         },
         const SingleActivator(LogicalKeyboardKey.arrowUp): () =>
             _adjustVolume(0.05),
@@ -1331,6 +1338,26 @@ class _PlayerViewState extends State<PlayerView> {
                                                   _controlBox(
                                                     _volumeButton(l10n),
                                                   ),
+                                                  if (widget.onToggleTheater !=
+                                                      null) ...[
+                                                    const SizedBox(width: 8),
+                                                    _controlBox(
+                                                      IconButton(
+                                                        icon: const Icon(
+                                                          Icons
+                                                              .rectangle_outlined,
+                                                        ),
+                                                        color: Colors.white,
+                                                        tooltip:
+                                                            l10n.theaterMode,
+                                                        onPressed: () {
+                                                          _showControls();
+                                                          widget
+                                                              .onToggleTheater!();
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ],
                                               ),
                                               const SizedBox(height: 8),
