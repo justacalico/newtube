@@ -10,8 +10,10 @@ class StreamChoice {
   String? get audioUrl => audio?.url;
 }
 
+final _digitsPattern = RegExp(r'\d+');
+
 int streamPixels(PlayableStream stream) {
-  final match = RegExp(r'\d+').firstMatch(stream.quality);
+  final match = _digitsPattern.firstMatch(stream.quality);
   return match == null ? 0 : int.tryParse(match.group(0)!) ?? 0;
 }
 

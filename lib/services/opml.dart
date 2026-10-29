@@ -40,6 +40,7 @@ List<OpmlEntry> parseOpml(String text) {
 }
 
 final _channelIdPattern = RegExp(r'(?:channel_id=|/channel/)([\w-]+)');
+final _quotesPattern = RegExp(r'^"|"$');
 
 List<OpmlEntry> parseTakeoutCsv(String text) {
   final entries = <OpmlEntry>[];
@@ -54,7 +55,7 @@ List<OpmlEntry> parseTakeoutCsv(String text) {
         .sublist(2)
         .join(',')
         .trim()
-        .replaceAll(RegExp(r'^"|"$'), '');
+        .replaceAll(_quotesPattern, '');
     entries.add(
       OpmlEntry(title: title, url: 'https://www.youtube.com/channel/$id'),
     );
