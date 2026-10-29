@@ -216,6 +216,19 @@ void main() {
     expect(route?.videoId, 'abc');
     expect(await api.resolveChannel('https://youtube.com/channel/UC5'), 'UC5');
   });
+  test('trailing-slash instance produces single-slash URLs', () async {
+    Uri? requested;
+    final trailing = InvidiousApi(
+      instance: 'https://inv.test/',
+      client: MockClient((req) async {
+        requested = req.url;
+        return http.Response('[]', 200);
+      }),
+    );
+    await trailing.trending();
+    expect(requested!.path, '/api/v1/trending');
+  });
+
   test('homeFeed delegates to trending', () async {
     final bare = InvidiousApi(instance: 'https://inv.test');
     expect(bare, isNotNull);
