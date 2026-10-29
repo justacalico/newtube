@@ -1,112 +1,23 @@
 import 'package:flutter/material.dart';
 
-import '../../models/video_info.dart';
-import '../../services/home_feed.dart';
-import '../../state/app_state.dart';
 import '../../l10n/app_localizations.dart';
-import '../../utils/feed_filter.dart';
-import '../widgets/content_width.dart';
-import '../widgets/page_header.dart';
-import '../widgets/video_grid.dart';
-import 'channel_page.dart';
-import 'watch_page.dart';
+import '../../services/home_feed.dart';
+import 'feed_page.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  List<VideoInfo> _videos = const [];
-  bool _loading = true;
-  Object? _error;
-
-  @override
-  void initState() {
-    super.initState();
-    _load();
-  }
-
-  Future<void> _load() async {
-    setState(() {
-      _loading = true;
-      _error = null;
-    });
-    final state = AppScope.read(context);
-    try {
-      final videos = await HomeFeed(
+  Widget build(BuildContext context) {
+    return FeedPage(
+      title: AppLocalizations.of(context).navHome,
+      fetch: (state) => HomeFeed(
         api: state.api,
         history: state.history,
         subscriptions: state.subscriptions,
         searchHistory: state.searchHistory,
         watchLater: state.watchLater,
-      ).fetch();
-      if (!mounted) return;
-      setState(() {
-        _videos = videos;
-        _loading = false;
-      });
-    } catch (e) {
-      if (!mounted) return;
-      setState(() {
-        _error = e;
-        _loading = false;
-      });
-    }
-  }
-
-  void _openVideo(VideoInfo video) => openWatchPage(context, video);
-
-  void _openChannel(VideoInfo video) {
-    if (video.channelId.isEmpty) return;
-    openChannelPage(context, video.channelId);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return ContentWidth(
-      maxWidth: 1280,
-      child: Column(
-        children: [
-          PageHeader(
-            title: l10n.navHome,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.refresh),
-                tooltip: l10n.refreshFeed,
-                onPressed: _load,
-              ),
-            ],
-          ),
-          Expanded(
-            child: FeedStateView(
-              loading: _loading,
-              error: _error,
-              videos: visibleVideos(
-                _videos,
-                AppScope.read(context).settings,
-                AppScope.read(context),
-              ),
-              onRetry: _load,
-              onRefresh: _load,
-              child: ListenableBuilder(
-                listenable: AppScope.read(context).history,
-                builder: (context, _) {
-                  final state = AppScope.read(context);
-                  return VideoGrid(
-                    videos: visibleVideos(_videos, state.settings, state),
-                    onVideoTap: _openVideo,
-                    onChannelTap: _openChannel,
-                  );
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
+      ).fetch(),
     );
   }
 }

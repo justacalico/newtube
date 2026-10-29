@@ -424,5 +424,17 @@
   "sortNewest": "Сначала новые",
   "sortLongest": "Сначала длинные",
   "fallbackBackend": "Резервный бэкенд",
-  "fallbackBackendHint": "Экземпляр Invidious при недоступности YouTube"
+  "fallbackBackendHint": "Экземпляр Invidious при недоступности YouTube",
+  "minimize": "Свернуть",
+  "maximize": "Развернуть",
+  "removeFromQueue": "Убрать из очереди",
+  "unhide": "Показать",
+  "unsubscribeConfirm": "Отписаться от {channel}?",
+  "@unsubscribeConfirm": {
+    "placeholders": {
+      "channel": {
+        "type": "String"
+      }
+    }
+  }
 }

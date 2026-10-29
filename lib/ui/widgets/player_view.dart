@@ -18,6 +18,7 @@ import '../../utils/storyboard.dart';
 import '../../utils/debug_log.dart';
 import '../../utils/format.dart';
 import 'live_badge.dart';
+import '../layout.dart';
 import 'thumbnail.dart';
 
 enum _SettingsSection { quality, audio, captions, speed, fit, repeat, sleep }
@@ -107,7 +108,8 @@ class _PlayerViewState extends State<PlayerView> {
   int _lastTapSide = 0;
   int _seekFlashSide = 0;
   Timer? _seekFlashTimer;
-  double? _previewFraction;
+  final _previewFraction = ValueNotifier<double?>(null);
+  final _dismissScale = ValueNotifier<double>(1.0);
   bool _statsVisible = false;
   bool _holding = false;
   double _heldRate = 1.0;
@@ -168,6 +170,8 @@ class _PlayerViewState extends State<PlayerView> {
     _tapTimer?.cancel();
     _playingSub?.cancel();
     _completedSub?.cancel();
+    _previewFraction.dispose();
+    _dismissScale.dispose();
     super.dispose();
   }
 
@@ -524,7 +528,7 @@ class _PlayerViewState extends State<PlayerView> {
               ('F', l10n.shortcutFullscreen),
               if (widget.onToggleTheater != null) ('T', l10n.theaterMode),
               ('N / P', l10n.shortcutNextPrev),
-              ('0–9', l10n.shortcutPercent),
+              ('0-9', l10n.shortcutPercent),
               ('Home / End', l10n.shortcutStartEnd),
               ('C', l10n.shortcutCaptions),
               ('I', l10n.shortcutPip),
@@ -571,21 +575,17 @@ class _PlayerViewState extends State<PlayerView> {
     final side = details.localPosition.dx < width / 2 ? -1 : 1;
     if (_tapTimer?.isActive == true && side == _lastTapSide) {
       _tapTimer!.cancel();
-      _tapTimer = Timer(
-        const Duration(milliseconds: 300),
-        () => _tapTimer = null,
-      );
+      _tapTimer = null;
       _skipBy(Duration(seconds: 10 * side));
       _flashSeek(side);
       return;
     }
     _lastTapSide = side;
     _tapTimer?.cancel();
-    _tapTimer = Timer(
-      const Duration(milliseconds: 300),
-      () => _tapTimer = null,
-    );
-    _toggleControls();
+    _tapTimer = Timer(const Duration(milliseconds: 300), () {
+      _tapTimer = null;
+      _toggleControls();
+    });
   }
 
   void _flashSeek(int side) {
@@ -627,7 +627,9 @@ class _PlayerViewState extends State<PlayerView> {
   void _onVerticalDragUpdate(DragUpdateDetails details) {
     if (_dragSide == 0) {
       _dragDy += details.delta.dy;
-      setState(() {});
+      _dismissScale.value = _dragDy > 0
+          ? (1 - _dragDy / 800).clamp(0.7, 1.0)
+          : 1.0;
       return;
     }
     final base = _dragBase;
@@ -654,6 +656,7 @@ class _PlayerViewState extends State<PlayerView> {
     if (_dragSide == 0 && _dragDy > 60) _dismiss();
     _dragDy = 0;
     _dragBase = null;
+    _dismissScale.value = 1.0;
     if (_hudValue != null) setState(() => _hudValue = null);
   }
 
@@ -821,7 +824,7 @@ class _PlayerViewState extends State<PlayerView> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final wide = MediaQuery.sizeOf(context).width >= 600;
+    final wide = MediaQuery.sizeOf(context).width >= playerWideWidth;
     return CallbackShortcuts(
       bindings: {
         const SingleActivator(LogicalKeyboardKey.arrowLeft): () =>
@@ -864,7 +867,6 @@ class _PlayerViewState extends State<PlayerView> {
         const SingleActivator(LogicalKeyboardKey.keyI): () =>
             widget.onPip?.call(),
         const SingleActivator(LogicalKeyboardKey.keyC): _cycleCaption,
-        const SingleActivator(LogicalKeyboardKey.escape): () {},
         const SingleActivator(LogicalKeyboardKey.slash, shift: true):
             _showShortcutsHelp,
         for (var i = 0; i <= 9; i++)
@@ -879,10 +881,10 @@ class _PlayerViewState extends State<PlayerView> {
               : SystemMouseCursors.none,
           onHover: (_) => _showControls(),
           onExit: (_) => _hideControls(),
-          child: Transform.scale(
-            scale: _dragSide == 0 && _dragDy > 0
-                ? (1 - _dragDy / 800).clamp(0.7, 1.0)
-                : 1.0,
+          child: ValueListenableBuilder<double>(
+            valueListenable: _dismissScale,
+            builder: (context, scale, child) =>
+                Transform.scale(scale: scale, child: child),
             child: ColoredBox(
               color: Colors.black,
               child: Stack(
@@ -1282,6 +1284,11 @@ class _PlayerViewState extends State<PlayerView> {
                                                                         .play_arrow,
                                                             ),
                                                             color: Colors.white,
+                                                            tooltip:
+                                                                snapshot.data ==
+                                                                    true
+                                                                ? l10n.pause
+                                                                : l10n.play,
                                                             onPressed: () =>
                                                                 snapshot.data ==
                                                                     true
@@ -1368,21 +1375,20 @@ class _PlayerViewState extends State<PlayerView> {
                                                     child: LayoutBuilder(
                                                       builder: (context, sliderCons) {
                                                         return MouseRegion(
-                                                          onHover: (e) => setState(
-                                                            () => _previewFraction =
-                                                                (e.localPosition.dx /
-                                                                        sliderCons
-                                                                            .maxWidth)
-                                                                    .clamp(
-                                                                      0.0,
-                                                                      1.0,
-                                                                    ),
-                                                          ),
-                                                          onExit: (_) => setState(
-                                                            () =>
-                                                                _previewFraction =
-                                                                    null,
-                                                          ),
+                                                          onHover: (e) =>
+                                                              _previewFraction
+                                                                      .value =
+                                                                  (e.localPosition.dx /
+                                                                          sliderCons
+                                                                              .maxWidth)
+                                                                      .clamp(
+                                                                        0.0,
+                                                                        1.0,
+                                                                      ),
+                                                          onExit: (_) =>
+                                                              _previewFraction
+                                                                      .value =
+                                                                  null,
                                                           child: Stack(
                                                             alignment: Alignment
                                                                 .center,
@@ -1453,7 +1459,7 @@ class _PlayerViewState extends State<PlayerView> {
                                                                                 Duration.zero
                                                                             ? null
                                                                             : (v) {
-                                                                                setState(() => _previewFraction = (v / total.inMilliseconds).clamp(0.0, 1.0));
+                                                                                _previewFraction.value = (v / total.inMilliseconds).clamp(0.0, 1.0);
                                                                                 _player.seek(Duration(milliseconds: v.round()));
                                                                               },
                                                                       ),
@@ -1499,33 +1505,40 @@ class _PlayerViewState extends State<PlayerView> {
                                                                     ),
                                                                   ),
                                                                 ),
-                                                              if (_previewFraction !=
-                                                                      null &&
-                                                                  widget.storyboard !=
+                                                              if (widget.storyboard !=
                                                                       null &&
                                                                   total >
                                                                       Duration
                                                                           .zero)
-                                                                Positioned(
-                                                                  left: ((_previewFraction! * sliderCons.maxWidth) - widget.storyboard!.tileWidth / 2).clamp(
-                                                                    0.0,
-                                                                    sliderCons
-                                                                            .maxWidth -
-                                                                        widget
-                                                                            .storyboard!
-                                                                            .tileWidth,
-                                                                  ),
-                                                                  bottom: 24,
-                                                                  child: IgnorePointer(
-                                                                    child: _SeekPreview(
-                                                                      board: widget
-                                                                          .storyboard!,
-                                                                      time: Duration(
-                                                                        milliseconds:
-                                                                            (_previewFraction! * total.inMilliseconds).round(),
-                                                                      ),
-                                                                    ),
-                                                                  ),
+                                                                ValueListenableBuilder<
+                                                                  double?
+                                                                >(
+                                                                  valueListenable:
+                                                                      _previewFraction,
+                                                                  builder:
+                                                                      (
+                                                                        context,
+                                                                        fraction,
+                                                                        _,
+                                                                      ) => fraction == null
+                                                                      ? const SizedBox.shrink()
+                                                                      : Positioned(
+                                                                          left: (fraction * sliderCons.maxWidth - widget.storyboard!.tileWidth / 2).clamp(
+                                                                            0.0,
+                                                                            sliderCons.maxWidth -
+                                                                                widget.storyboard!.tileWidth,
+                                                                          ),
+                                                                          bottom:
+                                                                              24,
+                                                                          child: IgnorePointer(
+                                                                            child: _SeekPreview(
+                                                                              board: widget.storyboard!,
+                                                                              time: Duration(
+                                                                                milliseconds: (fraction * total.inMilliseconds).round(),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
                                                                 ),
                                                             ],
                                                           ),

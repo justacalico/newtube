@@ -8,6 +8,7 @@ import '../../utils/format.dart';
 import 'thumbnail.dart';
 import 'video_actions_menu.dart';
 import 'live_badge.dart';
+import 'overlay_badge.dart';
 import 'watched_badge.dart';
 
 class VideoCard extends StatelessWidget {
@@ -68,19 +69,10 @@ class VideoCard extends StatelessWidget {
                       Positioned(
                         left: 6,
                         bottom: 6,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 4,
-                            vertical: 1,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.black87,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
+                        child: OverlayBadge(
                           child: Text(
                             AppLocalizations.of(context).shortsBadge,
                             style: const TextStyle(
-                              color: Colors.white,
                               fontSize: 10,
                               fontWeight: FontWeight.w700,
                             ),
@@ -90,28 +82,34 @@ class VideoCard extends StatelessWidget {
                     Builder(
                       builder: (context) {
                         final state = AppScope.read(context);
-                        final pos = state.history.positionFor(video.id);
-                        final total = video.duration;
-                        if (pos == null ||
-                            pos <= Duration.zero ||
-                            total == null ||
-                            total <= Duration.zero) {
-                          return const SizedBox.shrink();
-                        }
-                        final frac = (pos.inMilliseconds / total.inMilliseconds)
-                            .clamp(0.0, 1.0);
-                        return Positioned(
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          child: LinearProgressIndicator(
-                            value: frac,
-                            minHeight: 3,
-                            backgroundColor: Colors.black54,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Theme.of(context).colorScheme.error,
-                            ),
-                          ),
+                        return ListenableBuilder(
+                          listenable: state.history,
+                          builder: (context, _) {
+                            final pos = state.history.positionFor(video.id);
+                            final total = video.duration;
+                            if (pos == null ||
+                                pos <= Duration.zero ||
+                                total == null ||
+                                total <= Duration.zero) {
+                              return const SizedBox.shrink();
+                            }
+                            final frac =
+                                (pos.inMilliseconds / total.inMilliseconds)
+                                    .clamp(0.0, 1.0);
+                            return Positioned(
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              child: LinearProgressIndicator(
+                                value: frac,
+                                minHeight: 3,
+                                backgroundColor: Colors.black54,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Theme.of(context).colorScheme.error,
+                                ),
+                              ),
+                            );
+                          },
                         );
                       },
                     ),
@@ -125,57 +123,60 @@ class VideoCard extends StatelessWidget {
                       )
                     else if (duration.isNotEmpty)
                       Positioned(
-                        right: 8,
-                        bottom: 8,
+                        right: 6,
+                        bottom: 6,
                         child: DurationBadge(duration: video.duration),
                       ),
                   ],
                 ),
               ),
               Expanded(
-                child: SingleChildScrollView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                video.title,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: theme.textTheme.titleSmall,
+                child: ClipRect(
+                  child: OverflowBox(
+                    alignment: Alignment.topCenter,
+                    maxHeight: double.infinity,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  video.title,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: theme.textTheme.titleSmall,
+                                ),
+                              ),
+                              VideoActionsMenu(video: video),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          GestureDetector(
+                            onTap: onChannelTap,
+                            child: Text(
+                              video.author,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
                               ),
                             ),
-                            VideoActionsMenu(video: video),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        GestureDetector(
-                          onTap: onChannelTap,
-                          child: Text(
-                            video.author,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
                           ),
-                        ),
-                        if (meta.isNotEmpty)
-                          Text(
-                            meta,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
+                          if (meta.isNotEmpty)
+                            Text(
+                              meta,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

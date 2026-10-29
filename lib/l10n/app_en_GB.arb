@@ -424,5 +424,17 @@
   "sortNewest": "Newest",
   "sortLongest": "Longest",
   "fallbackBackend": "Fallback backend",
-  "fallbackBackendHint": "Invidious instance used when YouTube is unreachable"
+  "fallbackBackendHint": "Invidious instance used when YouTube is unreachable",
+  "minimize": "Minimise",
+  "maximize": "Maximise",
+  "removeFromQueue": "Remove from queue",
+  "unhide": "Unhide",
+  "unsubscribeConfirm": "Unsubscribe from {channel}?",
+  "@unsubscribeConfirm": {
+    "placeholders": {
+      "channel": {
+        "type": "String"
+      }
+    }
+  }
 }

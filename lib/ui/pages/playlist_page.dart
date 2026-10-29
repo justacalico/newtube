@@ -119,7 +119,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
       ),
       body: ContentWidth(
         child: FeedStateView(
-          loading: _loading && playlist == null,
+          loading: _loading && (playlist == null || playlist.videos.isEmpty),
           error: _error,
           videos: playlist?.videos ?? const [],
           onRetry: _load,

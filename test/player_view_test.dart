@@ -165,13 +165,13 @@ void main() {
     expect(controlsOpacity(tester), 0.0);
 
     await tester.tapAt(tester.getCenter(find.byType(PlayerView)));
-    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 350));
     expect(player.paused, isFalse);
     expect(controlsOpacity(tester), 1.0);
 
     await tester.pump(const Duration(milliseconds: 400));
     await tester.tapAt(tester.getCenter(find.byType(PlayerView)));
-    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 350));
     expect(player.paused, isFalse);
     expect(controlsOpacity(tester), 0.0);
   });
@@ -632,7 +632,7 @@ void main() {
     expect(controlsOpacity(tester), 0.0);
 
     await tester.tapAt(tester.getCenter(find.byType(PlayerView)));
-    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 350));
     expect(player.paused, isFalse);
     expect(controlsOpacity(tester), 1.0);
   });
@@ -916,7 +916,7 @@ void main() {
     expect(controlsOpacity(tester), 0.0);
 
     await tester.tapAt(tester.getCenter(find.byType(PlayerView)));
-    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 350));
     expect(controlsOpacity(tester), 1.0);
 
     await tester.tap(find.byTooltip('Settings'));
@@ -960,7 +960,7 @@ void main() {
 
     final rect = tester.getRect(find.byType(PlayerView));
     await tester.tapAt(Offset(rect.left + 8, rect.center.dy));
-    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 350));
     expect(controlsOpacity(tester), 0.0);
     expect(find.text('Quality'), findsNothing);
   });

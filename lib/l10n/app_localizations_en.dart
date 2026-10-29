@@ -1040,6 +1040,23 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get fallbackBackendHint =>
       'Invidious instance used when YouTube is unreachable';
+
+  @override
+  String get minimize => 'Minimize';
+
+  @override
+  String get maximize => 'Maximize';
+
+  @override
+  String get removeFromQueue => 'Remove from queue';
+
+  @override
+  String get unhide => 'Unhide';
+
+  @override
+  String unsubscribeConfirm(String channel) {
+    return 'Unsubscribe from $channel?';
+  }
 }
 
 /// The translations for English, as used in the United Kingdom (`en_GB`).
@@ -2077,4 +2094,21 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
   @override
   String get fallbackBackendHint =>
       'Invidious instance used when YouTube is unreachable';
+
+  @override
+  String get minimize => 'Minimise';
+
+  @override
+  String get maximize => 'Maximise';
+
+  @override
+  String get removeFromQueue => 'Remove from queue';
+
+  @override
+  String get unhide => 'Unhide';
+
+  @override
+  String unsubscribeConfirm(String channel) {
+    return 'Unsubscribe from $channel?';
+  }
 }

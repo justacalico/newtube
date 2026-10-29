@@ -1,10 +1,23 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:newtube/l10n/app_localizations.dart';
 import 'package:newtube/ui/shell/title_bar.dart';
 
 import 'fakes.dart';
+
+Widget _wrap(Widget child) => MaterialApp(
+  supportedLocales: AppLocalizations.supportedLocales,
+  localizationsDelegates: const [
+    AppLocalizations.delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+  ],
+  home: Scaffold(body: child),
+);
 
 void main() {
   tearDown(() => debugDefaultTargetPlatformOverride = null);
@@ -27,11 +40,7 @@ void main() {
   testWidgets('traffic lights call window actions', (tester) async {
     final actions = FakeWindowActions();
     await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: AppTitleBar(title: 'T', windowActions: actions),
-        ),
-      ),
+      _wrap(AppTitleBar(title: 'T', windowActions: actions)),
     );
 
     await tester.tap(find.byKey(const Key('titlebar.close')));
@@ -43,21 +52,19 @@ void main() {
   });
 
   testWidgets('glyphs appear on hover', (tester) async {
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: Scaffold(body: AppTitleBar(title: 'T')),
-      ),
-    );
+    await tester.pumpWidget(_wrap(const AppTitleBar(title: 'T')));
     expect(find.byIcon(Icons.close), findsNothing);
 
     final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
     await gesture.addPointer();
     await gesture.moveTo(
       tester.getCenter(
-        find.descendant(
-          of: find.byType(AppTitleBar),
-          matching: find.byType(MouseRegion),
-        ),
+        find
+            .descendant(
+              of: find.byType(AppTitleBar),
+              matching: find.byType(MouseRegion),
+            )
+            .first,
       ),
     );
     await tester.pump();
@@ -72,11 +79,7 @@ void main() {
   ) async {
     final actions = FakeWindowActions();
     await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: AppTitleBar(title: 'T', windowActions: actions),
-        ),
-      ),
+      _wrap(AppTitleBar(title: 'T', windowActions: actions)),
     );
 
     await tester.tap(find.text('T'), warnIfMissed: false);

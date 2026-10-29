@@ -18,9 +18,11 @@ import '../../state/playback_session.dart';
 import '../../utils/chapters.dart';
 import '../../utils/description.dart';
 import '../../utils/debug_log.dart';
+import '../../utils/feed_filter.dart';
 import '../../utils/format.dart';
 import '../../utils/storyboard.dart';
 import '../../utils/stream_picker.dart';
+import '../layout.dart';
 import '../shell/title_bar.dart';
 import '../widgets/comment_tile.dart';
 import '../widgets/content_width.dart';
@@ -406,11 +408,14 @@ class _WatchPageState extends State<WatchPage>
     return _state.playback.repeatMode == RepeatMode.all ? 0 : null;
   }
 
+  List<VideoInfo> get _visibleRelated =>
+      visibleVideos(_related, _state.settings, _state);
+
   VideoInfo? get _nextVideo {
     if (_state.playback.queue.isNotEmpty) return _state.playback.queue.first;
     final i = _nextPlaylistIndex;
     if (i != null) return widget.playlist!.videos[i];
-    return _related.firstOrNull;
+    return _visibleRelated.firstOrNull;
   }
 
   void _replaceWith(Widget page) {
@@ -419,6 +424,11 @@ class _WatchPageState extends State<WatchPage>
     }
     Navigator.of(context)
         .pushReplacement(MaterialPageRoute<void>(builder: (_) => page));
+  }
+
+  void _playPrevious() {
+    final prev = _state.playback.takePrevious();
+    if (prev != null) _replaceWith(WatchPage(video: prev));
   }
 
   void _openNext() {
@@ -744,6 +754,9 @@ class _WatchPageState extends State<WatchPage>
               audioOnly: _audioOnly,
               artworkUrl: widget.video.thumbnailUrl,
               onAudioOnlyChanged: _setAudioOnly,
+              onNext: () => _openNext(),
+              onPrevious: _playPrevious,
+              onPip: () => _pipActions?.enterPip(),
               title: widget.video.title,
               avatarUrl: _channel?.thumbnailUrl,
               storyboard: bestStoryboard(_details?.storyboards ?? const []),
@@ -811,7 +824,13 @@ class _WatchPageState extends State<WatchPage>
     final player = _player;
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(
+          widget.video.title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
       body: _error != null
           ? Center(
               child: Column(
@@ -826,7 +845,7 @@ class _WatchPageState extends State<WatchPage>
           : player == null || _details == null
           ? const Center(child: CircularProgressIndicator())
           : LayoutBuilder(
-              builder: (context, cons) => cons.maxWidth >= 1000
+              builder: (context, cons) => cons.maxWidth >= watchWideWidth
                   ? _buildWideBody(player)
                   : _buildNarrowBody(player),
             ),
@@ -842,7 +861,7 @@ class _WatchPageState extends State<WatchPage>
   Widget _buildNarrowBody(PlayerController player) {
     return SingleChildScrollView(
       child: ContentWidth(
-        maxWidth: 1280,
+        maxWidth: feedMaxWidth,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -872,7 +891,7 @@ class _WatchPageState extends State<WatchPage>
     final theater = _theaterMode;
     return SingleChildScrollView(
       child: ContentWidth(
-        maxWidth: theater ? 1920 : 1440,
+        maxWidth: theater ? theaterMaxWidth : watchMaxWidth,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -949,7 +968,7 @@ class _WatchPageState extends State<WatchPage>
               onAudioOnlyChanged: _setAudioOnly,
               onDismiss: () => Navigator.of(context).pop(),
               onNext: () => _openNext(),
-              onPrevious: () => Navigator.of(context).pop(),
+              onPrevious: _playPrevious,
               onPip: () => _pipActions?.enterPip(),
               title: widget.video.title,
               avatarUrl: _channel?.thumbnailUrl,
@@ -970,6 +989,7 @@ class _WatchPageState extends State<WatchPage>
           builder: (context, cons) {
             final channelInfo = Expanded(
               child: InkWell(
+                borderRadius: BorderRadius.circular(8),
                 onTap: () => openChannelPage(context, _details!.info.channelId),
                 child: Row(
                   children: [
@@ -1034,7 +1054,7 @@ class _WatchPageState extends State<WatchPage>
                   onPressed: _showDownloadPicker,
                 ),
             ];
-            if (cons.maxWidth < 560) {
+            if (cons.maxWidth < watchActionsWidth) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -1176,12 +1196,29 @@ class _WatchPageState extends State<WatchPage>
           ],
         ),
         const SizedBox(height: 4),
-        for (var i = 0; i < widget.playlist!.videos.length; i++)
-          VideoListTile(
-            video: widget.playlist!.videos[i],
-            contentPadding: EdgeInsets.zero,
-            selected: i == widget.index,
-            onTap: () => _openPlaylistVideo(i),
+        if (widget.playlist!.videos.length <= 12)
+          for (var i = 0; i < widget.playlist!.videos.length; i++)
+            VideoListTile(
+              video: widget.playlist!.videos[i],
+              contentPadding: EdgeInsets.zero,
+              selected: i == widget.index,
+              onTap: () => _openPlaylistVideo(i),
+            )
+        else
+          SizedBox(
+            height: 420,
+            child: Scrollbar(
+              thumbVisibility: true,
+              child: ListView.builder(
+                itemCount: widget.playlist!.videos.length,
+                itemBuilder: (context, i) => VideoListTile(
+                  video: widget.playlist!.videos[i],
+                  contentPadding: EdgeInsets.zero,
+                  selected: i == widget.index,
+                  onTap: () => _openPlaylistVideo(i),
+                ),
+              ),
+            ),
           ),
       ],
     );
@@ -1245,49 +1282,56 @@ class _WatchPageState extends State<WatchPage>
   }
 
   Widget _queueSection() {
-    if (_state.playback.queue.isEmpty) return const SizedBox.shrink();
-    final l10n = AppLocalizations.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 16),
-        Text(l10n.upNext, style: Theme.of(context).textTheme.titleSmall),
-        const SizedBox(height: 8),
-        ReorderableListView(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          onReorderItem: (from, to) => _state.playback.moveQueued(from, to),
+    return ListenableBuilder(
+      listenable: _state.playback,
+      builder: (context, _) {
+        if (_state.playback.queue.isEmpty) return const SizedBox.shrink();
+        final l10n = AppLocalizations.of(context);
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (var i = 0; i < _state.playback.queue.length; i++)
-              ListTile(
-                key: ValueKey('queue-$i-${_state.playback.queue[i].id}'),
-                dense: true,
-                leading: const Icon(Icons.drag_handle),
-                title: Text(
-                  _state.playback.queue[i].title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                trailing: IconButton(
-                  icon: const Icon(Icons.close, size: 18),
-                  onPressed: () => _state.playback.removeQueued(i),
-                ),
-                onTap: () {
-                  final v = _state.playback.takeNextFrom(i);
-                  if (v != null) {
-                    _replaceWith(WatchPage(video: v));
-                  }
-                },
-              ),
+            const SizedBox(height: 16),
+            Text(l10n.upNext, style: Theme.of(context).textTheme.titleSmall),
+            const SizedBox(height: 8),
+            ReorderableListView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              onReorderItem: (from, to) => _state.playback.moveQueued(from, to),
+              children: [
+                for (var i = 0; i < _state.playback.queue.length; i++)
+                  ListTile(
+                    key: ValueKey('queue-$i-${_state.playback.queue[i].id}'),
+                    dense: true,
+                    leading: const Icon(Icons.drag_handle),
+                    title: Text(
+                      _state.playback.queue[i].title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    trailing: IconButton(
+                      tooltip: l10n.removeFromQueue,
+                      icon: const Icon(Icons.close, size: 18),
+                      onPressed: () => _state.playback.removeQueued(i),
+                    ),
+                    onTap: () {
+                      final v = _state.playback.takeNextFrom(i);
+                      if (v != null) {
+                        _replaceWith(WatchPage(video: v));
+                      }
+                    },
+                  ),
+              ],
+            ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 
   Widget _relatedSection() {
     final state = AppScope.read(context);
-    if (!state.settings.showRelated || _related.isEmpty) {
+    final related = _visibleRelated;
+    if (!state.settings.showRelated || related.isEmpty) {
       return const SizedBox.shrink();
     }
     final l10n = AppLocalizations.of(context);
@@ -1297,7 +1341,7 @@ class _WatchPageState extends State<WatchPage>
         const SizedBox(height: 16),
         Text(l10n.relatedVideos, style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(height: 8),
-        for (final v in _related)
+        for (final v in related)
           VideoListTile(
             video: v,
             contentPadding: EdgeInsets.zero,
@@ -1332,6 +1376,9 @@ class _FullscreenPlayer extends StatefulWidget {
   final List<HeatMarker> heatmap;
   final bool live;
   final OrientationActions? orientation;
+  final VoidCallback? onNext;
+  final VoidCallback? onPrevious;
+  final VoidCallback? onPip;
 
   const _FullscreenPlayer({
     required this.player,
@@ -1357,6 +1404,9 @@ class _FullscreenPlayer extends StatefulWidget {
     this.heatmap = const [],
     this.live = false,
     this.orientation,
+    this.onNext,
+    this.onPrevious,
+    this.onPip,
   });
 
   @override
@@ -1440,6 +1490,9 @@ class _FullscreenPlayerState extends State<_FullscreenPlayer> {
           storyboard: widget.storyboard,
           heatmap: widget.heatmap,
           live: widget.live,
+          onNext: widget.onNext,
+          onPrevious: widget.onPrevious,
+          onPip: widget.onPip,
         ),
       ),
     );

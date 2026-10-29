@@ -42,7 +42,7 @@ void main() {
     await tester.tap(find.byIcon(Icons.edit_outlined));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField), 'Renamed');
-    await tester.tap(find.text('Save'));
+    await tester.tap(find.text('Rename'));
     await tester.pumpAndSettle();
     expect(store.byId('pl1')!.title, 'Renamed');
   });

@@ -19,6 +19,7 @@ import '../pages/trending_page.dart';
 import '../pages/watch_later_page.dart';
 import '../pages/watch_page.dart';
 import '../widgets/mini_player.dart';
+import '../layout.dart';
 import 'side_nav.dart';
 import 'title_bar.dart';
 
@@ -28,6 +29,9 @@ class AppShell extends StatefulWidget {
   @override
   State<AppShell> createState() => _AppShellState();
 }
+
+final _noPipMode = ValueNotifier<bool>(false);
+const _mobileTabCount = 4;
 
 class _AppShellState extends State<AppShell> {
   final _contentNavigator = GlobalKey<NavigatorState>();
@@ -123,7 +127,7 @@ class _AppShellState extends State<AppShell> {
   Widget build(BuildContext context) {
     final state = AppScope.of(context);
     final l10n = AppLocalizations.of(context);
-    final wide = MediaQuery.sizeOf(context).width >= 800;
+    final wide = MediaQuery.sizeOf(context).width >= wideLayoutWidth;
 
     const pages = [
       HomePage(),
@@ -216,8 +220,8 @@ class _AppShellState extends State<AppShell> {
           ),
         ];
 
-        final mobileBar = destinations.length > 5
-            ? destinations.sublist(0, 4)
+        final mobileBar = destinations.length > _mobileTabCount + 1
+            ? destinations.sublist(0, _mobileTabCount)
             : destinations;
 
         final selected = destinations.indexWhere(
@@ -260,7 +264,7 @@ class _AppShellState extends State<AppShell> {
         if (wide) {
           final collapsed =
               state.settings.sidebarCollapsed ||
-              MediaQuery.sizeOf(context).width < 1150;
+              MediaQuery.sizeOf(context).width < railCollapseWidth;
           return Scaffold(
             body: Row(
               children: [
@@ -278,22 +282,31 @@ class _AppShellState extends State<AppShell> {
                       ? l10n.expandSidebar
                       : l10n.collapseSidebar,
                   header: isDesktopPlatform
-                      ? SizedBox(
-                          height: 28,
-                          child: Row(
-                            children: [
-                              TrafficLights(actions: state.windowActions),
-                              Expanded(
-                                child: GestureDetector(
-                                  behavior: HitTestBehavior.opaque,
-                                  onPanStart: (_) =>
-                                      state.windowActions?.startDrag(),
-                                  onDoubleTap: () =>
-                                      state.windowActions?.toggleMaximize(),
+                      ? LayoutBuilder(
+                          builder: (context, cons) => cons.maxWidth < 96
+                              ? TrafficLights(
+                                  actions: state.windowActions,
+                                  direction: Axis.vertical,
+                                )
+                              : SizedBox(
+                                  height: 28,
+                                  child: Row(
+                                    children: [
+                                      TrafficLights(
+                                        actions: state.windowActions,
+                                      ),
+                                      Expanded(
+                                        child: GestureDetector(
+                                          behavior: HitTestBehavior.opaque,
+                                          onPanStart: (_) =>
+                                              state.windowActions?.startDrag(),
+                                          onDoubleTap: () => state.windowActions
+                                              ?.toggleMaximize(),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
                         )
                       : null,
                 ),
@@ -326,7 +339,7 @@ class _AppShellState extends State<AppShell> {
               : null,
           body: SafeArea(child: body),
           bottomNavigationBar: ValueListenableBuilder<bool>(
-            valueListenable: state.pipActions?.pipMode ?? ValueNotifier(false),
+            valueListenable: state.pipActions?.pipMode ?? _noPipMode,
             builder: (context, pip, _) => pip
                 ? const SizedBox.shrink()
                 : Builder(

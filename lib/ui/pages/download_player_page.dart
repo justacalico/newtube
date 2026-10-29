@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../l10n/app_localizations.dart';
 import '../../state/app_state.dart';
 import '../../state/downloads_store.dart';
 import '../../services/player_controller.dart';
@@ -16,7 +15,7 @@ class DownloadPlayerPage extends StatefulWidget {
 }
 
 class _DownloadPlayerPageState extends State<DownloadPlayerPage> {
-  PlayerController? _player;
+  late final PlayerController _player;
 
   @override
   void initState() {
@@ -24,46 +23,59 @@ class _DownloadPlayerPageState extends State<DownloadPlayerPage> {
     final state = AppScope.read(context);
     final player = state.createPlayer();
     _player = player;
-    player.open('file://${widget.entry.path}').then((_) => player.play());
+    player.open(Uri.file(widget.entry.path).toString()).then((_) {
+      player.play();
+    });
   }
 
   @override
   void dispose() {
-    _player?.dispose();
+    _player.dispose();
     super.dispose();
+  }
+
+  void _openFullscreen() {
+    Navigator.of(context, rootNavigator: true).push(
+      MaterialPageRoute<void>(
+        builder: (context) => Scaffold(
+          backgroundColor: Colors.black,
+          body: SafeArea(
+            child: PlayerView(
+              player: _player,
+              streams: const [],
+              current: null,
+              onQualitySelected: (_) {},
+              onAudioSelected: (_) {},
+              onToggleFullscreen: () => Navigator.of(context).pop(),
+              isFullscreen: true,
+              title: widget.entry.video.title,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final player = _player;
     return Scaffold(
       appBar: AppBar(title: Text(widget.entry.video.title)),
-      body: player == null
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: PlayerView(
-                    player: player,
-                    streams: const [],
-                    current: null,
-                    onQualitySelected: (_) {},
-                    onAudioSelected: (_) {},
-                    onToggleFullscreen: () {},
-                    title: widget.entry.video.title,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Text(
-                    l10n.downloads,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ),
-              ],
+      body: Column(
+        children: [
+          AspectRatio(
+            aspectRatio: 16 / 9,
+            child: PlayerView(
+              player: _player,
+              streams: const [],
+              current: null,
+              onQualitySelected: (_) {},
+              onAudioSelected: (_) {},
+              onToggleFullscreen: _openFullscreen,
+              title: widget.entry.video.title,
             ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1045,4 +1045,21 @@ class AppLocalizationsGa extends AppLocalizations {
   @override
   String get fallbackBackendHint =>
       'Invidious nuair nach bhfuil YouTube ar fáil';
+
+  @override
+  String get minimize => 'Íoslaghdaigh';
+
+  @override
+  String get maximize => 'Uasmhéadaigh';
+
+  @override
+  String get removeFromQueue => 'Bain as an scuaine';
+
+  @override
+  String get unhide => 'Dícheil';
+
+  @override
+  String unsubscribeConfirm(String channel) {
+    return 'Díliostáigh ó $channel?';
+  }
 }

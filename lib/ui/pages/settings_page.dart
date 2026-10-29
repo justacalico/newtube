@@ -127,7 +127,7 @@ class _SettingsPageState extends State<SettingsPage> {
         builder: (context, _) => AlertDialog(
           title: Text(l10n.hiddenItems),
           content: SizedBox(
-            width: 400,
+            width: double.maxFinite,
             child: ListView(
               shrinkWrap: true,
               children: [
@@ -135,8 +135,13 @@ class _SettingsPageState extends State<SettingsPage> {
                   ListTile(
                     dense: true,
                     leading: const Icon(Icons.person_off_outlined),
-                    title: Text(id, maxLines: 1),
+                    title: Text(
+                      id,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     trailing: IconButton(
+                      tooltip: l10n.unhide,
                       icon: const Icon(Icons.remove_circle_outline),
                       onPressed: () =>
                           state.hidden.unhideChannel(id, state.prefs),
@@ -146,8 +151,13 @@ class _SettingsPageState extends State<SettingsPage> {
                   ListTile(
                     dense: true,
                     leading: const Icon(Icons.visibility_off_outlined),
-                    title: Text(id, maxLines: 1),
+                    title: Text(
+                      id,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     trailing: IconButton(
+                      tooltip: l10n.unhide,
                       icon: const Icon(Icons.remove_circle_outline),
                       onPressed: () =>
                           state.hidden.unhideVideo(id, state.prefs),

@@ -11,11 +11,23 @@ const _chromeCorsUrl =
 class CorsNotice extends StatelessWidget {
   const CorsNotice({super.key});
 
+  static bool _open = false;
+
   static void show(BuildContext context) {
+    if (_open) return;
+    _open = true;
     showDialog<void>(
       context: context,
-      builder: (_) => const AlertDialog(content: CorsNotice()),
-    );
+      builder: (context) => AlertDialog(
+        content: const CorsNotice(),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(AppLocalizations.of(context).close),
+          ),
+        ],
+      ),
+    ).whenComplete(() => _open = false);
   }
 
   @override
