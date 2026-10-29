@@ -1,9 +1,11 @@
+final _agoPattern = RegExp(
+  r'(\d+)\s+(second|minute|hour|day|week|month|year)s?\s+ago',
+  caseSensitive: false,
+);
+
 DateTime? parseRelativeDate(String? text, [DateTime? now]) {
   if (text == null || text.isEmpty) return null;
-  final m = RegExp(
-    r'(\d+)\s+(second|minute|hour|day|week|month|year)s?\s+ago',
-    caseSensitive: false,
-  ).firstMatch(text);
+  final m = _agoPattern.firstMatch(text);
   if (m == null) return null;
   final n = int.parse(m[1]!);
   final unit = m[2]!.toLowerCase();

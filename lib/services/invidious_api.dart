@@ -8,6 +8,8 @@ import '../models/youtube_route.dart';
 import '../utils/captions.dart';
 import 'youtube_api.dart';
 
+final _trailingSlashes = RegExp(r'/+$');
+
 class InvidiousApi implements YouTubeApi {
   final http.Client _client;
   final String instance;
@@ -16,7 +18,7 @@ class InvidiousApi implements YouTubeApi {
     : _client = client ?? http.Client();
 
   Uri _url(String path, [Map<String, String>? params]) =>
-      Uri.parse('${instance.replaceAll(RegExp(r'/+$'), '')}$path')
+      Uri.parse('${instance.replaceAll(_trailingSlashes, '')}$path')
           .replace(queryParameters: params);
 
   Future<dynamic> _get(String path, [Map<String, String>? params]) async {

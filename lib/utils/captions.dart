@@ -2,6 +2,9 @@ import 'package:xml/xml.dart';
 
 import '../models/video_info.dart';
 
+final _whitespacePattern = RegExp(r'\s+');
+final _tagPattern = RegExp(r'<[^>]*>');
+
 List<CaptionCue> parseCaptions(String body) {
   if (body.trimLeft().startsWith('<')) return _parseXml(body);
   return _parseVtt(body);
@@ -29,7 +32,7 @@ List<CaptionCue> _parseVtt(String body) {
     }
     final start = _vttTime(lines[i].substring(0, arrow).trim());
     final timing = lines[i].substring(arrow + 3).trim();
-    final end = _vttTime(timing.split(RegExp(r'\s+')).first);
+    final end = _vttTime(timing.split(_whitespacePattern).first);
     i++;
     final text = <String>[];
     while (i < lines.length && lines[i].trim().isNotEmpty) {
@@ -59,7 +62,7 @@ Duration? _vttTime(String s) {
 
 String _stripTags(String line) {
   return line
-      .replaceAll(RegExp(r'<[^>]*>'), '')
+      .replaceAll(_tagPattern, '')
       .replaceAll('&amp;', '&')
       .replaceAll('&lt;', '<')
       .replaceAll('&gt;', '>')

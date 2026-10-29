@@ -12,6 +12,8 @@ import 'innertube_api.dart';
 import 'proxy_client.dart';
 import 'youtube_api.dart';
 
+final _digitsOnly = RegExp(r'[^0-9]');
+
 class YouTubeExplodeApi implements YouTubeApi {
   final yt.YoutubeExplode _yt;
   final http.Client _http;
@@ -156,7 +158,7 @@ class YouTubeExplodeApi implements YouTubeApi {
 
   static int _viewCount(dynamic node) {
     final text = _runs(node) ?? '';
-    final digits = text.replaceAll(RegExp(r'[^0-9]'), '');
+    final digits = text.replaceAll(_digitsOnly, '');
     return int.tryParse(digits) ?? 0;
   }
 

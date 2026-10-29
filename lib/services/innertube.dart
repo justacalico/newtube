@@ -2,6 +2,13 @@ import '../models/video_info.dart';
 
 const innertubeKey = 'AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8';
 
+final _countTextPattern = RegExp(r'^[\d.,]+\s*[KMBkm]?$');
+final _suffixedCountPattern = RegExp('([0-9][0-9.,]*)\\s*([KMB])');
+final _plainCountPattern = RegExp('([0-9][0-9.,]*)');
+final _shortsShelfIdPattern = RegExp(
+  'shorts-shelf-item-([A-Za-z0-9_-]{11})',
+);
+
 Map<String, dynamic> innertubeContext({
   String client = 'WEB',
   String? visitorData,
@@ -154,7 +161,7 @@ VideoInfo? parseLockup(Map<String, dynamic> l) {
           final content = text['content'];
           if (content is! String) continue;
           if (content.contains('view') ||
-              RegExp(r'^[\d.,]+\s*[KMBkm]?$').hasMatch(content)) {
+              _countTextPattern.hasMatch(content)) {
             views = content;
           } else if (content.endsWith('ago')) {
             uploaded = content;
@@ -415,9 +422,8 @@ String? _timeStatus(Map<String, dynamic> r) {
 }
 
 int compactCount(String text) {
-  final suffixed = RegExp('([0-9][0-9.,]*)\\s*([KMB])')
-      .firstMatch(text.toUpperCase());
-  final match = suffixed ?? RegExp('([0-9][0-9.,]*)').firstMatch(text);
+  final suffixed = _suffixedCountPattern.firstMatch(text.toUpperCase());
+  final match = suffixed ?? _plainCountPattern.firstMatch(text);
   if (match == null) return 0;
   final value = double.tryParse(match.group(1)!.replaceAll(',', '')) ?? 0;
   final suffix = match.groupCount >= 2 ? match.group(2) : null;
@@ -484,8 +490,7 @@ VideoInfo? parseShortsLockup(Map<String, dynamic> s) {
   final entityId = s['entityId'];
   String? id;
   if (entityId is String) {
-    final m = RegExp('shorts-shelf-item-([A-Za-z0-9_-]{11})')
-        .firstMatch(entityId);
+    final m = _shortsShelfIdPattern.firstMatch(entityId);
     id = m?.group(1);
   }
   id ??= _deepFind(s, 'reelWatchEndpoint') is Map<String, dynamic>

@@ -7,6 +7,8 @@ import '../state/subscriptions_store.dart';
 import '../state/watch_later_store.dart';
 import 'youtube_api.dart';
 
+final _tokenSplitPattern = RegExp(r'[^a-z0-9]+');
+
 class HomeFeed {
   final YouTubeApi api;
   final HistoryStore history;
@@ -232,7 +234,7 @@ class _TasteProfile {
   }
 
   static Iterable<String> _tokens(String text) sync* {
-    for (final raw in text.toLowerCase().split(RegExp(r'[^a-z0-9]+'))) {
+    for (final raw in text.toLowerCase().split(_tokenSplitPattern)) {
       if (raw.length < 3 || _stopwords.contains(raw)) continue;
       final t = raw.length > 3 && raw.endsWith('s')
           ? raw.substring(0, raw.length - 1)
