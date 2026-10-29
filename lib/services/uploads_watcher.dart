@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xml/xml.dart';
 
+import '../models/video_info.dart';
 import '../state/prefs_codec.dart';
 import '../state/settings_store.dart';
 import '../state/subscriptions_store.dart';
@@ -108,21 +109,19 @@ class UploadsWatcher {
     if (_checking || _disposed) return;
     _checking = true;
     try {
-      for (final channel in subscriptions.channels) {
-        if (subscriptions.isMuted(channel.id)) continue;
-        try {
-          final latest = await _latestUpload(channel.id);
-          if (latest == null) continue;
-          final seen = _seen[channel.id];
-          if (seen == null) {
-            _seen[channel.id] = latest.published;
-          } else if (latest.published.isAfter(seen)) {
-            await notify(channel.name, latest.title);
-            _seen[channel.id] = latest.published;
-          }
-        } on Object catch (e) {
-          debugLog('[uploads] ${channel.id}: check failed: $e');
-        }
+      final channels = [
+        for (final c in subscriptions.channels)
+          if (!subscriptions.isMuted(c.id)) c,
+      ];
+      const batchSize = 8;
+      for (var i = 0; i < channels.length; i += batchSize) {
+        final end = i + batchSize > channels.length
+            ? channels.length
+            : i + batchSize;
+        await Future.wait([
+          for (final channel in channels.sublist(i, end))
+            _checkChannel(channel),
+        ]);
       }
       final subscribed = {
         for (final channel in subscriptions.channels) channel.id,
@@ -135,6 +134,22 @@ class UploadsWatcher {
       // coverage:ignore-end
     } finally {
       _checking = false;
+    }
+  }
+
+  Future<void> _checkChannel(ChannelInfo channel) async {
+    try {
+      final latest = await _latestUpload(channel.id);
+      if (latest == null) return;
+      final seen = _seen[channel.id];
+      if (seen == null) {
+        _seen[channel.id] = latest.published;
+      } else if (latest.published.isAfter(seen)) {
+        await notify(channel.name, latest.title);
+        _seen[channel.id] = latest.published;
+      }
+    } on Object catch (e) {
+      debugLog('[uploads] ${channel.id}: check failed: $e');
     }
   }
 
