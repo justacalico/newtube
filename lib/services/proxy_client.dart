@@ -25,7 +25,8 @@ class ProxiedClient extends http.BaseClient {
           ..followRedirects = request.followRedirects
           ..maxRedirects = request.maxRedirects
           ..persistentConnection = request.persistentConnection
-          ..headers.addAll(request.headers);
+          ..headers.addAll(request.headers)
+          ..contentLength = request.contentLength;
     request.finalize().listen(
       proxied.sink.add,
       onError: proxied.sink.addError,

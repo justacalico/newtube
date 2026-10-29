@@ -49,6 +49,21 @@ void main() {
     client.close();
   });
 
+  test('ProxiedClient preserves content length on proxied posts', () async {
+    int? length;
+    final client = ProxiedClient(
+      MockClient((request) async {
+        length = request.contentLength;
+        return http.Response('ok', 200);
+      }),
+      () => 'https://proxy/?u=',
+    );
+
+    await client.post(Uri.parse('https://youtube.com/y'), body: 'hello');
+    expect(length, 5);
+    client.close();
+  });
+
   test('settings store persists proxy prefix', () async {
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
