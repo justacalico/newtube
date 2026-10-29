@@ -22,6 +22,24 @@ void main() {
     expect(find.byType(GridView), findsNothing);
   });
 
+  testWidgets('grid rebuilds when density changes', (tester) async {
+    final state = await testState();
+    await state.settings.setFeedDensity(2, state.prefs);
+    await pumpPage(
+      tester,
+      state,
+      Scaffold(
+        body: VideoGrid(videos: testVideos, onVideoTap: (_) {}),
+      ),
+    );
+    await tester.pump();
+    expect(find.byType(GridView), findsOneWidget);
+    await state.settings.setFeedDensity(1, state.prefs);
+    await tester.pump();
+    expect(find.byType(GridView), findsNothing);
+    expect(find.byType(ListTile), findsWidgets);
+  });
+
   test('feedDensity persists', () async {
     SharedPreferences.setMockInitialValues({'feed_density': 2});
     final prefs = await SharedPreferences.getInstance();

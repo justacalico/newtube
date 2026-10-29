@@ -21,7 +21,14 @@ class VideoGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final density = AppScope.read(context).settings.feedDensity;
+    final settings = AppScope.read(context).settings;
+    return ListenableBuilder(
+      listenable: settings,
+      builder: (context, _) => _buildForDensity(settings.feedDensity),
+    );
+  }
+
+  Widget _buildForDensity(int density) {
     if (density == 1) {
       return ListView.builder(
         padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
