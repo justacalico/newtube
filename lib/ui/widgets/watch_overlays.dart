@@ -131,11 +131,12 @@ class ShareMenu extends StatelessWidget {
             controller.isOpen ? controller.close() : controller.open(),
       ),
       menuChildren: [
-        MenuItemButton(
-          leadingIcon: const Icon(Icons.share),
-          onPressed: () => state.share?.share(url),
-          child: Text(l10n.share),
-        ),
+        if (state.share != null)
+          MenuItemButton(
+            leadingIcon: const Icon(Icons.share),
+            onPressed: () => state.share!.share(url),
+            child: Text(l10n.share),
+          ),
         MenuItemButton(
           leadingIcon: const Icon(Icons.link),
           onPressed: () => copy(url),

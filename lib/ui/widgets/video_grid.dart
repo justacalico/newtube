@@ -103,6 +103,7 @@ class FeedStateView extends StatelessWidget {
     final refresh = onRefresh;
     Widget scrollable(Widget inner) => LayoutBuilder(
       builder: (context, cons) => RefreshIndicator(
+        notificationPredicate: (notification) => notification.depth <= 1,
         onRefresh: () => refresh!(),
         child: inner is ScrollView
             ? inner
@@ -158,6 +159,10 @@ class FeedStateView extends StatelessWidget {
       return refresh != null ? scrollable(empty) : empty;
     }
     if (refresh == null) return child;
-    return RefreshIndicator(onRefresh: refresh, child: child);
+    return RefreshIndicator(
+      notificationPredicate: (notification) => notification.depth <= 1,
+      onRefresh: refresh,
+      child: child,
+    );
   }
 }

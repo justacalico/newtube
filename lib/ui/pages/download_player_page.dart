@@ -23,9 +23,12 @@ class _DownloadPlayerPageState extends State<DownloadPlayerPage> {
     final state = AppScope.read(context);
     final player = state.createPlayer();
     _player = player;
-    player.open(Uri.file(widget.entry.path).toString()).then((_) {
-      player.play();
-    });
+    player
+        .open(Uri.file(widget.entry.path).toString())
+        .then((_) {
+          if (mounted) player.play();
+        })
+        .catchError((_) {});
   }
 
   @override

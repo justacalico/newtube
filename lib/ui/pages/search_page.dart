@@ -191,7 +191,7 @@ class _SearchPageState extends State<SearchPage> {
     return visibleVideos(_results.videos, state.settings, state);
   }
 
-  Widget _resultsView(Widget child) {
+  Widget _resultsView(Widget Function() builder) {
     final state = AppScope.read(context);
     return ListenableBuilder(
       listenable: Listenable.merge([
@@ -199,7 +199,7 @@ class _SearchPageState extends State<SearchPage> {
         state.history,
         state.settings,
       ]),
-      builder: (context, _) => child,
+      builder: (context, _) => builder(),
     );
   }
 
@@ -244,7 +244,7 @@ class _SearchPageState extends State<SearchPage> {
                         )
                       : _SearchHistory(onSelect: _searchFromHistory))
                 : _resultsView(
-                    FeedStateView(
+                    () => FeedStateView(
                       loading: _loading,
                       error: _error,
                       videos: _visibleResults(),
@@ -375,7 +375,11 @@ class _SearchPageState extends State<SearchPage> {
                             child: VideoGrid(
                               videos: _visibleResults(),
                               onVideoTap: _openVideo,
-                              onChannelTap: (v) => _openChannel(v.channelId),
+                              onChannelTap: (v) {
+                                if (v.channelId.isNotEmpty) {
+                                  _openChannel(v.channelId);
+                                }
+                              },
                             ),
                           ),
                         ],

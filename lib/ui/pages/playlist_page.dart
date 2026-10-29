@@ -32,6 +32,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
   PlaylistInfo? _playlist;
   bool _loading = true;
   bool _loadingMore = false;
+  bool _loadMoreFailed = false;
   Object? _error;
 
   @override
@@ -66,7 +67,10 @@ class _PlaylistPageState extends State<PlaylistPage> {
     final playlist = _playlist;
     final token = playlist?.continuation;
     if (playlist == null || token == null || _loadingMore) return;
-    setState(() => _loadingMore = true);
+    setState(() {
+      _loadingMore = true;
+      _loadMoreFailed = false;
+    });
     try {
       final more = await AppScope.read(context).api
           .playlist(widget.playlistId, continuation: token);
@@ -76,7 +80,12 @@ class _PlaylistPageState extends State<PlaylistPage> {
         _loadingMore = false;
       });
     } catch (_) {
-      if (mounted) setState(() => _loadingMore = false);
+      if (mounted) {
+        setState(() {
+          _loadingMore = false;
+          _loadMoreFailed = true;
+        });
+      }
     }
   }
 
@@ -155,6 +164,12 @@ class _PlaylistPageState extends State<PlaylistPage> {
                           (playlist.continuation != null ? 1 : 0),
                 itemBuilder: (context, index) {
                   if (index >= playlist!.videos.length) {
+                    if (_loadMoreFailed) {
+                      return TextButton(
+                        onPressed: _loadMore,
+                        child: Text(AppLocalizations.of(context).retry),
+                      );
+                    }
                     if (!_loadingMore) {
                       scheduleMicrotask(_loadMore);
                     }

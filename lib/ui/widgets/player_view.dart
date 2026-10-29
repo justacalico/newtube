@@ -668,6 +668,14 @@ class _PlayerViewState extends State<PlayerView> {
     }
   }
 
+  void _onEscape() {
+    if (_settingsOpen) {
+      setState(() => _settingsOpen = false);
+      return;
+    }
+    if (widget.isFullscreen) widget.onToggleFullscreen();
+  }
+
   void _toggleMute() {
     _showControls();
     _player.setMuted(!_player.muted);
@@ -867,6 +875,7 @@ class _PlayerViewState extends State<PlayerView> {
         const SingleActivator(LogicalKeyboardKey.keyI): () =>
             widget.onPip?.call(),
         const SingleActivator(LogicalKeyboardKey.keyC): _cycleCaption,
+        const SingleActivator(LogicalKeyboardKey.escape): _onEscape,
         const SingleActivator(LogicalKeyboardKey.slash, shift: true):
             _showShortcutsHelp,
         for (var i = 0; i <= 9; i++)
@@ -1462,6 +1471,9 @@ class _PlayerViewState extends State<PlayerView> {
                                                                                 _previewFraction.value = (v / total.inMilliseconds).clamp(0.0, 1.0);
                                                                                 _player.seek(Duration(milliseconds: v.round()));
                                                                               },
+                                                                        onChangeEnd: (
+                                                                          _,
+                                                                        ) => _previewFraction.value = null,
                                                                       ),
                                                                     ),
                                                                   );

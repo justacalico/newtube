@@ -182,7 +182,9 @@ class _ChannelPageState extends State<ChannelPage> {
               child: FeedStateView(
                 loading: _loading,
                 error: _error,
-                videos: _videos,
+                videos: _videos.isEmpty && _shorts.isEmpty && _playlists.isEmpty
+                    ? const []
+                    : _videos,
                 onRetry: _load,
                 child: _searchResults != null
                     ? VideoGrid(videos: _searchResults!, onVideoTap: _openVideo)

@@ -82,7 +82,7 @@ class _FeedPageState extends State<FeedPage> {
             child: FeedStateView(
               loading: _loading,
               error: _error,
-              videos: visibleVideos(_videos, state.settings, state),
+              videos: _videos,
               onRetry: _load,
               onRefresh: _load,
               child: ListenableBuilder(

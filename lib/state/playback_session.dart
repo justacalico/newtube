@@ -135,6 +135,8 @@ class PlaybackSession extends ChangeNotifier {
 
   VideoInfo? takeNextFrom(int index) {
     if (index < 0 || index >= _queue.length) return null;
+    final current = _video;
+    if (current != null) _playedBefore.add(current);
     final next = _queue.removeAt(index);
     notifyListeners();
     return next;

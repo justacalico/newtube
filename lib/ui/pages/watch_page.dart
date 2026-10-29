@@ -168,7 +168,7 @@ class _WatchPageState extends State<WatchPage>
     debugLog('[watch] loading ${widget.video.id}');
     try {
       final state = AppScope.read(context);
-      if (!_recorded) {
+      if (!_recorded && widget.video.title.isNotEmpty) {
         _recorded = true;
         state.history.record(widget.video, state.prefs);
       }
@@ -973,6 +973,8 @@ class _WatchPageState extends State<WatchPage>
               title: widget.video.title,
               avatarUrl: _channel?.thumbnailUrl,
               storyboard: bestStoryboard(_details!.storyboards),
+              heatmap: _details!.heatmap,
+              live: _details!.info.isLive,
             ),
     );
   }
@@ -1329,6 +1331,17 @@ class _WatchPageState extends State<WatchPage>
   }
 
   Widget _relatedSection() {
+    return ListenableBuilder(
+      listenable: Listenable.merge([
+        _state.hidden,
+        _state.history,
+        _state.settings,
+      ]),
+      builder: (context, _) => _relatedBody(),
+    );
+  }
+
+  Widget _relatedBody() {
     final state = AppScope.read(context);
     final related = _visibleRelated;
     if (!state.settings.showRelated || related.isEmpty) {
@@ -1430,6 +1443,7 @@ class _FullscreenPlayerState extends State<_FullscreenPlayer> {
 
   late PlayableStream? _currentAudio = widget.currentAudio;
   late CaptionTrack? _caption = widget.selectedCaption;
+  late bool _audioOnly = widget.audioOnly;
 
   void _selectCaption(CaptionTrack? track) {
     widget.onCaptionSelected?.call(track);
@@ -1482,9 +1496,12 @@ class _FullscreenPlayerState extends State<_FullscreenPlayer> {
           captions: widget.captions,
           selectedCaption: _caption,
           onCaptionSelected: _selectCaption,
-          audioOnly: widget.audioOnly,
+          audioOnly: _audioOnly,
           artworkUrl: widget.artworkUrl,
-          onAudioOnlyChanged: widget.onAudioOnlyChanged,
+          onAudioOnlyChanged: (v) {
+            setState(() => _audioOnly = v);
+            widget.onAudioOnlyChanged?.call(v);
+          },
           title: widget.title,
           avatarUrl: widget.avatarUrl,
           storyboard: widget.storyboard,

@@ -57,11 +57,12 @@ List<_VideoAction> _actionsFor(
       label: l10n.notInterested,
       onTap: () => state.hidden.hideVideo(video.id, state.prefs),
     ),
-    (
-      icon: Icons.person_off_outlined,
-      label: l10n.dontRecommendChannel,
-      onTap: () => state.hidden.hideChannel(video.channelId, state.prefs),
-    ),
+    if (video.channelId.isNotEmpty)
+      (
+        icon: Icons.person_off_outlined,
+        label: l10n.dontRecommendChannel,
+        onTap: () => state.hidden.hideChannel(video.channelId, state.prefs),
+      ),
     if (state.share != null)
       (
         icon: Icons.share,

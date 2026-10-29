@@ -24,6 +24,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
   List<VideoInfo> _videos = const [];
   String? _group;
   bool _loading = false;
+  int _loadGeneration = 0;
 
   @override
   void initState() {
@@ -41,6 +42,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
       });
       return;
     }
+    final generation = ++_loadGeneration;
     setState(() => _loading = true);
     final fetched = <VideoInfo>[];
     const limit = 4;
@@ -53,6 +55,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
           state.api
               .channelVideos(channel.id)
               .then((list) {
+                if (!mounted || generation != _loadGeneration) return;
                 fetched.addAll([
                   for (final v in list)
                     if (v.author.isEmpty)
@@ -60,7 +63,6 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                     else
                       v,
                 ]);
-                if (!mounted) return;
                 setState(() => _videos = [...fetched]);
               })
               .catchError((_) {}),
@@ -69,10 +71,10 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
       if (running.isEmpty) break;
       await Future.wait(running, eagerError: false);
       running.clear();
-      if (!mounted) return;
+      if (!mounted || generation != _loadGeneration) return;
       if (queue.isEmpty) setState(() => _loading = false);
     }
-    if (!mounted) return;
+    if (!mounted || generation != _loadGeneration) return;
     setState(() => _loading = false);
   }
 
@@ -143,6 +145,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
               builder: (context, _) {
                 final channels = state.subscriptions.channelsInGroup(_group);
                 final groups = state.subscriptions.groups;
+                if (_group != null && !groups.contains(_group)) _group = null;
                 if (channels.isEmpty) {
                   return EmptyState(
                     icon: Icons.subscriptions_outlined,
