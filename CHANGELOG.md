@@ -2,6 +2,29 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.31.0 - 2026-10-29
+#### Features
+- (**ui**) 观看页桌面端新增剧院模式 - (4d210ae) - HttpAnimations
+- (**ui**) 移除首页继续观看栏目 - (e9d3cd5) - HttpAnimations
+#### Bug Fixes
+- (**web**) 修正网页清单与页面标题元数据 - (356e2da) - HttpAnimations
+- 视频详情缓存限容并合并进行中的请求 - (9e8052c) - HttpAnimations
+- 历史记录裁剪时同步清理过期播放进度 - (54456d7) - HttpAnimations
+- 观看数格式化使用应用语言环境 - (dbb183b) - HttpAnimations
+- 省流模式切换时缩略图即时更新 - (90f22b4) - HttpAnimations
+- 信息流密度切换时网格即时重建 - (e3a0090) - HttpAnimations
+- 代理转发保留请求 Content-Length - (0d8c996) - HttpAnimations
+- 修复 Invidious 实例末尾斜杠未去除的问题 - (53369c7) - HttpAnimations
+#### Performance
+- 大体积接口响应在后台 isolate 解码 - (a602f2d) - HttpAnimations
+- DeArrow 品牌信息请求缓存并限制并发 - (8e364c1) - HttpAnimations
+- 订阅更新检查改为批量并发 - (bcdb5e8) - HttpAnimations
+- 信息流排序改用懒优先队列并为历史记录建立索引 - (758086b) - HttpAnimations
+- 缩略图按显示尺寸解码以降低内存占用 - (02267e2) - HttpAnimations
+- 正则表达式提升为静态常量避免重复编译 - (09621c0) - HttpAnimations
+
+- - -
+
 ## v0.30.1 - 2026-10-23
 #### Bug Fixes
 - (**ci**) flatpak 改用用户级安装，修复 GPG 签名权限错误 - (851199d) - HttpAnimations
