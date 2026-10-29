@@ -827,3 +827,96 @@ class FakeLinkActions implements LinkActions {
   @override
   Future<Uri?> get initial async => initialLink;
 }
+
+class BareApi extends YouTubeApi {
+  final List<VideoInfo> uploads;
+  BareApi([this.uploads = const []]);
+
+  @override
+  Future<List<VideoInfo>> homeFeed() => throw UnimplementedError();
+  @override
+  Future<List<VideoInfo>> trending() => throw UnimplementedError();
+  @override
+  Future<SearchResults> search(String query, {SearchFilter? filter}) =>
+      throw UnimplementedError();
+  @override
+  Future<YouTubeRoute?> resolveUrl(String url) => throw UnimplementedError();
+  @override
+  Future<List<String>> searchSuggestions(String query) =>
+      throw UnimplementedError();
+  @override
+  Future<VideoDetails> videoDetails(String videoId) =>
+      throw UnimplementedError();
+  @override
+  Future<List<VideoInfo>> relatedVideos(String videoId) =>
+      throw UnimplementedError();
+  @override
+  Future<CommentsResult> comments(
+    String videoId, {
+    String? continuation,
+    CommentSort? sort,
+  }) => throw UnimplementedError();
+  @override
+  Future<ChannelInfo> channel(String channelId) => throw UnimplementedError();
+  @override
+  Future<PlaylistInfo> playlist(String playlistId, {String? continuation}) =>
+      throw UnimplementedError();
+  @override
+  Future<String?> resolveChannel(String url) => throw UnimplementedError();
+  @override
+  Future<List<VideoInfo>> channelVideos(String channelId) async => uploads;
+  @override
+  Future<List<CaptionCue>> captions(CaptionTrack track) =>
+      throw UnimplementedError();
+}
+
+class RecordingShare implements ShareActions {
+  final List<String> out;
+  RecordingShare(this.out);
+  @override
+  Future<void> share(String text) async => out.add(text);
+}
+
+class PagingApi extends FakeYouTubeApi {
+  bool fail = false;
+  PagingApi()
+    : super(
+        playlistInfo: PlaylistInfo(
+          id: 'pl1',
+          title: 'Mix',
+          author: 'a',
+          videoCount: 4,
+          videos: testVideos,
+          continuation: 'N',
+        ),
+      );
+
+  @override
+  Future<PlaylistInfo> playlist(
+    String playlistId, {
+    String? continuation,
+  }) async {
+    if (continuation != null && fail) throw StateError('paging');
+    if (continuation == 'N') {
+      return PlaylistInfo(
+        id: 'pl1',
+        title: 'Mix',
+        author: 'a',
+        videos: [
+          const VideoInfo(
+            id: 'extra',
+            title: 'Second video',
+            author: 'a',
+            channelId: 'c',
+          ),
+        ],
+      );
+    }
+    return super.playlist(playlistId, continuation: continuation);
+  }
+}
+
+class FailDownloads implements DownloadActions {
+  @override
+  Future<String?> download(String url, String name) async => null;
+}

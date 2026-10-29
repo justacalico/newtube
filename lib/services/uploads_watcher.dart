@@ -115,11 +115,8 @@ class UploadsWatcher {
       ];
       const batchSize = 8;
       for (var i = 0; i < channels.length; i += batchSize) {
-        final end = i + batchSize > channels.length
-            ? channels.length
-            : i + batchSize;
         await Future.wait([
-          for (final channel in channels.sublist(i, end))
+          for (final channel in channels.skip(i).take(batchSize))
             _checkChannel(channel),
         ]);
       }
