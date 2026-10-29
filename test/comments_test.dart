@@ -65,7 +65,10 @@ Map<String, dynamic> _thread({
             {'url': 'https://i/a.jpg'},
           ],
         },
-        if (pinned) 'pinnedCommentBadge': {'pinnedCommentBadgeRenderer': <String, dynamic>{}},
+        if (pinned)
+          'pinnedCommentBadge': {
+            'pinnedCommentBadgeRenderer': <String, dynamic>{},
+          },
         if (hearted)
           'authorCommentBadge': {
             'authorCommentBadgeRenderer': {
@@ -117,7 +120,8 @@ Map<String, dynamic> _commentsPage(
 };
 
 InnertubeApi _api(
-  Map<String, dynamic> Function(String endpoint, Map<String, dynamic> body) handler,
+  Map<String, dynamic> Function(String endpoint, Map<String, dynamic> body)
+  handler,
 ) => InnertubeApi(
   httpClient: MockClient((request) async {
     if (request.method != 'POST') return http.Response.bytes(const [], 206);

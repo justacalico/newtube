@@ -39,9 +39,11 @@ class VideoThumbnail extends StatelessWidget {
       return LayoutBuilder(
         builder: (context, constraints) {
           final ratio = MediaQuery.devicePixelRatioOf(context);
-          final w = width ??
+          final w =
+              width ??
               (constraints.hasBoundedWidth ? constraints.maxWidth : null);
-          final h = height ??
+          final h =
+              height ??
               (constraints.hasBoundedHeight ? constraints.maxHeight : null);
           return ClipRRect(
             borderRadius: borderRadius,

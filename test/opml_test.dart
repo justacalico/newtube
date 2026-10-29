@@ -109,7 +109,10 @@ void main() {
     });
 
     test('rejects non-channel endpoints', () async {
-      expect(await api({'endpoint': <String, dynamic>{}}).resolveChannel('x'), isNull);
+      expect(
+        await api({'endpoint': <String, dynamic>{}}).resolveChannel('x'),
+        isNull,
+      );
       expect(
         await api({
           'endpoint': {

@@ -5,9 +5,7 @@ const innertubeKey = 'AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8';
 final _countTextPattern = RegExp(r'^[\d.,]+\s*[KMBkm]?$');
 final _suffixedCountPattern = RegExp('([0-9][0-9.,]*)\\s*([KMB])');
 final _plainCountPattern = RegExp('([0-9][0-9.,]*)');
-final _shortsShelfIdPattern = RegExp(
-  'shorts-shelf-item-([A-Za-z0-9_-]{11})',
-);
+final _shortsShelfIdPattern = RegExp('shorts-shelf-item-([A-Za-z0-9_-]{11})');
 
 Map<String, dynamic> innertubeContext({
   String client = 'WEB',
@@ -160,8 +158,7 @@ VideoInfo? parseLockup(Map<String, dynamic> l) {
           if (text is! Map<String, dynamic>) continue;
           final content = text['content'];
           if (content is! String) continue;
-          if (content.contains('view') ||
-              _countTextPattern.hasMatch(content)) {
+          if (content.contains('view') || _countTextPattern.hasMatch(content)) {
             views = content;
           } else if (content.endsWith('ago')) {
             uploaded = content;

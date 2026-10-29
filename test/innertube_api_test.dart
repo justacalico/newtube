@@ -112,7 +112,8 @@ Map<String, dynamic> _lockup(String id, {String? author, String? channel}) => {
 };
 
 InnertubeApi _api(
-  Map<String, dynamic> Function(String endpoint, Map<String, dynamic> body) handler, {
+  Map<String, dynamic> Function(String endpoint, Map<String, dynamic> body)
+  handler, {
   String? prefix,
 }) {
   return InnertubeApi(
@@ -885,7 +886,10 @@ void main() {
                 'tabRenderer': {'title': 'Videos', 'endpoint': 'nope'},
               },
               {
-                'tabRenderer': {'title': 'Video', 'endpoint': <String, dynamic>{}},
+                'tabRenderer': {
+                  'title': 'Video',
+                  'endpoint': <String, dynamic>{},
+                },
               },
               {
                 'tabRenderer': {

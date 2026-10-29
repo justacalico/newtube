@@ -129,7 +129,9 @@ void main() {
               },
               'onResponseReceivedEndpoints': [
                 {
-                  'appendContinuationItemsAction': {'continuationItems': <dynamic>[]},
+                  'appendContinuationItemsAction': {
+                    'continuationItems': <dynamic>[],
+                  },
                 },
               ],
             }),
