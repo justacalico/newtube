@@ -40,7 +40,15 @@ class DeArrowApi implements YouTubeApi {
 
   Future<List<VideoInfo>> _applyAll(List<VideoInfo> videos) async {
     if (!_active) return videos;
-    return Future.wait(videos.map(_apply));
+    const batchSize = 8;
+    final out = <VideoInfo>[];
+    for (var i = 0; i < videos.length; i += batchSize) {
+      final end = i + batchSize > videos.length ? videos.length : i + batchSize;
+      out.addAll(
+        await Future.wait([for (final v in videos.sublist(i, end)) _apply(v)]),
+      );
+    }
+    return out;
   }
 
   @override
