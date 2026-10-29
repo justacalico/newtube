@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/video_info.dart';
+import 'prefs_codec.dart';
 
 class SubscriptionsStore extends ChangeNotifier {
   static const _key = 'subscriptions';
@@ -131,7 +132,7 @@ class SubscriptionsStore extends ChangeNotifier {
     } else {
       _groups[channelId] = group;
     }
-    await prefs.setString(_groupsKey, jsonEncode(_groups));
+    await savePrefsJson(prefs, _groupsKey, _groups);
     notifyListeners();
   }
 
@@ -144,26 +145,23 @@ class SubscriptionsStore extends ChangeNotifier {
     for (final e in _groups.entries.toList()) {
       if (e.value == oldName) _groups[e.key] = newName;
     }
-    await prefs.setString(_groupsKey, jsonEncode(_groups));
+    await savePrefsJson(prefs, _groupsKey, _groups);
     notifyListeners();
   }
 
   Future<void> deleteGroup(String group, SharedPreferences prefs) async {
     _groups.removeWhere((_, g) => g == group);
-    await prefs.setString(_groupsKey, jsonEncode(_groups));
+    await savePrefsJson(prefs, _groupsKey, _groups);
     notifyListeners();
   }
 
-  Future<void> _save(SharedPreferences prefs) => prefs.setString(
-    _key,
-    jsonEncode({
-      for (final e in _channels.entries)
-        e.key: {
-          'id': e.value.id,
-          'name': e.value.name,
-          'thumbnail': e.value.thumbnailUrl,
-          'subscribers': e.value.subscribers,
-        },
-    }),
-  );
+  Future<void> _save(SharedPreferences prefs) => savePrefsJson(prefs, _key, {
+    for (final e in _channels.entries)
+      e.key: {
+        'id': e.value.id,
+        'name': e.value.name,
+        'thumbnail': e.value.thumbnailUrl,
+        'subscribers': e.value.subscribers,
+      },
+  });
 }

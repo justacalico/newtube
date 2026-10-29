@@ -1,7 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'prefs_codec.dart';
 
 class SearchHistoryStore extends ChangeNotifier {
   static const _key = 'search_history';
@@ -12,20 +12,10 @@ class SearchHistoryStore extends ChangeNotifier {
   SearchHistoryStore([List<String>? entries])
     : _entries = List.of(entries ?? const []);
 
-  static Future<SearchHistoryStore> load(SharedPreferences prefs) async {
-    final raw = prefs.getString(_key);
-    if (raw == null) return SearchHistoryStore();
-    try {
-      final decoded = jsonDecode(raw);
-      if (decoded is! List) return SearchHistoryStore();
-      return SearchHistoryStore([
-        for (final e in decoded)
-          if (e is String) e,
-      ]);
-    } catch (_) {
-      return SearchHistoryStore();
-    }
-  }
+  static Future<SearchHistoryStore> load(SharedPreferences prefs) async =>
+      SearchHistoryStore(
+        decodePrefsList(prefs.getString(_key), (e) => e is String ? e : null),
+      );
 
   Future<void> reload(SharedPreferences prefs) async {
     final fresh = await SearchHistoryStore.load(prefs);
@@ -60,5 +50,5 @@ class SearchHistoryStore extends ChangeNotifier {
   }
 
   Future<void> _save(SharedPreferences prefs) =>
-      prefs.setString(_key, jsonEncode(_entries));
+      savePrefsJson(prefs, _key, _entries);
 }
