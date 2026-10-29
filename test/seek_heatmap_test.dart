@@ -93,7 +93,7 @@ void main() {
           'entityBatchUpdate': {
             'mutations': [
               {
-                'payload': {'other': {}},
+                'payload': {'other': <String, dynamic>{}},
               },
             ],
           },

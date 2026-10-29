@@ -177,7 +177,7 @@ class _WatchPageState extends State<WatchPage>
           .then((channel) {
             if (mounted) setState(() => _channel = channel);
           })
-          .catchError((e) {
+          .catchError((Object e) {
             debugLog('[watch] ${widget.video.id}: channel failed: $e');
           });
       state.api
@@ -185,7 +185,7 @@ class _WatchPageState extends State<WatchPage>
           .then((related) {
             if (mounted) setState(() => _related = related);
           })
-          .catchError((e) {
+          .catchError((Object e) {
             debugLog('[watch] ${widget.video.id}: related videos failed: $e');
           });
       final ryd = state.ryd;
@@ -195,7 +195,7 @@ class _WatchPageState extends State<WatchPage>
             .then((count) {
               if (mounted) setState(() => _dislikes = count);
             })
-            .catchError((e) {
+            .catchError((Object e) {
               debugLog('[watch] ${widget.video.id}: ryd failed: $e');
             });
       }
@@ -208,7 +208,7 @@ class _WatchPageState extends State<WatchPage>
               _commentsToken = result.continuation;
             });
           })
-          .catchError((e) {
+          .catchError((Object e) {
             debugLog('[watch] ${widget.video.id}: comments failed: $e');
           });
       if (!mounted) return;
@@ -589,7 +589,7 @@ class _WatchPageState extends State<WatchPage>
             _commentsToken = result.continuation;
           });
         })
-        .catchError((e) {
+        .catchError((Object e) {
           debugLog('[watch] ${widget.video.id}: comments sort failed: $e');
         });
   }

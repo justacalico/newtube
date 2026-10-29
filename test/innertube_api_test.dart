@@ -112,7 +112,7 @@ Map<String, dynamic> _lockup(String id, {String? author, String? channel}) => {
 };
 
 InnertubeApi _api(
-  Map<String, dynamic> Function(String endpoint, Map body) handler, {
+  Map<String, dynamic> Function(String endpoint, Map<String, dynamic> body) handler, {
   String? prefix,
 }) {
   return InnertubeApi(
@@ -758,7 +758,7 @@ void main() {
                   ],
                   'metadata': [
                     {
-                      'contentMetadataViewModel': {'metadataRows': []},
+                      'contentMetadataViewModel': {'metadataRows': <dynamic>[]},
                     },
                   ],
                 },
@@ -885,7 +885,7 @@ void main() {
                 'tabRenderer': {'title': 'Videos', 'endpoint': 'nope'},
               },
               {
-                'tabRenderer': {'title': 'Video', 'endpoint': {}},
+                'tabRenderer': {'title': 'Video', 'endpoint': <String, dynamic>{}},
               },
               {
                 'tabRenderer': {
@@ -1112,7 +1112,7 @@ void main() {
     test('runs and browseId edge cases', () {
       expect(runs('x'), isNull);
       expect(runs({'simpleText': 'a'}), 'a');
-      expect(runs({'runs': []}), '');
+      expect(runs({'runs': <dynamic>[]}), '');
       expect(browseId('x'), isNull);
       expect(browseId({'runs': 'x'}), isNull);
       expect(

@@ -69,7 +69,7 @@ void main() {
         return http.Response.bytes(
           utf8.encode(
             jsonEncode({
-              'contents': {'twoColumnSearchResultsRenderer': {}},
+              'contents': {'twoColumnSearchResultsRenderer': <String, dynamic>{}},
             }),
           ),
           200,

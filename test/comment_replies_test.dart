@@ -95,8 +95,8 @@ void main() {
                   {
                     'itemSectionRenderer': {
                       'header': {
-                        'commentsHeaderRenderer': {},
-                        'commentsEntryPointHeaderRenderer': {},
+                        'commentsHeaderRenderer': <String, dynamic>{},
+                        'commentsEntryPointHeaderRenderer': <String, dynamic>{},
                       },
                       'continuationCommands': [
                         {
@@ -129,7 +129,7 @@ void main() {
               },
               'onResponseReceivedEndpoints': [
                 {
-                  'appendContinuationItemsAction': {'continuationItems': []},
+                  'appendContinuationItemsAction': {'continuationItems': <dynamic>[]},
                 },
               ],
             }),

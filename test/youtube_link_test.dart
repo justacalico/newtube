@@ -92,7 +92,7 @@ void main() {
           'channel' => {
             'browseEndpoint': {'browseId': 'UCchan'},
           },
-          _ => {},
+          _ => <String, dynamic>{},
         };
         return http.Response.bytes(
           utf8.encode(jsonEncode({'endpoint': endpoint})),
