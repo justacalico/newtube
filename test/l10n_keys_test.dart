@@ -7,7 +7,7 @@ void main() {
     for (final l10n in [
       AppLocalizationsEn(),
       AppLocalizationsEnGb(),
-      AppLocalizationsZhHans(),
+      AppLocalizationsZh(),
     ]) {
       expect(l10n.navSubs, isNotEmpty);
       expect(l10n.noDownloadsHint, isNotEmpty);

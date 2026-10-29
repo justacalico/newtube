@@ -340,7 +340,7 @@ void main() {
     touchAll(AppLocalizationsEn());
     touchAll(AppLocalizationsEnGb());
     touchAll(AppLocalizationsZh());
-    touchAll(AppLocalizationsZhHans());
+    touchAll(AppLocalizationsZh());
     touchAll(AppLocalizationsRu());
     touchAll(AppLocalizationsGa());
   });
