@@ -57,3 +57,4 @@ landing/build/
 build/
 test/failures/
 project.sunset.json
+.flutter/
