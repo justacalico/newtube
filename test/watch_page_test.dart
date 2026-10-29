@@ -29,6 +29,14 @@ class _ChannelFailApi extends FakeYouTubeApi {
       throw StateError('nope');
 }
 
+bool _isNetworkImage(Widget w, String url) {
+  if (w is! Image) return false;
+  final provider = w.image is ResizeImage
+      ? (w.image as ResizeImage).imageProvider
+      : w.image;
+  return provider is NetworkImage && provider.url == url;
+}
+
 void main() {
   tearDown(() => debugDefaultTargetPlatformOverride = null);
 
@@ -60,10 +68,7 @@ void main() {
     expect(find.text('12.3K views'), findsOneWidget);
     expect(
       find.byWidgetPredicate(
-        (w) =>
-            w is Image &&
-            w.image is NetworkImage &&
-            (w.image as NetworkImage).url == testChannel.thumbnailUrl,
+        (w) => _isNetworkImage(w, testChannel.thumbnailUrl ?? ''),
       ),
       findsOneWidget,
     );
@@ -106,10 +111,7 @@ void main() {
     expect(find.text('Next video'), findsOneWidget);
     expect(
       find.byWidgetPredicate(
-        (w) =>
-            w is Image &&
-            w.image is NetworkImage &&
-            (w.image as NetworkImage).url == testVideos.first.thumbnailUrl,
+        (w) => _isNetworkImage(w, testVideos.first.thumbnailUrl ?? ''),
       ),
       findsOneWidget,
     );
