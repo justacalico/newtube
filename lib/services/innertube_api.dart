@@ -229,17 +229,31 @@ class InnertubeApi implements YouTubeApi {
   }
 
   final _detailsCache = <String, (VideoDetails, DateTime)>{};
+  final _detailsInFlight = <String, Future<VideoDetails>>{};
   static const _detailsTtl = Duration(minutes: 5);
+  static const _detailsMaxEntries = 50;
 
   @override
-  Future<VideoDetails> videoDetails(String videoId) async {
+  Future<VideoDetails> videoDetails(String videoId) {
     final cached = _detailsCache[videoId];
     if (cached != null && DateTime.now().difference(cached.$2) < _detailsTtl) {
-      return cached.$1;
+      return Future.value(cached.$1);
     }
-    final details = await _videoDetails(videoId);
-    _detailsCache[videoId] = (details, DateTime.now());
-    return details;
+    return _detailsInFlight[videoId] ??= _fetchDetails(videoId);
+  }
+
+  Future<VideoDetails> _fetchDetails(String videoId) async {
+    try {
+      final details = await _videoDetails(videoId);
+      _detailsCache.remove(videoId);
+      _detailsCache[videoId] = (details, DateTime.now());
+      if (_detailsCache.length > _detailsMaxEntries) {
+        _detailsCache.remove(_detailsCache.keys.first);
+      }
+      return details;
+    } finally {
+      _detailsInFlight.remove(videoId);
+    }
   }
 
   Future<VideoDetails> _videoDetails(String videoId) async {
