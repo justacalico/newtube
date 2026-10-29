@@ -12,10 +12,12 @@ class HistoryStore extends ChangeNotifier {
 
   final List<VideoInfo> _entries;
   final Map<String, int> _positions;
+  final Set<String> _ids;
 
   HistoryStore([List<VideoInfo>? entries, Map<String, int>? positions])
     : _entries = List.of(entries ?? const []),
-      _positions = Map.of(positions ?? const {});
+      _positions = Map.of(positions ?? const {}),
+      _ids = {for (final v in entries ?? const <VideoInfo>[]) v.id};
 
   static const _positionsKey = 'history_positions';
 
@@ -71,19 +73,23 @@ class HistoryStore extends ChangeNotifier {
     _positions
       ..clear()
       ..addAll(fresh._positions);
+    _ids
+      ..clear()
+      ..addAll(fresh._ids);
     notifyListeners();
   }
 
   List<VideoInfo> get entries => List.unmodifiable(_entries);
 
-  bool contains(String videoId) => _entries.any((v) => v.id == videoId);
+  bool contains(String videoId) => _ids.contains(videoId);
 
   Future<void> record(VideoInfo video, SharedPreferences prefs) async {
     _entries.removeWhere((v) => v.id == video.id);
     _entries.insert(0, video);
+    _ids.add(video.id);
     if (_entries.length > _maxEntries) {
       _entries.removeRange(_maxEntries, _entries.length);
-      final kept = {for (final v in _entries) v.id};
+      final kept = _ids..retainAll({for (final v in _entries) v.id});
       _positions.removeWhere((id, _) => !kept.contains(id));
       await savePrefsJson(prefs, _positionsKey, _positions);
     }
@@ -93,6 +99,7 @@ class HistoryStore extends ChangeNotifier {
 
   Future<void> remove(String videoId, SharedPreferences prefs) async {
     _entries.removeWhere((v) => v.id == videoId);
+    _ids.remove(videoId);
     _positions.remove(videoId);
     await _save(prefs);
     await savePrefsJson(prefs, _positionsKey, _positions);
@@ -102,6 +109,7 @@ class HistoryStore extends ChangeNotifier {
   Future<void> clear(SharedPreferences prefs) async {
     _entries.clear();
     _positions.clear();
+    _ids.clear();
     await _save(prefs);
     await savePrefsJson(prefs, _positionsKey, const {});
     notifyListeners();
