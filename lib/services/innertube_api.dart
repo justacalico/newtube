@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/search_filter.dart';
@@ -48,7 +49,9 @@ class InnertubeApi implements YouTubeApi {
     if (response.statusCode != 200) {
       throw InnertubeException('$endpoint failed with ${response.statusCode}');
     }
-    final decoded = jsonDecode(response.body);
+    final decoded = response.bodyBytes.length > 256 * 1024
+        ? await compute(jsonDecode, response.body)
+        : jsonDecode(response.body);
     if (decoded is! Map<String, dynamic>) {
       throw InnertubeException('$endpoint returned invalid body');
     }
