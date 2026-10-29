@@ -155,7 +155,7 @@ void main() {
           'playlistMetadataRenderer': {'title': 'Meta title'},
         },
         'x': {
-          'playlistVideoRenderer': {'videoId': 'v9', 'title': {}},
+          'playlistVideoRenderer': {'videoId': 'v9', 'title': <String, dynamic>{}},
         },
       });
       final playlist = await api.playlist('VLraw');

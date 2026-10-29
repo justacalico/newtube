@@ -123,13 +123,13 @@ void main() {
     final result =
         (await call('initialize', {
               'protocolVersion': '2025-03-26',
-              'capabilities': {},
+              'capabilities': <String, dynamic>{},
               'clientInfo': {'name': 'test', 'version': '0'},
             }))['result']
             as Map<String, Object?>;
     expect(result['protocolVersion'], '2025-03-26');
     expect(result['serverInfo'], {'name': 'newtube', 'version': '1.2.3'});
-    expect(result['capabilities'], isA<Map>());
+    expect(result['capabilities'], isA<Map<dynamic, dynamic>>());
 
     final fallback =
         (await call('initialize', {'protocolVersion': '1999-01-01'}))['result']

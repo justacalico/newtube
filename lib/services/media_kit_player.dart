@@ -119,7 +119,7 @@ class MediaKitPlayerController implements PlayerController {
     valueListenable: videoFit,
     builder: (context, fit, _) => Video(
       controller: _videoController,
-      controls: NoVideoControls,
+      controls: (_) => const SizedBox.shrink(),
       pauseUponEnteringBackgroundMode: false,
       fit: fit,
     ),

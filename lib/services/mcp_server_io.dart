@@ -159,7 +159,7 @@ class HttpMcpServer implements McpServer {
       return _error(id, -32602, 'Invalid params');
     }
     final rawArgs = params is Map ? params['arguments'] : null;
-    final arguments = rawArgs is Map ? rawArgs : const {};
+    final arguments = rawArgs is Map ? rawArgs : const <dynamic, dynamic>{};
     try {
       final data = await switch (name) {
         'search' => _search(arguments),

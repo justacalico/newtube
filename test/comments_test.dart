@@ -20,7 +20,7 @@ Map<String, dynamic> _nextPage() => {
             {
               'itemSectionRenderer': {
                 'contents': [
-                  {'commentsEntryPointHeaderRenderer': {}},
+                  {'commentsEntryPointHeaderRenderer': <String, dynamic>{}},
                   {
                     'continuationItemRenderer': {
                       'continuationEndpoint': {
@@ -65,7 +65,7 @@ Map<String, dynamic> _thread({
             {'url': 'https://i/a.jpg'},
           ],
         },
-        if (pinned) 'pinnedCommentBadge': {'pinnedCommentBadgeRenderer': {}},
+        if (pinned) 'pinnedCommentBadge': {'pinnedCommentBadgeRenderer': <String, dynamic>{}},
         if (hearted)
           'authorCommentBadge': {
             'authorCommentBadgeRenderer': {
@@ -117,7 +117,7 @@ Map<String, dynamic> _commentsPage(
 };
 
 InnertubeApi _api(
-  Map<String, dynamic> Function(String endpoint, Map body) handler,
+  Map<String, dynamic> Function(String endpoint, Map<String, dynamic> body) handler,
 ) => InnertubeApi(
   httpClient: MockClient((request) async {
     if (request.method != 'POST') return http.Response.bytes(const [], 206);
@@ -144,7 +144,7 @@ void main() {
                   replies: 3,
                 ),
                 _thread(author: 'Bob', text: 'second', likes: '5'),
-                {'junkItem': {}},
+                {'junkItem': <String, dynamic>{}},
               ], next: 'tok2')
             : _nextPage(),
       );
@@ -221,7 +221,7 @@ void main() {
     });
 
     test('returns empty when the video has no comments section', () async {
-      final api = _api((_, _) => {'contents': {}});
+      final api = _api((_, _) => {'contents': <String, dynamic>{}});
       expect((await api.comments('v')).comments, isEmpty);
     });
 
