@@ -1,8 +1,10 @@
 import 'package:intl/intl.dart';
 
-final _compact = NumberFormat.compact();
+final _compact = <String, NumberFormat>{};
 
-String formatViewCount(int views) => _compact.format(views);
+String formatViewCount(int views, [String? locale]) =>
+    (_compact[locale ?? ''] ??= NumberFormat.compact(locale: locale))
+        .format(views);
 
 String formatDuration(Duration? duration) {
   if (duration == null) return '';

@@ -990,7 +990,7 @@ class _WatchPageState extends State<WatchPage>
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                           Text(
-                            '${formatViewCount(_details!.info.viewCount)} ${l10n.views}${_dislikes != null ? ' · ${formatViewCount(_dislikes!)} ${l10n.dislikes}' : ''}',
+                            '${formatViewCount(_details!.info.viewCount, l10n.localeName)} ${l10n.views}${_dislikes != null ? ' · ${formatViewCount(_dislikes!, l10n.localeName)} ${l10n.dislikes}' : ''}',
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ],

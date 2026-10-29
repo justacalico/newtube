@@ -9,6 +9,12 @@ void main() {
     expect(formatViewCount(1500000), '1.5M');
   });
 
+  test('formatViewCount honors the passed locale', () {
+    expect(formatViewCount(1500000, 'ru'), isNot(formatViewCount(1500000)));
+    expect(formatViewCount(1500000, 'ru'), contains('млн'));
+    expect(formatViewCount(12345, 'en_GB'), '12.3k');
+  });
+
   test('formatDuration handles null, minutes and hours', () {
     expect(formatDuration(null), '');
     expect(formatDuration(const Duration(seconds: 5)), '0:05');
