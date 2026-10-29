@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart';
+
 import '../models/video_info.dart';
 import '../state/history_store.dart';
 import '../state/search_history_store.dart';
@@ -278,23 +280,22 @@ class _TasteProfile {
       pool.add(_ScoredVideo(v, _score(v)));
     }
 
+    final queue = PriorityQueue<_ScoredVideo>(
+      (a, b) => b.adjusted.compareTo(a.adjusted),
+    )..addAll(pool);
     final out = <VideoInfo>[];
     final placed = <String, int>{};
-    while (pool.isNotEmpty) {
-      var best = 0;
-      var bestScore = -double.infinity;
-      for (var i = 0; i < pool.length; i++) {
-        final key = pool[i].video.channelId;
-        final count = key.isEmpty ? 0 : placed[key] ?? 0;
-        final adjusted = pool[i].score / (1 + count);
-        if (adjusted > bestScore) {
-          bestScore = adjusted;
-          best = i;
-        }
+    while (queue.isNotEmpty) {
+      final item = queue.removeFirst();
+      final key = item.video.channelId;
+      final count = key.isEmpty ? 0 : placed[key] ?? 0;
+      final fresh = item.score / (1 + count);
+      if (fresh < item.adjusted) {
+        item.adjusted = fresh;
+        queue.add(item);
+        continue;
       }
-      final picked = pool.removeAt(best);
-      out.add(picked.video);
-      final key = picked.video.channelId;
+      out.add(item.video);
       if (key.isNotEmpty) placed[key] = (placed[key] ?? 0) + 1;
     }
     return out;
@@ -304,6 +305,7 @@ class _TasteProfile {
 class _ScoredVideo {
   final VideoInfo video;
   final double score;
+  double adjusted;
 
-  const _ScoredVideo(this.video, this.score);
+  _ScoredVideo(this.video, this.score) : adjusted = score;
 }
