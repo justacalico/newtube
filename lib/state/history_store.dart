@@ -99,6 +99,9 @@ class HistoryStore extends ChangeNotifier {
     _entries.insert(0, video);
     if (_entries.length > _maxEntries) {
       _entries.removeRange(_maxEntries, _entries.length);
+      final kept = {for (final v in _entries) v.id};
+      _positions.removeWhere((id, _) => !kept.contains(id));
+      await prefs.setString(_positionsKey, jsonEncode(_positions));
     }
     await _save(prefs);
     notifyListeners();

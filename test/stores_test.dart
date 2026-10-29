@@ -205,6 +205,28 @@ void main() {
       expect(store.entries.first.id, 'v204');
     });
 
+    test('positions for evicted entries are pruned', () async {
+      final p = await prefs();
+      final store = HistoryStore();
+      await store.record(
+        const VideoInfo(id: 'old', title: 't', author: 'a', channelId: 'c'),
+        p,
+      );
+      await store.savePosition('old', const Duration(seconds: 30), p);
+      expect(store.positionFor('old'), isNotNull);
+      for (var i = 0; i < 200; i++) {
+        await store.record(
+          VideoInfo(id: 'v$i', title: 't', author: 'a', channelId: 'c'),
+          p,
+        );
+      }
+      expect(store.positionFor('old'), isNull);
+      final reloaded = await HistoryStore.load(
+        await SharedPreferences.getInstance(),
+      );
+      expect(reloaded.positionFor('old'), isNull);
+    });
+
     test('corrupt payloads load as empty', () async {
       expect(
         (await HistoryStore.load(await prefs({'history': '{!'}))).entries,
