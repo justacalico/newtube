@@ -25,18 +25,21 @@ class DeArrowClient {
 
   DeArrowClient({http.Client? client}) : _client = client ?? http.Client();
 
+  final _cache = <String, DeArrowResult?>{};
+
   Future<DeArrowResult?> branding(String videoId) async {
+    if (_cache.containsKey(videoId)) return _cache[videoId];
     final response = await _client.get(
       Uri.parse('$_base/api/branding')
           .replace(queryParameters: {'videoID': videoId}),
     );
-    if (response.statusCode == 404) return null;
+    if (response.statusCode == 404) return _cache[videoId] = null;
     if (response.statusCode != 200) {
       throw DeArrowException('branding failed with ${response.statusCode}');
     }
     final decoded = jsonDecode(response.body);
-    if (decoded is! Map<String, dynamic>) return null;
-    return DeArrowResult(
+    if (decoded is! Map<String, dynamic>) return _cache[videoId] = null;
+    return _cache[videoId] = DeArrowResult(
       title: _bestTitle(decoded['titles']),
       thumbnailUrl: _bestThumbnail(decoded['thumbnails'], videoId),
     );
