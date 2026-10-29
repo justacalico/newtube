@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -14,6 +13,7 @@ import '../../services/version_checker.dart';
 import '../../state/app_state.dart';
 import '../../state/settings_store.dart';
 import '../shell/title_bar.dart' show isDesktopPlatform;
+import '../widgets/settings_dropdown.dart';
 import '../widgets/content_width.dart';
 import '../widgets/page_header.dart';
 
@@ -42,39 +42,6 @@ const sponsorBlockJumpCategory = 'poi_highlight';
 String _localeKey(Locale locale) => locale.countryCode == null
     ? locale.languageCode
     : '${locale.languageCode}_${locale.countryCode}';
-
-class _SettingsDropdown<T> extends StatelessWidget {
-  const _SettingsDropdown({
-    required this.value,
-    required this.items,
-    required this.onChanged,
-  });
-
-  final T value;
-  final List<DropdownMenuItem<T>> items;
-  final ValueChanged<T?> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final width = min(160.0, MediaQuery.sizeOf(context).width * 0.45);
-    return Container(
-      width: width,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        border: Border.all(color: theme.colorScheme.outlineVariant),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: DropdownButton<T>(
-        value: value,
-        isExpanded: true,
-        underline: const SizedBox(),
-        onChanged: onChanged,
-        items: items,
-      ),
-    );
-  }
-}
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -429,7 +396,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ListTile(
               leading: const Icon(Icons.palette_outlined),
               title: Text(l10n.theme),
-              trailing: _SettingsDropdown<AppTheme>(
+              trailing: SettingsDropdown<AppTheme>(
                 value: settings.theme,
                 onChanged: (theme) {
                   if (theme != null) settings.setTheme(theme, state.prefs);
@@ -457,7 +424,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ListTile(
               leading: const Icon(Icons.language),
               title: Text(l10n.language),
-              trailing: _SettingsDropdown<String>(
+              trailing: SettingsDropdown<String>(
                 value: settings.locale == null
                     ? 'system'
                     : _localeKey(settings.locale!),
@@ -518,7 +485,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ListTile(
               leading: const Icon(Icons.view_list_outlined),
               title: Text(l10n.feedLayout),
-              trailing: _SettingsDropdown<int>(
+              trailing: SettingsDropdown<int>(
                 value: settings.feedDensity,
                 onChanged: (value) {
                   if (value != null) {
@@ -555,7 +522,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ListTile(
               leading: const Icon(Icons.high_quality_outlined),
               title: Text(l10n.defaultQuality),
-              trailing: _SettingsDropdown<int>(
+              trailing: SettingsDropdown<int>(
                 value: settings.preferredQuality,
                 onChanged: (value) {
                   if (value != null) {
@@ -573,7 +540,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ListTile(
               leading: const Icon(Icons.videocam_outlined),
               title: Text(l10n.preferredCodec),
-              trailing: _SettingsDropdown<int>(
+              trailing: SettingsDropdown<int>(
                 value: settings.preferredCodec,
                 onChanged: (value) {
                   if (value != null) {
@@ -591,7 +558,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ListTile(
               leading: const Icon(Icons.speed),
               title: Text(l10n.defaultSpeed),
-              trailing: _SettingsDropdown<double>(
+              trailing: SettingsDropdown<double>(
                 value: settings.defaultSpeed,
                 onChanged: (value) {
                   if (value != null) {
@@ -711,7 +678,7 @@ class _SettingsPageState extends State<SettingsPage> {
               leading: const Icon(Icons.title_outlined),
               title: Text(l10n.deArrow),
               subtitle: Text(l10n.deArrowHint),
-              trailing: _SettingsDropdown<DeArrowMode>(
+              trailing: SettingsDropdown<DeArrowMode>(
                 value: settings.deArrowMode,
                 onChanged: (mode) {
                   if (mode != null) settings.setDeArrowMode(mode, state.prefs);
@@ -749,7 +716,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ListTile(
                   leading: const Icon(Icons.schedule_outlined),
                   title: Text(l10n.uploadCheckInterval),
-                  trailing: _SettingsDropdown<int>(
+                  trailing: SettingsDropdown<int>(
                     value: settings.uploadCheckIntervalMinutes,
                     onChanged: (minutes) {
                       if (minutes != null) {
