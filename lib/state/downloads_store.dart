@@ -35,16 +35,7 @@ class DownloadsStore extends ChangeNotifier {
         for (final e in decoded)
           if (e is Map<String, dynamic>)
             DownloadEntry(
-              video: VideoInfo(
-                id: e['id'] as String? ?? '',
-                title: e['title'] as String? ?? '',
-                author: e['author'] as String? ?? '',
-                channelId: e['channelId'] as String? ?? '',
-                thumbnailUrl: e['thumbnail'] as String?,
-                duration: e['duration'] is int
-                    ? Duration(seconds: e['duration'] as int)
-                    : null,
-              ),
+              video: VideoInfo.fromJson(e),
               path: e['path'] as String? ?? '',
               bytes: e['bytes'] as int? ?? 0,
             ),
@@ -81,16 +72,7 @@ class DownloadsStore extends ChangeNotifier {
     _key,
     jsonEncode([
       for (final e in _entries)
-        {
-          'id': e.video.id,
-          'title': e.video.title,
-          'author': e.video.author,
-          'channelId': e.video.channelId,
-          'thumbnail': e.video.thumbnailUrl,
-          'duration': e.video.duration?.inSeconds,
-          'path': e.path,
-          'bytes': e.bytes,
-        },
+        {...e.video.toJson(), 'path': e.path, 'bytes': e.bytes},
     ]),
   );
 }

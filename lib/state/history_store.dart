@@ -38,7 +38,7 @@ class HistoryStore extends ChangeNotifier {
       if (decoded is! List) return HistoryStore(null, positions);
       return HistoryStore([
         for (final e in decoded)
-          if (e is Map<String, dynamic>) _decodeVideo(e),
+          if (e is Map<String, dynamic>) VideoInfo.fromJson(e),
       ], positions);
     } catch (_) {
       return HistoryStore(null, positions);
@@ -65,19 +65,6 @@ class HistoryStore extends ChangeNotifier {
     await prefs.setString(_positionsKey, jsonEncode(_positions));
     notifyListeners();
   }
-
-  static VideoInfo _decodeVideo(Map<String, dynamic> json) => VideoInfo(
-    id: json['id'] as String? ?? '',
-    title: json['title'] as String? ?? '',
-    author: json['author'] as String? ?? '',
-    channelId: json['channelId'] as String? ?? '',
-    thumbnailUrl: json['thumbnail'] as String?,
-    duration: json['duration'] is int
-        ? Duration(seconds: json['duration'] as int)
-        : null,
-    viewCount: json['views'] as int? ?? 0,
-    uploaded: json['uploaded'] as String?,
-  );
 
   Future<void> reload(SharedPreferences prefs) async {
     final fresh = await HistoryStore.load(prefs);
@@ -125,18 +112,6 @@ class HistoryStore extends ChangeNotifier {
 
   Future<void> _save(SharedPreferences prefs) => prefs.setString(
     _key,
-    jsonEncode([
-      for (final v in _entries)
-        {
-          'id': v.id,
-          'title': v.title,
-          'author': v.author,
-          'channelId': v.channelId,
-          'thumbnail': v.thumbnailUrl,
-          'duration': v.duration?.inSeconds,
-          'views': v.viewCount,
-          'uploaded': v.uploaded,
-        },
-    ]),
+    jsonEncode([for (final v in _entries) v.toJson()]),
   );
 }

@@ -25,6 +25,33 @@ class VideoInfo {
     this.isShort = false,
   });
 
+  factory VideoInfo.fromJson(Map<String, dynamic> json) => VideoInfo(
+    id: json['id'] as String? ?? '',
+    title: json['title'] as String? ?? '',
+    author: json['author'] as String? ?? '',
+    channelId: json['channelId'] as String? ?? '',
+    thumbnailUrl: json['thumbnail'] as String?,
+    duration: json['duration'] is int
+        ? Duration(seconds: json['duration'] as int)
+        : null,
+    viewCount:
+        (json['views'] as num?)?.toInt() ??
+        (json['viewCount'] as num?)?.toInt() ??
+        0,
+    uploaded: json['uploaded'] as String?,
+  );
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'title': title,
+    'author': author,
+    'channelId': channelId,
+    'thumbnail': thumbnailUrl,
+    'duration': duration?.inSeconds,
+    'views': viewCount,
+    'uploaded': uploaded,
+  };
+
   VideoInfo copyWith({
     String? id,
     String? title,
