@@ -146,7 +146,7 @@ class _ChannelPageState extends State<ChannelPage> {
                           ),
                           if (channel.subscribers != null)
                             Text(
-                              '${formatViewCount(channel.subscribers!)} ${l10n.subscribers}',
+                              '${formatViewCount(channel.subscribers!, l10n.localeName)} ${l10n.subscribers}',
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                         ],

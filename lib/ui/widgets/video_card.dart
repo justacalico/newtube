@@ -30,7 +30,7 @@ class VideoCard extends StatelessWidget {
 
     final meta = [
       if (video.viewCount > 0)
-        '${formatViewCount(video.viewCount)} ${l10n.views}',
+        '${formatViewCount(video.viewCount, l10n.localeName)} ${l10n.views}',
       if (video.uploaded != null && video.uploaded!.isNotEmpty) video.uploaded!,
     ].join(' · ');
 
