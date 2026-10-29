@@ -36,17 +36,28 @@ class VideoThumbnail extends StatelessWidget {
       if (url == null || url!.isEmpty || saver) {
         return ClipRRect(borderRadius: borderRadius, child: placeholder);
       }
-      return ClipRRect(
-        borderRadius: borderRadius,
-        child: Image.network(
-          url!,
-          width: width,
-          height: height,
-          fit: BoxFit.cover,
-          errorBuilder: (_, _, _) => placeholder,
-          loadingBuilder: (context, child, progress) =>
-              progress == null ? child : placeholder,
-        ),
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          final ratio = MediaQuery.devicePixelRatioOf(context);
+          final w = width ??
+              (constraints.hasBoundedWidth ? constraints.maxWidth : null);
+          final h = height ??
+              (constraints.hasBoundedHeight ? constraints.maxHeight : null);
+          return ClipRRect(
+            borderRadius: borderRadius,
+            child: Image.network(
+              url!,
+              width: width,
+              height: height,
+              fit: BoxFit.cover,
+              cacheWidth: w == null ? null : (w * ratio).round(),
+              cacheHeight: h == null ? null : (h * ratio).round(),
+              errorBuilder: (_, _, _) => placeholder,
+              loadingBuilder: (context, child, progress) =>
+                  progress == null ? child : placeholder,
+            ),
+          );
+        },
       );
     }
 
