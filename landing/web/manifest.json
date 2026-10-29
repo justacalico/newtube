@@ -1,12 +1,11 @@
 {
-    "name": "newtube_landing",
-    "short_name": "newtube_landing",
+    "name": "NewTube",
+    "short_name": "NewTube",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
-    "orientation": "portrait-primary",
+    "background_color": "#C02026",
+    "theme_color": "#C02026",
+    "description": "A privacy-friendly YouTube client.",
     "prefer_related_applications": false,
     "icons": [
         {
