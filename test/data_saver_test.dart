@@ -28,4 +28,25 @@ void main() {
     expect(find.byType(Image), findsNothing);
     expect(find.byIcon(Icons.play_circle_outline), findsOneWidget);
   });
+
+  testWidgets('thumbnail reacts to data saver toggle', (tester) async {
+    final state = await testState();
+    await pumpPage(
+      tester,
+      state,
+      const Scaffold(
+        body: VideoThumbnail(url: 'https://img.youtube.com/vi/x/0.jpg'),
+      ),
+    );
+    await tester.pump();
+    expect(find.byType(Image), findsOneWidget);
+
+    await state.settings.setDataSaver(true, state.prefs);
+    await tester.pump();
+    expect(find.byType(Image), findsNothing);
+
+    await state.settings.setDataSaver(false, state.prefs);
+    await tester.pump();
+    expect(find.byType(Image), findsOneWidget);
+  });
 }
