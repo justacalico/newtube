@@ -884,6 +884,12 @@ abstract class AppLocalizations {
   /// **'Fullscreen'**
   String get fullscreen;
 
+  /// No description provided for @theaterMode.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Theater mode'**
+  String get theaterMode;
+
   /// No description provided for @quality.
   ///
   /// In en_GB, this message translates to:

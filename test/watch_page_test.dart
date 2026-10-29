@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:newtube/models/video_info.dart';
 import 'package:newtube/state/settings_store.dart';
 import 'package:newtube/ui/pages/watch_page.dart';
+import 'package:newtube/ui/widgets/player_view.dart';
 
 import 'fakes.dart';
 
@@ -1095,5 +1096,93 @@ void main() {
     await tester.pumpAndSettle();
     expect(player.opened, isEmpty);
     expect(find.text('Description'), findsNothing);
+  });
+
+  testWidgets('wide layout puts related videos in a sidebar', (tester) async {
+    final state = await testState(
+      api: FakeYouTubeApi(related: [testVideos[1]]),
+      player: FakePlayerController(),
+    );
+    await pumpPage(
+      tester,
+      state,
+      WatchPage(video: testVideos.first),
+      size: const Size(1400, 900),
+    );
+    await tester.pumpAndSettle();
+
+    final playerRect = tester.getRect(find.byType(PlayerView));
+    final relatedRect = tester.getRect(find.text('Related videos'));
+    expect(relatedRect.left, greaterThan(playerRect.right));
+    expect(find.byTooltip('Theater mode'), findsOneWidget);
+  });
+
+  testWidgets('theater toggle expands the player to full width', (
+    tester,
+  ) async {
+    final state = await testState(
+      api: FakeYouTubeApi(related: [testVideos[1]]),
+      player: FakePlayerController(),
+    );
+    await pumpPage(
+      tester,
+      state,
+      WatchPage(video: testVideos.first),
+      size: const Size(1400, 900),
+    );
+    await tester.pumpAndSettle();
+
+    final surface = find.ancestor(
+      of: find.byType(PlayerView),
+      matching: find.byType(AspectRatio),
+    );
+    final windowed = tester.getSize(surface).width;
+    expect(windowed, lessThan(1400));
+
+    await tester.tap(find.byTooltip('Theater mode'));
+    await tester.pumpAndSettle();
+
+    final theater = tester.getSize(surface).width;
+    expect(theater, greaterThan(windowed));
+    expect(state.settings.theaterMode, isTrue);
+  });
+
+  testWidgets('theater preference restores the expanded layout', (
+    tester,
+  ) async {
+    final state = await testState(
+      api: FakeYouTubeApi(related: [testVideos[1]]),
+      player: FakePlayerController(),
+      initialPrefs: const {'theater_mode': true},
+    );
+    await pumpPage(
+      tester,
+      state,
+      WatchPage(video: testVideos.first),
+      size: const Size(1400, 900),
+    );
+    await tester.pumpAndSettle();
+
+    final surface = find.ancestor(
+      of: find.byType(PlayerView),
+      matching: find.byType(AspectRatio),
+    );
+    expect(tester.getSize(surface).width, greaterThan(1200));
+  });
+
+  testWidgets('narrow layout has no theater toggle and stacks related', (
+    tester,
+  ) async {
+    final state = await testState(
+      api: FakeYouTubeApi(related: [testVideos[1]]),
+      player: FakePlayerController(),
+    );
+    await pumpPage(tester, state, WatchPage(video: testVideos.first));
+    await tester.pumpAndSettle();
+
+    expect(find.byTooltip('Theater mode'), findsNothing);
+    final playerRect = tester.getRect(find.byType(PlayerView));
+    final relatedRect = tester.getRect(find.text('Related videos'));
+    expect(relatedRect.top, greaterThan(playerRect.bottom));
   });
 }

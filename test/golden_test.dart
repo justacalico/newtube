@@ -99,6 +99,19 @@ void main() {
     );
   });
 
+  testWidgets('watch page theater mode', (tester) async {
+    final api = FakeYouTubeApi(related: testVideos);
+    await golden(
+      tester,
+      'watch_page_theater',
+      WatchPage(video: testVideos.first),
+      state: await testState(
+        api: api,
+        initialPrefs: const {'theater_mode': true},
+      ),
+    );
+  });
+
   testWidgets('watch page in shell', (tester) async {
     await golden(
       tester,

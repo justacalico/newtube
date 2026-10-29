@@ -405,6 +405,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fullscreen => 'Fullscreen';
 
   @override
+  String get theaterMode => 'Theater mode';
+
+  @override
   String get quality => 'Quality';
 
   @override
@@ -1437,6 +1440,9 @@ class AppLocalizationsEnGb extends AppLocalizationsEn {
 
   @override
   String get fullscreen => 'Fullscreen';
+
+  @override
+  String get theaterMode => 'Theater mode';
 
   @override
   String get quality => 'Quality';
