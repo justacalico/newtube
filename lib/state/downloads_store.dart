@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/video_info.dart';
+import 'prefs_codec.dart';
 
 class DownloadEntry {
   final VideoInfo video;
@@ -25,25 +24,19 @@ class DownloadsStore extends ChangeNotifier {
   DownloadsStore([List<DownloadEntry>? entries])
     : _entries = List.of(entries ?? const []);
 
-  static Future<DownloadsStore> load(SharedPreferences prefs) async {
-    final raw = prefs.getString(_key);
-    if (raw == null) return DownloadsStore();
-    try {
-      final decoded = jsonDecode(raw);
-      if (decoded is! List) return DownloadsStore();
-      return DownloadsStore([
-        for (final e in decoded)
-          if (e is Map<String, dynamic>)
-            DownloadEntry(
-              video: VideoInfo.fromJson(e),
-              path: e['path'] as String? ?? '',
-              bytes: e['bytes'] as int? ?? 0,
-            ),
-      ]);
-    } catch (_) {
-      return DownloadsStore();
-    }
-  }
+  static Future<DownloadsStore> load(SharedPreferences prefs) async =>
+      DownloadsStore(
+        decodePrefsList(
+          prefs.getString(_key),
+          (e) => e is Map<String, dynamic>
+              ? DownloadEntry(
+                  video: VideoInfo.fromJson(e),
+                  path: e['path'] as String? ?? '',
+                  bytes: e['bytes'] as int? ?? 0,
+                )
+              : null,
+        ),
+      );
 
   Future<void> reload(SharedPreferences prefs) async {
     final fresh = await DownloadsStore.load(prefs);
@@ -68,11 +61,8 @@ class DownloadsStore extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _save(SharedPreferences prefs) => prefs.setString(
-    _key,
-    jsonEncode([
-      for (final e in _entries)
-        {...e.video.toJson(), 'path': e.path, 'bytes': e.bytes},
-    ]),
-  );
+  Future<void> _save(SharedPreferences prefs) => savePrefsJson(prefs, _key, [
+    for (final e in _entries)
+      {...e.video.toJson(), 'path': e.path, 'bytes': e.bytes},
+  ]);
 }

@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/video_info.dart';
+import 'prefs_codec.dart';
 
 class WatchLaterStore extends ChangeNotifier {
   static const _key = 'watch_later';
@@ -14,19 +13,13 @@ class WatchLaterStore extends ChangeNotifier {
     : _videos = Map.of(videos ?? const {});
 
   static Future<WatchLaterStore> load(SharedPreferences prefs) async {
-    final raw = prefs.getString(_key);
-    if (raw == null) return WatchLaterStore();
-    try {
-      final decoded = jsonDecode(raw);
-      if (decoded is! List) return WatchLaterStore();
-      return WatchLaterStore({
-        for (final item in decoded)
-          if (item is Map<String, dynamic> && item['id'] is String)
-            item['id'] as String: VideoInfo.fromJson(item),
-      });
-    } catch (_) {
-      return WatchLaterStore();
-    }
+    final entries = decodePrefsList(
+      prefs.getString(_key),
+      (item) => item is Map<String, dynamic> && item['id'] is String
+          ? MapEntry(item['id'] as String, VideoInfo.fromJson(item))
+          : null,
+    );
+    return WatchLaterStore(entries == null ? null : Map.fromEntries(entries));
   }
 
   Future<void> reload(SharedPreferences prefs) async {
@@ -70,8 +63,6 @@ class WatchLaterStore extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _save(SharedPreferences prefs) => prefs.setString(
-    _key,
-    jsonEncode([for (final v in _videos.values) v.toJson()]),
-  );
+  Future<void> _save(SharedPreferences prefs) =>
+      savePrefsJson(prefs, _key, [for (final v in _videos.values) v.toJson()]);
 }

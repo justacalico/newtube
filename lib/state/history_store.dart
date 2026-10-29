@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/video_info.dart';
+import 'prefs_codec.dart';
 
 class HistoryStore extends ChangeNotifier {
   static const _key = 'history';
@@ -32,17 +33,13 @@ class HistoryStore extends ChangeNotifier {
         }
       } catch (_) {}
     }
-    if (raw == null) return HistoryStore(null, positions);
-    try {
-      final decoded = jsonDecode(raw);
-      if (decoded is! List) return HistoryStore(null, positions);
-      return HistoryStore([
-        for (final e in decoded)
-          if (e is Map<String, dynamic>) VideoInfo.fromJson(e),
-      ], positions);
-    } catch (_) {
-      return HistoryStore(null, positions);
-    }
+    return HistoryStore(
+      decodePrefsList(
+        raw,
+        (e) => e is Map<String, dynamic> ? VideoInfo.fromJson(e) : null,
+      ),
+      positions,
+    );
   }
 
   Duration? positionFor(String videoId) {
@@ -56,13 +53,13 @@ class HistoryStore extends ChangeNotifier {
     SharedPreferences prefs,
   ) async {
     _positions[videoId] = position.inSeconds;
-    await prefs.setString(_positionsKey, jsonEncode(_positions));
+    await savePrefsJson(prefs, _positionsKey, _positions);
     notifyListeners();
   }
 
   Future<void> clearPosition(String videoId, SharedPreferences prefs) async {
     if (_positions.remove(videoId) == null) return;
-    await prefs.setString(_positionsKey, jsonEncode(_positions));
+    await savePrefsJson(prefs, _positionsKey, _positions);
     notifyListeners();
   }
 
@@ -88,7 +85,7 @@ class HistoryStore extends ChangeNotifier {
       _entries.removeRange(_maxEntries, _entries.length);
       final kept = {for (final v in _entries) v.id};
       _positions.removeWhere((id, _) => !kept.contains(id));
-      await prefs.setString(_positionsKey, jsonEncode(_positions));
+      await savePrefsJson(prefs, _positionsKey, _positions);
     }
     await _save(prefs);
     notifyListeners();
@@ -98,7 +95,7 @@ class HistoryStore extends ChangeNotifier {
     _entries.removeWhere((v) => v.id == videoId);
     _positions.remove(videoId);
     await _save(prefs);
-    await prefs.setString(_positionsKey, jsonEncode(_positions));
+    await savePrefsJson(prefs, _positionsKey, _positions);
     notifyListeners();
   }
 
@@ -106,12 +103,10 @@ class HistoryStore extends ChangeNotifier {
     _entries.clear();
     _positions.clear();
     await _save(prefs);
-    await prefs.setString(_positionsKey, '{}');
+    await savePrefsJson(prefs, _positionsKey, const {});
     notifyListeners();
   }
 
-  Future<void> _save(SharedPreferences prefs) => prefs.setString(
-    _key,
-    jsonEncode([for (final v in _entries) v.toJson()]),
-  );
+  Future<void> _save(SharedPreferences prefs) =>
+      savePrefsJson(prefs, _key, [for (final v in _entries) v.toJson()]);
 }

@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xml/xml.dart';
 
+import '../state/prefs_codec.dart';
 import '../state/settings_store.dart';
 import '../state/subscriptions_store.dart';
 import '../utils/debug_log.dart';
@@ -169,11 +170,7 @@ class UploadsWatcher {
     return null;
   }
 
-  Future<void> _save() => prefs.setString(
-    _seenKey,
-    jsonEncode({
-      for (final entry in _seen.entries)
-        entry.key: entry.value.toIso8601String(),
-    }),
-  );
+  Future<void> _save() => savePrefsJson(prefs, _seenKey, {
+    for (final entry in _seen.entries) entry.key: entry.value.toIso8601String(),
+  });
 }

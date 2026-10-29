@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/video_info.dart';
+import 'prefs_codec.dart';
 
 class PlaylistsStore extends ChangeNotifier {
   static const _key = 'playlists';
@@ -13,21 +12,15 @@ class PlaylistsStore extends ChangeNotifier {
   PlaylistsStore([List<PlaylistInfo>? playlists])
     : _playlists = List.of(playlists ?? const []);
 
-  static Future<PlaylistsStore> load(SharedPreferences prefs) async {
-    final raw = prefs.getString(_key);
-    if (raw == null) return PlaylistsStore();
-    try {
-      final decoded = jsonDecode(raw);
-      if (decoded is! List) return PlaylistsStore();
-      return PlaylistsStore([
-        for (final item in decoded)
-          if (item is Map<String, dynamic> && item['id'] is String)
-            _decode(item),
-      ]);
-    } catch (_) {
-      return PlaylistsStore();
-    }
-  }
+  static Future<PlaylistsStore> load(SharedPreferences prefs) async =>
+      PlaylistsStore(
+        decodePrefsList(
+          prefs.getString(_key),
+          (item) => item is Map<String, dynamic> && item['id'] is String
+              ? _decode(item)
+              : null,
+        ),
+      );
 
   static PlaylistInfo _decode(Map<String, dynamic> json) {
     final videos = <VideoInfo>[
@@ -188,19 +181,14 @@ class PlaylistsStore extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _save(SharedPreferences prefs) => prefs.setString(
-    _key,
-    jsonEncode([
-      for (final p in _playlists)
-        {
-          'id': p.id,
-          'title': p.title,
-          'author': p.author,
-          'thumbnail': p.thumbnailUrl,
-          'videos': [
-            for (final v in p.videos) v.toJson(),
-          ],
-        },
-    ]),
-  );
+  Future<void> _save(SharedPreferences prefs) => savePrefsJson(prefs, _key, [
+    for (final p in _playlists)
+      {
+        'id': p.id,
+        'title': p.title,
+        'author': p.author,
+        'thumbnail': p.thumbnailUrl,
+        'videos': [for (final v in p.videos) v.toJson()],
+      },
+  ]);
 }
