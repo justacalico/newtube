@@ -75,11 +75,11 @@ void main() {
       expect(await client.branding('x'), isNull);
       body = '{}';
       status = 200;
-      final empty = await client.branding('x');
+      final empty = await client.branding('y');
       expect(empty!.title, isNull);
       expect(empty.thumbnailUrl, isNull);
       body = '{"titles": "junk", "thumbnails": "junk"}';
-      final result = await client.branding('x');
+      final result = await client.branding('z');
       expect(result!.title, isNull);
       expect(result.thumbnailUrl, isNull);
     });

@@ -1,21 +1,20 @@
 import '../models/search_filter.dart';
-import '../models/youtube_route.dart';
 import '../models/video_info.dart';
 import '../state/settings_store.dart';
 import '../utils/debug_log.dart';
 import 'dearrow.dart';
+import 'forwarding_api.dart';
 import 'youtube_api.dart';
 
-class DeArrowApi implements YouTubeApi {
-  final YouTubeApi inner;
+class DeArrowApi extends ForwardingYouTubeApi {
   final DeArrowClient client;
   final SettingsStore settings;
 
   DeArrowApi({
-    required this.inner,
+    required YouTubeApi inner,
     required this.client,
     required this.settings,
-  });
+  }) : super(inner);
 
   bool get _active => settings.deArrowTitles || settings.deArrowThumbnails;
 
@@ -27,13 +26,13 @@ class DeArrowApi implements YouTubeApi {
       return video.copyWith(
         title: settings.deArrowTitles && result.title != null
             ? result.title!
-            : video.title,
+            : null,
         thumbnailUrl: settings.deArrowThumbnails && result.thumbnailUrl != null
             ? result.thumbnailUrl!
-            : video.thumbnailUrl,
+            : null,
       );
-    } catch (e) {
-      debugLog('[dearrow] ${video.id}: branding failed: $e');
+    } on DeArrowException catch (e) {
+      debugLog('[dearrow] ${video.id}: $e');
       return video;
     }
   }
@@ -56,13 +55,6 @@ class DeArrowApi implements YouTubeApi {
 
   @override
   Future<List<VideoInfo>> trending() => inner.trending().then(_applyAll);
-
-  @override
-  Future<List<String>> searchSuggestions(String query) =>
-      inner.searchSuggestions(query);
-
-  @override
-  Future<YouTubeRoute?> resolveUrl(String url) => inner.resolveUrl(url);
 
   @override
   Future<SearchResults> search(String query, {SearchFilter? filter}) async {
@@ -90,33 +82,25 @@ class DeArrowApi implements YouTubeApi {
       inner.relatedVideos(videoId).then(_applyAll);
 
   @override
-  Future<CommentsResult> comments(
-    String videoId, {
-    String? continuation,
-    CommentSort? sort,
-  }) => inner.comments(videoId, continuation: continuation, sort: sort);
-
-  @override
-  Future<ChannelInfo> channel(String channelId) => inner.channel(channelId);
+  Future<List<PlaylistInfo>> channelPlaylists(String channelId) async {
+    final playlists = await inner.channelPlaylists(channelId);
+    return [
+      for (final p in playlists)
+        PlaylistInfo(
+          id: p.id,
+          title: p.title,
+          author: p.author,
+          thumbnailUrl: p.thumbnailUrl,
+          videoCount: p.videoCount,
+          videos: await _applyAll(p.videos),
+          continuation: p.continuation,
+        ),
+    ];
+  }
 
   @override
   Future<List<VideoInfo>> channelShorts(String channelId) =>
-      inner.channelShorts(channelId);
-
-  @override
-  Future<List<PlaylistInfo>> channelPlaylists(String channelId) =>
-      inner.channelPlaylists(channelId);
-
-  @override
-  Future<ChannelAbout> channelAbout(String channelId) =>
-      inner.channelAbout(channelId);
-
-  @override
-  Future<List<VideoInfo>> channelSearch(String channelId, String query) =>
-      inner.channelSearch(channelId, query);
-
-  @override
-  Future<String?> resolveChannel(String url) => inner.resolveChannel(url);
+      inner.channelShorts(channelId).then(_applyAll);
 
   @override
   Future<PlaylistInfo> playlist(
@@ -141,8 +125,4 @@ class DeArrowApi implements YouTubeApi {
   @override
   Future<List<VideoInfo>> channelVideos(String channelId) =>
       inner.channelVideos(channelId).then(_applyAll);
-
-  @override
-  Future<List<CaptionCue>> captions(CaptionTrack track) =>
-      inner.captions(track);
 }
