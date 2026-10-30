@@ -156,7 +156,14 @@ class _WatchLaterTile extends StatelessWidget {
   Widget build(BuildContext context) => Column(
     children: [
       VideoListTile(video: video, onTap: onTap),
-      if (progress > 0) LinearProgressIndicator(value: progress, minHeight: 2),
+      if (progress > 0)
+        LinearProgressIndicator(
+          value: progress,
+          minHeight: 3,
+          valueColor: AlwaysStoppedAnimation<Color>(
+            Theme.of(context).colorScheme.error,
+          ),
+        ),
     ],
   );
 }

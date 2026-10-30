@@ -2052,6 +2052,36 @@ abstract class AppLocalizations {
   /// In en_GB, this message translates to:
   /// **'Invidious instance used when YouTube is unreachable'**
   String get fallbackBackendHint;
+
+  /// No description provided for @minimize.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Minimise'**
+  String get minimize;
+
+  /// No description provided for @maximize.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Maximise'**
+  String get maximize;
+
+  /// No description provided for @removeFromQueue.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Remove from queue'**
+  String get removeFromQueue;
+
+  /// No description provided for @unhide.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Unhide'**
+  String get unhide;
+
+  /// No description provided for @unsubscribeConfirm.
+  ///
+  /// In en_GB, this message translates to:
+  /// **'Unsubscribe from {channel}?'**
+  String unsubscribeConfirm(String channel);
 }
 
 class _AppLocalizationsDelegate

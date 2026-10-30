@@ -1047,4 +1047,21 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get fallbackBackendHint =>
       'Экземпляр Invidious при недоступности YouTube';
+
+  @override
+  String get minimize => 'Свернуть';
+
+  @override
+  String get maximize => 'Развернуть';
+
+  @override
+  String get removeFromQueue => 'Убрать из очереди';
+
+  @override
+  String get unhide => 'Показать';
+
+  @override
+  String unsubscribeConfirm(String channel) {
+    return 'Отписаться от $channel?';
+  }
 }

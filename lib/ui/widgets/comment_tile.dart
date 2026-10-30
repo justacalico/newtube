@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../state/app_state.dart';
+import '../../utils/format.dart';
 import '../pages/channel_page.dart';
 import 'thumbnail.dart';
 
@@ -43,6 +44,7 @@ class CommentTile extends StatelessWidget {
                             style: theme.textTheme.titleSmall,
                           )
                         : InkWell(
+                            borderRadius: BorderRadius.circular(4),
                             onTap: () => openChannelPage(context, channelId),
                             child: Text(
                               comment.author,
@@ -84,14 +86,14 @@ class CommentTile extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 2),
-                Text(comment.text),
+                SelectableText(comment.text),
                 const SizedBox(height: 4),
                 Row(
                   children: [
                     const Icon(Icons.thumb_up_outlined, size: 14),
                     const SizedBox(width: 4),
                     Text(
-                      '${comment.likeCount}',
+                      formatViewCount(comment.likeCount, l10n.localeName),
                       style: theme.textTheme.bodySmall,
                     ),
                     if (comment.replyCount > 0) ...[
@@ -182,7 +184,7 @@ class _RepliesState extends State<_Replies> {
           onPressed: _toggle,
           style: TextButton.styleFrom(
             padding: EdgeInsets.zero,
-            minimumSize: const Size(0, 28),
+            minimumSize: const Size(0, 32),
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
         ),
@@ -192,7 +194,7 @@ class _RepliesState extends State<_Replies> {
             child: Column(
               children: [
                 for (final reply in _replies ?? const <CommentInfo>[])
-                  CommentTile(comment: reply),
+                  CommentTile(comment: reply, videoId: widget.videoId),
               ],
             ),
           ),

@@ -155,6 +155,9 @@ class _HistoryTile extends StatelessWidget {
                       1.0,
                     ),
                     minHeight: 3,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Theme.of(context).colorScheme.error,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),

@@ -91,7 +91,7 @@ void main() {
     await tester.pump();
 
     await tester.tapAt(playerCenter(tester));
-    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 350));
     expect(
       tester
           .widget<AnimatedOpacity>(

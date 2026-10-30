@@ -9,6 +9,7 @@ import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../services/youtube_api.dart';
 import '../../state/app_state.dart';
+import '../layout.dart';
 import '../widgets/content_width.dart';
 import '../widgets/thumbnail.dart';
 import '../../utils/feed_filter.dart';
@@ -185,11 +186,28 @@ class _SearchPageState extends State<SearchPage> {
 
   void _openChannel(String channelId) => openChannelPage(context, channelId);
 
+  List<VideoInfo> _visibleResults() {
+    final state = AppScope.read(context);
+    return visibleVideos(_results.videos, state.settings, state);
+  }
+
+  Widget _resultsView(Widget Function() builder) {
+    final state = AppScope.read(context);
+    return ListenableBuilder(
+      listenable: Listenable.merge([
+        state.hidden,
+        state.history,
+        state.settings,
+      ]),
+      builder: (context, _) => builder(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return ContentWidth(
-      maxWidth: 1280,
+      maxWidth: feedMaxWidth,
       child: Column(
         children: [
           Padding(
@@ -198,6 +216,17 @@ class _SearchPageState extends State<SearchPage> {
               controller: _controller,
               hintText: l10n.searchHint,
               leading: const Icon(Icons.search),
+              trailing: [
+                if (_controller.text.isNotEmpty)
+                  IconButton(
+                    tooltip: l10n.clear,
+                    icon: const Icon(Icons.close, size: 18),
+                    onPressed: () => setState(() {
+                      _controller.clear();
+                      _query = '';
+                    }),
+                  ),
+              ],
               elevation: const WidgetStatePropertyAll(0.0),
               side: WidgetStatePropertyAll(
                 BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
@@ -214,143 +243,147 @@ class _SearchPageState extends State<SearchPage> {
                           children: _suggestionTiles(_controller.text.trim()),
                         )
                       : _SearchHistory(onSelect: _searchFromHistory))
-                : FeedStateView(
-                    loading: _loading,
-                    error: _error,
-                    videos: visibleVideos(
-                      _results.videos,
-                      AppScope.read(context).settings,
-                      AppScope.read(context),
-                    ),
-                    onRetry: _load,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (_results.channels.isNotEmpty)
-                          SizedBox(
-                            height: 64,
-                            child: ListView(
-                              scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 8,
-                              ),
-                              children: [
-                                for (final channel in _results.channels)
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 8),
-                                    child: Material(
-                                      color: Colors.transparent,
-                                      child: InkWell(
+                : _resultsView(
+                    () => FeedStateView(
+                      loading: _loading,
+                      error: _error,
+                      videos: _visibleResults(),
+                      onRetry: _load,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (_results.channels.isNotEmpty)
+                            SizedBox(
+                              height: 64,
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
+                                children: [
+                                  for (final channel in _results.channels)
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 8),
+                                      child: Material(
+                                        color: Colors.transparent,
                                         borderRadius: BorderRadius.circular(8),
-                                        onTap: () => _openChannel(channel.id),
-                                        child: SizedBox(
-                                          width: 180,
-                                          child: Row(
-                                            children: [
-                                              VideoThumbnail(
-                                                url: channel.thumbnailUrl,
-                                                width: 48,
-                                                height: 48,
-                                                borderRadius:
-                                                    BorderRadius.circular(24),
-                                                placeholderIcon:
-                                                    Icons.person_outline,
-                                              ),
-                                              const SizedBox(width: 8),
-                                              Expanded(
-                                                child: Text(
-                                                  channel.name,
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                        clipBehavior: Clip.antiAlias,
+                                        child: InkWell(
+                                          onTap: () => _openChannel(channel.id),
+                                          child: SizedBox(
+                                            width: 180,
+                                            child: Row(
+                                              children: [
+                                                VideoThumbnail(
+                                                  url: channel.thumbnailUrl,
+                                                  width: 48,
+                                                  height: 48,
+                                                  borderRadius:
+                                                      BorderRadius.circular(24),
+                                                  placeholderIcon:
+                                                      Icons.person_outline,
                                                 ),
-                                              ),
-                                            ],
+                                                const SizedBox(width: 8),
+                                                Expanded(
+                                                  child: Text(
+                                                    channel.name,
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        if (_results.playlists.isNotEmpty)
-                          SizedBox(
-                            height: 72,
-                            child: ListView(
-                              scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 8,
+                                ],
                               ),
-                              children: [
-                                for (final playlist in _results.playlists)
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 8),
-                                    child: Material(
-                                      color: Colors.transparent,
-                                      child: InkWell(
+                            ),
+                          if (_results.playlists.isNotEmpty)
+                            SizedBox(
+                              height: 72,
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
+                                children: [
+                                  for (final playlist in _results.playlists)
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 8),
+                                      child: Material(
+                                        color: Colors.transparent,
                                         borderRadius: BorderRadius.circular(8),
-                                        onTap: () =>
-                                            openPlaylistPage(context, playlist),
-                                        child: SizedBox(
-                                          width: 180,
-                                          child: Row(
-                                            children: [
-                                              VideoThumbnail(
-                                                url: playlist.thumbnailUrl,
-                                                width: 48,
-                                                height: 48,
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
-                                              const SizedBox(width: 8),
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      playlist.title,
-                                                      maxLines: 2,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                    Text(
-                                                      l10n.videoCount(
-                                                        playlist.videoCount,
+                                        clipBehavior: Clip.antiAlias,
+                                        child: InkWell(
+                                          onTap: () => openPlaylistPage(
+                                            context,
+                                            playlist,
+                                          ),
+                                          child: SizedBox(
+                                            width: 180,
+                                            child: Row(
+                                              children: [
+                                                VideoThumbnail(
+                                                  url: playlist.thumbnailUrl,
+                                                  width: 48,
+                                                  height: 48,
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        playlist.title,
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                       ),
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .bodySmall,
-                                                    ),
-                                                  ],
+                                                      Text(
+                                                        l10n.videoCount(
+                                                          playlist.videoCount,
+                                                        ),
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .bodySmall,
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                              ],
+                                ],
+                              ),
+                            ),
+                          Expanded(
+                            child: VideoGrid(
+                              videos: _visibleResults(),
+                              onVideoTap: _openVideo,
+                              onChannelTap: (v) {
+                                if (v.channelId.isNotEmpty) {
+                                  _openChannel(v.channelId);
+                                }
+                              },
                             ),
                           ),
-                        Expanded(
-                          child: VideoGrid(
-                            videos: visibleVideos(
-                              _results.videos,
-                              AppScope.read(context).settings,
-                              AppScope.read(context),
-                            ),
-                            onVideoTap: _openVideo,
-                            onChannelTap: (v) => _openChannel(v.channelId),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
           ),
@@ -545,7 +578,7 @@ class _FilterMenu<T> extends StatelessWidget {
                 ? theme.colorScheme.secondaryContainer
                 : theme.colorScheme.surfaceContainerHighest,
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            minimumSize: const Size(0, 32),
+            minimumSize: const Size(0, 36),
           ),
           onPressed: () =>
               controller.isOpen ? controller.close() : controller.open(),

@@ -42,7 +42,11 @@ void main() {
     await tester.pumpAndSettle();
     await tester.longPress(find.byType(VideoCard));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.widgetWithText(ListTile, 'Not interested'));
+    await tester.dragUntilVisible(
+      find.widgetWithText(ListTile, 'Not interested'),
+      find.byType(ListView),
+      const Offset(0, -80),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(ListTile, 'Not interested'));
     await tester.pumpAndSettle();
@@ -50,8 +54,10 @@ void main() {
 
     await tester.longPress(find.byType(VideoCard));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(
+    await tester.dragUntilVisible(
       find.widgetWithText(ListTile, "Don't recommend channel"),
+      find.byType(ListView),
+      const Offset(0, -80),
     );
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(ListTile, "Don't recommend channel"));
@@ -60,7 +66,11 @@ void main() {
 
     await tester.longPress(find.byType(VideoCard));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.widgetWithText(ListTile, 'Share'));
+    await tester.dragUntilVisible(
+      find.widgetWithText(ListTile, 'Share'),
+      find.byType(ListView),
+      const Offset(0, -80),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(ListTile, 'Share'));
     await tester.pumpAndSettle();
@@ -68,7 +78,11 @@ void main() {
 
     await tester.longPress(find.byType(VideoCard));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.widgetWithText(ListTile, 'Watch later'));
+    await tester.dragUntilVisible(
+      find.widgetWithText(ListTile, 'Watch later'),
+      find.byType(ListView),
+      const Offset(0, -80),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(ListTile, 'Watch later'));
     await tester.pumpAndSettle();
@@ -76,7 +90,11 @@ void main() {
 
     await tester.longPress(find.byType(VideoCard));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.widgetWithText(ListTile, 'Play next'));
+    await tester.dragUntilVisible(
+      find.widgetWithText(ListTile, 'Play next'),
+      find.byType(ListView),
+      const Offset(0, -80),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(ListTile, 'Play next'));
     await tester.pumpAndSettle();
@@ -84,7 +102,11 @@ void main() {
 
     await tester.longPress(find.byType(VideoCard));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.widgetWithText(ListTile, 'Add to queue'));
+    await tester.dragUntilVisible(
+      find.widgetWithText(ListTile, 'Add to queue'),
+      find.byType(ListView),
+      const Offset(0, -80),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(ListTile, 'Add to queue'));
     await tester.pumpAndSettle();
@@ -544,8 +566,10 @@ void main() {
     await tester.pumpAndSettle();
     await tester.longPress(find.byType(VideoCard));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(
+    await tester.dragUntilVisible(
       find.widgetWithText(ListTile, 'Add to playlist'),
+      find.byType(ListView),
+      const Offset(0, -80),
     );
     await tester.tap(find.widgetWithText(ListTile, 'Add to playlist'));
     await tester.pumpAndSettle();

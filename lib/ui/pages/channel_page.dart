@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../state/app_state.dart';
+import '../../utils/feed_filter.dart';
 import '../../utils/format.dart';
+import '../layout.dart';
 import '../widgets/content_width.dart';
 import '../widgets/subscribe_button.dart';
 import '../widgets/thumbnail.dart';
@@ -51,21 +53,26 @@ class _ChannelPageState extends State<ChannelPage> {
     try {
       final api = AppScope.read(context).api;
       final channel = await api.channel(widget.channelId);
+      final results = await Future.wait([
+        api.channelVideos(widget.channelId),
+        api
+            .channelShorts(widget.channelId)
+            .catchError((_) => const <VideoInfo>[]),
+        api
+            .channelPlaylists(widget.channelId)
+            .catchError((_) => const <PlaylistInfo>[]),
+        api
+            .channelAbout(widget.channelId)
+            .then<ChannelAbout?>((a) => a)
+            .catchError((_) => null),
+      ]);
       final videos = [
-        for (final v in await api.channelVideos(widget.channelId))
+        for (final v in results[0] as List<VideoInfo>)
           if (v.author.isEmpty) v.copyWith(author: channel.name) else v,
       ];
-      if (!mounted) return;
-      final shorts = await api
-          .channelShorts(widget.channelId)
-          .catchError((_) => const <VideoInfo>[]);
-      final playlists = await api
-          .channelPlaylists(widget.channelId)
-          .catchError((_) => const <PlaylistInfo>[]);
-      final about = await api
-          .channelAbout(widget.channelId)
-          .then<ChannelAbout?>((a) => a)
-          .catchError((_) => null);
+      final shorts = results[1] as List<VideoInfo>;
+      final playlists = results[2] as List<PlaylistInfo>;
+      final about = results[3] as ChannelAbout?;
       if (!mounted) return;
       setState(() {
         _channel = channel;
@@ -85,6 +92,21 @@ class _ChannelPageState extends State<ChannelPage> {
   }
 
   void _openVideo(VideoInfo video) => openWatchPage(context, video);
+
+  Widget _filteredGrid(List<VideoInfo> videos) {
+    final state = AppScope.read(context);
+    return ListenableBuilder(
+      listenable: Listenable.merge([
+        state.hidden,
+        state.history,
+        state.settings,
+      ]),
+      builder: (context, _) => VideoGrid(
+        videos: visibleVideos(videos, state.settings, state),
+        onVideoTap: _openVideo,
+      ),
+    );
+  }
 
   Future<void> _runSearch(String query) async {
     final api = AppScope.read(context).api;
@@ -118,7 +140,7 @@ class _ChannelPageState extends State<ChannelPage> {
         ],
       ),
       body: ContentWidth(
-        maxWidth: 1280,
+        maxWidth: feedMaxWidth,
         child: Column(
           children: [
             if (channel != null)
@@ -160,7 +182,9 @@ class _ChannelPageState extends State<ChannelPage> {
               child: FeedStateView(
                 loading: _loading,
                 error: _error,
-                videos: _videos,
+                videos: _videos.isEmpty && _shorts.isEmpty && _playlists.isEmpty
+                    ? const []
+                    : _videos,
                 onRetry: _load,
                 child: _searchResults != null
                     ? VideoGrid(videos: _searchResults!, onVideoTap: _openVideo)
@@ -181,14 +205,8 @@ class _ChannelPageState extends State<ChannelPage> {
                             Expanded(
                               child: TabBarView(
                                 children: [
-                                  VideoGrid(
-                                    videos: _videos,
-                                    onVideoTap: _openVideo,
-                                  ),
-                                  VideoGrid(
-                                    videos: _shorts,
-                                    onVideoTap: _openVideo,
-                                  ),
+                                  _filteredGrid(_videos),
+                                  _filteredGrid(_shorts),
                                   _PlaylistTab(playlists: _playlists),
                                   _AboutTab(about: _about),
                                 ],
@@ -225,7 +243,9 @@ class _PlaylistTab extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            subtitle: Text('${playlist.videos.length}'),
+            subtitle: playlist.videoCount > 0
+                ? Text(l10n.videoCount(playlist.videoCount))
+                : null,
             onTap: () => openPlaylistPage(context, playlist),
           ),
       ],
@@ -245,7 +265,9 @@ class _AboutTab extends StatelessWidget {
     if (a == null ||
         (a.description.isEmpty &&
             a.joinedText.isEmpty &&
-            a.videoCountText == null)) {
+            a.subscriberCountText == null &&
+            a.videoCountText == null &&
+            a.viewCountText == null)) {
       return Center(child: Text(l10n.noAboutInfo));
     }
     return ListView(

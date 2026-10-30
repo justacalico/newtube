@@ -424,5 +424,17 @@
   "sortNewest": "Is nuaí",
   "sortLongest": "Is faide",
   "fallbackBackend": "Cúltaca inneal",
-  "fallbackBackendHint": "Invidious nuair nach bhfuil YouTube ar fáil"
+  "fallbackBackendHint": "Invidious nuair nach bhfuil YouTube ar fáil",
+  "minimize": "Íoslaghdaigh",
+  "maximize": "Uasmhéadaigh",
+  "removeFromQueue": "Bain as an scuaine",
+  "unhide": "Dícheil",
+  "unsubscribeConfirm": "Díliostáigh ó {channel}?",
+  "@unsubscribeConfirm": {
+    "placeholders": {
+      "channel": {
+        "type": "String"
+      }
+    }
+  }
 }

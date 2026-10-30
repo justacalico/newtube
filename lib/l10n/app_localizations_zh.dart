@@ -1025,4 +1025,21 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get fallbackBackendHint => '当 YouTube 不可用时使用的 Invidious 实例';
+
+  @override
+  String get minimize => '最小化';
+
+  @override
+  String get maximize => '最大化';
+
+  @override
+  String get removeFromQueue => '从队列中移除';
+
+  @override
+  String get unhide => '取消隐藏';
+
+  @override
+  String unsubscribeConfirm(String channel) {
+    return '确定要取消订阅 $channel 吗？';
+  }
 }

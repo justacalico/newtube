@@ -56,7 +56,11 @@ class VideoListTile extends StatelessWidget {
         ),
       ),
       title: Text(video.title, maxLines: 2, overflow: TextOverflow.ellipsis),
-      subtitle: Text(video.author),
+      subtitle: Text(
+        video.author,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

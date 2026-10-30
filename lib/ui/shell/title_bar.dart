@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../services/window_actions.dart';
 
 bool get isDesktopPlatform =>
@@ -49,7 +50,7 @@ class AppTitleBar extends StatelessWidget {
               ),
             ),
           ),
-          if (showControls) const SizedBox(width: 62),
+          if (showControls) const SizedBox(width: 84),
         ],
       ),
     );
@@ -58,8 +59,13 @@ class AppTitleBar extends StatelessWidget {
 
 class TrafficLights extends StatefulWidget {
   final WindowActions? actions;
+  final Axis direction;
 
-  const TrafficLights({super.key, this.actions});
+  const TrafficLights({
+    super.key,
+    this.actions,
+    this.direction = Axis.horizontal,
+  });
 
   @override
   State<TrafficLights> createState() => _TrafficLightsState();
@@ -73,33 +79,42 @@ class _TrafficLightsState extends State<TrafficLights> {
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _Light(
-            key: const Key('titlebar.close'),
-            color: const Color(0xFFFF5F57),
-            glyph: Icons.close,
-            showGlyph: _hovered,
-            onTap: widget.actions?.close,
-          ),
-          const SizedBox(width: 8),
-          _Light(
-            key: const Key('titlebar.minimize'),
-            color: const Color(0xFFFEBC2E),
-            glyph: Icons.remove,
-            showGlyph: _hovered,
-            onTap: widget.actions?.minimize,
-          ),
-          const SizedBox(width: 8),
-          _Light(
-            key: const Key('titlebar.maximize'),
-            color: const Color(0xFF28C840),
-            glyph: Icons.add,
-            showGlyph: _hovered,
-            onTap: widget.actions?.toggleMaximize,
-          ),
-        ],
+      child: Builder(
+        builder: (context) {
+          final l10n = AppLocalizations.of(context);
+          return Flex(
+            direction: widget.direction,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _Light(
+                key: const Key('titlebar.close'),
+                color: const Color(0xFFFF5F57),
+                glyph: Icons.close,
+                tooltip: l10n.close,
+                showGlyph: _hovered,
+                onTap: widget.actions?.close,
+              ),
+              const SizedBox.square(dimension: 8),
+              _Light(
+                key: const Key('titlebar.minimize'),
+                color: const Color(0xFFFEBC2E),
+                glyph: Icons.remove,
+                tooltip: l10n.minimize,
+                showGlyph: _hovered,
+                onTap: widget.actions?.minimize,
+              ),
+              const SizedBox.square(dimension: 8),
+              _Light(
+                key: const Key('titlebar.maximize'),
+                color: const Color(0xFF28C840),
+                glyph: Icons.add,
+                tooltip: l10n.maximize,
+                showGlyph: _hovered,
+                onTap: widget.actions?.toggleMaximize,
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -108,6 +123,7 @@ class _TrafficLightsState extends State<TrafficLights> {
 class _Light extends StatelessWidget {
   final Color color;
   final IconData glyph;
+  final String tooltip;
   final bool showGlyph;
   final Future<void> Function()? onTap;
 
@@ -115,21 +131,40 @@ class _Light extends StatelessWidget {
     super.key,
     required this.color,
     required this.glyph,
+    required this.tooltip,
     required this.showGlyph,
     this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap == null ? null : () => onTap!(),
-      child: Container(
-        width: 12,
-        height: 12,
-        decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-        child: showGlyph
-            ? Icon(glyph, size: 9, color: Colors.black.withValues(alpha: 0.6))
-            : null,
+    return Tooltip(
+      message: tooltip,
+      child: Semantics(
+        button: true,
+        label: tooltip,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: onTap == null ? null : () => onTap!(),
+          child: SizedBox(
+            width: 20,
+            height: 20,
+            child: Center(
+              child: Container(
+                width: 12,
+                height: 12,
+                decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+                child: showGlyph
+                    ? Icon(
+                        glyph,
+                        size: 9,
+                        color: Colors.black.withValues(alpha: 0.6),
+                      )
+                    : null,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

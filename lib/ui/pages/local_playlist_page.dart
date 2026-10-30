@@ -7,6 +7,7 @@ import '../../l10n/app_localizations.dart';
 import '../../models/video_info.dart';
 import '../../state/app_state.dart';
 import '../widgets/content_width.dart';
+import '../widgets/playlist_dialogs.dart';
 import '../widgets/video_list_tile.dart';
 import 'watch_page.dart';
 
@@ -24,37 +25,14 @@ class LocalPlaylistPage extends StatelessWidget {
     );
   }
 
-  void _rename(BuildContext context, PlaylistInfo playlist) {
+  Future<void> _rename(BuildContext context, PlaylistInfo playlist) async {
     final state = AppScope.read(context);
-    final l10n = AppLocalizations.of(context);
-    final controller = TextEditingController(text: playlist.title);
-    showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.renamePlaylist),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          decoration: InputDecoration(labelText: l10n.playlistName),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(l10n.cancel),
-          ),
-          FilledButton(
-            onPressed: () {
-              final title = controller.text.trim();
-              if (title.isNotEmpty) {
-                state.playlists.rename(playlist.id, title, state.prefs);
-              }
-              Navigator.of(context).pop();
-            },
-            child: Text(l10n.save),
-          ),
-        ],
-      ),
+    final title = await promptPlaylistTitle(
+      context,
+      initialValue: playlist.title,
     );
+    if (title == null || title.isEmpty) return;
+    state.playlists.rename(playlist.id, title, state.prefs);
   }
 
   void _shufflePlay(BuildContext context, PlaylistInfo playlist) {

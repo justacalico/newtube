@@ -95,7 +95,7 @@ Future<void> showPlaylistPicker(BuildContext context, VideoInfo video) {
       return AlertDialog(
         title: Text(l10n.addToPlaylist),
         content: SizedBox(
-          width: 360,
+          width: double.maxFinite,
           child: ListenableBuilder(
             listenable: state.playlists,
             builder: (context, _) {

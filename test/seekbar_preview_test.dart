@@ -214,15 +214,20 @@ void main() {
       ),
     );
 
-    await tester.drag(
-      find.byKey(const ValueKey('seekSlider')),
-      const Offset(40, 0),
+    final gesture = await tester.startGesture(
+      tester.getCenter(find.byKey(const ValueKey('seekSlider'))),
     );
-    await tester.pump();
+    await gesture.moveBy(const Offset(40, 0));
     await tester.pump();
     expect(
       find.byWidgetPredicate((w) => w is Image && w.image is NetworkImage),
       findsOneWidget,
+    );
+    await gesture.up();
+    await tester.pump();
+    expect(
+      find.byWidgetPredicate((w) => w is Image && w.image is NetworkImage),
+      findsNothing,
     );
   });
 }

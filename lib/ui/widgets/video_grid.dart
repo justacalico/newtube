@@ -31,6 +31,7 @@ class VideoGrid extends StatelessWidget {
   Widget _buildForDensity(int density) {
     if (density == 1) {
       return ListView.builder(
+        physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
         itemCount: videos.length,
         itemBuilder: (context, i) {
@@ -50,6 +51,7 @@ class VideoGrid extends StatelessWidget {
             (constraints.maxWidth - 24 - (columns - 1) * 12) / columns;
         final childAspectRatio = cardWidth / (cardWidth * 9 / 16 + 100);
         return GridView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: columns,
@@ -99,14 +101,17 @@ class FeedStateView extends StatelessWidget {
       return const Center(child: CircularProgressIndicator());
     }
     final refresh = onRefresh;
-    Widget scrollable(Widget inner) => RefreshIndicator(
-      onRefresh: () => refresh!(),
-      child: inner is ScrollView
-          ? inner
-          : ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              children: [inner],
-            ),
+    Widget scrollable(Widget inner) => LayoutBuilder(
+      builder: (context, cons) => RefreshIndicator(
+        notificationPredicate: (notification) => notification.depth <= 1,
+        onRefresh: () => refresh!(),
+        child: inner is ScrollView
+            ? inner
+            : ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                children: [SizedBox(height: cons.maxHeight, child: inner)],
+              ),
+      ),
     );
     if (error != null) {
       if (AppScope.read(context).isWeb) {
@@ -154,6 +159,10 @@ class FeedStateView extends StatelessWidget {
       return refresh != null ? scrollable(empty) : empty;
     }
     if (refresh == null) return child;
-    return RefreshIndicator(onRefresh: refresh, child: child);
+    return RefreshIndicator(
+      notificationPredicate: (notification) => notification.depth <= 1,
+      onRefresh: refresh,
+      child: child,
+    );
   }
 }

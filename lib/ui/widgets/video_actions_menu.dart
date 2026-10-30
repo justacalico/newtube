@@ -6,6 +6,85 @@ import '../../models/video_info.dart';
 import '../../state/app_state.dart';
 import 'playlist_dialogs.dart';
 
+typedef _VideoAction = ({IconData icon, String label, VoidCallback onTap});
+
+List<_VideoAction> _actionsFor(
+  BuildContext context,
+  AppState state,
+  AppLocalizations l10n,
+  VideoInfo video, {
+  required bool saved,
+  required bool watched,
+}) {
+  final messenger = ScaffoldMessenger.of(context);
+  final url = 'https://www.youtube.com/watch?v=${video.id}';
+  return [
+    (
+      icon: saved ? Icons.bookmark : Icons.bookmark_border,
+      label: saved ? l10n.watchLaterRemove : l10n.watchLaterAdd,
+      onTap: () => state.watchLater.toggle(video, state.prefs),
+    ),
+    (
+      icon: Icons.playlist_play,
+      label: l10n.playNext,
+      onTap: () {
+        state.playback.playNext(video);
+        messenger.showSnackBar(SnackBar(content: Text(l10n.queuedNext)));
+      },
+    ),
+    (
+      icon: Icons.queue,
+      label: l10n.addToQueue,
+      onTap: () {
+        state.playback.enqueue(video);
+        messenger.showSnackBar(SnackBar(content: Text(l10n.queued)));
+      },
+    ),
+    (
+      icon: Icons.playlist_add,
+      label: l10n.addToPlaylist,
+      onTap: () => showPlaylistPicker(context, video),
+    ),
+    (
+      icon: watched ? Icons.visibility_off : Icons.visibility,
+      label: watched ? l10n.markUnwatched : l10n.markWatched,
+      onTap: () => watched
+          ? state.history.remove(video.id, state.prefs)
+          : state.history.record(video, state.prefs),
+    ),
+    (
+      icon: Icons.visibility_off_outlined,
+      label: l10n.notInterested,
+      onTap: () => state.hidden.hideVideo(video.id, state.prefs),
+    ),
+    if (video.channelId.isNotEmpty)
+      (
+        icon: Icons.person_off_outlined,
+        label: l10n.dontRecommendChannel,
+        onTap: () => state.hidden.hideChannel(video.channelId, state.prefs),
+      ),
+    if (state.share != null)
+      (
+        icon: Icons.share,
+        label: l10n.share,
+        onTap: () => state.share!.share(url),
+      ),
+    (
+      icon: Icons.link,
+      label: l10n.copyLink,
+      onTap: () {
+        Clipboard.setData(ClipboardData(text: url));
+        messenger.showSnackBar(SnackBar(content: Text(l10n.copiedToClipboard)));
+      },
+    ),
+    (
+      icon: Icons.open_in_new,
+      label: l10n.watchOnYouTube,
+      onTap: () => state.launch(Uri.parse(url)),
+    ),
+  ];
+}
+
 class VideoActionsMenu extends StatelessWidget {
   final VideoInfo video;
 
@@ -14,7 +93,7 @@ class VideoActionsMenu extends StatelessWidget {
   static void open(BuildContext context, VideoInfo video) {
     showModalBottomSheet<void>(
       context: context,
-      builder: (context) => _VideoActionsSheet(video: video),
+      builder: (_) => _VideoActionsSheet(video: video, parentContext: context),
     );
   }
 
@@ -23,14 +102,16 @@ class VideoActionsMenu extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final state = AppScope.read(context);
     return ListenableBuilder(
-      listenable: Listenable.merge([
-        state.watchLater,
-        state.history,
-        state.hidden,
-      ]),
+      listenable: Listenable.merge([state.watchLater, state.history]),
       builder: (context, _) {
-        final saved = state.watchLater.contains(video.id);
-        final watched = state.history.contains(video.id);
+        final actions = _actionsFor(
+          context,
+          state,
+          l10n,
+          video,
+          saved: state.watchLater.contains(video.id),
+          watched: state.history.contains(video.id),
+        );
         return MenuAnchor(
           builder: (context, controller, child) => IconButton(
             tooltip: l10n.videoActions,
@@ -44,82 +125,12 @@ class VideoActionsMenu extends StatelessWidget {
                 controller.isOpen ? controller.close() : controller.open(),
           ),
           menuChildren: [
-            MenuItemButton(
-              leadingIcon: Icon(saved ? Icons.bookmark : Icons.bookmark_border),
-              onPressed: () => state.watchLater.toggle(video, state.prefs),
-              child: Text(saved ? l10n.watchLaterRemove : l10n.watchLaterAdd),
-            ),
-            MenuItemButton(
-              leadingIcon: const Icon(Icons.playlist_play),
-              onPressed: () {
-                state.playback.playNext(video);
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(l10n.queuedNext)));
-              },
-              child: Text(l10n.playNext),
-            ),
-            MenuItemButton(
-              leadingIcon: const Icon(Icons.queue),
-              onPressed: () {
-                state.playback.enqueue(video);
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(l10n.queued)));
-              },
-              child: Text(l10n.addToQueue),
-            ),
-            MenuItemButton(
-              leadingIcon: const Icon(Icons.playlist_add),
-              onPressed: () => showPlaylistPicker(context, video),
-              child: Text(l10n.addToPlaylist),
-            ),
-            MenuItemButton(
-              leadingIcon: Icon(
-                watched ? Icons.visibility_off : Icons.visibility,
+            for (final action in actions)
+              MenuItemButton(
+                leadingIcon: Icon(action.icon),
+                onPressed: action.onTap,
+                child: Text(action.label),
               ),
-              onPressed: () => watched
-                  ? state.history.remove(video.id, state.prefs)
-                  : state.history.record(video, state.prefs),
-              child: Text(watched ? l10n.markUnwatched : l10n.markWatched),
-            ),
-            MenuItemButton(
-              leadingIcon: const Icon(Icons.visibility_off_outlined),
-              onPressed: () => state.hidden.hideVideo(video.id, state.prefs),
-              child: Text(l10n.notInterested),
-            ),
-            MenuItemButton(
-              leadingIcon: const Icon(Icons.person_off_outlined),
-              onPressed: () =>
-                  state.hidden.hideChannel(video.channelId, state.prefs),
-              child: Text(l10n.dontRecommendChannel),
-            ),
-            MenuItemButton(
-              leadingIcon: const Icon(Icons.share),
-              onPressed: () => state.share?.share(
-                'https://www.youtube.com/watch?v=${video.id}',
-              ),
-              child: Text(l10n.share),
-            ),
-            MenuItemButton(
-              leadingIcon: const Icon(Icons.link),
-              onPressed: () {
-                Clipboard.setData(
-                  ClipboardData(
-                    text: 'https://www.youtube.com/watch?v=${video.id}',
-                  ),
-                );
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(l10n.copiedToClipboard)));
-              },
-              child: Text(l10n.copyLink),
-            ),
-            MenuItemButton(
-              leadingIcon: const Icon(Icons.open_in_new),
-              onPressed: () => state.launch(
-                Uri.parse('https://www.youtube.com/watch?v=${video.id}'),
-              ),
-              child: Text(l10n.watchOnYouTube),
-            ),
           ],
         );
       },
@@ -129,8 +140,9 @@ class VideoActionsMenu extends StatelessWidget {
 
 class _VideoActionsSheet extends StatelessWidget {
   final VideoInfo video;
+  final BuildContext parentContext;
 
-  const _VideoActionsSheet({required this.video});
+  const _VideoActionsSheet({required this.video, required this.parentContext});
 
   @override
   Widget build(BuildContext context) {
@@ -138,66 +150,32 @@ class _VideoActionsSheet extends StatelessWidget {
     final state = AppScope.read(context);
     void close() => Navigator.of(context).pop();
     return SafeArea(
-      child: ListView(
-        shrinkWrap: true,
-        children: [
-          ListTile(
-            leading: const Icon(Icons.bookmark_border),
-            title: Text(l10n.watchLaterAdd),
-            onTap: () {
-              state.watchLater.toggle(video, state.prefs);
-              close();
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.playlist_play),
-            title: Text(l10n.playNext),
-            onTap: () {
-              state.playback.playNext(video);
-              close();
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.queue),
-            title: Text(l10n.addToQueue),
-            onTap: () {
-              state.playback.enqueue(video);
-              close();
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.playlist_add),
-            title: Text(l10n.addToPlaylist),
-            onTap: () {
-              close();
-              showPlaylistPicker(context, video);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.visibility_off_outlined),
-            title: Text(l10n.notInterested),
-            onTap: () {
-              state.hidden.hideVideo(video.id, state.prefs);
-              close();
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.person_off_outlined),
-            title: Text(l10n.dontRecommendChannel),
-            onTap: () {
-              state.hidden.hideChannel(video.channelId, state.prefs);
-              close();
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.share),
-            title: Text(l10n.share),
-            onTap: () {
-              state.share?.share('https://www.youtube.com/watch?v=${video.id}');
-              close();
-            },
-          ),
-        ],
+      child: ListenableBuilder(
+        listenable: Listenable.merge([state.watchLater, state.history]),
+        builder: (context, _) {
+          final actions = _actionsFor(
+            parentContext,
+            state,
+            l10n,
+            video,
+            saved: state.watchLater.contains(video.id),
+            watched: state.history.contains(video.id),
+          );
+          return ListView(
+            shrinkWrap: true,
+            children: [
+              for (final action in actions)
+                ListTile(
+                  leading: Icon(action.icon),
+                  title: Text(action.label),
+                  onTap: () {
+                    close();
+                    action.onTap();
+                  },
+                ),
+            ],
+          );
+        },
       ),
     );
   }

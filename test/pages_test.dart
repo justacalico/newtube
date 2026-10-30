@@ -268,6 +268,8 @@ void main() {
 
       await tester.tap(find.text('Unsubscribe'));
       await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilledButton, 'Unsubscribe'));
+      await tester.pumpAndSettle();
       expect(find.text('No subscriptions yet'), findsOneWidget);
     });
 
